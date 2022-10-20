@@ -26,8 +26,6 @@ export default function DashboardApp() {
 
   // Status
   const [statusData, setStatusData] = useState([{ name: 'loading', data: [0] }]);
-  const [ram, setRam] = useState(0)
-  const [cpuCores, setCpuCores] = useState(0)
 
   const getStatusData = () => {
     fetch('https://api.landing.kthcloud.com/status', {
@@ -38,7 +36,7 @@ export default function DashboardApp() {
         setStatusData(result.hosts.map((host) => {
           let res = {}
           res.name = host.name
-          res.data = [host.cpu.temp.main]
+          res.data = [host.cpu.temp.main, host.cpu.load.main, host.ram.load.main]
           return res
         }))
       })
@@ -50,6 +48,10 @@ export default function DashboardApp() {
   useInterval(() => {
     getStatusData()
   }, 1000);
+
+  // Capacities
+  const [ram, setRam] = useState(0)
+  const [cpuCores, setCpuCores] = useState(0)
 
   const getCapacities = () => {
     fetch('https://api.landing.kthcloud.com/capacities', {
