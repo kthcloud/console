@@ -27,4 +27,4 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
-          tags: registry.kthcloud.com/examples/frontend-example:latest
+          tags: registry.kthcloud.com/system/landing-frontend:latest
