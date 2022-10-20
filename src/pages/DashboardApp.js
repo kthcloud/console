@@ -35,10 +35,10 @@ export default function DashboardApp() {
     })
       .then((response) => response.json())
       .then((result) => {
-        setStatusData(result.map((server) => {
+        setStatusData(result.hosts.map((host) => {
           let res = {}
-          res.name = server.name
-          res.data = [server.cpu.temp.main]
+          res.name = host.name
+          res.data = [host.cpu.temp.main]
           return res
         }))
       })
