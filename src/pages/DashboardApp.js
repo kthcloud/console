@@ -6,7 +6,7 @@ import { Grid, Container, Typography } from '@mui/material';
 import Page from '../components/Page';
 import Iconify from '../components/Iconify';
 import useInterval from "../utils/useInterval";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 // sections
 import {
   AppTasks,
@@ -26,6 +26,8 @@ export default function DashboardApp() {
 
   // Status
   const [statusData, setStatusData] = useState([{ name: 'loading', data: [0] }]);
+  const [ram, setRam] = useState(0)
+  const [cpuCores, setCpuCores] = useState(0)
 
   const getStatusData = () => {
     fetch('https://api.landing.kthcloud.com/status', {
@@ -49,6 +51,23 @@ export default function DashboardApp() {
     getStatusData()
   }, 1000);
 
+  const getCapacities = () => {
+    fetch('https://api.landing.kthcloud.com/capacities', {
+      method: 'GET'
+    })
+      .then((response) => response.json())
+      .then((result) => {
+        setRam(result.ram.total)
+        setCpuCores(result.cpuCores.total)
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  }
+
+  useEffect(() => {
+    getCapacities()
+  })
 
   // News
   const [newsData, setNewsData] = useState([]);
@@ -101,11 +120,11 @@ export default function DashboardApp() {
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="CPU Cores" total={148} color="warning" icon={'uil:processor'} />
+            <AppWidgetSummary title="CPU Cores" total={cpuCores} color="warning" icon={'uil:processor'} />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Gigabytes of memory" total={506} color="success" icon={'bi:memory'} />
+            <AppWidgetSummary title="Gigabytes of memory" total={ram} color="success" icon={'bi:memory'} />
           </Grid>
 
 
