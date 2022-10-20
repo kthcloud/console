@@ -38,7 +38,7 @@ export default function DashboardApp() {
         setStatusData(result.map((server) => {
           let res = {}
           res.name = server.name
-          res.data = [server.temp.cpu.main]
+          res.data = [server.cpu.temp.main]
           return res
         }))
       })
