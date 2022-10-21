@@ -49,6 +49,26 @@ export default function DashboardApp() {
     getStatusData()
   }, 1000);
 
+  // Stats
+  const [podCount, setPodCount] = useState(0)
+
+  const getStats = () => {
+    fetch('https://api.landing.kthcloud.com/stats', {
+      method: 'GET'
+    })
+      .then((response) => response.json())
+      .then((result) => {
+        setPodCount(result.k8s.podCount)
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  }
+
+  useInterval(() => {
+    getStats()
+  }, 1000);
+
   // Capacities
   const [ram, setRam] = useState(0)
   const [cpuCores, setCpuCores] = useState(0)
@@ -114,7 +134,7 @@ export default function DashboardApp() {
 
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Running containers" total={153} icon={'octicon:container-16'} />
+            <AppWidgetSummary title="Running containers" total={podCount} icon={'octicon:container-16'} />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
