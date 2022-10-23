@@ -72,6 +72,7 @@ export default function DashboardApp() {
   // Capacities
   const [ram, setRam] = useState(0)
   const [cpuCores, setCpuCores] = useState(0)
+  const [gpus, setGpus] = useState(0)
 
   const getCapacities = () => {
     fetch('https://api.landing.kthcloud.com/capacities', {
@@ -80,7 +81,8 @@ export default function DashboardApp() {
       .then((response) => response.json())
       .then((result) => {
         setRam(result.ram.total)
-        setCpuCores(result.cpuCores.total)
+        setCpuCores(result.cpuCore.total)
+        setGpus(result.gpu.total)
       })
       .catch((error) => {
         console.error('Error:', error);
@@ -138,7 +140,7 @@ export default function DashboardApp() {
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Users federated" total={59} color="secondary" icon={'octicon:person-16'} />
+            <AppWidgetSummary title="GPUs" total={gpus} color="secondary" icon={'bi:gpu-card'} />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
