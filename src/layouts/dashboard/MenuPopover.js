@@ -1,5 +1,7 @@
 import { useRef, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
+// keycloak
+import { useKeycloak } from '@react-keycloak/web';
 // @mui
 import { alpha } from '@mui/material/styles';
 import { Box, Divider, Typography, Stack, MenuItem, Avatar, IconButton } from '@mui/material';
@@ -43,6 +45,8 @@ export default function Menu() {
   const handleClose = () => {
     setOpen(null);
   };
+
+  const { keycloak } = useKeycloak()
 
   return (
     <>
@@ -107,7 +111,10 @@ export default function Menu() {
           </Typography>
         </Box>
         <Stack sx={{ p: 1 }}>
-          <MenuItem href={"https://iam.kthcloud.com"} component={Link} onClick={handleClose}>
+          <MenuItem component={Link} onClick={() => {
+            keycloak.login()
+            handleClose()
+          }}>
             Log in
           </MenuItem>
           <MenuItem href={"/404"} component={Link} onClick={handleClose}>

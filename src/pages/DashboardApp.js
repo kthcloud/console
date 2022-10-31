@@ -1,7 +1,9 @@
 import { faker } from '@faker-js/faker';
+// keycloak
+import { useKeycloak } from '@react-keycloak/web';
 // @mui
 import { useTheme } from '@mui/material/styles';
-import { Grid, Container, Typography } from '@mui/material';
+import { Grid, Container, Typography, Fab, Fade } from '@mui/material';
 // components
 import Page from '../components/Page';
 import Iconify from '../components/Iconify';
@@ -19,10 +21,13 @@ import {
   AppConversionRates,
   ServerStats
 } from '../sections/@dashboard/app';
+import AlertPopup from 'src/components/AlertPopup';
 
 // ----------------------------------------------------------------------
 
 export default function DashboardApp() {
+
+  const { keycloak } = useKeycloak()
 
   // Status
   const [statusData, setStatusData] = useState([{ name: 'loading', data: [0] }]);
@@ -34,10 +39,11 @@ export default function DashboardApp() {
       .then((response) => response.json())
       .then((result) => {
         setStatusData(result.hosts.map((host) => {
-          let res = {}
-          res.name = host.name
-          res.data = [host.cpu.temp.main, host.cpu.load.main, host.ram.load.main]
-          return res
+          const gpuTemp = host.gpu ? host.gpu.temp[0].main : null
+          return {
+            name: host.name,
+            data: [host.cpu.temp.main, host.cpu.load.main, host.ram.load.main, gpuTemp]
+          }
         }))
       })
       .catch((error) => {
@@ -125,7 +131,12 @@ export default function DashboardApp() {
 
   return (
     <Page title="Dashboard">
+      <Grid container justifyContent="flex-end">
+        <AlertPopup />
+      </Grid>
+
       <Container maxWidth="xl">
+
         <Typography variant="h4" sx={{}}>
           Welcome to kthcloud
         </Typography>
@@ -163,7 +174,7 @@ export default function DashboardApp() {
           <Grid item xs={12} md={6} lg={4}>
             <ServerStats
               title="Server statistics"
-              chartLabels={['CPU °C', 'CPU %', 'Memory %', 'GPU %', 'GPU °C']}
+              chartLabels={['CPU °C', 'CPU %', 'Memory %', 'GPU °C']}
               chartData={statusData
                 //   [
                 //   { name: 'se-flem-001', data: [80, 50, 30, 50, 30] },

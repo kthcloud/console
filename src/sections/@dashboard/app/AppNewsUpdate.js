@@ -1,6 +1,8 @@
+// keycloak
+import { useKeycloak } from '@react-keycloak/web';
 // @mui
 import PropTypes from 'prop-types';
-import { Box, Stack, Link, Card, Button, Divider, Typography, CardHeader } from '@mui/material';
+import { Box, Grid, Stack, Link, Card, Button, Divider, Typography, CardHeader } from '@mui/material';
 // utils
 import { fToNow } from '../../../utils/formatTime';
 // components
@@ -9,8 +11,9 @@ import Scrollbar from '../../../components/Scrollbar';
 // ----------------------------------------------------------------------
 // material
 import { styled } from '@mui/material/styles';
-import { Toolbar, Tooltip, IconButton, OutlinedInput, InputAdornment } from '@mui/material';
+import { OutlinedInput, InputAdornment } from '@mui/material';
 import { useState } from 'react';
+import NewsFormDialog from 'src/layouts/dashboard/NewsFormDialog';
 // component
 
 AppNewsUpdate.propTypes = {
@@ -26,19 +29,39 @@ const SearchStyle = styled(OutlinedInput)(({ theme }) => ({
     easing: theme.transitions.easing.easeInOut,
     duration: theme.transitions.duration.shorter,
   }),
-  '&.Mui-focused': {  boxShadow: theme.customShadows.z8 },
+  '&.Mui-focused': { boxShadow: theme.customShadows.z8 },
   '& fieldset': {
     borderWidth: `1px !important`,
     borderColor: `${theme.palette.grey[500_32]} !important`,
   },
 }));
 
+
 export default function AppNewsUpdate({ title, subheader, list, ...other }) {
   const [email, setEmail] = useState("")
+  const { keycloak } = useKeycloak()
 
   return (
     <Card {...other}>
-      <CardHeader title={title} subheader={subheader} />
+      <CardHeader
+        title={
+          <>
+            <Grid container justifyContent="space-between">
+              <Grid item >
+                {title}
+              </Grid>
+              {keycloak.authenticated ?
+                <Grid item >
+                  <NewsFormDialog />
+                </Grid>
+                : <></>}
+            </Grid>
+          </>
+        }
+        subheader={subheader}>
+
+
+      </CardHeader>
 
       <Scrollbar>
         <Stack spacing={3} sx={{ p: 3, pr: 0 }}>
@@ -50,10 +73,10 @@ export default function AppNewsUpdate({ title, subheader, list, ...other }) {
 
       <Divider />
 
-      <Stack  direction="row"
-  justifyContent="center"
-  alignItems="center"
-  spacing={2} sx={{ px: 3, py:2 }}>
+      <Stack direction="row"
+        justifyContent="center"
+        alignItems="center"
+        spacing={2} sx={{ px: 3, py: 2 }}>
 
         <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
           Sign up to get news and outage notifications
