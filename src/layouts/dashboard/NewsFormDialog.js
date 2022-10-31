@@ -1,23 +1,21 @@
 // keycloak
 import { useKeycloak } from '@react-keycloak/web';
 // @mui
-import { Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import { Button, TextField, Dialog, DialogActions, DialogContent, DialogTitle, Grid } from '@mui/material';
 import { useState } from 'react';
 import Iconify from '../../components/Iconify';
 import useAlert from 'src/hooks/useAlert';
 
-async function createForm(title, content, image, token) {
-    const body = {
-        title: title,
-        description: content,
-        image: image
-    }
+async function createNews(title, content, image, token) {
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('description', content);
+    formData.append('image', image);
 
     return fetch('https://api.landing.kthcloud.com/news', {
         method: 'POST',
-        body: JSON.stringify(body),
+        body: formData,
         headers: {
-            'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`
         }
     }).then((response) => {
@@ -35,8 +33,10 @@ export default function NewsFormDialog() {
     const { keycloak } = useKeycloak()
 
     const [open, setOpen] = useState(false);
+
     const [title, setTitle] = useState("")
     const [content, setContent] = useState("")
+    const [image, setImage] = useState("")
 
     const { setAlert } = useAlert();
 
@@ -82,11 +82,34 @@ export default function NewsFormDialog() {
                             setContent(e.target.value)
                         }}
                     />
+
                 </DialogContent>
+
+                <DialogContent>
+                    <Grid container justifyContent="center">
+                        <Button
+                            variant="contained"
+                            component="label"
+                        >
+                            Upload File
+                            <input
+                                type="file"
+                                accept="image/png, image/jpeg"
+                                hidden
+                                onChange={e => {
+                                    if (e.target.files.length > 0) {
+                                        setImage(e.target.files[0])
+                                    }
+                                }}
+                            />
+                        </Button>
+                    </Grid>
+                </DialogContent>
+
                 <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>
                     <Button onClick={() => {
-                        createForm(title, content, 'none', keycloak.token)
+                        createNews(title, content, image, keycloak.token)
                             .then(_result => {
                                 setAlert('Sucessfully created news', 'success')
                             })

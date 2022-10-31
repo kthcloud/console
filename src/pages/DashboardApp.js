@@ -1,6 +1,4 @@
 import { faker } from '@faker-js/faker';
-// keycloak
-import { useKeycloak } from '@react-keycloak/web';
 // @mui
 import { useTheme } from '@mui/material/styles';
 import { Grid, Container, Typography, Fab, Fade } from '@mui/material';
@@ -26,9 +24,6 @@ import AlertPopup from 'src/components/AlertPopup';
 // ----------------------------------------------------------------------
 
 export default function DashboardApp() {
-
-  const { keycloak } = useKeycloak()
-
   // Status
   const [statusData, setStatusData] = useState([{ name: 'loading', data: [0] }]);
 

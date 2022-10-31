@@ -12,9 +12,8 @@ import Scrollbar from '../../../components/Scrollbar';
 // material
 import { styled } from '@mui/material/styles';
 import { OutlinedInput, InputAdornment } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import NewsFormDialog from 'src/layouts/dashboard/NewsFormDialog';
-// component
 
 AppNewsUpdate.propTypes = {
   title: PropTypes.string,
@@ -39,7 +38,22 @@ const SearchStyle = styled(OutlinedInput)(({ theme }) => ({
 
 export default function AppNewsUpdate({ title, subheader, list, ...other }) {
   const [email, setEmail] = useState("")
-  const { keycloak } = useKeycloak()
+  const [canManageNews, setCanManageNews] = useState(false)
+  const { keycloak, initialized } = useKeycloak()
+
+
+  useEffect(() => {
+    if (initialized) {
+      keycloak.loadUserInfo()
+        .then(userInfo => {
+          setCanManageNews(keycloak.authenticated && userInfo.groups.some(item => item === '/admin'))
+        })
+        .catch(err => {
+          console.error(err);
+        })
+    }
+  })
+
 
   return (
     <Card {...other}>
@@ -50,7 +64,7 @@ export default function AppNewsUpdate({ title, subheader, list, ...other }) {
               <Grid item >
                 {title}
               </Grid>
-              {keycloak.authenticated ?
+              {canManageNews ?
                 <Grid item >
                   <NewsFormDialog />
                 </Grid>
@@ -118,7 +132,12 @@ function NewsItem({ news }) {
 
   return (
     <Stack direction="row" alignItems="center" spacing={2}>
-      <Box component="img" alt={title} src={image} sx={{ width: 48, height: 48, borderRadius: 1.5, flexShrink: 0 }} />
+
+      {image ?
+        <Box component="img" alt={title} src={`data:image/jpeg;base64,${image}`} sx={{ width: 48, height: 48, borderRadius: 1.5, flexShrink: 0 }} />
+        :
+        <Box component="img" alt={title} src={'/static/icons/no-image.png'} sx={{ width: 48, height: 48, borderRadius: 1.5, flexShrink: 0 }} />
+      }
 
       <Box sx={{ minWidth: 240, flexGrow: 1 }}>
         <Link color="inherit" variant="subtitle2" underline="hover" noWrap>
