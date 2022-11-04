@@ -103,6 +103,11 @@ export default function DashboardApp() {
     })
       .then((response) => response.json())
       .then((result) => {
+        result = result.map(e => {
+          e.content = e.description
+          e.description = undefined
+          return e
+        })
         setNewsData(result)
       })
       .catch((error) => {
@@ -164,6 +169,7 @@ export default function DashboardApp() {
               title="News"
               list={newsData}
               onCreate={news => setNewsData(current => [...current, news])}
+              onDelete={id => setNewsData(current => current.filter(e => e.id != id))}
             />
           </Grid>
 
