@@ -29,7 +29,7 @@ async function createNews(title, content, image, token) {
     });
 }
 
-export default function NewsFormDialog() {
+export default function NewsFormDialog({ onCreate }) {
     const { keycloak } = useKeycloak()
 
     const [open, setOpen] = useState(false);
@@ -110,8 +110,18 @@ export default function NewsFormDialog() {
                     <Button onClick={handleClose}>Cancel</Button>
                     <Button onClick={() => {
                         createNews(title, content, image, keycloak.token)
-                            .then(_result => {
+                            .then(result => {
                                 setAlert('Sucessfully created news', 'success')
+                                onCreate({
+                                    id: result.id,
+                                    postedAt: result.postedAt,
+                                    title: title,
+                                    content: content,
+                                    image: image
+                                })
+                                setTitle('')
+                                setContent('')
+                                handleClose()
                             })
                             .catch(err => {
                                 if (err.status === 400) {
@@ -119,11 +129,9 @@ export default function NewsFormDialog() {
                                 } else {
                                     setAlert('Failed to create news. ', 'error')
                                 }
+                                handleClose()
                             })
 
-                        setTitle('')
-                        setContent('')
-                        handleClose()
                     }}>Create</Button>
                 </DialogActions>
             </Dialog>

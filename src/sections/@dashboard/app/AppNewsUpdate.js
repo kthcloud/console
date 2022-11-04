@@ -36,7 +36,7 @@ const SearchStyle = styled(OutlinedInput)(({ theme }) => ({
 }));
 
 
-export default function AppNewsUpdate({ title, subheader, list, ...other }) {
+export default function AppNewsUpdate({ title, subheader, list, onCreate, ...other }) {
   const [email, setEmail] = useState("")
   const [canManageNews, setCanManageNews] = useState(false)
   const { keycloak, initialized } = useKeycloak()
@@ -66,7 +66,7 @@ export default function AppNewsUpdate({ title, subheader, list, ...other }) {
               </Grid>
               {canManageNews ?
                 <Grid item >
-                  <NewsFormDialog />
+                  <NewsFormDialog onCreate={onCreate}/>
                 </Grid>
                 : <></>}
             </Grid>

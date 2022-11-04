@@ -163,6 +163,7 @@ export default function DashboardApp() {
             <AppNewsUpdate
               title="News"
               list={newsData}
+              onCreate={news => setNewsData(current => [...current, news])}
             />
           </Grid>
 
