@@ -1,6 +1,6 @@
 {
-  "name": "@minimal/material-kit-react",
-  "author": "minimals.cc",
+  "name": "@kthcloud/landing-frontend",
+  "author": "cloud.cbh.kth.se",
   "licence": "MIT",
   "version": "1.5.0",
   "private": false,

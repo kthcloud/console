@@ -1,131 +1,129 @@
-import { faker } from '@faker-js/faker';
 // @mui
-import { useTheme } from '@mui/material/styles';
-import { Grid, Container, Typography, Fab, Fade } from '@mui/material';
+import { useTheme } from "@mui/material/styles";
+import { Grid, Container, Typography } from "@mui/material";
 // components
-import Page from '../components/Page';
-import Iconify from '../components/Iconify';
+import Page from "../components/Page";
 import useInterval from "../utils/useInterval";
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 // sections
 import {
-  AppTasks,
   AppNewsUpdate,
-  AppOrderTimeline,
-  AppCurrentVisits,
-  AppWebsiteVisits,
-  AppTrafficBySite,
   AppWidgetSummary,
-  AppConversionRates,
-  ServerStats
-} from '../sections/@dashboard/app';
-import AlertPopup from 'src/components/AlertPopup';
+  ServerStats,
+} from "../sections/@dashboard/app";
+import AlertPopup from "src/components/AlertPopup";
 
 // ----------------------------------------------------------------------
 
-export default function DashboardApp() {
+export default function Status() {
   // Status
-  const [statusData, setStatusData] = useState([{ name: 'loading', data: [0] }]);
+  const [statusData, setStatusData] = useState([
+    { name: "loading", data: [0] },
+  ]);
 
   const getStatusData = () => {
-    fetch('https://api.landing.kthcloud.com/status', {
-      method: 'GET'
+    fetch("https://api.landing.kthcloud.com/status", {
+      method: "GET",
     })
       .then((response) => response.json())
       .then((result) => {
-        setStatusData(result.hosts.map((host) => {
-          const gpuTemp = host.gpu ? host.gpu.temp[0].main : null
-          return {
-            name: host.name,
-            data: [host.cpu.temp.main, host.cpu.load.main, host.ram.load.main, gpuTemp]
-          }
-        }))
+        setStatusData(
+          result.hosts.map((host) => {
+            const gpuTemp = host.gpu ? host.gpu.temp[0].main : null;
+            return {
+              name: host.name,
+              data: [
+                host.cpu.temp.main,
+                host.cpu.load.main,
+                host.ram.load.main,
+                gpuTemp,
+              ],
+            };
+          })
+        );
       })
       .catch((error) => {
-        console.error('Error:', error);
+        console.error("Error:", error);
       });
-  }
+  };
 
   useInterval(() => {
-    getStatusData()
+    getStatusData();
   }, 1000);
 
   // Stats
-  const [podCount, setPodCount] = useState(0)
+  const [podCount, setPodCount] = useState(0);
 
   const getStats = () => {
-    fetch('https://api.landing.kthcloud.com/stats', {
-      method: 'GET'
+    fetch("https://api.landing.kthcloud.com/stats", {
+      method: "GET",
     })
       .then((response) => response.json())
       .then((result) => {
-        setPodCount(result.k8s.podCount)
+        setPodCount(result.k8s.podCount);
       })
       .catch((error) => {
-        console.error('Error:', error);
+        console.error("Error:", error);
       });
-  }
+  };
 
   useInterval(() => {
-    getStats()
+    getStats();
   }, 1000);
 
   // Capacities
-  const [ram, setRam] = useState(0)
-  const [cpuCores, setCpuCores] = useState(0)
-  const [gpus, setGpus] = useState(0)
+  const [ram, setRam] = useState(0);
+  const [cpuCores, setCpuCores] = useState(0);
+  const [gpus, setGpus] = useState(0);
 
   const getCapacities = () => {
-    fetch('https://api.landing.kthcloud.com/capacities', {
-      method: 'GET'
+    fetch("https://api.landing.kthcloud.com/capacities", {
+      method: "GET",
     })
       .then((response) => response.json())
       .then((result) => {
-        setRam(result.ram.total)
-        setCpuCores(result.cpuCore.total)
-        setGpus(result.gpu.total)
+        setRam(result.ram.total);
+        setCpuCores(result.cpuCore.total);
+        setGpus(result.gpu.total);
       })
       .catch((error) => {
-        console.error('Error:', error);
+        console.error("Error:", error);
       });
-  }
+  };
 
   useEffect(() => {
-    getCapacities()
-  })
+    getCapacities();
+  });
 
   // News
-  const [newsData, setNewsData] = useState([]);
+  const [newsData, _setNewsData] = useState([]);
+
+  const setNewsData = (news) => {
+    let sorted = news.sort((a, b) => (a.postedAt < b.postedAt ? 1 : -1));
+    _setNewsData(sorted);
+  };
 
   const getNewsData = () => {
-    fetch('https://api.landing.kthcloud.com/news', {
-      method: 'GET'
+    fetch("https://api.landing.kthcloud.com/news", {
+      method: "GET",
     })
       .then((response) => response.json())
       .then((result) => {
-        result = result.map(e => {
-          e.content = e.description
-          e.description = undefined
-          return e
-        })
-        setNewsData(result)
+        result = result.map((e) => {
+          e.content = e.description;
+          e.description = undefined;
+          return e;
+        });
+        setNewsData(result);
       })
       .catch((error) => {
-        console.error('Error:', error);
+        console.error("Error:", error);
       });
-  }
+  };
 
   useInterval(() => {
-    getNewsData()
+    getNewsData();
   }, 1000000);
-
-  const fakeNews = [...Array(5)].map((_, index) => ({
-    id: faker.datatype.uuid(),
-    title: faker.name.jobTitle(),
-    description: faker.name.jobTitle(),
-    image: `/static/mock-images/covers/cover_${index + 1}.jpg`,
-    postedAt: faker.date.recent(),
-  }));
 
   const theme = useTheme();
 
@@ -136,48 +134,70 @@ export default function DashboardApp() {
       </Grid>
 
       <Container maxWidth="xl">
-
         <Typography variant="h4" sx={{}}>
           Welcome to kthcloud
         </Typography>
 
-        <Typography variant="h5" sx={{ mb: 5, opacity: 0.5, fontWeight: "normal" }}>
+        <Typography
+          variant="h5"
+          sx={{ mb: 5, opacity: 0.5, fontWeight: "normal" }}
+        >
           Start deploying your projects today
         </Typography>
 
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Running containers" total={podCount} icon={'octicon:container-16'} />
+            <AppWidgetSummary
+              title="Running containers"
+              total={podCount}
+              icon={"octicon:container-16"}
+            />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="GPUs" total={gpus} color="secondary" icon={'bi:gpu-card'} />
+            <AppWidgetSummary
+              title="GPUs"
+              total={gpus}
+              color="secondary"
+              icon={"bi:gpu-card"}
+            />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="CPU Cores" total={cpuCores} color="warning" icon={'uil:processor'} />
+            <AppWidgetSummary
+              title="CPU Cores"
+              total={cpuCores}
+              color="warning"
+              icon={"uil:processor"}
+            />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Gigabytes of memory" total={ram} color="success" icon={'bi:memory'} />
+            <AppWidgetSummary
+              title="Gigabytes of memory"
+              total={ram}
+              color="success"
+              icon={"bi:memory"}
+            />
           </Grid>
-
-
 
           <Grid item xs={12} md={6} lg={8}>
             <AppNewsUpdate
               title="News"
               list={newsData}
-              onCreate={news => setNewsData(current => [...current, news])}
-              onDelete={id => setNewsData(current => current.filter(e => e.id != id))}
+              onCreate={(news) => setNewsData((current) => [...current, news])}
+              onDelete={(id) =>
+                setNewsData((current) => current.filter((e) => e.id !== id))
+              }
             />
           </Grid>
 
           <Grid item xs={12} md={6} lg={4}>
             <ServerStats
               title="Server statistics"
-              chartLabels={['CPU °C', 'CPU %', 'Memory %', 'GPU °C']}
-              chartData={statusData
+              chartLabels={["CPU °C", "CPU %", "Memory %", "GPU °C"]}
+              chartData={
+                statusData
                 //   [
                 //   { name: 'se-flem-001', data: [80, 50, 30, 50, 30] },
                 //   { name: 'se-flem-002', data: [80, 50, 30, 50, 30] },
@@ -191,10 +211,11 @@ export default function DashboardApp() {
                 //   { name: 'se-flem-010', data: [44, 76, 78, 56, 56] },
                 // ]
               }
-              chartColors={[...Array(6)].map(() => theme.palette.text.secondary)}
+              chartColors={[...Array(6)].map(
+                () => theme.palette.text.secondary
+              )}
             />
           </Grid>
-
 
           {/* <Grid item xs={12} md={6} lg={4}>
             <AppOrderTimeline
@@ -332,8 +353,6 @@ export default function DashboardApp() {
               ]}
             />
           </Grid> */}
-
-
         </Grid>
       </Container>
     </Page>

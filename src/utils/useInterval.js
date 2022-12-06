@@ -1,13 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef } from "react";
 
 const useInterval = (callback, delay) => {
-
   const savedCallback = useRef();
 
   useEffect(() => {
     savedCallback.current = callback;
   }, [callback]);
-
 
   useEffect(() => {
     callback();
@@ -18,7 +16,8 @@ const useInterval = (callback, delay) => {
       const id = setInterval(tick, delay);
       return () => clearInterval(id);
     }
+    // eslint-disable-next-line
   }, [delay]);
-}
+};
 
 export default useInterval;

@@ -1,26 +1,23 @@
-import { faker } from '@faker-js/faker';
-import { sample } from 'lodash';
+import { faker } from "@faker-js/faker";
+import { sample } from "lodash";
 
 // ----------------------------------------------------------------------
 
 const users = [...Array(24)].map((_, index) => ({
   id: faker.datatype.uuid(),
-  avatarUrl: `/static/mock-images/avatars/avatar_${index + 1}.jpg`,
-  name: faker.name.findName(),
-  company: faker.company.companyName(),
-  isVerified: faker.datatype.boolean(),
-  status: sample(['active', 'banned']),
-  role: sample([
-    'Leader',
-    'Hr Manager',
-    'UI Designer',
-    'UX Designer',
-    'UI/UX Designer',
-    'Project Manager',
-    'Backend Developer',
-    'Full Stack Designer',
-    'Front End Developer',
-    'Full Stack Developer',
+  status: sample(["running", "stopped", "error"]),
+  name: sample([
+    "ramp2-backend",
+    "ramp-auth",
+    "ramp2-frontend",
+    "ramp1-backend",
+    "jupyter",
+  ]),
+  type: sample([
+    "Kubernetes Production",
+    "Kubernetes Development",
+    "Virtual server - GPU Small",
+    "Virtual server - GPU Large",
   ]),
 }));
 

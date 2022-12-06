@@ -1,35 +1,18 @@
-import { useRef, useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { useRef, useState } from "react";
 // keycloak
-import { useKeycloak } from '@react-keycloak/web';
+import { useKeycloak } from "@react-keycloak/web";
 // @mui
-import { alpha } from '@mui/material/styles';
-import { Box, Divider, Typography, Stack, MenuItem, Avatar, IconButton } from '@mui/material';
-// components
-import MenuPopover from '../../components/MenuPopover';
-// mocks_
-import account from '../../_mock/account';
-import Iconify from '../../components/Iconify';
-import Link from '@mui/material/Link';
-// ----------------------------------------------------------------------
-
-const MENU_OPTIONS = [
-  {
-    label: 'Home',
-    icon: 'eva:home-fill',
-    linkTo: '/',
-  },
-  {
-    label: 'Profile',
-    icon: 'eva:person-fill',
-    linkTo: '#',
-  },
-  {
-    label: 'Settings',
-    icon: 'eva:settings-2-fill',
-    linkTo: '#',
-  },
-];
+import {
+  Box,
+  Divider,
+  Typography,
+  Stack,
+  MenuItem,
+  IconButton,
+} from "@mui/material";
+import MenuPopover from "../../components/MenuPopover";
+import Iconify from "../../components/Iconify";
+import Link from "@mui/material/Link";
 
 // ----------------------------------------------------------------------
 
@@ -46,43 +29,13 @@ export default function Menu() {
     setOpen(null);
   };
 
-  const { keycloak } = useKeycloak()
+  const { keycloak, initialized } = useKeycloak();
 
   return (
     <>
-      <IconButton
-        ref={anchorRef}
-        onClick={handleOpen}
-        sx={{
-          p: 0,
-          // ...(open && {
-          //   '&:before': {
-          //     zIndex: 1,
-          //     content: "''",
-          //     width: '100%',
-          //     height: '100%',
-          //     borderRadius: '50%',
-          //     position: 'absolute',
-          //     bgcolor: (theme) => alpha(theme.palette.grey[900], 0.8),
-          //   },
-          // }),
-        }}
-      >
-        {/* <Avatar src={account.photoURL} alt="photoURL" /> */}
+      <IconButton ref={anchorRef} onClick={handleOpen}>
         <Iconify icon="eva:menu-outline" width={20} height={20} />
       </IconButton>
-
-      {/* 
-      <IconButton
-        ref={anchorRef}
-        color={open ? 'primary' : 'default'}
-        onClick={handleOpen}
-        sx={{ width: 40, height: 40 }}
-      >
-        <Badge badgeContent={totalUnRead} color="error">
-          <Iconify icon="eva:bell-fill" width={20} height={20} />
-        </Badge>
-      </IconButton> */}
 
       <MenuPopover
         open={Boolean(open)}
@@ -92,93 +45,136 @@ export default function Menu() {
           p: 0,
           mt: 1.5,
           ml: 0.75,
-          '& .MuiMenuItem-root': {
-            typography: 'body2',
+          "& .MuiMenuItem-root": {
+            typography: "body2",
             borderRadius: 0.75,
           },
         }}
       >
-        {/* <Box sx={{ my: 1.5, px: 2.5 }}>
-          <Typography variant="subtitle2" noWrap>
-            Navigation
-          </Typography>
-        </Box>
-        <Divider sx={{ borderStyle: 'dashed' }} /> */}
-
         <Box sx={{ mt: 1.5, px: 2.5 }}>
-          <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            Account
+          <Typography variant="body2" sx={{ color: "text.secondary" }} noWrap>
+            Beta program
           </Typography>
         </Box>
         <Stack sx={{ p: 1 }}>
-          <MenuItem component={Link} onClick={() => {
-            keycloak.login()
-            handleClose()
-          }}>
-            Log in
-          </MenuItem>
-          <MenuItem href={"/404"} component={Link} onClick={handleClose}>
+          <MenuItem
+            href={"https://discord.gg/MuHQd6QEtM"}
+            component={Link}
+            onClick={handleClose}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             Request an account
           </MenuItem>
+
+          {initialized ? (
+            <>
+              {keycloak.authenticated ? (
+                <MenuItem
+                  href={"/deploy"}
+                  component={Link}
+                  onClick={handleClose}
+                >
+                  Deploy
+                </MenuItem>
+              ) : null}
+            </>
+          ) : null}
         </Stack>
 
-        <Divider sx={{ borderStyle: 'dashed' }} />
+        <Divider sx={{ borderStyle: "dashed" }} />
 
         {/* DEV */}
         <Box sx={{ mt: 1.5, px: 2.5 }}>
-          <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
+          <Typography variant="body2" sx={{ color: "text.secondary" }} noWrap>
             Production
           </Typography>
         </Box>
 
         <Stack sx={{ p: 1 }}>
-          <MenuItem href={"https://k8s.dev.kthcloud.com"} component={Link} onClick={handleClose}>
+          <MenuItem
+            href={"https://k8s.dev.kthcloud.com"}
+            component={Link}
+            onClick={handleClose}
+          >
             Kubernetes
           </MenuItem>
-          <MenuItem href={"https://proxy.dev.kthcloud.com"} component={Link} onClick={handleClose}>
+          <MenuItem
+            href={"https://proxy.dev.kthcloud.com"}
+            component={Link}
+            onClick={handleClose}
+          >
             Proxy
           </MenuItem>
         </Stack>
-        <Divider sx={{ borderStyle: 'dashed' }} />
+        <Divider sx={{ borderStyle: "dashed" }} />
 
         {/* PROD */}
         <Box sx={{ mt: 1.5, px: 2.5 }}>
-          <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
+          <Typography variant="body2" sx={{ color: "text.secondary" }} noWrap>
             Production
           </Typography>
         </Box>
 
         <Stack sx={{ p: 1 }}>
-          <MenuItem href={"https://k8s.prod.kthcloud.com"} component={Link} onClick={handleClose}>
+          <MenuItem
+            href={"https://k8s.prod.kthcloud.com"}
+            component={Link}
+            onClick={handleClose}
+          >
             Kubernetes
           </MenuItem>
-          <MenuItem href={"https://proxy.prod.kthcloud.com"} component={Link} onClick={handleClose}>
+          <MenuItem
+            href={"https://proxy.prod.kthcloud.com"}
+            component={Link}
+            onClick={handleClose}
+          >
             Proxy
           </MenuItem>
         </Stack>
-        <Divider sx={{ borderStyle: 'dashed' }} />
+        <Divider sx={{ borderStyle: "dashed" }} />
 
         {/* INTERNAL */}
         <Box sx={{ mt: 1.5, px: 2.5 }}>
-          <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
+          <Typography variant="body2" sx={{ color: "text.secondary" }} noWrap>
             Internal
           </Typography>
         </Box>
 
         <Stack sx={{ p: 1 }}>
-          <MenuItem href={"https://dashboard.kthcloud.com"} component={Link} onClick={handleClose}>
+          <MenuItem
+            href={"https://dashboard.kthcloud.com"}
+            component={Link}
+            onClick={handleClose}
+          >
             Dashboard
           </MenuItem>
-          <MenuItem href={"https://k8s.kthcloud.com"} component={Link} onClick={handleClose}>
+          <MenuItem
+            href={"https://k8s.kthcloud.com"}
+            component={Link}
+            onClick={handleClose}
+          >
             Kubernetes
           </MenuItem>
-          <MenuItem href={"https://proxy.kthcloud.com"} component={Link} onClick={handleClose}>
+          <MenuItem
+            href={"https://proxy.kthcloud.com"}
+            component={Link}
+            onClick={handleClose}
+          >
             Proxy
           </MenuItem>
-          <MenuItem href={"https://iam.kthcloud.com"} component={Link} onClick={handleClose}>
+          <MenuItem
+            href={"https://iam.kthcloud.com"}
+            component={Link}
+            onClick={handleClose}
+          >
             IAM
           </MenuItem>
-          <MenuItem href={"https://dns.kthcloud.com"} component={Link} onClick={handleClose}>
+          <MenuItem
+            href={"https://dns.kthcloud.com"}
+            component={Link}
+            onClick={handleClose}
+          >
             DNS
           </MenuItem>
         </Stack>

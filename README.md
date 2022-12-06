@@ -1,6 +1,6 @@
 ## kthcloud landing
 
-![preview](public/static/preview.jpg)
+![preview](screenshot.png)
 
 ## Getting started
 
