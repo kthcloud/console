@@ -1,6 +1,6 @@
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 // form
-import { FormProvider as Form } from 'react-hook-form';
+import { FormProvider as Form } from "react-hook-form";
 
 // ----------------------------------------------------------------------
 

@@ -1,7 +1,6 @@
 import { filter } from "lodash";
 import { sentenceCase } from "change-case";
 import { useState } from "react";
-import { Link as RouterLink } from "react-router-dom";
 // material
 import {
   Card,
@@ -23,14 +22,10 @@ import Page from "../components/Page";
 import Label from "../components/Label";
 import Scrollbar from "../components/Scrollbar";
 import Iconify from "../components/Iconify";
-import SearchNotFound from "../components/SearchNotFound";
-import {
-  UserListHead,
-  UserListToolbar,
-  UserMoreMenu,
-} from "../sections/@dashboard/user";
+import SearchNotFound from "../sections/deploy/SearchNotFound";
+import { ListHead, ListToolbar, MoreMenu } from "../sections/deploy";
 // mock
-import USERLIST from "../_mock/user";
+import MOCK_DEPLOYMENTS from "../_mock/deployments";
 
 // ----------------------------------------------------------------------
 
@@ -86,7 +81,10 @@ export default function Deploy() {
 
   const [filterName, setFilterName] = useState("");
 
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  //eslint-disable-next-line
+  const [deployments, setDeployments] = useState(MOCK_DEPLOYMENTS);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -96,7 +94,7 @@ export default function Deploy() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = USERLIST.map((n) => n.name);
+      const newSelecteds = deployments.map((n) => n.name);
       setSelected(newSelecteds);
       return;
     }
@@ -135,10 +133,10 @@ export default function Deploy() {
   };
 
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - deployments.length) : 0;
 
   const filteredUsers = applySortFilter(
-    USERLIST,
+    deployments,
     getComparator(order, orderBy),
     filterName
   );
@@ -163,7 +161,6 @@ export default function Deploy() {
           </Typography>
           <Button
             variant="contained"
-            component={RouterLink}
             to="#"
             startIcon={<Iconify icon="eva:plus-fill" />}
           >
@@ -172,20 +169,20 @@ export default function Deploy() {
         </Stack>
 
         <Card>
-          <UserListToolbar
+          <ListToolbar
             numSelected={selected.length}
             filterName={filterName}
             onFilterName={handleFilterByName}
           />
 
           <Scrollbar>
-            <TableContainer sx={{ minWidth: 800 }}>
+            <TableContainer sx={{ minWidth: 600 }}>
               <Table>
-                <UserListHead
+                <ListHead
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={USERLIST.length}
+                  rowCount={deployments.length}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
@@ -228,7 +225,7 @@ export default function Deploy() {
                           </TableCell>
 
                           <TableCell align="right">
-                            <UserMoreMenu />
+                            <MoreMenu />
                           </TableCell>
                         </TableRow>
                       );
@@ -254,9 +251,9 @@ export default function Deploy() {
           </Scrollbar>
 
           <TablePagination
-            rowsPerPageOptions={[5, 10, 25]}
+            rowsPerPageOptions={[10, 100]}
             component="div"
-            count={USERLIST.length}
+            count={deployments.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

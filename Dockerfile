@@ -1,7 +1,9 @@
-FROM node:18 as build
+FROM node as build
 WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
 ENV CHOKIDAR_USEPOLLING=true
+
+ENV REACT_APP_API_URL=https://api.kthcloud.com
 
 COPY ./package.json /app/
 COPY ./package-lock.json /app/

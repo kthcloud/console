@@ -1,7 +1,6 @@
-import PropTypes from 'prop-types';
-import { Link as RouterLink } from 'react-router-dom';
-import { Box } from '@mui/material';
-
+import PropTypes from "prop-types";
+import { Link as RouterLink } from "react-router-dom";
+import { Box } from "@mui/material";
 
 Logo.propTypes = {
   disabledLink: PropTypes.bool,
@@ -9,10 +8,13 @@ Logo.propTypes = {
 };
 
 export default function Logo({ disabledLink = false, sx }) {
-
   const logo = (
     <Box sx={{ width: 140, height: "auto", ...sx }}>
-      <img src={process.env.PUBLIC_URL + "/static/logo.svg"} className="App-logo" alt="logo" />
+      <img
+        src={process.env.PUBLIC_URL + "/static/logo.svg"}
+        className="App-logo"
+        alt="logo"
+      />
     </Box>
   );
 

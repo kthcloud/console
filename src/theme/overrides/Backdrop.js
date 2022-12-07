@@ -1,4 +1,4 @@
-import { alpha } from '@mui/material/styles';
+import { alpha } from "@mui/material/styles";
 
 // ----------------------------------------------------------------------
 
@@ -16,8 +16,8 @@ export default function Backdrop(theme) {
             `-webkit-linear-gradient(75deg, ${varLow} 0%, ${varHigh} 100%)`,
             `linear-gradient(75deg, ${varLow} 0%, ${varHigh} 100%)`,
           ],
-          '&.MuiBackdrop-invisible': {
-            background: 'transparent',
+          "&.MuiBackdrop-invisible": {
+            background: "transparent",
           },
         },
       },

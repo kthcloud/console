@@ -1,6 +1,7 @@
 {
   "name": "kthcloud",
   "short_name": "kthcloud",
+  "description": "Start deploying your projects today",
   "icons": [
       {
           "src": "favicon/android-chrome-192x192.png",

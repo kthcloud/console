@@ -1,25 +1,25 @@
-import { createContext, useState } from 'react';
+import { createContext, useState } from "react";
 
 const ALERT_TIME = 3000;
 const initialState = {
-  text: '',
-  type: '',
+  text: "",
+  type: "",
 };
 
 const AlertContext = createContext({
   ...initialState,
-  setAlert: () => { },
+  setAlert: () => {},
 });
 
 export const AlertProvider = ({ children }) => {
-  const [text, setText] = useState('placeholder');
-  const [type, setType] = useState('success');
+  const [text, setText] = useState("placeholder");
+  const [type, setType] = useState("success");
   const [active, setActive] = useState(false);
 
   const setAlert = (text, type) => {
     setText(text);
     setType(type);
-    setActive(true)
+    setActive(true);
 
     setTimeout(() => {
       setActive(false);
@@ -36,7 +36,6 @@ export const AlertProvider = ({ children }) => {
       }}
     >
       {children}
-
     </AlertContext.Provider>
   );
 };
