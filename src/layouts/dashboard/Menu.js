@@ -13,6 +13,7 @@ import {
 import MenuPopover from "../../components/MenuPopover";
 import Iconify from "../../components/Iconify";
 import Link from "@mui/material/Link";
+import { Link as RouterLink } from "react-router-dom";
 
 // ----------------------------------------------------------------------
 
@@ -71,8 +72,8 @@ export default function Menu() {
             <>
               {keycloak.authenticated ? (
                 <MenuItem
-                  href={"/deploy"}
-                  component={Link}
+                  to={"/deploy"}
+                  component={RouterLink}
                   onClick={handleClose}
                 >
                   Deploy
