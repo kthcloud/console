@@ -1,0 +1,25 @@
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: frontend
+  namespace: landing
+  labels:
+    k8s-app: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      k8s-app: frontend
+  template:
+    metadata:
+      name: frontend
+      labels:
+        k8s-app: frontend
+    spec:
+      containers:
+        - name: frontend
+          image: registry.kthcloud.com/system/landing-frontend
+          imagePullPolicy: Always
+      imagePullSecrets:
+        - name: system-ci-secret
