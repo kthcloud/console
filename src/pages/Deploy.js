@@ -1,12 +1,13 @@
 import { filter } from "lodash";
 import { sentenceCase } from "change-case";
+import useInterval from "../utils/useInterval";
 import { useState } from "react";
+import { useKeycloak } from "@react-keycloak/web";
 // material
 import {
   Card,
   Table,
   Stack,
-  Button,
   Checkbox,
   TableRow,
   TableBody,
@@ -14,19 +15,21 @@ import {
   Container,
   Typography,
   TableContainer,
-  TablePagination,
   Alert,
+  Link,
 } from "@mui/material";
+
+// hooks
+import useAlert from "src/hooks/useAlert";
+
 // components
 import Page from "../components/Page";
 import Label from "../components/Label";
 import Scrollbar from "../components/Scrollbar";
-import Iconify from "../components/Iconify";
 import SearchNotFound from "../sections/deploy/SearchNotFound";
 import { ListHead, ListToolbar, MoreMenu } from "../sections/deploy";
-// mock
-import MOCK_DEPLOYMENTS from "../_mock/deployments";
-
+import CreateDeployment from "src/sections/deploy/CreateDeployment";
+import CreateVm from "src/sections/deploy/CreateVm";
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
@@ -38,7 +41,7 @@ const TABLE_HEAD = [
 
 // ----------------------------------------------------------------------
 
-function descendingComparator(a, b, orderBy) {
+const descendingComparator = (a, b, orderBy) => {
   if (b[orderBy] < a[orderBy]) {
     return -1;
   }
@@ -46,15 +49,15 @@ function descendingComparator(a, b, orderBy) {
     return 1;
   }
   return 0;
-}
+};
 
-function getComparator(order, orderBy) {
+const getComparator = (order, orderBy) => {
   return order === "desc"
     ? (a, b) => descendingComparator(a, b, orderBy)
     : (a, b) => -descendingComparator(a, b, orderBy);
-}
+};
 
-function applySortFilter(array, comparator, query) {
+const applySortFilter = (array, comparator, query) => {
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -68,11 +71,9 @@ function applySortFilter(array, comparator, query) {
     );
   }
   return stabilizedThis.map((el) => el[0]);
-}
+};
 
 export default function Deploy() {
-  const [page, setPage] = useState(0);
-
   const [order, setOrder] = useState("asc");
 
   const [selected, setSelected] = useState([]);
@@ -81,10 +82,114 @@ export default function Deploy() {
 
   const [filterName, setFilterName] = useState("");
 
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rows, setRows] = useState([]);
 
-  //eslint-disable-next-line
-  const [deployments, setDeployments] = useState(MOCK_DEPLOYMENTS);
+  const [rawVMs, setRawVMs] = useState([]);
+
+  const [rawDeployments, setRawDeployments] = useState([]);
+
+  const [loading, setLoading] = useState(false);
+
+  const { keycloak, initialized } = useKeycloak();
+
+  const { setAlert } = useAlert();
+
+  const getVMs = () => {
+    if (!initialized) return;
+    fetch(process.env.REACT_APP_DEPLOY_API_URL + "/vms", {
+      method: "GET",
+      headers: {
+        Authorization: "Bearer " + keycloak.token,
+      },
+    })
+      .then((response) => response.json())
+      .then((result) => {
+        result = result.map((obj) => ({ ...obj, type: "vm" }));
+
+        if (Array.isArray(result)) setRawVMs(result);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching VMs:", error);
+      });
+  };
+
+  const getDeployments = () => {
+    if (!initialized) return;
+    fetch(process.env.REACT_APP_DEPLOY_API_URL + "/deployments", {
+      method: "GET",
+      headers: {
+        Authorization: "Bearer " + keycloak.token,
+      },
+    })
+      .then((response) => response.json())
+      .then((result) => {
+        result = result.map((obj) => ({ ...obj, type: "deployment" }));
+
+        if (Array.isArray(result)) setRawDeployments(result);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching deployments:", error);
+      });
+  };
+
+  const createDeployment = async (name) => {
+    if (!initialized) return;
+
+    const body = {
+      name: name,
+    };
+
+    return fetch(process.env.REACT_APP_DEPLOY_API_URL + "/deployments", {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer " + keycloak.token,
+      },
+      body: JSON.stringify(body),
+    }).then(async (result) => {
+      const jsonResult = await result.json();
+      if (result.ok) {
+        return jsonResult;
+      }
+      throw jsonResult;
+    });
+  };
+
+  const createVm = async (name) => {
+    if (!initialized) return;
+
+    const body = {
+      name: name,
+    };
+
+    return fetch(process.env.REACT_APP_DEPLOY_API_URL + "/vms", {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer " + keycloak.token,
+      },
+      body: JSON.stringify(body),
+    }).then(async (result) => {
+      const jsonResult = await result.json();
+      if (result.ok) {
+        return jsonResult;
+      }
+      throw jsonResult;
+    });
+  };
+
+  const mergeLists = () => {
+    let array = rawVMs.concat(rawDeployments);
+    array = applySortFilter(array, getComparator(order, orderBy), filterName);
+    setRows(array);
+  };
+
+  useInterval(() => {
+    setLoading(true);
+    getVMs();
+    getDeployments();
+    mergeLists();
+  }, 1000);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -94,7 +199,7 @@ export default function Deploy() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = deployments.map((n) => n.name);
+      const newSelecteds = rows.map((n) => n.name);
       setSelected(newSelecteds);
       return;
     }
@@ -119,29 +224,11 @@ export default function Deploy() {
     setSelected(newSelected);
   };
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
-
   const handleFilterByName = (event) => {
     setFilterName(event.target.value);
   };
 
-  const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - deployments.length) : 0;
-
-  const filteredUsers = applySortFilter(
-    deployments,
-    getComparator(order, orderBy),
-    filterName
-  );
-
-  const isUserNotFound = filteredUsers.length === 0;
+  const noResultsFound = rows.length === 0;
 
   return (
     <Page title="Deploy">
@@ -159,13 +246,53 @@ export default function Deploy() {
           <Typography variant="h4" gutterBottom>
             Deploy
           </Typography>
-          <Button
-            variant="contained"
-            to="#"
-            startIcon={<Iconify icon="eva:plus-fill" />}
+          <Stack
+            direction="row"
+            alignItems="center"
+            justifyContent="space-around"
+            mb={5}
           >
-            New deployment
-          </Button>
+            <CreateVm
+              onCreate={(name) => {
+                return createVm(name)
+                  .then(({ id }) => {
+                    setAlert("Sucessfully created VM " + id, "success");
+                  })
+                  .catch((err) => {
+                    if (err.status === 400) {
+                      setAlert(
+                        "Failed to create VM. Invalid input: " + err,
+                        "error"
+                      );
+                    } else {
+                      setAlert("Failed to create VM. Details: " + err, "error");
+                    }
+                  });
+              }}
+            />
+
+            <CreateDeployment
+              onCreate={(name) => {
+                return createDeployment(name)
+                  .then(({ id }) => {
+                    setAlert("Sucessfully created deployment " + id, "success");
+                  })
+                  .catch((err) => {
+                    if (err.status === 400) {
+                      setAlert(
+                        "Failed to create deployment. Invalid input: " + err,
+                        "error"
+                      );
+                    } else {
+                      setAlert(
+                        "Failed to create deployment. Details: " + err,
+                        "error"
+                      );
+                    }
+                  });
+              }}
+            />
+          </Stack>
         </Stack>
 
         <Card>
@@ -173,6 +300,7 @@ export default function Deploy() {
             numSelected={selected.length}
             filterName={filterName}
             onFilterName={handleFilterByName}
+            loading={loading}
           />
 
           <Scrollbar>
@@ -182,62 +310,74 @@ export default function Deploy() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={deployments.length}
+                  rowCount={rows.length}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
-                  {filteredUsers
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row) => {
-                      const { id, name, type, status } = row;
-                      const isItemSelected = selected.indexOf(name) !== -1;
+                  {rows.map((row) => {
+                    const { id, name, type, status } = row;
+                    const isItemSelected = selected.indexOf(name) !== -1;
 
-                      return (
-                        <TableRow
-                          hover
-                          key={id}
-                          tabIndex={-1}
-                          role="checkbox"
-                          selected={isItemSelected}
-                          aria-checked={isItemSelected}
-                        >
-                          <TableCell padding="checkbox">
-                            <Checkbox
-                              checked={isItemSelected}
-                              onChange={(event) => handleClick(event, name)}
-                            />
-                          </TableCell>
-                          <TableCell align="left">{name}</TableCell>
-                          <TableCell align="left">{type}</TableCell>
-                          <TableCell align="left">
-                            <Label
-                              variant="ghost"
-                              color={
-                                (status === "stopped" && "warning") ||
-                                (status === "error" && "error") ||
-                                "success"
-                              }
+                    return (
+                      <TableRow
+                        hover
+                        key={id}
+                        tabIndex={-1}
+                        role="checkbox"
+                        selected={isItemSelected}
+                        aria-checked={isItemSelected}
+                      >
+                        <TableCell padding="checkbox">
+                          <Checkbox
+                            checked={isItemSelected}
+                            onChange={(event) => handleClick(event, name)}
+                          />
+                        </TableCell>
+                        <TableCell align="left">
+                          {type === "deployment" ? (
+                            <Link
+                              href={row.url}
+                              target="_blank"
+                              rel="noreferrer"
+                              underline="none"
                             >
-                              {sentenceCase(status)}
-                            </Label>
-                          </TableCell>
+                              {name}
+                            </Link>
+                          ) : (
+                            name
+                          )}
+                        </TableCell>
+                        <TableCell align="left">{type}</TableCell>
+                        <TableCell align="left">
+                          <Label
+                            variant="ghost"
+                            color={
+                              (status === "resourceError" && "error") ||
+                              (status === "resourceUnknown" && "error") ||
+                              (status === "resourceStopped" && "warning") ||
+                              (status === "resourceBeingCreated" && "info") ||
+                              (status === "resourceBeingDeleted" && "info") ||
+                              (status === "resourceBeingDeleted" && "info") ||
+                              (status === "resourceStarting" && "info") ||
+                              (status === "resourceStopping" && "info") ||
+                              (status === "resourceRunning" && "success")
+                            }
+                          >
+                            {sentenceCase(status)}
+                          </Label>
+                        </TableCell>
 
-                          <TableCell align="right">
-                            <MoreMenu />
-                          </TableCell>
-                        </TableRow>
-                      );
-                    })}
-                  {emptyRows > 0 && (
-                    <TableRow style={{ height: 53 * emptyRows }}>
-                      <TableCell colSpan={6} />
-                    </TableRow>
-                  )}
+                        <TableCell align="right">
+                          <MoreMenu row={row} />
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
                 </TableBody>
 
-                {isUserNotFound && (
+                {noResultsFound && (
                   <TableBody>
                     <TableRow>
                       <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
@@ -249,16 +389,6 @@ export default function Deploy() {
               </Table>
             </TableContainer>
           </Scrollbar>
-
-          <TablePagination
-            rowsPerPageOptions={[10, 100]}
-            component="div"
-            count={deployments.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
         </Card>
       </Container>
     </Page>

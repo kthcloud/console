@@ -42,7 +42,12 @@ ListToolbar.propTypes = {
   onFilterName: PropTypes.func,
 };
 
-export default function ListToolbar({ numSelected, filterName, onFilterName }) {
+export default function ListToolbar({
+  numSelected,
+  filterName,
+  onFilterName,
+  loading,
+}) {
   return (
     <RootStyle
       sx={{
@@ -79,11 +84,15 @@ export default function ListToolbar({ numSelected, filterName, onFilterName }) {
           </IconButton>
         </Tooltip>
       ) : (
-        <Tooltip title="Filter list">
-          <IconButton>
-            <Iconify icon="ic:round-filter-list" />
-          </IconButton>
-        </Tooltip>
+        <>
+          {loading ? (
+            <Tooltip title="Filter list">
+              <IconButton>
+                <Iconify icon="eos-icons:three-dots-loading" />
+              </IconButton>
+            </Tooltip>
+          ) : null}
+        </>
       )}
     </RootStyle>
   );
