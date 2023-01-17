@@ -28,3 +28,4 @@ jobs:
         with:
           push: true
           tags: registry.cloud.cbh.kth.se/system/landing-frontend:latest
+
