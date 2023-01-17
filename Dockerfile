@@ -3,7 +3,7 @@ WORKDIR /app
 ENV PATH /app/node_modules/.bin:$PATH
 ENV CHOKIDAR_USEPOLLING=true
 
-ENV REACT_APP_API_URL=https://api.kthcloud.com
+ENV REACT_APP_API_URL=https://api.cloud.cbh.kth.se
 
 COPY ./package.json /app/
 COPY ./package-lock.json /app/

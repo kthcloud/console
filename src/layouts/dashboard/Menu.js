@@ -94,14 +94,14 @@ export default function Menu() {
 
         <Stack sx={{ p: 1 }}>
           <MenuItem
-            href={"https://k8s.dev.kthcloud.com"}
+            href={"https://k8s.dev.cloud.cbh.kth.se"}
             component={Link}
             onClick={handleClose}
           >
             Kubernetes
           </MenuItem>
           <MenuItem
-            href={"https://proxy.dev.kthcloud.com"}
+            href={"https://proxy.dev.cloud.cbh.kth.se"}
             component={Link}
             onClick={handleClose}
           >
@@ -119,14 +119,14 @@ export default function Menu() {
 
         <Stack sx={{ p: 1 }}>
           <MenuItem
-            href={"https://k8s.prod.kthcloud.com"}
+            href={"https://k8s.prod.cloud.cbh.kth.se"}
             component={Link}
             onClick={handleClose}
           >
             Kubernetes
           </MenuItem>
           <MenuItem
-            href={"https://proxy.prod.kthcloud.com"}
+            href={"https://proxy.prod.cloud.cbh.kth.se"}
             component={Link}
             onClick={handleClose}
           >
@@ -144,35 +144,35 @@ export default function Menu() {
 
         <Stack sx={{ p: 1 }}>
           <MenuItem
-            href={"https://dashboard.kthcloud.com"}
+            href={"https://dashboard.cloud.cbh.kth.se"}
             component={Link}
             onClick={handleClose}
           >
             Dashboard
           </MenuItem>
           <MenuItem
-            href={"https://k8s.kthcloud.com"}
+            href={"https://k8s.cloud.cbh.kth.se"}
             component={Link}
             onClick={handleClose}
           >
             Kubernetes
           </MenuItem>
           <MenuItem
-            href={"https://proxy.kthcloud.com"}
+            href={"https://proxy.cloud.cbh.kth.se"}
             component={Link}
             onClick={handleClose}
           >
             Proxy
           </MenuItem>
           <MenuItem
-            href={"https://iam.kthcloud.com"}
+            href={"https://iam.cloud.cbh.kth.se"}
             component={Link}
             onClick={handleClose}
           >
             IAM
           </MenuItem>
           <MenuItem
-            href={"https://dns.kthcloud.com"}
+            href={"https://dns.cloud.cbh.kth.se"}
             component={Link}
             onClick={handleClose}
           >

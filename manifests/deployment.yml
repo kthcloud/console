@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: registry.kthcloud.com/system/landing-frontend
+          image: registry.cloud.cbh.kth.se/system/landing-frontend
           imagePullPolicy: Always
       imagePullSecrets:
         - name: system-ci-secret

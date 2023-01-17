@@ -19,7 +19,7 @@ jobs:
         name: Login to DockerHub
         uses: docker/login-action@v2
         with:
-          registry: registry.kthcloud.com
+          registry: registry.cloud.cbh.kth.se
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
       -
@@ -27,4 +27,4 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
-          tags: registry.kthcloud.com/system/landing-frontend:latest
+          tags: registry.cloud.cbh.kth.se/system/landing-frontend:latest
