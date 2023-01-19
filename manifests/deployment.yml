@@ -22,4 +22,4 @@ spec:
           image: registry.cloud.cbh.kth.se/system/landing-frontend
           imagePullPolicy: Always
       imagePullSecrets:
-        - name: system-ci-secret
+        - name: kthcloud-system-secret
