@@ -95,6 +95,9 @@ export default function CreateNews({ onCreate }) {
                 .catch(() => {})
                 .finally(() => {
                   handleClose();
+                  setTitle("");
+                  setContent("");
+                  setImage("");
                 });
             }}
           >

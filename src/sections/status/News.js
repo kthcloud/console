@@ -104,7 +104,7 @@ export default function News({
   const { setAlert } = useAlert();
 
   useEffect(() => {
-    if (initialized) {
+    if (initialized && keycloak.authenticated) {
       keycloak
         .loadUserInfo()
         .then((userInfo) => {
@@ -148,6 +148,7 @@ export default function News({
                               "error"
                             );
                           } else {
+                            console.error(err);
                             setAlert("Failed to create news. ", "error");
                           }
                           throw err;
@@ -176,7 +177,8 @@ export default function News({
                   .then(() => {
                     onDelete(id);
                   })
-                  .catch(() => {
+                  .catch((e) => {
+                    console.error(e);
                     setAlert("Failed to delete news. ", "error");
                   });
               }}

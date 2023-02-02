@@ -6,6 +6,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  DialogContentText,
 } from "@mui/material";
 import { useState } from "react";
 import Iconify from "../../components/Iconify";
@@ -14,6 +15,7 @@ export default function CreateVm({ onCreate }) {
   const [open, setOpen] = useState(false);
 
   const [name, setName] = useState("");
+  const [cleaned, setCleaned] = useState("");
   const [content, setContent] = useState("");
 
   const handleClickOpen = () => {
@@ -30,15 +32,32 @@ export default function CreateVm({ onCreate }) {
     }
   };
   const createVm = () => {
-    onCreate(name, content)
+    onCreate(cleaned, content)
       .then(() => {
-        setName("");
-        setContent("");
+        handleClose();
       })
       .catch(() => {})
       .finally(() => {
-        handleClose();
+        setName("");
+        setContent("");
+        setCleaned("");
       });
+  };
+
+  const clean = (name) => {
+    name = name.toLowerCase();
+    // convert name to RFC 1035
+    name = name.replace(/[^a-z0-9-]/g, "-");
+    name = name.replace(/-+/g, "-");
+    name = name.replace(/^-|-$/g, "");
+    // trim to 30 characters
+    name = name.substring(0, 30);
+    // convert name to RFC 1035
+    name = name.replace(/[^a-z0-9-]/g, "-");
+    name = name.replace(/-+/g, "-");
+    name = name.replace(/^-|-$/g, "");
+
+    setCleaned(name);
   };
 
   return (
@@ -65,8 +84,8 @@ export default function CreateVm({ onCreate }) {
             variant="standard"
             value={name}
             error={
-              !/^[a-zA-Z]([a-zA-Z0-9-]*[a-zA-Z0-9])?([a-zA-Z]([a-zA-Z0-9-]*[a-zA-Z0-9])?)*$/.test(
-                name
+              !/^[a-zA-Z]([a-zA-Z0-9-]*[a-zA-Z0-9])?([a-zA-Z]([a-zA-Z0-9-]*[a-zA-Z0-9])?)*$|^.{0}$/.test(
+                cleaned
               )
             }
             helperText={
@@ -84,9 +103,15 @@ export default function CreateVm({ onCreate }) {
             }
             onChange={(e) => {
               setName(e.target.value);
+              clean(e.target.value);
             }}
             onKeyDown={handleKeyPress}
           />
+          {cleaned !== "" && (
+            <DialogContentText sx={{ mt: 3 }}>
+              Your VM will be created with the name <strong>{cleaned}</strong>
+            </DialogContentText>
+          )}
         </DialogContent>
 
         <DialogActions>

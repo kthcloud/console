@@ -7,7 +7,6 @@ import useInterval from "../utils/useInterval";
 import { useState, useEffect } from "react";
 // sections
 import { NewsUpdate, WidgetSummary, ServerStats } from "../sections/status";
-import AlertPopup from "src/components/AlertPopup";
 
 // ----------------------------------------------------------------------
 
@@ -86,7 +85,7 @@ export default function Status() {
 
   useEffect(() => {
     getCapacities();
-  });
+  }, []);
 
   // News
   const [newsData, _setNewsData] = useState([]);
@@ -116,16 +115,12 @@ export default function Status() {
 
   useInterval(() => {
     getNewsData();
-  }, 1000000);
+  }, 1000);
 
   const theme = useTheme();
 
   return (
     <Page title="Dashboard">
-      <Grid container justifyContent="flex-end">
-        <AlertPopup />
-      </Grid>
-
       <Container maxWidth="xl">
         <Typography variant="h4" sx={{}}>
           Welcome to kthcloud
@@ -178,9 +173,9 @@ export default function Status() {
             <NewsUpdate
               title="News"
               list={newsData}
-              onCreate={(news) => setNewsData((current) => [...current, news])}
+              onCreate={(news) => setNewsData([...newsData, news])}
               onDelete={(id) =>
-                setNewsData((current) => current.filter((e) => e.id !== id))
+                setNewsData(newsData.filter((e) => e.id !== id))
               }
             />
           </Grid>

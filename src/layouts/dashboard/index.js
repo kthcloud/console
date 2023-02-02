@@ -3,6 +3,7 @@ import { Outlet } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 //
 import Navbar from "./Navbar";
+import AlertPopup from "src/components/AlertPopup";
 
 // ----------------------------------------------------------------------
 
@@ -35,6 +36,8 @@ export default function DashboardLayout() {
     <RootStyle>
       <Navbar />
       <MainStyle>
+        <AlertPopup />
+
         <Outlet />
       </MainStyle>
     </RootStyle>

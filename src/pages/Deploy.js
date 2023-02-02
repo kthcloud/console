@@ -1,7 +1,7 @@
 import { filter } from "lodash";
 import { sentenceCase } from "change-case";
 import useInterval from "../utils/useInterval";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useKeycloak } from "@react-keycloak/web";
 // material
 import {
@@ -88,7 +88,7 @@ export default function Deploy() {
 
   const [rawDeployments, setRawDeployments] = useState([]);
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const { keycloak, initialized } = useKeycloak();
 
@@ -163,7 +163,7 @@ export default function Deploy() {
       name: name,
     };
 
-    return fetch(process.env.REACT_APP_DEPLOY_API_URL + "/vms", {
+    return await fetch(process.env.REACT_APP_DEPLOY_API_URL + "/vms", {
       method: "POST",
       headers: {
         Authorization: "Bearer " + keycloak.token,
@@ -184,6 +184,16 @@ export default function Deploy() {
     setRows(array);
   };
 
+  // Run once on load
+  useEffect(() => {
+    setLoading(true);
+    getVMs();
+    getDeployments();
+    mergeLists();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Run every second
   useInterval(() => {
     setLoading(true);
     getVMs();
@@ -234,11 +244,14 @@ export default function Deploy() {
     <Page title="Deploy">
       <Container>
         <Alert severity="warning" sx={{ mb: 5 }} elevation={3}>
-          PaaS deployment is still in development, functions may or may not work
+          PaaS deployment is still in development, features may or may not work
         </Alert>
 
         <Stack
-          direction="row"
+          sx={{
+            flexDirection: { xs: "column", md: "row" },
+            alignItems: { xs: "flex-begin", md: "center" },
+          }}
           alignItems="center"
           justifyContent="space-between"
           mb={5}
@@ -249,7 +262,9 @@ export default function Deploy() {
           <Stack
             direction="row"
             alignItems="center"
-            justifyContent="space-around"
+            sx={{
+              justifyContent: { xs: "space-between", md: "space-around" },
+            }}
             mb={5}
           >
             <CreateVm
@@ -261,11 +276,19 @@ export default function Deploy() {
                   .catch((err) => {
                     if (err.status === 400) {
                       setAlert(
-                        "Failed to create VM. Invalid input: " + err,
+                        "Failed to create VM. Invalid input: " +
+                          JSON.stringify(err),
                         "error"
                       );
+                    } else if (Array.isArray(err.errors)) {
+                      err.errors.forEach((error) => {
+                        setAlert(error.msg, "error");
+                      });
                     } else {
-                      setAlert("Failed to create VM. Details: " + err, "error");
+                      setAlert(
+                        "Failed to create vm. Details: " + JSON.stringify(err),
+                        "error"
+                      );
                     }
                   });
               }}
@@ -336,7 +359,8 @@ export default function Deploy() {
                           />
                         </TableCell>
                         <TableCell align="left">
-                          {type === "deployment" ? (
+                          {type === "deployment" &&
+                          row.url !== "https://notset" ? (
                             <Link
                               href={row.url}
                               target="_blank"

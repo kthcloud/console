@@ -17,7 +17,7 @@ export default function SearchNotFound({ searchQuery = "", ...other }) {
             No deployments found
           </Typography>
           <Typography variant="body2" align="center">
-            "No results found for &nbsp
+            No results found for&nbsp;
             <strong>&quot;{searchQuery}&quot;</strong>. Try a different query.
           </Typography>
         </>

@@ -6,6 +6,7 @@ import LogoOnlyLayout from "./layouts/LogoOnlyLayout";
 import Deploy from "./pages/Deploy";
 import NotFound from "./pages/Page404";
 import Status from "./pages/Status";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 // ----------------------------------------------------------------------
 
@@ -16,7 +17,15 @@ export default function Router() {
       element: <DashboardLayout />,
       children: [
         { path: "/", element: <Status /> },
-        { path: "deploy", element: <Deploy /> },
+        {
+          path: "deploy",
+          element: (
+            <ProtectedRoute>
+              {" "}
+              <Deploy />
+            </ProtectedRoute>
+          ),
+        },
         // { path: "products", element: <Products /> },
         // { path: "blog", element: <Blog /> },
       ],

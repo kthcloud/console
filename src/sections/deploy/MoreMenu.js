@@ -18,6 +18,7 @@ import {
 // component
 import Iconify from "../../components/Iconify";
 import { CopyToClipboard } from "react-copy-to-clipboard";
+import useAlert from "src/hooks/useAlert";
 
 // ----------------------------------------------------------------------
 
@@ -26,6 +27,7 @@ export default function MoreMenu({ row }) {
   const [isOpen, setIsOpen] = useState(false);
   const { keycloak, initialized } = useKeycloak();
   const [textAreaValue, setTextAreaValue] = useState(null);
+  const { setAlert } = useAlert();
   const [modalOpen, setModalOpen] = useState(false);
 
   const fetchDeploymentYaml = () => {
@@ -54,12 +56,22 @@ export default function MoreMenu({ row }) {
 
   const deleteResource = () => {
     if (!initialized) return;
-    fetch(process.env.REACT_APP_DEPLOY_API_URL + "/deployments/" + row.id, {
-      method: "DELETE",
-      headers: {
-        Authorization: "Bearer " + keycloak.token,
-      },
-    });
+    fetch(
+      process.env.REACT_APP_DEPLOY_API_URL + "/" + row.type + "s/" + row.id,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: "Bearer " + keycloak.token,
+        },
+      }
+    )
+      .then((res) => {
+        if (!res.ok) throw res;
+      })
+      .catch((err) => {
+        setAlert("Could not delete resource " + JSON.stringify(err), "error");
+      });
+    setIsOpen(false);
   };
 
   return (
@@ -108,7 +120,11 @@ export default function MoreMenu({ row }) {
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
         transformOrigin={{ vertical: "top", horizontal: "right" }}
       >
-        <MenuItem sx={{ color: "text.secondary" }} onClick={deleteResource}>
+        <MenuItem
+          sx={{ color: "text.secondary" }}
+          onClick={deleteResource}
+          disabled={row.status !== "resourceRunning"}
+        >
           <ListItemIcon>
             <Iconify icon="eva:trash-2-outline" width={24} height={24} />
           </ListItemIcon>
@@ -122,6 +138,7 @@ export default function MoreMenu({ row }) {
           component={RouterLink}
           to="#"
           sx={{ color: "text.secondary" }}
+          disabled={row.status !== "resourceRunning"}
         >
           <ListItemIcon>
             <Iconify icon="eva:edit-fill" width={24} height={24} />
@@ -131,7 +148,6 @@ export default function MoreMenu({ row }) {
             primaryTypographyProps={{ variant: "body2" }}
           />
         </MenuItem>
-
         {row.type === "vm" && (
           <MenuItem
             component={RouterLink}
@@ -142,6 +158,7 @@ export default function MoreMenu({ row }) {
               setIsOpen(false);
               setModalOpen(true);
             }}
+            disabled={row.status !== "resourceRunning"}
           >
             <ListItemIcon>
               <Iconify icon="mdi:ssh" width={24} height={24} />
@@ -163,6 +180,7 @@ export default function MoreMenu({ row }) {
               setIsOpen(false);
               setModalOpen(true);
             }}
+            disabled={row.status !== "resourceRunning"}
           >
             <ListItemIcon>
               <Iconify icon="mdi:github" width={24} height={24} />
