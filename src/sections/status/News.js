@@ -53,7 +53,7 @@ async function createNews(title, content, image, token) {
   formData.append("description", content);
   formData.append("image", image);
 
-  return fetch(process.env.REACT_APP_API_URL + "/landing/v1/news", {
+  return fetch(process.env.REACT_APP_API_URL + "/landing/v2/news", {
     method: "POST",
     body: formData,
     headers: {
@@ -73,7 +73,7 @@ async function createNews(title, content, image, token) {
 }
 
 function deleteNews(id, token) {
-  return fetch(process.env.REACT_APP_API_URL + `/landing/v1/news/${id}`, {
+  return fetch(process.env.REACT_APP_API_URL + `/landing/v2/news/${id}`, {
     method: "DELETE",
     headers: {
       Authorization: `Bearer ${token}`,

@@ -1,38 +1,128 @@
+import { useLocation } from "react-router-dom";
 // @mui
 import { useTheme } from "@mui/material/styles";
-import { Grid, Container, Typography } from "@mui/material";
+import { Grid, Container, Typography, Alert, AlertTitle } from "@mui/material";
 // components
 import Page from "../components/Page";
 import useInterval from "../utils/useInterval";
 import { useState, useEffect } from "react";
 // sections
-import { NewsUpdate, WidgetSummary, ServerStats } from "../sections/status";
+import {
+  TreeMap,
+  WidgetSummary,
+  ServerStats,
+  LineChart,
+} from "../sections/status";
 
 // ----------------------------------------------------------------------
 
 export default function Status() {
-  const [statusData, setStatusData] = useState([]); // { name: "", data: [] }
+  const [statusData, setStatusData] = useState([]);
+  const [cpuCapacities, setCpuCapacities] = useState([]);
+  const [ramCapacities, setRamCapacities] = useState([]);
+  const [gpuCapacities, setGpuCapacities] = useState([]);
+  const [overviewData, _setOverviewData] = useState([]);
+  const location = useLocation();
+
+  const setOverviewData = (data) => {
+    let cpuTemp = [];
+    let cpuLoad = [];
+    let ramLoad = [];
+    let gpuTemp = [];
+
+    data.forEach((element) => {
+      let averageCpuTemp =
+        element.status.hosts
+          .map((host) => {
+            return host.cpu.temp.main;
+          })
+          .reduce((a, b) => a + b, 0) / element.status.hosts.length;
+      let averageCpuLoad =
+        element.status.hosts
+          .map((host) => {
+            return host.cpu.load.main;
+          })
+          .reduce((a, b) => a + b, 0) / element.status.hosts.length;
+      let averageRamLoad =
+        element.status.hosts
+          .map((host) => {
+            return host.ram.load.main;
+          })
+          .reduce((a, b) => a + b, 0) / element.status.hosts.length;
+      let averageGpuTemp =
+        element.status.hosts
+          .map((host) => {
+            return host.gpu ? host.gpu.temp[0].main : 0;
+          })
+          .reduce((a, b) => a + b, 0) / element.status.hosts.length;
+
+      cpuTemp.push({
+        x: element.timestamp,
+        y: Math.floor(averageCpuTemp),
+      });
+      cpuLoad.push({
+        x: element.timestamp,
+        y: Math.floor(averageCpuLoad),
+      });
+      ramLoad.push({
+        x: element.timestamp,
+        y: Math.floor(averageRamLoad),
+      });
+      gpuTemp.push({
+        x: element.timestamp,
+        y: Math.floor(averageGpuTemp),
+      });
+    });
+
+    _setOverviewData([
+      {
+        name: "CPU Temp",
+        data: cpuTemp,
+      },
+      {
+        name: "CPU Load",
+        data: cpuLoad,
+      },
+      {
+        name: "RAM Load",
+        data: ramLoad,
+      },
+      {
+        name: "GPU Temp",
+        data: gpuTemp,
+      },
+    ]);
+  };
 
   const getStatusData = () => {
-    fetch(process.env.REACT_APP_API_URL + "/landing/v1/status", {
+    fetch(process.env.REACT_APP_API_URL + "/landing/v2/status?n=100", {
       method: "GET",
     })
       .then((response) => response.json())
       .then((result) => {
-        setStatusData(
-          result.hosts.map((host) => {
-            const gpuTemp = host.gpu ? host.gpu.temp[0].main : null;
+        let statusData = result[0].status.hosts.map((host) => {
+          const gpuTemp = host.gpu ? host.gpu.temp[0].main : null;
+          return {
+            name: host.name,
+            data: [
+              host.cpu.temp.main,
+              host.cpu.load.main,
+              host.ram.load.main,
+              gpuTemp,
+            ],
+          };
+        });
+
+        setStatusData(statusData);
+        setCpuCapacities(
+          result[0].status.hosts.map((host) => {
             return {
-              name: host.name,
-              data: [
-                host.cpu.temp.main,
-                host.cpu.load.main,
-                host.ram.load.main,
-                gpuTemp,
-              ],
+              x: host.name,
+              y: host.cpu.load.cores.length,
             };
           })
         );
+        setOverviewData(result);
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -47,21 +137,21 @@ export default function Status() {
   const [podCount, setPodCount] = useState(0);
 
   const getStats = () => {
-    fetch(process.env.REACT_APP_API_URL + "/landing/v1/stats", {
+    fetch(process.env.REACT_APP_API_URL + "/landing/v2/stats?n=1", {
       method: "GET",
     })
       .then((response) => response.json())
       .then((result) => {
-        setPodCount(result.k8s.podCount);
+        setPodCount(result[0].stats.k8s.podCount);
       })
       .catch((error) => {
         console.error("Error:", error);
       });
   };
 
-  useInterval(() => {
+  useEffect(() => {
     getStats();
-  }, 1000);
+  }, []);
 
   // Capacities
   const [ram, setRam] = useState(0);
@@ -69,14 +159,32 @@ export default function Status() {
   const [gpus, setGpus] = useState(0);
 
   const getCapacities = () => {
-    fetch(process.env.REACT_APP_API_URL + "/landing/v1/capacities", {
+    fetch(process.env.REACT_APP_API_URL + "/landing/v2/capacities?n=1", {
       method: "GET",
     })
       .then((response) => response.json())
       .then((result) => {
-        setRam(result.ram.total);
-        setCpuCores(result.cpuCore.total);
-        setGpus(result.gpu.total);
+        setRam(result[0].capacities.ram.total);
+        setCpuCores(result[0].capacities.cpuCore.total);
+        setGpus(result[0].capacities.gpu.total);
+
+        setRamCapacities(
+          result[0].capacities.hosts.map((host) => {
+            return {
+              x: host.name,
+              y: host.ram.total,
+            };
+          })
+        );
+
+        setGpuCapacities(
+          result[0].capacities.hosts.map((host) => {
+            return {
+              x: host.name,
+              y: host.gpu ? host.gpu.count : 0,
+            };
+          })
+        );
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -87,34 +195,8 @@ export default function Status() {
     getCapacities();
   }, []);
 
-  // News
-  const [newsData, _setNewsData] = useState([]);
-
-  const setNewsData = (news) => {
-    let sorted = news.sort((a, b) => (a.postedAt < b.postedAt ? 1 : -1));
-    _setNewsData(sorted);
-  };
-
-  const getNewsData = () => {
-    fetch(process.env.REACT_APP_API_URL + "/landing/v1/news", {
-      method: "GET",
-    })
-      .then((response) => response.json())
-      .then((result) => {
-        result = result.map((e) => {
-          e.content = e.description;
-          e.description = undefined;
-          return e;
-        });
-        setNewsData(result);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-  };
-
   useInterval(() => {
-    getNewsData();
+    getCapacities();
   }, 1000);
 
   const theme = useTheme();
@@ -122,6 +204,13 @@ export default function Status() {
   return (
     <Page title="Dashboard">
       <Container maxWidth="xl">
+        {location.search.includes("sotl") && (
+          <Alert severity="info" sx={{ mb: 5 }} elevation={3}>
+            <AlertTitle>KTH SoTL 2023</AlertTitle>
+            SoTL participants: Join us in room D33 for demo sessions as 13:45
+            and 15:15
+          </Alert>
+        )}
         <Typography variant="h4" sx={{}}>
           Welcome to kthcloud
         </Typography>
@@ -169,22 +258,51 @@ export default function Status() {
             />
           </Grid>
 
-          <Grid item xs={12} md={6} lg={8}>
-            <NewsUpdate
-              title="News"
-              list={newsData}
-              onCreate={(news) => setNewsData([...newsData, news])}
-              onDelete={(id) =>
-                setNewsData(newsData.filter((e) => e.id !== id))
-              }
-            />
-          </Grid>
-
           <Grid item xs={12} md={6} lg={4}>
             <ServerStats
               title="Server statistics"
               chartLabels={["CPU °C", "CPU %", "Memory %", "GPU °C"]}
               chartData={statusData}
+              chartColors={[...Array(6)].map(
+                () => theme.palette.text.secondary
+              )}
+            />
+          </Grid>
+
+          <Grid item xs={12} md={6} lg={8}>
+            <LineChart
+              title="Overview"
+              chartData={overviewData}
+              chartColors={[...Array(6)].map(
+                () => theme.palette.text.secondary
+              )}
+            />
+          </Grid>
+
+          <Grid item xs={12} md={6} lg={4}>
+            <TreeMap
+              title="CPU capacity"
+              chartData={cpuCapacities}
+              chartColors={[...Array(6)].map(
+                () => theme.palette.text.secondary
+              )}
+            />
+          </Grid>
+
+          <Grid item xs={12} md={6} lg={4}>
+            <TreeMap
+              title="RAM capacity"
+              chartData={ramCapacities}
+              chartColors={[...Array(6)].map(
+                () => theme.palette.text.secondary
+              )}
+            />
+          </Grid>
+
+          <Grid item xs={12} md={6} lg={4}>
+            <TreeMap
+              title="GPU capacity"
+              chartData={gpuCapacities}
               chartColors={[...Array(6)].map(
                 () => theme.palette.text.secondary
               )}
