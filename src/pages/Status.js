@@ -251,7 +251,7 @@ export default function Status() {
 
           <Grid item xs={12} sm={6} md={3}>
             <WidgetSummary
-              title="Gigabytes of memory"
+              title="Terabytes of memory"
               total={ram}
               color="success"
               icon={"bi:memory"}

@@ -62,8 +62,13 @@ export default function WidgetSummary({
       >
         <Iconify icon={icon} width={24} height={24} />
       </IconWrapperStyle>
-
-      <Typography variant="h3">{fShortenNumber(total)}</Typography>
+      {icon === "bi:memory" ? (
+        <Typography variant="h3">
+          {(total / 1000).toString().substring(0, 5)}
+        </Typography>
+      ) : (
+        <Typography variant="h3">{fShortenNumber(total)}</Typography>
+      )}
 
       <Typography variant="subtitle2" sx={{ opacity: 0.72 }}>
         {title}
