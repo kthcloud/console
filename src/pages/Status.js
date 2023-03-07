@@ -208,7 +208,8 @@ export default function Status() {
           <Alert severity="info" sx={{ mb: 5 }} elevation={3}>
             <AlertTitle>KTH SoTL 2023</AlertTitle>
             SoTL participants: Join us in room D33 for demo sessions as 13:45
-            and 15:15
+            and 15:15. Interested in the project?{" "}
+            <a href="https://discord.gg/MuHQd6QEtM">Request an account.</a>
           </Alert>
         )}
         <Typography variant="h4" sx={{}}>
