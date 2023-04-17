@@ -67,7 +67,16 @@ export default function Menu() {
           >
             Request an account
           </MenuItem>
-
+          <MenuItem
+            href={"https://mastodon.social/@kthcloud"}
+            component={Link}
+            onClick={handleClose}
+            target="_blank"
+            rel="me"
+          >
+            Status (Mastodon)
+          </MenuItem>
+          
           {initialized ? (
             <>
               {keycloak.authenticated ? (
