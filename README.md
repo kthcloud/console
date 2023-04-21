@@ -1,4 +1,4 @@
-## kthcloud landing
+## kthcloud landing page
 
 ![preview](screenshot.png)
 
