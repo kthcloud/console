@@ -243,7 +243,7 @@ export default function Status() {
 
           <Grid item xs={12} sm={6} md={3}>
             <WidgetSummary
-              title="CPU Cores"
+              title="CPU cores"
               total={cpuCores}
               color="warning"
               icon={"uil:processor"}
