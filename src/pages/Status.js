@@ -22,6 +22,8 @@ export default function Status() {
   const [ramCapacities, setRamCapacities] = useState([]);
   const [gpuCapacities, setGpuCapacities] = useState([]);
   const [overviewData, _setOverviewData] = useState([]);
+  const [statusLock, setStatusLock] = useState(false);
+  const [capacitiesLock, setCapacitiesLock] = useState(false);
   const location = useLocation();
 
   const setOverviewData = (data) => {
@@ -95,6 +97,8 @@ export default function Status() {
   };
 
   const getStatusData = () => {
+    if(statusLock) return;
+    setStatusLock(true);
     fetch(process.env.REACT_APP_API_URL + "/landing/v2/status?n=100", {
       method: "GET",
     })
@@ -123,6 +127,7 @@ export default function Status() {
           })
         );
         setOverviewData(result);
+        setStatusLock(false);
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -159,6 +164,8 @@ export default function Status() {
   const [gpus, setGpus] = useState(0);
 
   const getCapacities = () => {
+    if(capacitiesLock) return;
+    setCapacitiesLock(true);
     fetch(process.env.REACT_APP_API_URL + "/landing/v2/capacities?n=1", {
       method: "GET",
     })
@@ -185,6 +192,7 @@ export default function Status() {
             };
           })
         );
+        setCapacitiesLock(false);
       })
       .catch((error) => {
         console.error("Error:", error);

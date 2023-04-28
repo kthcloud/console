@@ -3,6 +3,8 @@ import { sentenceCase } from "change-case";
 import useInterval from "../utils/useInterval";
 import { useState, useEffect } from "react";
 import { useKeycloak } from "@react-keycloak/web";
+import LoadingPage from "../components/LoadingPage";
+
 // material
 import {
   Card,
@@ -84,55 +86,13 @@ export default function Deploy() {
 
   const [rows, setRows] = useState([]);
 
-  const [rawVMs, setRawVMs] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  const [rawDeployments, setRawDeployments] = useState([]);
-
-  const [loading, setLoading] = useState(true);
+  const [initialLoad, setInitialLoad] = useState(false);
 
   const { keycloak, initialized } = useKeycloak();
 
   const { setAlert } = useAlert();
-
-  const getVMs = () => {
-    if (!initialized) return;
-    fetch(process.env.REACT_APP_DEPLOY_API_URL + "/vms", {
-      method: "GET",
-      headers: {
-        Authorization: "Bearer " + keycloak.token,
-      },
-    })
-      .then((response) => response.json())
-      .then((result) => {
-        result = result.map((obj) => ({ ...obj, type: "vm" }));
-
-        if (Array.isArray(result)) setRawVMs(result);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching VMs:", error);
-      });
-  };
-
-  const getDeployments = () => {
-    if (!initialized) return;
-    fetch(process.env.REACT_APP_DEPLOY_API_URL + "/deployments", {
-      method: "GET",
-      headers: {
-        Authorization: "Bearer " + keycloak.token,
-      },
-    })
-      .then((response) => response.json())
-      .then((result) => {
-        result = result.map((obj) => ({ ...obj, type: "deployment" }));
-
-        if (Array.isArray(result)) setRawDeployments(result);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching deployments:", error);
-      });
-  };
 
   const createDeployment = async (name) => {
     if (!initialized) return;
@@ -178,28 +138,76 @@ export default function Deploy() {
     });
   };
 
-  const mergeLists = () => {
-    let array = rawVMs.concat(rawDeployments);
+  const getVMs = async () => {
+    if (!initialized) return -1;
+
+    try {
+      const res = await fetch(process.env.REACT_APP_DEPLOY_API_URL + "/vms", {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + keycloak.token,
+        },
+      });
+      const response = await res.json();
+      const result = response.map((obj) => ({ ...obj, type: "vm" }));
+      if (Array.isArray(result)) {
+        return result;
+      }
+    } catch (error) {
+      console.error("Error fetching VMs:", error);
+    }
+  };
+
+  const getDeployments = async () => {
+    if (!initialized) return -1;
+
+    try {
+      const res = await fetch(
+        process.env.REACT_APP_DEPLOY_API_URL + "/deployments",
+        {
+          method: "GET",
+          headers: {
+            Authorization: "Bearer " + keycloak.token,
+          },
+        }
+      );
+      const response = await res.json();
+      const result = response.map((obj) => ({ ...obj, type: "deployment" }));
+      if (Array.isArray(result)) {
+        return result;
+      }
+    } catch (error) {
+      console.error("Error fetching deployments:", error);
+    }
+  };
+
+  const mergeLists = (resources) => {
+    let array = resources[0].concat(resources[1]);
     array = applySortFilter(array, getComparator(order, orderBy), filterName);
     setRows(array);
   };
 
+  const loadResources = async () => {
+    setLoading(true);
+    const promises =  [getVMs(), getDeployments()];
+
+    mergeLists(await Promise.all(promises));
+
+    setInitialLoad(true);
+    setLoading(false);
+  };
+
   // Run once on load
   useEffect(() => {
-    setLoading(true);
-    getVMs();
-    getDeployments();
-    mergeLists();
+    loadResources();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Run every second
   useInterval(() => {
-    setLoading(true);
-    getVMs();
-    getDeployments();
-    mergeLists();
-  }, 1000);
+    loadResources();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, 5000);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -241,180 +249,196 @@ export default function Deploy() {
   const noResultsFound = rows.length === 0;
 
   return (
-    <Page title="Deploy">
-      <Container>
-        <Alert severity="warning" sx={{ mb: 5 }} elevation={3}>
-          PaaS deployment is still in development, features may or may not work
-        </Alert>
+    <>
+      {" "}
+      {!initialLoad ? (
+        <LoadingPage />
+      ) : (
+        <Page title="Deploy">
+          <Container>
+            <Alert severity="warning" sx={{ mb: 5 }} elevation={3}>
+              PaaS deployment is still in development, features may or may not
+              work
+            </Alert>
 
-        <Stack
-          sx={{
-            flexDirection: { xs: "column", md: "row" },
-            alignItems: { xs: "flex-begin", md: "center" },
-          }}
-          alignItems="center"
-          justifyContent="space-between"
-          mb={5}
-        >
-          <Typography variant="h4" gutterBottom>
-            Deploy
-          </Typography>
-          <Stack
-            direction="row"
-            alignItems="center"
-            sx={{
-              justifyContent: { xs: "space-between", md: "space-around" },
-            }}
-            mb={5}
-          >
-            <CreateVm
-              onCreate={(name) => {
-                return createVm(name)
-                  .then(({ id }) => {
-                    setAlert("Sucessfully created VM " + id, "success");
-                  })
-                  .catch((err) => {
-                    if (err.status === 400) {
-                      setAlert(
-                        "Failed to create VM. Invalid input: " +
-                          JSON.stringify(err),
-                        "error"
-                      );
-                    } else if (Array.isArray(err.errors)) {
-                      err.errors.forEach((error) => {
-                        setAlert(error.msg, "error");
+            <Stack
+              sx={{
+                flexDirection: { xs: "column", md: "row" },
+                alignItems: { xs: "flex-begin", md: "center" },
+              }}
+              alignItems="center"
+              justifyContent="space-between"
+              mb={5}
+            >
+              <Typography variant="h4" gutterBottom>
+                Deploy
+              </Typography>
+              <Stack
+                direction="row"
+                alignItems="center"
+                sx={{
+                  justifyContent: { xs: "space-between", md: "space-around" },
+                }}
+                mb={5}
+              >
+                <CreateVm
+                  onCreate={(name) => {
+                    return createVm(name)
+                      .then(({ id }) => {
+                        setAlert("Sucessfully created VM " + id, "success");
+                      })
+                      .catch((err) => {
+                        if (err.status === 400) {
+                          setAlert(
+                            "Failed to create VM. Invalid input: " +
+                              JSON.stringify(err),
+                            "error"
+                          );
+                        } else if (Array.isArray(err.errors)) {
+                          err.errors.forEach((error) => {
+                            setAlert(error.msg, "error");
+                          });
+                        } else {
+                          setAlert(
+                            "Failed to create vm. Details: " +
+                              JSON.stringify(err),
+                            "error"
+                          );
+                        }
                       });
-                    } else {
-                      setAlert(
-                        "Failed to create vm. Details: " + JSON.stringify(err),
-                        "error"
-                      );
-                    }
-                  });
-              }}
-            />
-
-            <CreateDeployment
-              onCreate={(name) => {
-                return createDeployment(name)
-                  .then(({ id }) => {
-                    setAlert("Sucessfully created deployment " + id, "success");
-                  })
-                  .catch((err) => {
-                    if (err.status === 400) {
-                      setAlert(
-                        "Failed to create deployment. Invalid input: " + err,
-                        "error"
-                      );
-                    } else {
-                      setAlert(
-                        "Failed to create deployment. Details: " + err,
-                        "error"
-                      );
-                    }
-                  });
-              }}
-            />
-          </Stack>
-        </Stack>
-
-        <Card>
-          <ListToolbar
-            numSelected={selected.length}
-            filterName={filterName}
-            onFilterName={handleFilterByName}
-            loading={loading}
-          />
-
-          <Scrollbar>
-            <TableContainer sx={{ minWidth: 600 }}>
-              <Table>
-                <ListHead
-                  order={order}
-                  orderBy={orderBy}
-                  headLabel={TABLE_HEAD}
-                  rowCount={rows.length}
-                  numSelected={selected.length}
-                  onRequestSort={handleRequestSort}
-                  onSelectAllClick={handleSelectAllClick}
+                  }}
                 />
-                <TableBody>
-                  {rows.map((row) => {
-                    const { id, name, type, status } = row;
-                    const isItemSelected = selected.indexOf(name) !== -1;
 
-                    return (
-                      <TableRow
-                        hover
-                        key={id}
-                        tabIndex={-1}
-                        role="checkbox"
-                        selected={isItemSelected}
-                        aria-checked={isItemSelected}
-                      >
-                        <TableCell padding="checkbox">
-                          <Checkbox
-                            checked={isItemSelected}
-                            onChange={(event) => handleClick(event, name)}
-                          />
-                        </TableCell>
-                        <TableCell align="left">
-                          {type === "deployment" &&
-                          row.url !== "https://notset" ? (
-                            <Link
-                              href={row.url}
-                              target="_blank"
-                              rel="noreferrer"
-                              underline="none"
-                            >
-                              {name}
-                            </Link>
-                          ) : (
-                            name
-                          )}
-                        </TableCell>
-                        <TableCell align="left">{type}</TableCell>
-                        <TableCell align="left">
-                          <Label
-                            variant="ghost"
-                            color={
-                              (status === "resourceError" && "error") ||
-                              (status === "resourceUnknown" && "error") ||
-                              (status === "resourceStopped" && "warning") ||
-                              (status === "resourceBeingCreated" && "info") ||
-                              (status === "resourceBeingDeleted" && "info") ||
-                              (status === "resourceBeingDeleted" && "info") ||
-                              (status === "resourceStarting" && "info") ||
-                              (status === "resourceStopping" && "info") ||
-                              (status === "resourceRunning" && "success")
-                            }
+                <CreateDeployment
+                  onCreate={(name) => {
+                    return createDeployment(name)
+                      .then(({ id }) => {
+                        setAlert(
+                          "Sucessfully created deployment " + id,
+                          "success"
+                        );
+                      })
+                      .catch((err) => {
+                        if (err.status === 400) {
+                          setAlert(
+                            "Failed to create deployment. Invalid input: " +
+                              err,
+                            "error"
+                          );
+                        } else {
+                          setAlert(
+                            "Failed to create deployment. Details: " + err,
+                            "error"
+                          );
+                        }
+                      });
+                  }}
+                />
+              </Stack>
+            </Stack>
+
+            <Card>
+              <ListToolbar
+                numSelected={selected.length}
+                filterName={filterName}
+                onFilterName={handleFilterByName}
+                loading={loading}
+              />
+
+              <Scrollbar>
+                <TableContainer sx={{ minWidth: 600 }}>
+                  <Table>
+                    <ListHead
+                      order={order}
+                      orderBy={orderBy}
+                      headLabel={TABLE_HEAD}
+                      rowCount={rows.length}
+                      numSelected={selected.length}
+                      onRequestSort={handleRequestSort}
+                      onSelectAllClick={handleSelectAllClick}
+                    />
+                    <TableBody>
+                      {rows.map((row) => {
+                        const { id, name, type, status } = row;
+                        const isItemSelected = selected.indexOf(name) !== -1;
+
+                        return (
+                          <TableRow
+                            hover
+                            key={id}
+                            tabIndex={-1}
+                            role="checkbox"
+                            selected={isItemSelected}
+                            aria-checked={isItemSelected}
                           >
-                            {sentenceCase(status)}
-                          </Label>
-                        </TableCell>
+                            <TableCell padding="checkbox">
+                              <Checkbox
+                                checked={isItemSelected}
+                                onChange={(event) => handleClick(event, name)}
+                              />
+                            </TableCell>
+                            <TableCell align="left">
+                              {type === "deployment" &&
+                              row.url !== "https://notset" ? (
+                                <Link
+                                  href={row.url}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  underline="none"
+                                >
+                                  {name}
+                                </Link>
+                              ) : (
+                                name
+                              )}
+                            </TableCell>
+                            <TableCell align="left">{type}</TableCell>
+                            <TableCell align="left">
+                              <Label
+                                variant="ghost"
+                                color={
+                                  (status === "resourceError" && "error") ||
+                                  (status === "resourceUnknown" && "error") ||
+                                  (status === "resourceStopped" && "warning") ||
+                                  (status === "resourceBeingCreated" &&
+                                    "info") ||
+                                  (status === "resourceBeingDeleted" &&
+                                    "info") ||
+                                  (status === "resourceBeingDeleted" &&
+                                    "info") ||
+                                  (status === "resourceStarting" && "info") ||
+                                  (status === "resourceStopping" && "info") ||
+                                  (status === "resourceRunning" && "success")
+                                }
+                              >
+                                {sentenceCase(status)}
+                              </Label>
+                            </TableCell>
 
-                        <TableCell align="right">
-                          <MoreMenu row={row} />
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })}
-                </TableBody>
+                            <TableCell align="right">
+                              <MoreMenu row={row} />
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                    </TableBody>
 
-                {noResultsFound && (
-                  <TableBody>
-                    <TableRow>
-                      <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
-                        <SearchNotFound searchQuery={filterName} />
-                      </TableCell>
-                    </TableRow>
-                  </TableBody>
-                )}
-              </Table>
-            </TableContainer>
-          </Scrollbar>
-        </Card>
-      </Container>
-    </Page>
+                    {noResultsFound && (
+                      <TableBody>
+                        <TableRow>
+                          <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
+                            <SearchNotFound searchQuery={filterName} />
+                          </TableCell>
+                        </TableRow>
+                      </TableBody>
+                    )}
+                  </Table>
+                </TableContainer>
+              </Scrollbar>
+            </Card>
+          </Container>
+        </Page>
+      )}
+    </>
   );
 }

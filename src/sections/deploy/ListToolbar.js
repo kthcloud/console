@@ -86,7 +86,7 @@ export default function ListToolbar({
       ) : (
         <>
           {loading ? (
-            <Tooltip title="Filter list">
+            <Tooltip title="Updating list...">
               <IconButton>
                 <Iconify icon="eos-icons:three-dots-loading" />
               </IconButton>
