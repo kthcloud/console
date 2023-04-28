@@ -18,6 +18,8 @@ export default function CreateVm({ onCreate }) {
   const [cleaned, setCleaned] = useState("");
   const [content, setContent] = useState("");
 
+  const [publicKey, setPublicKey] = useState("");
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -32,7 +34,7 @@ export default function CreateVm({ onCreate }) {
     }
   };
   const createVm = () => {
-    onCreate(cleaned, content)
+    onCreate(cleaned, publicKey, content)
       .then(() => {
         handleClose();
       })
@@ -112,6 +114,27 @@ export default function CreateVm({ onCreate }) {
               Your VM will be created with the name <strong>{cleaned}</strong>
             </DialogContentText>
           )}
+
+          <TextField
+            autoFocus
+            fullWidth
+            multiline
+            margin="dense"
+            id="publicKey"
+            label="Public Key"
+            variant="standard"
+            value={publicKey}
+            helperText={
+              <span>
+                Enter a public key to be added to the VM. This will allow you to
+                SSH into the VM. Use <code>ssh-keygen</code> to generate a key.
+              </span>
+            }
+            onChange={(e) => {
+              setPublicKey(e.target.value);
+            }}
+            onKeyDown={handleKeyPress}
+          />
         </DialogContent>
 
         <DialogActions>

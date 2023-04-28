@@ -74,6 +74,32 @@ export default function MoreMenu({ row }) {
     setIsOpen(false);
   };
 
+  const attachGPU = (vm) => {
+    if (!initialized) return;
+    fetch(
+      process.env.REACT_APP_DEPLOY_API_URL +
+        "/" +
+        row.type +
+        "s/" +
+        row.id +
+        (!vm.gpu ? "/attachGpu" : "/detachGpu"),
+      {
+        method: "POST",
+        headers: {
+          Authorization: "Bearer " + keycloak.token,
+        },
+      }
+    )
+      .then((res) => {
+        if (!res.ok) throw res;
+        else setAlert(!vm.gpu ? "Attaching GPU..." : "Detaching GPU...", "success");
+      })
+      .catch((err) => {
+        setAlert(!vm.gpu ? "Could not attach GPU " : "Could not detach GPU " + JSON.stringify(err), "error");
+      });
+    setIsOpen(false);
+  };
+
   return (
     <>
       <IconButton ref={ref} onClick={() => setIsOpen(true)}>
@@ -134,20 +160,24 @@ export default function MoreMenu({ row }) {
           />
         </MenuItem>
 
-        <MenuItem
-          component={RouterLink}
-          to="#"
-          sx={{ color: "text.secondary" }}
-          disabled={row.status !== "resourceRunning"}
-        >
-          <ListItemIcon>
-            <Iconify icon="eva:edit-fill" width={24} height={24} />
-          </ListItemIcon>
-          <ListItemText
-            primary="Edit"
-            primaryTypographyProps={{ variant: "body2" }}
-          />
-        </MenuItem>
+        {row.type === "vm" && (
+          <MenuItem
+            component={RouterLink}
+            to="#"
+            sx={{ color: "text.secondary" }}
+            disabled={row.status !== "resourceRunning"}
+            onClick={() => attachGPU(row)}
+          >
+            <ListItemIcon>
+              <Iconify icon="bi:gpu-card" width={24} height={24} />
+            </ListItemIcon>
+            <ListItemText
+              primary={!row.gpu ? "Attach GPU" : "Detach GPU"}
+              primaryTypographyProps={{ variant: "body2" }}
+            />
+          </MenuItem>
+        )}
+
         {row.type === "vm" && (
           <MenuItem
             component={RouterLink}

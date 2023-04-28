@@ -77,23 +77,23 @@ export default function ListToolbar({
         />
       )}
 
-      {numSelected > 0 ? (
+      {/* {numSelected > 0 ? (
         <Tooltip title="Delete">
           <IconButton>
             <Iconify icon="eva:trash-2-fill" />
           </IconButton>
         </Tooltip>
-      ) : (
-        <>
-          {loading ? (
-            <Tooltip title="Updating list...">
-              <IconButton>
-                <Iconify icon="eos-icons:three-dots-loading" />
-              </IconButton>
-            </Tooltip>
-          ) : null}
-        </>
-      )}
+      ) : ( */}
+      <>
+        {loading ? (
+          <Tooltip title="Updating list...">
+            <IconButton>
+              <Iconify icon="eos-icons:three-dots-loading" />
+            </IconButton>
+          </Tooltip>
+        ) : null}
+      </>
+      {/* )} */}
     </RootStyle>
   );
 }

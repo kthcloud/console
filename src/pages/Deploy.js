@@ -4,6 +4,7 @@ import useInterval from "../utils/useInterval";
 import { useState, useEffect } from "react";
 import { useKeycloak } from "@react-keycloak/web";
 import LoadingPage from "../components/LoadingPage";
+import Iconify from "../components/Iconify";
 
 // material
 import {
@@ -19,6 +20,7 @@ import {
   TableContainer,
   Alert,
   Link,
+  Tooltip,
 } from "@mui/material";
 
 // hooks
@@ -116,11 +118,12 @@ export default function Deploy() {
     });
   };
 
-  const createVm = async (name) => {
+  const createVm = async (name, publicKey) => {
     if (!initialized) return;
 
     const body = {
       name: name,
+      sshPublicKey: publicKey,
     };
 
     return await fetch(process.env.REACT_APP_DEPLOY_API_URL + "/vms", {
@@ -189,7 +192,7 @@ export default function Deploy() {
 
   const loadResources = async () => {
     setLoading(true);
-    const promises =  [getVMs(), getDeployments()];
+    const promises = [getVMs(), getDeployments()];
 
     mergeLists(await Promise.all(promises));
 
@@ -248,6 +251,41 @@ export default function Deploy() {
 
   const noResultsFound = rows.length === 0;
 
+  const renderResourceName = (resource) => {
+    if (resource.type === "deployment" && resource.url === "https://notset") {
+      return (
+        <Link
+          href={resource.url}
+          target="_blank"
+          rel="noreferrer"
+          underline="none"
+        >
+          {resource.name}
+        </Link>
+      );
+    } else if (resource.type === "vm" && resource.gpu) {
+      const tooltip = "NVIDIA " + resource.gpu.name;
+
+      return (
+        <Typography
+          variant="body2"
+          color="text.primary"
+          display="flex"
+          alignItems="center"
+        >
+          {resource.name}
+          <Tooltip title={tooltip}>
+            <span style={{display: "flex", alignItems:"center"}}>
+              <Iconify icon="bi:gpu-card" width={20} height={20} ml={1} />
+            </span>
+          </Tooltip>
+        </Typography>
+      );
+    } else {
+      return resource.name;
+    }
+  };
+
   return (
     <>
       {" "}
@@ -257,8 +295,8 @@ export default function Deploy() {
         <Page title="Deploy">
           <Container>
             <Alert severity="warning" sx={{ mb: 5 }} elevation={3}>
-              PaaS deployment is still in development, features may or may not
-              work
+              Deploying on kthcloud is still in development, features might be
+              playing hide and seek. Your patience is appreciated!
             </Alert>
 
             <Stack
@@ -282,8 +320,8 @@ export default function Deploy() {
                 mb={5}
               >
                 <CreateVm
-                  onCreate={(name) => {
-                    return createVm(name)
+                  onCreate={(name, publicKey) => {
+                    return createVm(name, publicKey)
                       .then(({ id }) => {
                         setAlert("Sucessfully created VM " + id, "success");
                       })
@@ -378,19 +416,7 @@ export default function Deploy() {
                               />
                             </TableCell>
                             <TableCell align="left">
-                              {type === "deployment" &&
-                              row.url !== "https://notset" ? (
-                                <Link
-                                  href={row.url}
-                                  target="_blank"
-                                  rel="noreferrer"
-                                  underline="none"
-                                >
-                                  {name}
-                                </Link>
-                              ) : (
-                                name
-                              )}
+                              {renderResourceName(row)}
                             </TableCell>
                             <TableCell align="left">{type}</TableCell>
                             <TableCell align="left">
