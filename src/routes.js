@@ -4,6 +4,7 @@ import DashboardLayout from "./layouts/dashboard";
 import LogoOnlyLayout from "./layouts/LogoOnlyLayout";
 //
 import Deploy from "./pages/Deploy";
+import Profile from "./pages/Profile";
 import NotFound from "./pages/Page404";
 import Status from "./pages/Status";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -21,8 +22,15 @@ export default function Router() {
           path: "deploy",
           element: (
             <ProtectedRoute>
-              {" "}
               <Deploy />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "profile",
+          element: (
+            <ProtectedRoute>
+              <Profile />
             </ProtectedRoute>
           ),
         },
