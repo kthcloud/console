@@ -22,7 +22,7 @@ import useAlert from "src/hooks/useAlert";
 
 // ----------------------------------------------------------------------
 
-export default function MoreMenu({ row }) {
+export default function MoreMenu({ row, queueJob }) {
   const ref = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
   const { keycloak, initialized } = useKeycloak();
@@ -54,23 +54,28 @@ export default function MoreMenu({ row }) {
       });
   };
 
-  const deleteResource = () => {
+  const deleteResource = async () => {
     if (!initialized) return;
-    fetch(
-      process.env.REACT_APP_DEPLOY_API_URL + "/" + row.type + "s/" + row.id,
-      {
-        method: "DELETE",
-        headers: {
-          Authorization: "Bearer " + keycloak.token,
-        },
-      }
-    )
-      .then((res) => {
-        if (!res.ok) throw res;
-      })
-      .catch((err) => {
-        setAlert("Could not delete resource " + JSON.stringify(err), "error");
-      });
+
+    try {
+      const res = await fetch(
+        process.env.REACT_APP_DEPLOY_API_URL + "/" + row.type + "s/" + row.id,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: "Bearer " + keycloak.token,
+          },
+        }
+      );
+      if (!res.ok) throw res;
+
+      const response = await res.json();
+
+      queueJob(response)
+      
+    } catch (err) {
+      setAlert("Could not delete resource " + JSON.stringify(err), "error");
+    }
     setIsOpen(false);
   };
 
@@ -92,10 +97,19 @@ export default function MoreMenu({ row }) {
     )
       .then((res) => {
         if (!res.ok) throw res;
-        else setAlert(!vm.gpu ? "Attaching GPU..." : "Detaching GPU...", "success");
+        else
+          setAlert(
+            !vm.gpu ? "Attaching GPU..." : "Detaching GPU...",
+            "success"
+          );
       })
       .catch((err) => {
-        setAlert(!vm.gpu ? "Could not attach GPU " : "Could not detach GPU " + JSON.stringify(err), "error");
+        setAlert(
+          !vm.gpu
+            ? "Could not attach GPU "
+            : "Could not detach GPU " + JSON.stringify(err),
+          "error"
+        );
       });
     setIsOpen(false);
   };

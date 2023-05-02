@@ -21,6 +21,7 @@ import {
   Alert,
   Link,
   Tooltip,
+  CircularProgress,
 } from "@mui/material";
 
 // hooks
@@ -34,6 +35,8 @@ import SearchNotFound from "../sections/deploy/SearchNotFound";
 import { ListHead, ListToolbar, MoreMenu } from "../sections/deploy";
 import CreateDeployment from "src/sections/deploy/CreateDeployment";
 import CreateVm from "src/sections/deploy/CreateVm";
+import JobList from "src/sections/deploy/JobList";
+
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
@@ -92,6 +95,8 @@ export default function Deploy() {
 
   const [initialLoad, setInitialLoad] = useState(false);
 
+  const [jobs, setJobs] = useState([]);
+
   const { keycloak, initialized } = useKeycloak();
 
   const { setAlert } = useAlert();
@@ -112,6 +117,7 @@ export default function Deploy() {
     }).then(async (result) => {
       const jsonResult = await result.json();
       if (result.ok) {
+        queueJob(jsonResult);
         return jsonResult;
       }
       throw jsonResult;
@@ -135,6 +141,7 @@ export default function Deploy() {
     }).then(async (result) => {
       const jsonResult = await result.json();
       if (result.ok) {
+        queueJob(jsonResult);
         return jsonResult;
       }
       throw jsonResult;
@@ -212,6 +219,53 @@ export default function Deploy() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, 5000);
 
+  const getJob = async (jobId) => {
+    if (!initialized) return -1;
+    try {
+      const res = await fetch(
+        process.env.REACT_APP_DEPLOY_API_URL + "/jobs/" + jobId,
+        {
+          method: "GET",
+          headers: {
+            Authorization: "Bearer " + keycloak.token,
+          },
+        }
+      );
+
+      const response = await res.json();
+      // set type and status
+      setJobs((jobs) =>
+        jobs.map((job) => {
+          if (job.jobId === jobId) {
+            job.type = response.type;
+            job.status = response.status;
+            try{
+            job.name = rows.filter((row) => row.id === job.id)[0].name
+          }catch(e){}
+          }
+          return job;
+        })
+      );
+    } catch (error) {
+      console.error("Error fetching VMs:", error);
+    }
+  };
+
+  const queueJob = (jobId) => {
+    setJobs((jobs) => [...jobs, jobId]);
+  };
+
+  // Run every second
+  useInterval(async () => {
+    for (let i = 0; i < jobs.length; i++) {
+      if (jobs[i].status !== "jobFinished") {
+        await getJob(jobs[i].jobId);
+      }
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, 500);
+
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -252,7 +306,7 @@ export default function Deploy() {
   const noResultsFound = rows.length === 0;
 
   const renderResourceName = (resource) => {
-    if (resource.type === "deployment" && resource.url === "https://notset") {
+    if (resource.type === "deployment" && resource.url !== "https://notset") {
       return (
         <Link
           href={resource.url}
@@ -275,7 +329,7 @@ export default function Deploy() {
         >
           {resource.name}
           <Tooltip title={tooltip}>
-            <span style={{display: "flex", alignItems:"center"}}>
+            <span style={{ display: "flex", alignItems: "center" }}>
               <Iconify icon="bi:gpu-card" width={20} height={20} ml={1} />
             </span>
           </Tooltip>
@@ -288,7 +342,6 @@ export default function Deploy() {
 
   return (
     <>
-      {" "}
       {!initialLoad ? (
         <LoadingPage />
       ) : (
@@ -306,18 +359,18 @@ export default function Deploy() {
               }}
               alignItems="center"
               justifyContent="space-between"
-              mb={5}
+              mb={2}
             >
               <Typography variant="h4" gutterBottom>
                 Deploy
               </Typography>
+
               <Stack
                 direction="row"
                 alignItems="center"
                 sx={{
                   justifyContent: { xs: "space-between", md: "space-around" },
                 }}
-                mb={5}
               >
                 <CreateVm
                   onCreate={(name, publicKey) => {
@@ -374,6 +427,8 @@ export default function Deploy() {
                 />
               </Stack>
             </Stack>
+
+            <JobList jobs={jobs} rows={rows} setJobs={setJobs} />
 
             <Card>
               <ListToolbar
@@ -442,7 +497,7 @@ export default function Deploy() {
                             </TableCell>
 
                             <TableCell align="right">
-                              <MoreMenu row={row} />
+                              <MoreMenu row={row} queueJob={queueJob} />
                             </TableCell>
                           </TableRow>
                         );
