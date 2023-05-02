@@ -75,105 +75,111 @@ export default function PortManager({ resource }) {
   const [newPortName, setNewPortName] = useState("");
 
   return (
-    <Card sx={{mt:3}}>
-      <CardHeader title={"Details"} />
-      <CardContent>
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell>Internal</TableCell>
-                <TableCell>External</TableCell>
-                <TableCell align="right">Action</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {config.map((port) => (
+    <Container>
+      <Card sx={{ mt: 3 }}>
+        <CardHeader title={"Details"} />
+        <CardContent>
+          <TableContainer component={Paper}>
+            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+              <TableHead>
+                <TableRow>
+                  <TableCell>Name</TableCell>
+                  <TableCell>Internal</TableCell>
+                  <TableCell>External</TableCell>
+                  <TableCell align="right">Action</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {config.map((port) => (
+                  <TableRow
+                    key={"port_" + port.id}
+                    sx={{
+                      "&:last-child td, &:last-child th": { border: 0 },
+                    }}
+                  >
+                    <TableCell component="th" scope="row">
+                      {port.name}
+                    </TableCell>
+                    <TableCell>{port.internalPort}</TableCell>
+                    <TableCell>{port.externalPort}</TableCell>
+                    <TableCell align="right">
+                      <IconButton
+                        color="error"
+                        aria-label="delete port mapping"
+                        component="label"
+                        onClick={() =>
+                          setConfig(
+                            config.filter((item) => item.id !== port.id)
+                          )
+                        }
+                      >
+                        <Iconify icon="mdi:delete" />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))}
+
                 <TableRow
-                  key={"port_" + port.id}
                   sx={{
                     "&:last-child td, &:last-child th": { border: 0 },
                   }}
                 >
                   <TableCell component="th" scope="row">
-                    {port.name}
+                    <TextField
+                      label="Name"
+                      variant="standard"
+                      value={newPortName}
+                      onChange={(e) => {
+                        setNewPortName(e.target.value);
+                      }}
+                    />
                   </TableCell>
-                  <TableCell>{port.internalPort}</TableCell>
-                  <TableCell>{port.externalPort}</TableCell>
+                  <TableCell>
+                    <TextField
+                      label="Internal port"
+                      variant="standard"
+                      value={newPort}
+                      onChange={(e) => {
+                        setNewPort(e.target.value);
+                      }}
+                      fullWidth
+                    />
+                  </TableCell>
+                  <TableCell></TableCell>
                   <TableCell align="right">
                     <IconButton
-                      color="error"
-                      aria-label="delete port mapping"
+                      color="primary"
+                      aria-label="upload key"
                       component="label"
-                      onClick={() =>
-                        setConfig(config.filter((item) => item.id !== port.id))
-                      }
-                    >
-                      <Iconify icon="mdi:delete" />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              ))}
+                      disabled={!newPort}
+                      onClick={() => {
+                        console.log(newPort);
+                        if (!newPort) return;
 
-              <TableRow
-                sx={{
-                  "&:last-child td, &:last-child th": { border: 0 },
-                }}
-              >
-                <TableCell component="th" scope="row">
-                  <TextField
-                    label="Name"
-                    variant="standard"
-                    value={newPortName}
-                    onChange={(e) => {
-                      setNewPortName(e.target.value);
-                    }}
-                  />
-                </TableCell>
-                <TableCell>
-                  <TextField
-                    label="Internal port"
-                    variant="standard"
-                    value={newPort}
-                    onChange={(e) => {
-                      setNewPort(e.target.value);
-                    }}
-                    fullWidth
-                  />
-                </TableCell>
-                <TableCell></TableCell>
-                <TableCell align="right">
-                  <IconButton
-                    color="primary"
-                    aria-label="upload key"
-                    component="label"
-                    disabled={!newPort}
-                    onClick={() => {
-                      console.log(newPort);
-                      if (!newPort) return;
-
-                      setNewPort("");
-                      setNewPortName("");
-                      setConfig([
-                        ...config,
-                        {
-                            id: "12815800-e909-11ed-a05b-0242ac1202342" + config.length,
+                        setNewPort("");
+                        setNewPortName("");
+                        setConfig([
+                          ...config,
+                          {
+                            id:
+                              "12815800-e909-11ed-a05b-0242ac1202342" +
+                              config.length,
                             name: newPortName,
                             internalPort: newPort,
                             externalPort: 23000 + config.length,
-                        },
+                          },
                         ]);
-                    }}
-                  >
-                    <Iconify icon="mdi:plus" />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </CardContent>
-    </Card>
+                      }}
+                    >
+                      <Iconify icon="mdi:plus" />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </CardContent>
+      </Card>
+    </Container>
   );
 }
