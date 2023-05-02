@@ -48,7 +48,7 @@ export default function Profile() {
   const [newKeyName, setNewKeyName] = useState("");
 
   return (
-    <Page title="Deploy">
+    <Page title="Profile">
       <Container>
         <Stack spacing={3}>
           <Typography variant="h4" gutterBottom>

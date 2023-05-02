@@ -21,7 +21,6 @@ import {
   Alert,
   Link,
   Tooltip,
-  CircularProgress,
 } from "@mui/material";
 
 // hooks
@@ -239,9 +238,9 @@ export default function Deploy() {
           if (job.jobId === jobId) {
             job.type = response.type;
             job.status = response.status;
-            try{
-            job.name = rows.filter((row) => row.id === job.id)[0].name
-          }catch(e){}
+            try {
+              job.name = rows.filter((row) => row.id === job.id)[0].name;
+            } catch (e) {}
           }
           return job;
         })
@@ -317,7 +316,13 @@ export default function Deploy() {
           {resource.name}
         </Link>
       );
-    } else if (resource.type === "vm" && resource.gpu) {
+    } else {
+      return resource.name;
+    }
+  };
+
+  const renderResourceType = (resource) => {
+    if (resource.type === "vm" && resource.gpu) {
       const tooltip = "NVIDIA " + resource.gpu.name;
 
       return (
@@ -327,7 +332,7 @@ export default function Deploy() {
           display="flex"
           alignItems="center"
         >
-          {resource.name}
+          {resource.type}
           <Tooltip title={tooltip}>
             <span style={{ display: "flex", alignItems: "center" }}>
               <Iconify icon="bi:gpu-card" width={20} height={20} ml={1} />
@@ -336,7 +341,7 @@ export default function Deploy() {
         </Typography>
       );
     } else {
-      return resource.name;
+      return resource.type;
     }
   };
 
@@ -473,7 +478,9 @@ export default function Deploy() {
                             <TableCell align="left">
                               {renderResourceName(row)}
                             </TableCell>
-                            <TableCell align="left">{type}</TableCell>
+                            <TableCell align="left">
+                              {renderResourceType(row)}
+                            </TableCell>
                             <TableCell align="left">
                               <Label
                                 variant="ghost"

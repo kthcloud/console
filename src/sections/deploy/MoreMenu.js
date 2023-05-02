@@ -19,6 +19,7 @@ import {
 import Iconify from "../../components/Iconify";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import useAlert from "src/hooks/useAlert";
+import PortManager from "./PortManager";
 
 // ----------------------------------------------------------------------
 
@@ -29,6 +30,7 @@ export default function MoreMenu({ row, queueJob }) {
   const [textAreaValue, setTextAreaValue] = useState(null);
   const { setAlert } = useAlert();
   const [modalOpen, setModalOpen] = useState(false);
+  const [modalMode, setModalMode] = useState("");
 
   const fetchDeploymentYaml = () => {
     if (!initialized) return;
@@ -71,8 +73,7 @@ export default function MoreMenu({ row, queueJob }) {
 
       const response = await res.json();
 
-      queueJob(response)
-      
+      queueJob(response);
     } catch (err) {
       setAlert("Could not delete resource " + JSON.stringify(err), "error");
     }
@@ -124,31 +125,42 @@ export default function MoreMenu({ row, queueJob }) {
         {/* Modals */}
 
         <Dialog
-          fullWidth
+          fullWidth={modalMode === "actions" || modalMode === "ssh"}
+          fullScreen={modalMode === "ports"}
           open={modalOpen}
           onClose={() => {
             setModalOpen(false);
           }}
         >
           <DialogTitle>
-            {(row.type === "deployment" && "GitHub Actions YAML") ||
-              (row.type === "vm" && "SSH Command")}
+            {(modalMode === "actions" && "GitHub Actions YAML") ||
+              (modalMode === "ssh" && "SSH Command") ||
+              (modalMode === "ports" && "Manage ports")}
           </DialogTitle>
-          <DialogContent>
-            <TextareaAutosize
-              value={textAreaValue ? textAreaValue : "Loading..."}
-              style={{ width: "100%", border: 0 }}
-            />
+
+          <DialogContent
+          
+          sx={{bgcolor: "#f5f5f5"}}>
+            {(modalMode === "actions" || modalMode === "ssh") && (
+              <TextareaAutosize
+                value={textAreaValue ? textAreaValue : "Loading..."}
+                style={{ width: "100%", border: 0 }}
+              />
+            )}
+
+            {modalMode === "ports" && <PortManager resource={row} />}
           </DialogContent>
 
-          <DialogActions>
-            <CopyToClipboard
-              text={textAreaValue}
-              onCopy={() => setModalOpen(false)}
-            >
-              <Button>Copy to clipboard</Button>
-            </CopyToClipboard>
-            <Button onClick={() => setModalOpen(false)}>Close</Button>
+          <DialogActions >
+            {(modalMode === "ssh" || modalMode === "actions") && (
+              <CopyToClipboard
+                text={textAreaValue}
+                onCopy={() => setModalOpen(false)}
+              >
+                <Button>Copy to clipboard</Button>
+              </CopyToClipboard>
+            )}
+            <Button variant={modalMode==="ports" ? "contained" : "text"} onClick={() => setModalOpen(false)}>Close</Button>
           </DialogActions>
         </Dialog>
       </>
@@ -160,44 +172,13 @@ export default function MoreMenu({ row, queueJob }) {
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
         transformOrigin={{ vertical: "top", horizontal: "right" }}
       >
-        <MenuItem
-          sx={{ color: "text.secondary" }}
-          onClick={deleteResource}
-          disabled={row.status !== "resourceRunning"}
-        >
-          <ListItemIcon>
-            <Iconify icon="eva:trash-2-outline" width={24} height={24} />
-          </ListItemIcon>
-          <ListItemText
-            primary="Delete"
-            primaryTypographyProps={{ variant: "body2" }}
-          />
-        </MenuItem>
-
-        {row.type === "vm" && (
-          <MenuItem
-            component={RouterLink}
-            to="#"
-            sx={{ color: "text.secondary" }}
-            disabled={row.status !== "resourceRunning"}
-            onClick={() => attachGPU(row)}
-          >
-            <ListItemIcon>
-              <Iconify icon="bi:gpu-card" width={24} height={24} />
-            </ListItemIcon>
-            <ListItemText
-              primary={!row.gpu ? "Attach GPU" : "Detach GPU"}
-              primaryTypographyProps={{ variant: "body2" }}
-            />
-          </MenuItem>
-        )}
-
         {row.type === "vm" && (
           <MenuItem
             component={RouterLink}
             to="#"
             sx={{ color: "text.secondary" }}
             onClick={() => {
+              setModalMode("ssh");
               setTextAreaValue(row.connectionString);
               setIsOpen(false);
               setModalOpen(true);
@@ -220,6 +201,7 @@ export default function MoreMenu({ row, queueJob }) {
             to="#"
             sx={{ color: "text.secondary" }}
             onClick={() => {
+              setModalMode("actions");
               fetchDeploymentYaml();
               setIsOpen(false);
               setModalOpen(true);
@@ -235,6 +217,58 @@ export default function MoreMenu({ row, queueJob }) {
             />
           </MenuItem>
         )}
+
+        <MenuItem
+          component={RouterLink}
+          to="#"
+          sx={{ color: "text.secondary" }}
+          onClick={() => {
+            setModalMode("ports");
+            setIsOpen(false);
+            setModalOpen(true);
+          }}
+          disabled={row.status !== "resourceRunning"}
+        >
+          <ListItemIcon>
+            <Iconify icon="carbon:port-input" width={24} height={24} />
+          </ListItemIcon>
+          <ListItemText
+            primary="Manage ports"
+            primaryTypographyProps={{ variant: "body2" }}
+          />
+        </MenuItem>
+
+        {row.type === "vm" && (
+          <MenuItem
+            component={RouterLink}
+            to="#"
+            sx={{ color: "text.secondary" }}
+            disabled={row.status !== "resourceRunning"}
+            onClick={() => attachGPU(row)}
+          >
+            <ListItemIcon>
+              <Iconify icon="bi:gpu-card" width={24} height={24} />
+            </ListItemIcon>
+            <ListItemText
+              primary={!row.gpu ? "Attach GPU" : "Detach GPU"}
+              primaryTypographyProps={{ variant: "body2" }}
+            />
+          </MenuItem>
+        )}
+
+        <MenuItem
+          sx={{ color: "text.secondary" }}
+          onClick={deleteResource}
+          disabled={row.status !== "resourceRunning"}
+        >
+          <ListItemIcon>
+            <Iconify icon="eva:trash-2-outline" width={24} height={24} />
+          </ListItemIcon>
+          <ListItemText
+            primary="Delete"
+            primaryTypographyProps={{ variant: "body2" }}
+          />
+        </MenuItem>
       </Menu>
     </>
   );
