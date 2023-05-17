@@ -3,10 +3,13 @@ import { Navigate, useRoutes } from "react-router-dom";
 import DashboardLayout from "./layouts/dashboard";
 import LogoOnlyLayout from "./layouts/LogoOnlyLayout";
 //
-import Deploy from "./pages/Deploy";
-import Profile from "./pages/Profile";
-import NotFound from "./pages/Page404";
-import Status from "./pages/Status";
+import Edit from "./pages/edit";
+import Deploy from "./pages/deploy";
+import Profile from "./pages/profile";
+import Create from "./pages/create";
+
+import NotFound from "./pages/404";
+import Status from "./pages/status";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 // ----------------------------------------------------------------------
@@ -34,18 +37,23 @@ export default function Router() {
             </ProtectedRoute>
           ),
         },
-        // { path: "products", element: <Products /> },
-        // { path: "blog", element: <Blog /> },
+        {
+          path: "edit/:type/:id",
+          element: (
+            <ProtectedRoute>
+              <Edit/>
+            </ProtectedRoute>)
+        },
+        {
+          path: "create",
+          element: (
+            <ProtectedRoute>
+              <Create />
+            </ProtectedRoute>
+          ),
+        },
       ],
     },
-    // {
-    //   path: "login",
-    //   element: <Login />,
-    // },
-    // {
-    //   path: "register",
-    //   element: <Register />,
-    // },
     {
       path: "/",
       element: <LogoOnlyLayout />,

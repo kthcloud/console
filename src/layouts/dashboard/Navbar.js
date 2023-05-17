@@ -1,11 +1,20 @@
 import PropTypes from "prop-types";
 // material
 import { alpha, styled } from "@mui/material/styles";
-import { Box, Container, AppBar, Toolbar, Stack } from "@mui/material";
+import {
+  Box,
+  Container,
+  AppBar,
+  Toolbar,
+  Stack,
+  useTheme,
+  useMediaQuery,
+} from "@mui/material";
 // components
 import MenuPopover from "./Menu";
 import LoginButton from "./LoginButton";
 import Logo from "../../components/Logo";
+import Shortcuts from "./Shortcuts";
 
 // ----------------------------------------------------------------------
 
@@ -39,22 +48,25 @@ Navbar.propTypes = {
 };
 
 export default function Navbar({ onOpenSidebar }) {
+  const theme = useTheme();
+  const greaterThan = useMediaQuery(theme.breakpoints.up("lg"));
+  const smallerThan = useMediaQuery(theme.breakpoints.down("sm"));
+
+  const renderContainer = (children) => {
+    if (greaterThan || smallerThan) {
+      return <Container maxWidth="xl">{children}</Container>;
+    } else {
+      return children;
+    }
+  };
+
   return (
     <RootStyle>
-      {/* Remove this container if the logo should be out by the viewport edge */}
-      <Container maxWidth="xl">
+      {renderContainer(
         <ToolbarStyle sx={{ px: 0 }}>
           <Box sx={{ px: 0, py: 3, display: "inline-flex" }}>
             <Logo />
           </Box>
-          {/* <IconButton
-            onClick={onOpenSidebar}
-            sx={{ mr: 1, color: "text.primary", display: { lg: "none" } }}
-          >
-            <Iconify icon="eva:menu-2-fill" />
-          </IconButton> */}
-
-          {/* <Searchbar /> */}
           <Box sx={{ flexGrow: 1 }} />
 
           <Box sx={{ pl: 0, py: 3, display: "inline-flex" }}>
@@ -63,13 +75,13 @@ export default function Navbar({ onOpenSidebar }) {
               alignItems="center"
               spacing={{ xs: 0.5, sm: 1.5 }}
             >
-              {/* <LanguagePopover /> */}
+              <Shortcuts />
               <LoginButton />
               <MenuPopover />
             </Stack>
           </Box>
         </ToolbarStyle>
-      </Container>
+      )}
     </RootStyle>
   );
 }

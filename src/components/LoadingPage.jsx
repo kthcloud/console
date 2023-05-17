@@ -1,5 +1,5 @@
 import { CircularProgress, Grid } from "@mui/material";
-import Page from "../components/Page";
+import Page from "./Page";
 
 const LoadingPage = () => {
     const loadingMessages = [

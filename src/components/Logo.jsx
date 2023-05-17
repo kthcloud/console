@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 import { Link as RouterLink } from "react-router-dom";
 import { Box } from "@mui/material";
+import { useKeycloak } from "@react-keycloak/web";
 
 Logo.propTypes = {
   disabledLink: PropTypes.bool,
@@ -8,6 +9,8 @@ Logo.propTypes = {
 };
 
 export default function Logo({ disabledLink = false, sx }) {
+
+  const { initialized, keycloak } = useKeycloak();
   const logo = (
     <Box sx={{ width: 140, height: "auto", ...sx }}>
       <img
@@ -20,6 +23,10 @@ export default function Logo({ disabledLink = false, sx }) {
 
   if (disabledLink) {
     return <>{logo}</>;
+  }
+
+  if(initialized && keycloak.authenticated) {
+    return <RouterLink to="/deploy">{logo}</RouterLink>;
   }
 
   return <RouterLink to="/">{logo}</RouterLink>;

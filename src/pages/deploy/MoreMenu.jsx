@@ -19,7 +19,7 @@ import {
 import Iconify from "../../components/Iconify";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import useAlert from "src/hooks/useAlert";
-import PortManager from "./PortManager";
+import PortManager from "../../pages/edit/PortManager";
 
 // ----------------------------------------------------------------------
 
@@ -35,85 +35,9 @@ export default function MoreMenu({ row, queueJob }) {
   const fetchDeploymentYaml = () => {
     if (!initialized) return;
     if (textAreaValue) return;
-    fetch(
-      process.env.REACT_APP_DEPLOY_API_URL +
-        "/deployments/" +
-        row.id +
-        "/ciConfig",
-      {
-        method: "GET",
-        headers: {
-          Authorization: "Bearer " + keycloak.token,
-        },
-      }
-    )
-      .then((response) => response.json())
-      .then((result) => {
-        setTextAreaValue(result.config);
-      })
-      .catch((error) => {
-        console.error("Error fetching deployment yaml:", error);
-      });
+  
   };
 
-  const deleteResource = async () => {
-    if (!initialized) return;
-
-    try {
-      const res = await fetch(
-        process.env.REACT_APP_DEPLOY_API_URL + "/" + row.type + "s/" + row.id,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: "Bearer " + keycloak.token,
-          },
-        }
-      );
-      if (!res.ok) throw res;
-
-      const response = await res.json();
-
-      queueJob(response);
-    } catch (err) {
-      setAlert("Could not delete resource " + JSON.stringify(err), "error");
-    }
-    setIsOpen(false);
-  };
-
-  const attachGPU = (vm) => {
-    if (!initialized) return;
-    fetch(
-      process.env.REACT_APP_DEPLOY_API_URL +
-        "/" +
-        row.type +
-        "s/" +
-        row.id +
-        (!vm.gpu ? "/attachGpu" : "/detachGpu"),
-      {
-        method: "POST",
-        headers: {
-          Authorization: "Bearer " + keycloak.token,
-        },
-      }
-    )
-      .then((res) => {
-        if (!res.ok) throw res;
-        else
-          setAlert(
-            !vm.gpu ? "Attaching GPU..." : "Detaching GPU...",
-            "success"
-          );
-      })
-      .catch((err) => {
-        setAlert(
-          !vm.gpu
-            ? "Could not attach GPU "
-            : "Could not detach GPU " + JSON.stringify(err),
-          "error"
-        );
-      });
-    setIsOpen(false);
-  };
 
   return (
     <>
@@ -138,9 +62,7 @@ export default function MoreMenu({ row, queueJob }) {
               (modalMode === "ports" && "Manage ports")}
           </DialogTitle>
 
-          <DialogContent
-          
-          sx={{bgcolor: "#f5f5f5"}}>
+          <DialogContent sx={{ bgcolor: "#f5f5f5" }}>
             {(modalMode === "actions" || modalMode === "ssh") && (
               <TextareaAutosize
                 value={textAreaValue ? textAreaValue : "Loading..."}
@@ -151,7 +73,7 @@ export default function MoreMenu({ row, queueJob }) {
             {modalMode === "ports" && <PortManager resource={row} />}
           </DialogContent>
 
-          <DialogActions >
+          <DialogActions>
             {(modalMode === "ssh" || modalMode === "actions") && (
               <CopyToClipboard
                 text={textAreaValue}
@@ -160,7 +82,12 @@ export default function MoreMenu({ row, queueJob }) {
                 <Button>Copy to clipboard</Button>
               </CopyToClipboard>
             )}
-            <Button variant={modalMode==="ports" ? "contained" : "text"} onClick={() => setModalOpen(false)}>Close</Button>
+            <Button
+              variant={modalMode === "ports" ? "contained" : "text"}
+              onClick={() => setModalOpen(false)}
+            >
+              Close
+            </Button>
           </DialogActions>
         </Dialog>
       </>

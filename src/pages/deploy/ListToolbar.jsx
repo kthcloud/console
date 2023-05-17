@@ -46,7 +46,8 @@ export default function ListToolbar({
   numSelected,
   filterName,
   onFilterName,
-  loading
+  loading,
+  onDelete
 }) {
   return (
     <RootStyle
@@ -79,7 +80,7 @@ export default function ListToolbar({
 
       {numSelected > 0 ? (
         <Tooltip title="Delete">
-          <IconButton>
+          <IconButton onClick={onDelete}>
             <Iconify icon="eva:trash-2-fill" />
           </IconButton>
         </Tooltip>

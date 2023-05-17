@@ -35,7 +35,7 @@ export default function Menu() {
   return (
     <>
       <IconButton ref={anchorRef} onClick={handleOpen}>
-        <Iconify icon="eva:menu-outline" width={20} height={20} />
+        <Iconify icon="material-symbols:menu-rounded" width={20} height={20} />
       </IconButton>
 
       <MenuPopover
@@ -52,12 +52,59 @@ export default function Menu() {
           },
         }}
       >
+        {initialized ? (
+          <>
+            {keycloak.authenticated ? (
+              <>
+                <Box sx={{ mt: 1.5, px: 2.5 }}>
+                  <Typography
+                    variant="body2"
+                    sx={{ color: "text.secondary" }}
+                    noWrap
+                  >
+                    Manage
+                  </Typography>
+                </Box>
+
+                <Stack sx={{ p: 1 }}>
+                  <MenuItem
+                    to={"/deploy"}
+                    component={RouterLink}
+                    onClick={handleClose}
+                  >
+                    Deploy
+                  </MenuItem>
+                  <MenuItem
+                    to={"/create"}
+                    component={RouterLink}
+                    onClick={handleClose}
+                  >
+                    Create new
+                  </MenuItem>
+
+                  <MenuItem
+                    to={"/profile"}
+                    component={RouterLink}
+                    onClick={handleClose}
+                  >
+                    Profile
+                  </MenuItem>
+                </Stack>
+                <Divider sx={{ borderStyle: "dashed" }} />
+              </>
+            ) : null}
+          </>
+        ) : null}
+
         <Box sx={{ mt: 1.5, px: 2.5 }}>
           <Typography variant="body2" sx={{ color: "text.secondary" }} noWrap>
-            Beta program
+            kthcloud
           </Typography>
         </Box>
         <Stack sx={{ p: 1 }}>
+          <MenuItem to={"/"} component={RouterLink} onClick={handleClose}>
+            Status
+          </MenuItem>
           <MenuItem
             href={"https://discord.gg/MuHQd6QEtM"}
             component={Link}
@@ -65,7 +112,7 @@ export default function Menu() {
             target="_blank"
             rel="noopener noreferrer"
           >
-            Request an account
+            Request account
           </MenuItem>
           <MenuItem
             href={"https://mastodon.social/@kthcloud"}
@@ -74,118 +121,7 @@ export default function Menu() {
             target="_blank"
             rel="me"
           >
-            Status (Mastodon)
-          </MenuItem>
-          
-          {initialized ? (
-            <>
-              {keycloak.authenticated ? (
-                <MenuItem
-                  to={"/deploy"}
-                  component={RouterLink}
-                  onClick={handleClose}
-                >
-                  Deploy
-                </MenuItem>
-              ) : null}
-            </>
-          ) : null}
-        </Stack>
-
-        <Divider sx={{ borderStyle: "dashed" }} />
-
-        {/* DEV */}
-        <Box sx={{ mt: 1.5, px: 2.5 }}>
-          <Typography variant="body2" sx={{ color: "text.secondary" }} noWrap>
-            Development
-          </Typography>
-        </Box>
-
-        <Stack sx={{ p: 1 }}>
-          <MenuItem
-            href={"https://k8s.dev.cloud.cbh.kth.se"}
-            component={Link}
-            onClick={handleClose}
-          >
-            Kubernetes
-          </MenuItem>
-          <MenuItem
-            href={"https://proxy.dev.cloud.cbh.kth.se"}
-            component={Link}
-            onClick={handleClose}
-          >
-            Proxy
-          </MenuItem>
-        </Stack>
-        <Divider sx={{ borderStyle: "dashed" }} />
-
-        {/* PROD */}
-        <Box sx={{ mt: 1.5, px: 2.5 }}>
-          <Typography variant="body2" sx={{ color: "text.secondary" }} noWrap>
-            Production
-          </Typography>
-        </Box>
-
-        <Stack sx={{ p: 1 }}>
-          <MenuItem
-            href={"https://k8s.prod.cloud.cbh.kth.se"}
-            component={Link}
-            onClick={handleClose}
-          >
-            Kubernetes
-          </MenuItem>
-          <MenuItem
-            href={"https://proxy.prod.cloud.cbh.kth.se"}
-            component={Link}
-            onClick={handleClose}
-          >
-            Proxy
-          </MenuItem>
-        </Stack>
-        <Divider sx={{ borderStyle: "dashed" }} />
-
-        {/* INTERNAL */}
-        <Box sx={{ mt: 1.5, px: 2.5 }}>
-          <Typography variant="body2" sx={{ color: "text.secondary" }} noWrap>
-            Internal
-          </Typography>
-        </Box>
-
-        <Stack sx={{ p: 1 }}>
-          <MenuItem
-            href={"https://dashboard.cloud.cbh.kth.se"}
-            component={Link}
-            onClick={handleClose}
-          >
-            Dashboard
-          </MenuItem>
-          <MenuItem
-            href={"https://k8s.cloud.cbh.kth.se"}
-            component={Link}
-            onClick={handleClose}
-          >
-            Kubernetes
-          </MenuItem>
-          <MenuItem
-            href={"https://proxy.cloud.cbh.kth.se"}
-            component={Link}
-            onClick={handleClose}
-          >
-            Proxy
-          </MenuItem>
-          <MenuItem
-            href={"https://iam.cloud.cbh.kth.se"}
-            component={Link}
-            onClick={handleClose}
-          >
-            IAM
-          </MenuItem>
-          <MenuItem
-            href={"https://dns.cloud.cbh.kth.se"}
-            component={Link}
-            onClick={handleClose}
-          >
-            DNS
+            Mastodon
           </MenuItem>
         </Stack>
       </MenuPopover>
