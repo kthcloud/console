@@ -1,11 +1,18 @@
 import { Chip, CircularProgress, Stack } from "@mui/material";
 import { sentenceCase } from "change-case";
-import Iconify from "../../components/Iconify";
+import Iconify from "./Iconify";
+import useResource from "src/hooks/useResource";
 
-export default function JobList({ jobs, rows, setJobs }) {
-  
-    const handleDelete = (job) => {
-    setJobs(jobs.filter((j) => !(j.id === job.id && j.status === job.status && j.type === job.type )));
+export default function JobList() {
+  const { jobs, setJobs } = useResource();
+
+  const handleDelete = (job) => {
+    setJobs(
+      jobs.filter(
+        (j) =>
+          !(j.id === job.id && j.status === job.status && j.type === job.type)
+      )
+    );
   };
 
   return (

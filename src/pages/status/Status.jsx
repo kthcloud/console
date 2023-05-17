@@ -1,22 +1,21 @@
-import { useLocation } from "react-router-dom";
-// @mui
+// mui
 import { useTheme } from "@mui/material/styles";
-import { Grid, Container, Typography, Alert, AlertTitle } from "@mui/material";
+import { Grid, Container, Typography } from "@mui/material";
+
 // components
-import Page from "../components/Page";
-import useInterval from "../utils/useInterval";
+import Page from "../../components/Page";
+import useInterval from "../../hooks/useInterval";
 import { useState, useEffect } from "react";
+
 // sections
-import {
-  TreeMap,
-  WidgetSummary,
-  ServerStats,
-  LineChart,
-} from "../sections/status";
+import TreeMap from "./TreeMap";
+import WidgetSummary from "./WidgetSummary";
+import ServerStats from "./ServerStats";
+import LineChart from "./LineChart";
 
 // ----------------------------------------------------------------------
 
-export default function Status() {
+export function Status() {
   const [statusData, setStatusData] = useState([]);
   const [cpuCapacities, setCpuCapacities] = useState([]);
   const [ramCapacities, setRamCapacities] = useState([]);
@@ -24,7 +23,6 @@ export default function Status() {
   const [overviewData, _setOverviewData] = useState([]);
   const [statusLock, setStatusLock] = useState(false);
   const [capacitiesLock, setCapacitiesLock] = useState(false);
-  const location = useLocation();
 
   const setOverviewData = (data) => {
     let cpuTemp = [];
@@ -97,7 +95,7 @@ export default function Status() {
   };
 
   const getStatusData = () => {
-    if(statusLock) return;
+    if (statusLock) return;
     setStatusLock(true);
     fetch(process.env.REACT_APP_API_URL + "/landing/v2/status?n=100", {
       method: "GET",
@@ -154,9 +152,8 @@ export default function Status() {
       });
   };
 
-  useEffect(() => {
-    getStats();
-  }, []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(getStats, []);
 
   // Capacities
   const [ram, setRam] = useState(0);
@@ -164,7 +161,7 @@ export default function Status() {
   const [gpus, setGpus] = useState(0);
 
   const getCapacities = () => {
-    if(capacitiesLock) return;
+    if (capacitiesLock) return;
     setCapacitiesLock(true);
     fetch(process.env.REACT_APP_API_URL + "/landing/v2/capacities?n=1", {
       method: "GET",
@@ -212,14 +209,6 @@ export default function Status() {
   return (
     <Page title="Dashboard">
       <Container maxWidth="xl">
-        {location.search.includes("sotl") && (
-          <Alert severity="info" sx={{ mb: 5 }} elevation={3}>
-            <AlertTitle>KTH SoTL 2023</AlertTitle>
-            SoTL participants: Join us in room D33 for demo sessions as 13:45
-            and 15:15. Interested in the project?{" "}
-            <a href="https://discord.gg/MuHQd6QEtM">Request an account.</a>
-          </Alert>
-        )}
         <Typography variant="h4" sx={{}}>
           Welcome to kthcloud
         </Typography>

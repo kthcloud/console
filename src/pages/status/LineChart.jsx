@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 import merge from "lodash/merge";
 import ReactApexChart from "react-apexcharts";
 // @mui
@@ -33,22 +32,54 @@ const ChartWrapperStyle = styled("div")(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-export default function TreeMap({ title, subheader, chartData, chartColors }) {
+export default function LineChart({
+  title,
+  subheader,
+  chartData,
+  chartColors,
+}) {
   const chartOptions = merge(BaseOptionChart(), {
     plotOptions: { treemap: {} },
-    legend: { floating: true, horizontalAlign: "center" },
-    style: {
-      colors: chartColors,
+    xaxis: {
+      type: "datetime",
+      labels: {
+        style: {
+          colors: chartColors,
+        },
+      },
+    },
+    chart: { animations: { enabled: false } },
+
+    markers: {
+      size: 0,
+    },
+
+    tooltip: {
+      enabled: true,
+    },
+    dataLabels: {
+      enabled: false,
+    },
+
+    legend: {
+      show: true,
+      floating: true,
+      horizontalAlign: "right",
+      onItemClick: {
+        toggleDataSeries: false,
+      },
+      position: "top",
     },
   });
+
   return (
     <Card>
       <CardContent>
         <CardHeader title={title} subheader={subheader} />
         <ChartWrapperStyle dir="ltr">
           <ReactApexChart
-            type="treemap"
-            series={[{ data: chartData }]}
+            type="line"
+            series={chartData}
             height="100%"
             width="100%"
             options={chartOptions}
