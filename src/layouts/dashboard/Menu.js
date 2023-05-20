@@ -32,6 +32,19 @@ export default function Menu() {
 
   const { keycloak, initialized } = useKeycloak();
 
+  const shouldRenderAdmin = () => {
+    if (!initialized) return false;
+    if (!keycloak) return false;
+    if (!keycloak.authenticated) return false;
+
+    keycloak.loadUserInfo();
+
+    if (!keycloak.userInfo) return false;
+
+    if (!Object.hasOwn(keycloak.userInfo, "groups")) return false;
+    return keycloak.userInfo.groups.includes("/admin");
+  };
+
   return (
     <>
       <IconButton ref={anchorRef} onClick={handleOpen}>
@@ -52,9 +65,9 @@ export default function Menu() {
           },
         }}
       >
-        {initialized ? (
+        {initialized && (
           <>
-            {keycloak.authenticated ? (
+            {keycloak.authenticated && (
               <>
                 <Box sx={{ mt: 1.5, px: 2.5 }}>
                   <Typography
@@ -92,9 +105,9 @@ export default function Menu() {
                 </Stack>
                 <Divider sx={{ borderStyle: "dashed" }} />
               </>
-            ) : null}
+            )}
           </>
-        ) : null}
+        )}
 
         <Box sx={{ mt: 1.5, px: 2.5 }}>
           <Typography variant="body2" sx={{ color: "text.secondary" }} noWrap>
@@ -124,6 +137,119 @@ export default function Menu() {
             Mastodon
           </MenuItem>
         </Stack>
+
+        {shouldRenderAdmin() && (
+          <>
+            <Divider sx={{ borderStyle: "dashed" }} />
+
+            {/* DEV */}
+            <Box sx={{ mt: 1.5, px: 2.5 }}>
+              <Typography
+                variant="body2"
+                sx={{ color: "text.secondary" }}
+                noWrap
+              >
+                Development
+              </Typography>
+            </Box>
+
+            <Stack sx={{ p: 1 }}>
+              <MenuItem
+                href={"https://k8s.dev.cloud.cbh.kth.se"}
+                component={Link}
+                onClick={handleClose}
+              >
+                Kubernetes
+              </MenuItem>
+              <MenuItem
+                href={"https://proxy.dev.cloud.cbh.kth.se"}
+                component={Link}
+                onClick={handleClose}
+              >
+                Proxy
+              </MenuItem>
+            </Stack>
+            <Divider sx={{ borderStyle: "dashed" }} />
+
+            {/* PROD */}
+            <Box sx={{ mt: 1.5, px: 2.5 }}>
+              <Typography
+                variant="body2"
+                sx={{ color: "text.secondary" }}
+                noWrap
+              >
+                Production
+              </Typography>
+            </Box>
+
+            <Stack sx={{ p: 1 }}>
+              <MenuItem
+                href={"https://k8s.prod.cloud.cbh.kth.se"}
+                component={Link}
+                onClick={handleClose}
+              >
+                Kubernetes
+              </MenuItem>
+              <MenuItem
+                href={"https://proxy.prod.cloud.cbh.kth.se"}
+                component={Link}
+                onClick={handleClose}
+              >
+                Proxy
+              </MenuItem>
+            </Stack>
+            <Divider sx={{ borderStyle: "dashed" }} />
+
+            {/* INTERNAL */}
+            <Box sx={{ mt: 1.5, px: 2.5 }}>
+              <Typography
+                variant="body2"
+                sx={{ color: "text.secondary" }}
+                noWrap
+              >
+                Internal
+              </Typography>
+            </Box>
+
+            <Stack sx={{ p: 1 }}>
+              <MenuItem
+                href={"https://dashboard.cloud.cbh.kth.se"}
+                component={Link}
+                onClick={handleClose}
+              >
+                Dashboard
+              </MenuItem>
+              <MenuItem
+                href={"https://k8s.cloud.cbh.kth.se"}
+                component={Link}
+                onClick={handleClose}
+              >
+                Kubernetes
+              </MenuItem>
+              <MenuItem
+                href={"https://proxy.cloud.cbh.kth.se"}
+                component={Link}
+                onClick={handleClose}
+              >
+                Proxy
+              </MenuItem>
+              <MenuItem
+                href={"https://iam.cloud.cbh.kth.se"}
+                component={Link}
+                onClick={handleClose}
+              >
+                IAM
+              </MenuItem>
+              <MenuItem
+                href={"https://dns.cloud.cbh.kth.se"}
+                component={Link}
+                onClick={handleClose}
+              >
+                DNS
+              </MenuItem>
+            </Stack>
+          </>
+        )}
       </MenuPopover>
     </>
   );
