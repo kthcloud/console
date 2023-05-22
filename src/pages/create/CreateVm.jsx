@@ -12,6 +12,7 @@ import {
   MenuItem,
   Stack,
   Typography,
+  FormHelperText,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 
@@ -19,6 +20,7 @@ import { getUser } from "src/api/deploy/users";
 import { useKeycloak } from "@react-keycloak/web";
 import { useSnackbar } from "notistack";
 import { createVM } from "src/api/deploy/vms";
+import { Link } from "react-router-dom";
 
 export default function CreateVm({ finished }) {
   const [name, setName] = useState("");
@@ -154,6 +156,11 @@ export default function CreateVm({ finished }) {
                   </MenuItem>
                 ))}
               </Select>
+              <FormHelperText>
+                {" "}
+                Don't have a key yet? Upload one in your{" "}
+                <Link to="/profile">profile</Link>.
+              </FormHelperText>
             </FormControl>
           )}
         </CardContent>
