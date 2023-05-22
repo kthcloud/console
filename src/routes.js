@@ -41,8 +41,9 @@ export default function Router() {
           path: "edit/:type/:id",
           element: (
             <ProtectedRoute>
-              <Edit/>
-            </ProtectedRoute>)
+              <Edit />
+            </ProtectedRoute>
+          ),
         },
         {
           path: "create",

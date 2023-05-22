@@ -7,9 +7,7 @@ const ProtectedRoute = ({ children }) => {
 
   const renderPage = (children) => {
     if (!initialized) {
-      return (
-       <LoadingPage/>
-      );
+      return <LoadingPage />;
     } else if (initialized && keycloak.authenticated) {
       return children;
     } else {

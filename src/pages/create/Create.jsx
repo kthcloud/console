@@ -3,21 +3,17 @@ import {
   Card,
   CardContent,
   Container,
-  TextField,
-  InputAdornment,
   Typography,
   Stack,
   CardHeader,
-  Button,
-  Chip,
   ToggleButtonGroup,
   ToggleButton,
 } from "@mui/material";
 
 //hooks
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useKeycloak } from "@react-keycloak/web";
-import useAlert from "src/hooks/useAlert";
+import { useSnackbar } from "notistack";
 import useResource from "src/hooks/useResource";
 
 // utils
@@ -37,14 +33,16 @@ import { useNavigate } from "react-router-dom";
 
 export const Create = () => {
   const { initialized } = useKeycloak();
-  const { setAlert } = useAlert();
+  const { enqueueSnackbar } = useSnackbar();
   const { queueJob } = useResource();
   const [alignment, setAlignment] = useState("deployment");
   const navigate = useNavigate();
 
   const finished = (job, stay) => {
     queueJob(job);
-    setAlert(sentenceCase(alignment) + " created successfully", "success");
+    enqueueSnackbar(sentenceCase(alignment) + " created successfully", {
+      variant: "success",
+    });
     if (!stay) navigate("/edit/" + alignment + "/" + job.id);
   };
 

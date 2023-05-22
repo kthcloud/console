@@ -1,7 +1,7 @@
 // hooks
 import { useState, createContext, useEffect } from "react";
 import useInterval from "src/hooks/useInterval";
-import useAlert from "src/hooks/useAlert";
+import { useSnackbar } from "notistack";
 import { useKeycloak } from "@react-keycloak/web";
 
 // api
@@ -26,14 +26,19 @@ export const ResourceContextProvider = ({ children }) => {
   const [rows, setRows] = useState([]);
   const [jobs, setJobs] = useState([]);
   const [initialLoad, setInitialLoad] = useState(false);
-  const { setAlert } = useAlert();
-
+  const { enqueueSnackbar } = useSnackbar();
 
   const refreshJob = async (jobId) => {
     if (!initialized) return;
 
     try {
       const response = await getJob(jobId, keycloak.token);
+
+      if (response.status === "jobFinished") {
+        setTimeout(() => {
+          setJobs((jobs) => jobs.filter((job) => job.jobId !== jobId));
+        }, 5000);
+      }
 
       // set type and status
       setJobs((jobs) =>
@@ -51,15 +56,15 @@ export const ResourceContextProvider = ({ children }) => {
         })
       );
     } catch (error) {
-      setAlert(
+      enqueueSnackbar(
         "Error refreshing job " + jobId + ": " + JSON.stringify(error),
-        "error"
+        { variant: "error" }
       );
     }
   };
 
   const queueJob = (job) => {
-    console.log("Queuing job", JSON.stringify(job))
+    console.log("Queuing job", JSON.stringify(job));
     if (!job) return;
     setJobs((jobs) => [...jobs, job]);
   };
@@ -77,7 +82,9 @@ export const ResourceContextProvider = ({ children }) => {
       mergeLists(await Promise.all(promises));
       setInitialLoad(true);
     } catch (error) {
-      setAlert("Error fetching resources: " + JSON.stringify(error), "error");
+      enqueueSnackbar("Error fetching resources: " + JSON.stringify(error), {
+        variant: "error",
+      });
     }
   };
 

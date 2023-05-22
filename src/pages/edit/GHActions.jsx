@@ -24,11 +24,16 @@ const GHActions = ({ resource }) => {
     if (!initialized) return;
     if (textAreaValue) return;
     loadYaml();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <Card sx={{ boxShadow: 20 }}>
-      <CardHeader title="GitHub Actions YAML" subheader={"Run this workflow to publish your app"}/>
+      <CardHeader
+        title="GitHub Actions YAML"
+        subheader={"Run this workflow to publish your app"}
+      />
       <CardContent>
         <TextareaAutosize
           value={textAreaValue ? textAreaValue : "Loading..."}

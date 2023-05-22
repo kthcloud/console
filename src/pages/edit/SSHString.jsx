@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import {
   Button,
   Card,
@@ -10,11 +9,16 @@ import {
 import { CopyToClipboard } from "react-copy-to-clipboard";
 
 const SSHString = ({ resource }) => {
-  const [textAreaValue, setTextAreaValue] = useState(resource.connectionString);
+  const textAreaValue = resource.connectionString;
 
   return (
     <Card sx={{ boxShadow: 20 }}>
-      <CardHeader title="SSH Connection string" subheader={"Run this in your terminal to access the VM. Make sure you are using the correct SSH key."}/>
+      <CardHeader
+        title="SSH Connection string"
+        subheader={
+          "Run this in your terminal to access the VM. Make sure you are using the correct SSH key."
+        }
+      />
       <CardContent>
         <TextareaAutosize
           value={textAreaValue ? textAreaValue : "Loading..."}

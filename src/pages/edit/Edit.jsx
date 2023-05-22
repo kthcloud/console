@@ -18,7 +18,7 @@ import { AccountCircle } from "@mui/icons-material";
 //hooks
 import { useState, useEffect } from "react";
 import { useKeycloak } from "@react-keycloak/web";
-import useAlert from "src/hooks/useAlert";
+import { useSnackbar } from "notistack";
 import useResource from "src/hooks/useResource";
 import { useParams, useNavigate } from "react-router-dom";
 
@@ -42,7 +42,7 @@ import SSHString from "./SSHString";
 export function Edit() {
   const { keycloak, initialized } = useKeycloak();
   const [resource, setResource] = useState(null);
-  const { setAlert } = useAlert();
+  const { enqueueSnackbar } = useSnackbar();
   const [privateMode, setPrivateMode] = useState(false);
   const [envs, setEnvs] = useState([]);
   const [ports, setPorts] = useState([]);
@@ -63,11 +63,11 @@ export function Edit() {
     if (!row) return;
 
     setResource(row);
-    if (type == "deployment" && !loaded) {
+    if (type === "deployment" && !loaded) {
       setPrivateMode(row.private);
       setEnvs(row.envs);
     }
-    if (type == "vm" && !loaded) {
+    if (type === "vm" && !loaded) {
       setPorts(row.ports);
     }
     setLoaded(true);
@@ -79,10 +79,18 @@ export function Edit() {
 
   const deleteResource = async () => {
     try {
-      if (type === "vm") queueJob( await deleteVM(id, keycloak.token));
-      if (type === "deployment") queueJob(await deleteDeployment(id, keycloak.token));
+      let res = null;
+      if (type === "vm") res = await deleteVM(id, keycloak.token);
+      if (type === "deployment")
+        res = await deleteDeployment(id, keycloak.token);
+
+      if (res) {
+        queueJob(res);
+        enqueueSnackbar("Resource deleting... ", { variant: "info" });
+        navigate("/deploy");
+      }
     } catch (err) {
-      setAlert("Could not delete resource " + JSON.stringify(err), "error");
+      enqueueSnackbar(err, { variant: "error" });
     }
   };
 
@@ -97,20 +105,18 @@ export function Edit() {
         );
         queueJob(res);
       } catch (err) {
-        setAlert("Could not update resource " + JSON.stringify(err), "error");
+        enqueueSnackbar("Could not update resource " + JSON.stringify(err), {
+          variant: "error",
+        });
       }
-    }else if (type === "vm") {
+    } else if (type === "vm") {
       try {
-        const res = await updateVM(
-          id,
-          ports,
-          2,
-          2,
-          keycloak.token
-        );
+        const res = await updateVM(id, ports, 2, 2, keycloak.token);
         queueJob(res);
       } catch (err) {
-        setAlert("Could not update resource " + JSON.stringify(err), "error");
+        enqueueSnackbar("Could not update resource " + JSON.stringify(err), {
+          variant: "error",
+        });
       }
     }
   };
@@ -181,9 +187,9 @@ export function Edit() {
                               );
                               queueJob(res);
                             } catch (e) {
-                              setAlert(
+                              enqueueSnackbar(
                                 "Could not attach GPU " + JSON.stringify(e),
-                                "error"
+                                { variant: "error" }
                               );
                             }
                           }}

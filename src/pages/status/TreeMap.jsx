@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 import merge from "lodash/merge";
 import ReactApexChart from "react-apexcharts";
 // @mui
@@ -42,7 +41,7 @@ export default function TreeMap({ title, subheader, chartData, chartColors }) {
     },
   });
   return (
-    <Card >
+    <Card>
       <CardContent>
         <CardHeader title={title} subheader={subheader} />
         <ChartWrapperStyle dir="ltr">

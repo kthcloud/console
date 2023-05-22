@@ -3,7 +3,6 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle,
   Paper,
   Stack,
   Table,
@@ -18,7 +17,6 @@ import {
 import { useState } from "react";
 
 import Iconify from "src/components/Iconify";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 const ResourceComparisonTable = () => {
   const useCases = [
@@ -99,15 +97,17 @@ const ResourceComparisonTable = () => {
       <Typography variant="body2">
         <b>Kubernetes Deployment</b>
         <br />
-        Used for stateless <u>frontend</u> and <u>backend</u> services. Allows for CI/CD through GitHub Actions.
+        Used for stateless <u>frontend</u> and <u>backend</u> services. Allows
+        for CI/CD through GitHub Actions.
       </Typography>
 
       <Typography variant="body2">
         <b>VM (Virtual Machine)</b>
         <br />
         Provides the ability to run an operating system directly. More versatile
-        but deployment and maintenance will be more difficult. Ideal for <u>GPU
-        compute</u> and <u>databases</u>, anything that requires <u>persistent storage</u>.
+        but deployment and maintenance will be more difficult. Ideal for{" "}
+        <u>GPU compute</u> and <u>databases</u>, anything that requires{" "}
+        <u>persistent storage</u>.
       </Typography>
 
       <Stack spacing={3} direction="row">

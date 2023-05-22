@@ -198,6 +198,7 @@ export function Status() {
 
   useEffect(() => {
     getCapacities();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useInterval(() => {

@@ -1,1 +1,1 @@
-export {Deploy as default} from "./Deploy";
+export { Deploy as default } from "./Deploy";

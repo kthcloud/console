@@ -8,22 +8,21 @@ import ThemeProvider from "./theme";
 // components
 import ScrollToTop from "./components/ScrollToTop";
 import { BaseOptionChartStyle } from "./components/chart/BaseOptionChart";
-import { AlertProvider } from "./contexts/AlertContext";
 import { ResourceContextProvider } from "./contexts/ResourceContext";
-
+import { SnackbarProvider } from "notistack";
 // ----------------------------------------------------------------------
 
 export default function App() {
   return (
     <ReactKeycloakProvider authClient={keycloak}>
       <ResourceContextProvider>
-        <AlertProvider>
+        <SnackbarProvider maxSnack={10}>
           <ThemeProvider>
             <ScrollToTop />
             <BaseOptionChartStyle />
             <Router />
           </ThemeProvider>
-        </AlertProvider>
+        </SnackbarProvider>
       </ResourceContextProvider>
     </ReactKeycloakProvider>
   );

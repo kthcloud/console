@@ -9,7 +9,7 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import LoadingPage from "../../components/LoadingPage";
 import { useKeycloak } from "@react-keycloak/web";
-import useAlert from "src/hooks/useAlert";
+import { useSnackbar } from "notistack";
 import { sentenceCase } from "change-case";
 
 // material
@@ -31,7 +31,6 @@ import {
 import Page from "../../components/Page";
 
 import { AccountCircle, Email } from "@mui/icons-material";
-import useInterval from "src/hooks/useInterval";
 import { getUser } from "src/api/deploy/users";
 
 export function Profile() {
@@ -42,8 +41,7 @@ export function Profile() {
   const [newKey, setNewKey] = useState("");
   const [newKeyName, setNewKeyName] = useState("");
   const [changeInKeys, setChangeInKeys] = useState(false);
-  const { setAlert } = useAlert();
-
+  const { enqueueSnackbar } = useSnackbar();
   const loadProfile = async () => {
     if (!initialized) return -1;
 
@@ -51,7 +49,7 @@ export function Profile() {
       const response = await getUser(keycloak.subject, keycloak.token);
       setUser(response);
     } catch (error) {
-      setAlert("Error fetching profile: " + error, "error");
+      enqueueSnackbar("Error fetching profile: " + error, { variant: "error" });
     }
   };
 
@@ -88,9 +86,9 @@ export function Profile() {
 
       const response = await res.json();
       console.log(response);
-      setAlert("Successfully saved details", "success");
+      enqueueSnackbar("Successfully saved details", { variant: "success" });
     } catch (error) {
-      setAlert("Error applying changes: " + error, "error");
+      enqueueSnackbar("Error applying changes: " + error, { variant: "error" });
     }
   };
 
@@ -124,7 +122,7 @@ export function Profile() {
                 Profile
               </Typography>
 
-              <Card sx={{boxShadow: 20}}>
+              <Card sx={{ boxShadow: 20 }}>
                 <CardHeader title={"Details"} />
                 <CardContent>
                   {/* Form with user data pre filled */}
@@ -194,7 +192,7 @@ export function Profile() {
                 </CardContent>
               </Card>
 
-              <Card sx={{boxShadow: 20}}>
+              <Card sx={{ boxShadow: 20 }}>
                 <CardHeader title={"Quotas"} />
                 <CardContent>
                   <Stack spacing={3} direction={"row"}>
@@ -212,7 +210,7 @@ export function Profile() {
                               marginLeft: ".75em",
                             }}
                           >
-                            {user.usage.cpuCores  + "/" + user.quota.cpuCores}
+                            {user.usage.cpuCores + "/" + user.quota.cpuCores}
                           </b>
                         </span>
                       }
@@ -267,7 +265,9 @@ export function Profile() {
                               marginLeft: ".75em",
                             }}
                           >
-                            {user.usage.deployments + "/" + user.quota.deployments}
+                            {user.usage.deployments +
+                              "/" +
+                              user.quota.deployments}
                           </b>
                         </span>
                       }
@@ -276,7 +276,7 @@ export function Profile() {
                 </CardContent>
               </Card>
 
-              <Card sx={{boxShadow: 20}}> 
+              <Card sx={{ boxShadow: 20 }}>
                 <CardHeader
                   title={"SSH keys"}
                   subheader={"Upload your public keys to enable SSH"}

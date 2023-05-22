@@ -2,14 +2,9 @@
 import {
   Button,
   TextField,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
   DialogContentText,
   Card,
   CardContent,
-  CardActions,
   CardHeader,
   TableCell,
   TableContainer,
@@ -24,21 +19,18 @@ import {
 import { useState } from "react";
 import Iconify from "../../components/Iconify";
 import { createDeployment } from "src/api/deploy/deployments";
-import useResource from "src/hooks/useResource";
-import useAlert from "src/hooks/useAlert";
-import { create } from "lodash";
+import { useSnackbar } from "notistack";
 import { useKeycloak } from "@react-keycloak/web";
 
 export default function CreateDeployment({ finished }) {
   const [name, setName] = useState("");
-  const [content, setContent] = useState("");
   const [cleaned, setCleaned] = useState("");
   const { initialized, keycloak } = useKeycloak();
 
   const [envs, setEnvs] = useState([]);
   const [newEnvName, setNewEnvName] = useState("");
   const [newEnvValue, setNewEnvValue] = useState("");
-  const { setAlert } = useAlert();
+  const { enqueueSnackbar } = useSnackbar();
 
   const handleCreate = async (stay) => {
     if (!initialized) return;
@@ -47,14 +39,15 @@ export default function CreateDeployment({ finished }) {
       finished(job, stay);
       if (stay) {
         setName("");
-        setContent("");
         setCleaned("");
         setEnvs([]);
         setNewEnvName("");
         setNewEnvValue("");
       }
     } catch (e) {
-      setAlert("Error creating deployment " + JSON.stringify(e), "error");
+      enqueueSnackbar("Error creating deployment " + JSON.stringify(e), {
+        variant: "error",
+      });
     }
   };
 

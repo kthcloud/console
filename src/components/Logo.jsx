@@ -9,7 +9,6 @@ Logo.propTypes = {
 };
 
 export default function Logo({ disabledLink = false, sx }) {
-
   const { initialized, keycloak } = useKeycloak();
   const logo = (
     <Box sx={{ width: 140, height: "auto", ...sx }}>
@@ -25,7 +24,7 @@ export default function Logo({ disabledLink = false, sx }) {
     return <>{logo}</>;
   }
 
-  if(initialized && keycloak.authenticated) {
+  if (initialized && keycloak.authenticated) {
     return <RouterLink to="/deploy">{logo}</RouterLink>;
   }
 

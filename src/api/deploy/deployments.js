@@ -24,7 +24,17 @@ export const deleteDeployment = async (id, token) => {
       },
     }
   );
-  if (!res.ok) throw res;
+
+  if (!res.ok) {
+    const body = await res.json();
+    if (
+      Object.hasOwn(body, "errors") &&
+      Array.isArray(body.errors) &&
+      body.errors.length > 0
+    )
+      throw body.errors[0].msg;
+    else throw res;
+  }
 
   return await res.json();
 };
@@ -40,24 +50,33 @@ export const getDeploymentYaml = async (id, token) => {
     }
   );
 
-  if (!res.ok) throw res;
+  if (!res.ok) {
+    try {
+      let body = await res.body.getReader().read();
+      throw body;
+    } catch (e) {
+      throw res;
+    }
+  }
   return await res.json();
 };
-
 
 export const createDeployment = async (name, envs, token) => {
   const body = {
     name,
-    envs
+    envs,
   };
 
-  const res =  await fetch(process.env.REACT_APP_DEPLOY_API_URL + "/deployments", {
-    method: "POST",
-    headers: {
-      Authorization: "Bearer " + token,
-    },
-    body: JSON.stringify(body),
-  });
+  const res = await fetch(
+    process.env.REACT_APP_DEPLOY_API_URL + "/deployments",
+    {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+      body: JSON.stringify(body),
+    }
+  );
 
   if (!res.ok) throw res;
   return await res.json();
@@ -66,16 +85,19 @@ export const createDeployment = async (name, envs, token) => {
 export const updateDeployment = async (id, envs, privateMode, token) => {
   const body = {
     envs: envs,
-    private: privateMode
+    private: privateMode,
   };
 
-  const res =  await fetch(process.env.REACT_APP_DEPLOY_API_URL + "/deployments/" + id, {
-    method: "POST",
-    headers: {
-      Authorization: "Bearer " + token,
-    },
-    body: JSON.stringify(body),
-  });
+  const res = await fetch(
+    process.env.REACT_APP_DEPLOY_API_URL + "/deployments/" + id,
+    {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+      body: JSON.stringify(body),
+    }
+  );
 
   if (!res.ok) throw res;
   return await res.json();

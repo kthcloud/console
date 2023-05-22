@@ -12,10 +12,8 @@ import { TextField, IconButton } from "@mui/material";
 import Iconify from "../../components/Iconify";
 
 export default function EnvManager({ resource, envs, setEnvs }) {
-
   const [newEnvName, setNewEnvName] = useState("");
   const [newEnvValue, setNewEnvValue] = useState("");
-
 
   return (
     <TableContainer component={Paper}>
@@ -28,31 +26,32 @@ export default function EnvManager({ resource, envs, setEnvs }) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {Array.isArray(envs) && envs.map((env) => (
-            <TableRow
-              key={"env" + env.name}
-              sx={{
-                "&:last-child td, &:last-child th": { border: 0 },
-              }}
-            >
-              <TableCell component="th" scope="row">
-                {env.name}
-              </TableCell>
-              <TableCell>{env.value}</TableCell>
-              <TableCell align="right">
-                <IconButton
-                  color="error"
-                  aria-label="delete env"
-                  component="label"
-                  onClick={() =>
-                    setEnvs(envs.filter((item) => item.name !== env.name))
-                  }
-                >
-                  <Iconify icon="mdi:delete" />
-                </IconButton>
-              </TableCell>
-            </TableRow>
-          ))}
+          {Array.isArray(envs) &&
+            envs.map((env) => (
+              <TableRow
+                key={"env" + env.name}
+                sx={{
+                  "&:last-child td, &:last-child th": { border: 0 },
+                }}
+              >
+                <TableCell component="th" scope="row">
+                  {env.name}
+                </TableCell>
+                <TableCell>{env.value}</TableCell>
+                <TableCell align="right">
+                  <IconButton
+                    color="error"
+                    aria-label="delete env"
+                    component="label"
+                    onClick={() =>
+                      setEnvs(envs.filter((item) => item.name !== env.name))
+                    }
+                  >
+                    <Iconify icon="mdi:delete" />
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+            ))}
 
           <TableRow
             sx={{

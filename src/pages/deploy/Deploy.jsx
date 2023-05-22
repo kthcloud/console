@@ -10,17 +10,15 @@ import {
   Container,
   Typography,
   TableContainer,
-  Alert,
   Link,
   Button,
   Tooltip,
 } from "@mui/material";
 
 // hooks
-import useAlert from "src/hooks/useAlert";
+import { useSnackbar } from "notistack";
 import useResource from "src/hooks/useResource";
-import useInterval from "../../hooks/useInterval";
-import { useState, useEffect, useContext } from "react";
+import { useState } from "react";
 import { useKeycloak } from "@react-keycloak/web";
 
 // utils
@@ -38,7 +36,6 @@ import JobList from "../../components/JobList";
 import { Link as RouterLink } from "react-router-dom";
 import LoadingPage from "../../components/LoadingPage";
 import Iconify from "../../components/Iconify";
-import { LinkOffTwoTone } from "@mui/icons-material";
 import { deleteDeployment } from "src/api/deploy/deployments";
 import { deleteVM } from "src/api/deploy/vms";
 
@@ -94,13 +91,13 @@ export function Deploy() {
 
   const [filterName, setFilterName] = useState("");
 
-  const { rows, setRows, initialLoad, queueJob } = useResource();
+  const { rows, initialLoad, queueJob } = useResource();
 
   const [loading, setLoading] = useState(false);
 
   const { keycloak, initialized } = useKeycloak();
 
-  const { setAlert } = useAlert();
+  const { enqueueSnackbar } = useSnackbar();
 
   const bulkDelete = async () => {
     if (!initialized) return;
@@ -124,7 +121,7 @@ export function Deploy() {
     await Promise.all(promises);
 
     setSelected([]);
-    setAlert("Successfully deleted resources", "success");
+    enqueueSnackbar("Successfully deleted resources", { variant: "success" });
     setLoading(false);
   };
 

@@ -2,10 +2,6 @@
 import {
   Button,
   TextField,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
   DialogContentText,
   Card,
   CardHeader,
@@ -15,28 +11,25 @@ import {
   InputLabel,
   MenuItem,
   Stack,
-  Skeleton,
   Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import Iconify from "../../components/Iconify";
 
 import { getUser } from "src/api/deploy/users";
 import { useKeycloak } from "@react-keycloak/web";
-import useAlert from "src/hooks/useAlert";
+import { useSnackbar } from "notistack";
 import { createVM } from "src/api/deploy/vms";
 
 export default function CreateVm({ finished }) {
   const [name, setName] = useState("");
   const [cleaned, setCleaned] = useState("");
-  const [content, setContent] = useState("");
 
   const [publicKey, setPublicKey] = useState("");
   const [cpuCores, setCpuCores] = useState("");
   const [diskSize, setDiskSize] = useState("");
   const [ram, setRam] = useState("");
 
-  const { setAlert } = useAlert();
+  const { enqueueSnackbar } = useSnackbar();
   const { initialized, keycloak } = useKeycloak();
   const [user, setUser] = useState(null);
 
@@ -47,19 +40,21 @@ export default function CreateVm({ finished }) {
       const response = await getUser(keycloak.subject, keycloak.token);
       setUser(response);
     } catch (error) {
-      setAlert("Error fetching profile: " + error, "error");
+      enqueueSnackbar("Error fetching profile: " + error, { variant: "error" });
     }
   };
   useEffect(() => {
     loadProfile();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialized]);
 
   const handleCreate = async (stay) => {
     if (!initialized) return;
 
     if (!name || !cleaned || !publicKey || !cpuCores || !diskSize || !ram) {
-      setAlert("Please fill all fields", "error");
-      console.log(name, cleaned, publicKey, cpuCores, diskSize, ram)
+      enqueueSnackbar("Please fill all fields", { variant: "error" });
+      console.log(name, cleaned, publicKey, cpuCores, diskSize, ram);
       return;
     }
 
@@ -76,7 +71,6 @@ export default function CreateVm({ finished }) {
 
       if (stay) {
         setName("");
-        setContent("");
         setCleaned("");
         setPublicKey("");
         setCpuCores("");
@@ -84,7 +78,9 @@ export default function CreateVm({ finished }) {
         setRam("");
       }
     } catch (e) {
-      setAlert("Error creating vm " + JSON.stringify(e), "error");
+      enqueueSnackbar("Error creating vm " + JSON.stringify(e), {
+        variant: "error",
+      });
     }
   };
 

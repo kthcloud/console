@@ -47,7 +47,7 @@ export default function ListToolbar({
   filterName,
   onFilterName,
   loading,
-  onDelete
+  onDelete,
 }) {
   return (
     <RootStyle
