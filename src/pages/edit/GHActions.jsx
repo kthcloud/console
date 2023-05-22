@@ -26,7 +26,7 @@ const GHActions = ({ resource }) => {
     loadYaml();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [resource]);
 
   return (
     <Card sx={{ boxShadow: 20 }}>

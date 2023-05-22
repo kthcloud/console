@@ -12,6 +12,15 @@ import {
   Chip,
   FormControlLabel,
   Switch,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  Select,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  DialogActions,
 } from "@mui/material";
 import { AccountCircle } from "@mui/icons-material";
 
@@ -33,11 +42,18 @@ import PortManager from "./PortManager";
 import JobList from "../../components/JobList";
 
 // api
-import { deleteVM, attachGPU, updateVM } from "src/api/deploy/vms";
+import {
+  deleteVM,
+  attachGPU,
+  updateVM,
+  getGPUs,
+  attachGPUById,
+} from "src/api/deploy/vms";
 import { deleteDeployment, updateDeployment } from "src/api/deploy/deployments";
 import EnvManager from "./EnvManager";
 import GHActions from "./GHActions";
 import SSHString from "./SSHString";
+import Specs from "./Specs";
 
 export function Edit() {
   const { keycloak, initialized } = useKeycloak();
@@ -46,6 +62,10 @@ export function Edit() {
   const [privateMode, setPrivateMode] = useState(false);
   const [envs, setEnvs] = useState([]);
   const [ports, setPorts] = useState([]);
+
+  const [gpus, setGpus] = useState([]);
+  const [gpuPickerOpen, setGpuPickerOpen] = useState(false);
+  const [gpuChoice, setGpuChoice] = useState("");
 
   const { rows, initialLoad, queueJob } = useResource();
   const [loaded, setLoaded] = useState(false);
@@ -71,6 +91,16 @@ export function Edit() {
       setPorts(row.ports);
     }
     setLoaded(true);
+
+    loadGPUs();
+  };
+
+  const loadGPUs = async () => {
+    if (type === "vm" && userCanListGPUs) {
+      const gpuRes = await getGPUs(keycloak.token);
+      console.log(gpuRes);
+      setGpus(gpuRes);
+    }
   };
 
   // Update resource whenever rows changes
@@ -119,6 +149,19 @@ export function Edit() {
         });
       }
     }
+  };
+
+  const userCanListGPUs = () => {
+    if (!initialized) return false;
+    if (!keycloak) return false;
+    if (!keycloak.authenticated) return false;
+
+    keycloak.loadUserInfo();
+
+    if (!keycloak.userInfo) return false;
+
+    if (!Object.hasOwn(keycloak.userInfo, "groups")) return false;
+    return keycloak.userInfo.groups.includes("powerUser");
   };
 
   return (
@@ -172,41 +215,115 @@ export function Edit() {
                       direction="row"
                       flexWrap={"wrap"}
                       alignItems={"center"}
+                      justifyContent={"space-between"}
+                      spacing={3}
+                      useFlexGap={true}
                     >
                       <Chip label={sentenceCase(resource.status)} />
 
                       <div style={{ flexGrow: "1" }} />
 
                       {resource.type === "vm" && (
-                        <Button
-                          onClick={async () => {
-                            try {
-                              const res = await attachGPU(
-                                resource,
-                                keycloak.token
-                              );
-                              queueJob(res);
-                            } catch (e) {
-                              enqueueSnackbar(
-                                "Could not attach GPU " + JSON.stringify(e),
-                                { variant: "error" }
-                              );
-                            }
-                          }}
-                          variant="contained"
-                          to="#"
-                          startIcon={<Iconify icon="mdi:gpu" />}
-                          sx={{ m: 1 }}
-                        >
-                          {!resource.gpu ? "Attach GPU" : "Detach GPU"}
-                        </Button>
+                        <>
+                          <Button
+                            onClick={async () => {
+                              if (userCanListGPUs() && !resource.gpu) {
+                                setGpuPickerOpen(true);
+                                return;
+                              }
+
+                              try {
+                                const res = await attachGPU(
+                                  resource,
+                                  keycloak.token
+                                );
+                                queueJob(res);
+                              } catch (e) {
+                                enqueueSnackbar(
+                                  "Could not attach GPU " + JSON.stringify(e),
+                                  { variant: "error" }
+                                );
+                              }
+                            }}
+                            variant="contained"
+                            to="#"
+                            startIcon={<Iconify icon="mdi:gpu" />}
+                            disabled={resource.status !== "resourceRunning"}
+                          >
+                            {!resource.gpu ? "Attach GPU" : "Detach GPU"}
+                          </Button>
+                          <Dialog
+                            open={gpuPickerOpen}
+                            onClose={() => setGpuPickerOpen(false)}
+                          >
+                            <DialogTitle>Attach GPU</DialogTitle>
+                            <DialogContent>
+                              <DialogContentText>
+                                Select a GPU to attach to this VM.
+                              </DialogContentText>
+                              <FormControl fullWidth>
+                                <InputLabel id="gpu-picker-label">
+                                  GPU
+                                </InputLabel>
+                                <Select
+                                  labelId="gpu-picker-label"
+                                  id="gpu-picker"
+                                  value={gpuChoice}
+                                  onChange={(e) => setGpuChoice(e.target.value)}
+                                  label="GPU"
+                                  fullWidth
+                                >
+                                  {gpus.map((gpu) => (
+                                    <MenuItem key={gpu.id} value={gpu.id}>
+                                      {gpu.name}
+                                    </MenuItem>
+                                  ))}
+                                </Select>
+                              </FormControl>
+
+                              <DialogActions>
+                                <Button
+                                  onClick={() => setGpuPickerOpen(false)}
+                                  color="error"
+                                >
+                                  Cancel
+                                </Button>
+                                <Button
+                                  onClick={async () => {
+                                    try {
+                                      const res = await attachGPUById(
+                                        resource,
+                                        keycloak.token,
+                                        gpuChoice
+                                      );
+                                      queueJob(res);
+                                      setGpuPickerOpen(false);
+                                      setGpuChoice("");
+                                      enqueueSnackbar("GPU attached", {
+                                        variant: "success",
+                                      });
+                                    } catch (e) {
+                                      enqueueSnackbar(
+                                        "Could not attach GPU " +
+                                          JSON.stringify(e),
+                                        { variant: "error" }
+                                      );
+                                    }
+                                  }}
+                                  color="primary"
+                                >
+                                  Attach
+                                </Button>
+                              </DialogActions>
+                            </DialogContent>
+                          </Dialog>
+                        </>
                       )}
                       <Button
                         onClick={updateResource}
                         variant="contained"
                         to="#"
                         startIcon={<Iconify icon="material-symbols:save" />}
-                        sx={{ m: 1 }}
                       >
                         Save changes
                       </Button>
@@ -216,7 +333,6 @@ export function Edit() {
                         variant="contained"
                         to="#"
                         startIcon={<Iconify icon="mdi:nuke" />}
-                        sx={{ m: 1 }}
                         color="error"
                       >
                         Delete
@@ -225,6 +341,8 @@ export function Edit() {
                   </Stack>
                 </CardContent>
               </Card>
+
+              {resource.type === "vm" && <Specs vm={resource} />}
 
               {resource.type === "vm" && (
                 <Card sx={{ boxShadow: 20 }}>

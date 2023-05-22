@@ -42,7 +42,7 @@ export default function Menu() {
     if (!keycloak.userInfo) return false;
 
     if (!Object.hasOwn(keycloak.userInfo, "groups")) return false;
-    return keycloak.userInfo.groups.includes("/admin");
+    return keycloak.userInfo.groups.includes("admin");
   };
 
   return (

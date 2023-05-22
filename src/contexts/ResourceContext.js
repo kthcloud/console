@@ -29,7 +29,7 @@ export const ResourceContextProvider = ({ children }) => {
   const { enqueueSnackbar } = useSnackbar();
 
   const refreshJob = async (jobId) => {
-    if (!initialized) return;
+    if (!(initialized && keycloak.authenticated)) return;
 
     try {
       const response = await getJob(jobId, keycloak.token);
@@ -75,7 +75,7 @@ export const ResourceContextProvider = ({ children }) => {
   };
 
   const loadResources = async () => {
-    if (!initialized) return;
+    if (!(initialized && keycloak.authenticated)) return;
 
     try {
       const promises = [getVMs(keycloak.token), getDeployments(keycloak.token)];

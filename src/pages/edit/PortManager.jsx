@@ -81,11 +81,11 @@ export default function PortManager({ resource, ports, setPorts }) {
             </TableCell>
             <TableCell>
               <FormControl fullWidth>
-                <InputLabel id="disk-select-label">Disk size</InputLabel>
+                <InputLabel id="protocol-label">Protocol</InputLabel>
                 <Select
                   defaultValue={newPortProtocol}
-                  id="disk-select"
-                  label="Disk size"
+                  id="protocol-select"
+                  label="Protocol"
                   onChange={(e) => {
                     setNewPortProtocol(e.target.value);
                   }}

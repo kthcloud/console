@@ -22,7 +22,11 @@ export default function LoginButton() {
           ) : (
             <Tooltip title="Log in">
               <IconButton
-                onClick={() => keycloak.login()}
+                onClick={() =>
+                  keycloak.login({
+                    redirectUri: window.location.origin + "/deploy",
+                  })
+                }
                 sx={{ width: 40, height: 40 }}
               >
                 <Iconify icon="eva:log-in-outline" width={20} height={20} />

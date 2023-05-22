@@ -159,7 +159,14 @@ export function Profile() {
                       }}
                     />
 
-                    <Stack spacing={3} direction={"row"}>
+                    <Stack
+                      spacing={3}
+                      direction={"row"}
+                      flexWrap={"wrap"}
+                      useFlexGap={true}
+                      justifyContent={"space-between"}
+                      alignItems={"center"}
+                    >
                       {user.roles &&
                         user.roles.map((role, index) => (
                           <Chip
@@ -183,7 +190,6 @@ export function Profile() {
                         variant="contained"
                         to="#"
                         startIcon={<Iconify icon="material-symbols:save" />}
-                        sx={{ m: 1 }}
                       >
                         Update
                       </Button>
@@ -195,7 +201,12 @@ export function Profile() {
               <Card sx={{ boxShadow: 20 }}>
                 <CardHeader title={"Quotas"} />
                 <CardContent>
-                  <Stack spacing={3} direction={"row"}>
+                  <Stack
+                    spacing={3}
+                    direction={"row"}
+                    flexWrap={"wrap"}
+                    useFlexGap={true}
+                  >
                     <Chip
                       m={1}
                       icon={
