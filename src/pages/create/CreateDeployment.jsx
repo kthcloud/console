@@ -21,9 +21,9 @@ import Iconify from "../../components/Iconify";
 import { createDeployment } from "src/api/deploy/deployments";
 import { useSnackbar } from "notistack";
 import { useKeycloak } from "@react-keycloak/web";
+import RFC1035Input from "src/components/RFC1035Input";
 
 export default function CreateDeployment({ finished }) {
-  const [name, setName] = useState("");
   const [cleaned, setCleaned] = useState("");
   const { initialized, keycloak } = useKeycloak();
 
@@ -38,7 +38,6 @@ export default function CreateDeployment({ finished }) {
       const job = await createDeployment(cleaned, envs, keycloak.token);
       finished(job, stay);
       if (stay) {
-        setName("");
         setCleaned("");
         setEnvs([]);
         setNewEnvName("");
@@ -50,59 +49,22 @@ export default function CreateDeployment({ finished }) {
       });
     }
   };
-
-  const clean = (name) => {
-    name = name.toLowerCase();
-    // convert name to RFC 1035
-    name = name.replace(/[^a-z0-9-]/g, "-");
-    name = name.replace(/-+/g, "-");
-    name = name.replace(/^-|-$/g, "");
-    // trim to 30 characters
-    name = name.substring(0, 30);
-    // convert name to RFC 1035
-    name = name.replace(/[^a-z0-9-]/g, "-");
-    name = name.replace(/-+/g, "-");
-    name = name.replace(/^-|-$/g, "");
-
-    setCleaned(name);
-  };
-
   return (
     <>
       <Card sx={{ boxShadow: 20 }}>
         <CardHeader title={"Create Deployment"} />
         <CardContent>
-          <TextField
-            autoFocus
-            fullWidth
-            margin="dense"
-            id="deploymentName"
-            label="Name"
+
+        <RFC1035Input
+            label={"Name"}
+            placeholder="name"
+            callToAction="Your deployment will be created with the name"
+            type="Deployment name"
+            autofocus={true}
             variant="standard"
-            value={name}
-            helperText={
-              <span>
-                Deployment names must follow{" "}
-                <a
-                  href="https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#rfc-1035-label-names"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  RFC 1035
-                </a>{" "}
-                and must not include dots.
-              </span>
-            }
-            onChange={(e) => {
-              setName(e.target.value);
-              clean(e.target.value);
-            }}
+            cleaned={cleaned}
+            setCleaned={setCleaned}
           />
-          {cleaned !== "" && (
-            <DialogContentText sx={{ mt: 3 }}>
-              Your VM will be created with the name <strong>{cleaned}</strong>
-            </DialogContentText>
-          )}
         </CardContent>
       </Card>
 

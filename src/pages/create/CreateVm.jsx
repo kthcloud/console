@@ -21,9 +21,9 @@ import { useKeycloak } from "@react-keycloak/web";
 import { useSnackbar } from "notistack";
 import { createVM } from "src/api/deploy/vms";
 import { Link } from "react-router-dom";
+import RFC1035Input from "src/components/RFC1035Input";
 
 export default function CreateVm({ finished }) {
-  const [name, setName] = useState("");
   const [cleaned, setCleaned] = useState("");
 
   const [publicKey, setPublicKey] = useState("");
@@ -54,9 +54,9 @@ export default function CreateVm({ finished }) {
   const handleCreate = async (stay) => {
     if (!initialized) return;
 
-    if (!name || !cleaned || !publicKey || !cpuCores || !diskSize || !ram) {
+    if (!cleaned || !publicKey || !cpuCores || !diskSize || !ram) {
       enqueueSnackbar("Please fill all fields", { variant: "error" });
-      console.log(name, cleaned, publicKey, cpuCores, diskSize, ram);
+      console.log(cleaned, publicKey, cpuCores, diskSize, ram);
       return;
     }
 
@@ -72,7 +72,6 @@ export default function CreateVm({ finished }) {
       finished(job, stay);
 
       if (stay) {
-        setName("");
         setCleaned("");
         setPublicKey("");
         setCpuCores("");
@@ -86,58 +85,21 @@ export default function CreateVm({ finished }) {
     }
   };
 
-  const clean = (name) => {
-    name = name.toLowerCase();
-    // convert name to RFC 1035
-    name = name.replace(/[^a-z0-9-]/g, "-");
-    name = name.replace(/-+/g, "-");
-    name = name.replace(/^-|-$/g, "");
-    // trim to 30 characters
-    name = name.substring(0, 30);
-    // convert name to RFC 1035
-    name = name.replace(/[^a-z0-9-]/g, "-");
-    name = name.replace(/-+/g, "-");
-    name = name.replace(/^-|-$/g, "");
-
-    setCleaned(name);
-  };
-
   return (
     <>
       <Card sx={{ boxShadow: 20 }}>
         <CardHeader title="Create VM" />
         <CardContent>
-          <TextField
-            autoFocus
-            fullWidth
-            margin="dense"
-            id="vmName"
-            label="Name"
+          <RFC1035Input
+            label={"Name"}
+            placeholder="name"
+            callToAction="Your VM will be created with the name"
+            type="VM Name"
+            autofocus={true}
             variant="standard"
-            value={name}
-            helperText={
-              <span>
-                Deployment names must follow{" "}
-                <a
-                  href="https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#rfc-1035-label-names"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  RFC 1035
-                </a>{" "}
-                and must not include dots.
-              </span>
-            }
-            onChange={(e) => {
-              setName(e.target.value);
-              clean(e.target.value);
-            }}
+            cleaned={cleaned}
+            setCleaned={setCleaned}
           />
-          {cleaned !== "" && (
-            <DialogContentText sx={{ mt: 3 }}>
-              Your VM will be created with the name <strong>{cleaned}</strong>
-            </DialogContentText>
-          )}
 
           {user && (
             <FormControl fullWidth sx={{ mt: 3 }}>

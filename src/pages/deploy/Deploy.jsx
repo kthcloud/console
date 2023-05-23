@@ -38,6 +38,7 @@ import LoadingPage from "../../components/LoadingPage";
 import Iconify from "../../components/Iconify";
 import { deleteDeployment } from "src/api/deploy/deployments";
 import { deleteVM } from "src/api/deploy/vms";
+import { render } from "react-dom";
 
 // ----------------------------------------------------------------------
 
@@ -121,7 +122,7 @@ export function Deploy() {
     await Promise.all(promises);
 
     setSelected([]);
-    enqueueSnackbar("Successfully deleted resources", { variant: "success" });
+    enqueueSnackbar("Deleting resources", { variant: "info" });
     setLoading(false);
   };
 
@@ -167,7 +168,8 @@ export function Deploy() {
   const renderResourceButtons = (resource) => {
     if (
       resource.type === "deployment" &&
-      resource.url !== "https://notset" &&
+      Object.hasOwn(resource, "url") &&
+      resource.url !== "" &&
       resource.private === false
     ) {
       return (
@@ -242,6 +244,27 @@ export function Deploy() {
     } else {
       return resource.type;
     }
+  };
+
+  const renderResourceStatus = (row) => {
+    let color =
+      (row.status === "resourceError" && "error") ||
+      (row.status === "resourceUnknown" && "error") ||
+      (row.status === "resourceStopped" && "warning") ||
+      (row.status === "resourceBeingCreated" && "info") ||
+      (row.status === "resourceBeingDeleted" && "info") ||
+      (row.status === "resourceBeingDeleted" && "info") ||
+      (row.status === "resourceStarting" && "info") ||
+      (row.status === "resourceStopping" && "info") ||
+      (row.status === "resourceRunning" && "success");
+
+    if (!color) color = "info";
+
+    return (
+      <Label variant="ghost" color={color}>
+        {sentenceCase(row.status)}
+      </Label>
+    );
   };
 
   return (
@@ -335,30 +358,7 @@ export function Deploy() {
                               {renderResourceType(row)}
                             </TableCell>
                             <TableCell align="left">
-                              <Label
-                                variant="ghost"
-                                color={
-                                  (row.status === "resourceError" && "error") ||
-                                  (row.status === "resourceUnknown" &&
-                                    "error") ||
-                                  (row.status === "resourceStopped" &&
-                                    "warning") ||
-                                  (row.status === "resourceBeingCreated" &&
-                                    "info") ||
-                                  (row.status === "resourceBeingDeleted" &&
-                                    "info") ||
-                                  (row.status === "resourceBeingDeleted" &&
-                                    "info") ||
-                                  (row.status === "resourceStarting" &&
-                                    "info") ||
-                                  (row.status === "resourceStopping" &&
-                                    "info") ||
-                                  (row.status === "resourceRunning" &&
-                                    "success")
-                                }
-                              >
-                                {sentenceCase(row.status)}
-                              </Label>
+                              {renderResourceStatus(row)}
                             </TableCell>
 
                             <TableCell align="right">

@@ -11,6 +11,7 @@ import LoadingPage from "../../components/LoadingPage";
 import { useKeycloak } from "@react-keycloak/web";
 import { useSnackbar } from "notistack";
 import { sentenceCase } from "change-case";
+import { CopyToClipboard } from "react-copy-to-clipboard";
 
 // material
 import {
@@ -25,6 +26,7 @@ import {
   Button,
   IconButton,
   Chip,
+  Tooltip,
 } from "@mui/material";
 
 // components
@@ -104,9 +106,22 @@ export function Profile() {
     rawKey = rawKey.split(" ")[0];
 
     return (
-      rawKey.substring(0, 10) +
-      " ... " +
-      rawKey.substring(rawKey.length - 10, rawKey.length)
+      <Stack
+        spacing={3}
+        direction={"row"}
+        alignItems={"center"}
+        justifyContent={"flex-start"}
+        useFlexGap={true}
+      >
+        <>{"..." + rawKey.substring(rawKey.length - 20, rawKey.length - 1)}</>
+        <CopyToClipboard text={key}>
+          <Tooltip title="Copy SSH key">
+            <IconButton>
+              <Iconify icon={"ic:round-content-copy"} width={24} height={24} />
+            </IconButton>
+          </Tooltip>
+        </CopyToClipboard>
+      </Stack>
     );
   };
 
