@@ -51,7 +51,7 @@ export const Create = () => {
       {!initialized ? (
         <LoadingPage />
       ) : (
-        <Page title="Profile">
+        <Page title="Create new resource">
           <Container>
             <Stack spacing={3}>
               <Typography variant="h4" gutterBottom>

@@ -169,7 +169,7 @@ export function Edit() {
       {!(resource && initialLoad && initialized) ? (
         <LoadingPage />
       ) : (
-        <Page title="Profile">
+        <Page title={"Editing " + resource.name}>
           <Container>
             <Stack spacing={3}>
               <Typography variant="h4" gutterBottom>

@@ -208,10 +208,10 @@ export function Status() {
   const theme = useTheme();
 
   return (
-    <Page title="Dashboard">
+    <Page title="Status">
       <Container maxWidth="xl">
         <Typography variant="h4" sx={{}}>
-          Welcome to kthcloud
+          Welcome to cbhcloud
         </Typography>
 
         <Typography

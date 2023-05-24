@@ -272,7 +272,7 @@ export function Deploy() {
       {!initialLoad ? (
         <LoadingPage />
       ) : (
-        <Page title="Deploy">
+        <Page title="Deploy dashboard">
           <Container>
             <Stack
               sx={{
