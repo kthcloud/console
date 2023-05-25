@@ -3,9 +3,12 @@ import {
   CardContent,
   CardHeader,
   Chip,
+  Link,
   Stack,
+  Tooltip,
   Typography,
 } from "@mui/material";
+import CopyToClipboard from "react-copy-to-clipboard";
 import Iconify from "src/components/Iconify";
 
 export const GPUManager = ({ vm }) => {
@@ -57,15 +60,21 @@ export const GPUManager = ({ vm }) => {
             install the drivers and software yourself.
             <br />
             For Ubuntu VMs,{" "}
-            <a
+            <CopyToClipboard text="sudo ubuntu-drivers install --gpgpu">
+              <Tooltip title="Copy to clipboard">
+              <span style={{ fontFamily: "monospace", fontWeight: "bold", cursor: "pointer" }}>
+                sudo ubuntu-drivers install --gpgpu
+              </span>
+              </Tooltip>
+            </CopyToClipboard>{" "}
+            can be used to install drivers.{" "}
+            <Link
               href="https://help.ubuntu.com/community/NvidiaDriversInstallation"
               target="_blank"
               rel="noreferrer"
-              style={{ fontFamily: "monospace" }}
             >
-              sudo ubuntu-drivers install --gpgpu
-            </a>{" "}
-            can be used to install drivers.
+              Learn more
+            </Link>
           </Typography>
         </Stack>
       </CardContent>
