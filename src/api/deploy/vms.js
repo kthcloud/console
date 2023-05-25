@@ -123,9 +123,31 @@ export const createVM = async (
   return await res.json();
 };
 
-export const updateVM = async (id, ports, cpuCores, ram, token) => {
+export const updateVMPorts = async (id, ports, token) => {
   const body = {
-    ports,
+    ports: ports,
+  };
+
+  const res = await fetch(process.env.REACT_APP_DEPLOY_API_URL + "/vms/" + id, {
+    method: "POST",
+    headers: {
+      Authorization: "Bearer " + token,
+    },
+    body: JSON.stringify(body),
+  });
+
+  if (!res.ok) {
+    const body = await res.json();
+    if (body) {
+      throw body;
+    }
+    throw res;
+  }
+  return await res.json();
+};
+
+export const updateVMSpecs = async (id, cpuCores, ram, token) => {
+  const body = {
     cpuCores,
     ram,
   };
@@ -149,14 +171,17 @@ export const updateVM = async (id, ports, cpuCores, ram, token) => {
 };
 
 export const applyCommand = async (id, command, token) => {
-  const body = {command: command};
-  const res = await fetch(process.env.REACT_APP_DEPLOY_API_URL + "/vms/" + id + "/command", {
-    method: "POST",
-    headers: {
-      Authorization: "Bearer " + token,
-    },
-    body: JSON.stringify(body),
-  });
+  const body = { command: command };
+  const res = await fetch(
+    process.env.REACT_APP_DEPLOY_API_URL + "/vms/" + id + "/command",
+    {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+      body: JSON.stringify(body),
+    }
+  );
 
   if (!res.ok) {
     const body = await res.json();
@@ -166,4 +191,4 @@ export const applyCommand = async (id, command, token) => {
     throw res;
   }
   return true;
-}
+};

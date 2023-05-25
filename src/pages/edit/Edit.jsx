@@ -45,10 +45,10 @@ import JobList from "../../components/JobList";
 import {
   deleteVM,
   attachGPU,
-  updateVM,
   getGPUs,
   attachGPUById,
   applyCommand,
+  updateVMPorts,
 } from "src/api/deploy/vms";
 import { deleteDeployment, updateDeployment } from "src/api/deploy/deployments";
 import EnvManager from "./EnvManager";
@@ -142,7 +142,7 @@ export function Edit() {
       }
     } else if (type === "vm") {
       try {
-        const res = await updateVM(id, ports, 2, 2, keycloak.token);
+        const res = await updateVMPorts(id, ports, keycloak.token);
         queueJob(res);
       } catch (err) {
         enqueueSnackbar("Could not update resource " + JSON.stringify(err), {
@@ -155,7 +155,7 @@ export function Edit() {
   const executeCommand = async (command) => {
     try {
       await applyCommand(id, command, keycloak.token);
-      enqueueSnackbar(sentenceCase(command) + "ing... ", { variant: "info" });
+      enqueueSnackbar(sentenceCase(command) + " VM in progress... ", { variant: "info" });
     } catch (err) {
       enqueueSnackbar("Could not execute command " + JSON.stringify(err), {
         variant: "error",
@@ -316,7 +316,6 @@ export function Edit() {
                           variant="contained"
                           to="#"
                           startIcon={<Iconify icon="mdi:gpu" />}
-                          disabled={resource.status !== "resourceRunning"}
                           color={!resource.gpu ? "primary" : "warning"}
                         >
                           {!resource.gpu ? "Lease GPU" : "End GPU Lease"}
