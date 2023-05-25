@@ -46,7 +46,7 @@ export default function Specs({vm}) {
             <Chip
               m={1}
               icon={
-                <Iconify icon="uil:processor" width={24} height={24} />
+                <Iconify icon="mdi:harddisk" width={24} height={24} />
               }
               label={
                 <span>
