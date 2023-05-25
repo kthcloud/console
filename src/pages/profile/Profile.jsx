@@ -33,12 +33,15 @@ import {
 import Page from "../../components/Page";
 
 import { AccountCircle, Email } from "@mui/icons-material";
-import { getUser } from "src/api/deploy/users";
+import { getUser, updateUser } from "src/api/deploy/users";
+import { wasActivated } from "src/utils/eventHandler";
+import { UserQuotas } from "./UserQuotas";
 
 export function Profile() {
   const { keycloak, initialized } = useKeycloak();
 
   const [user, setUser] = useState(null);
+  const [validationError, setValidationError] = useState({});
 
   const [newKey, setNewKey] = useState("");
   const [newKeyName, setNewKeyName] = useState("");
@@ -67,30 +70,31 @@ export function Profile() {
 
     console.log("updating keys");
     setChangeInKeys(false);
-    updateDetails();
+    updateDetails("keys");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
-  const updateDetails = async () => {
-    if (!initialized) return -1;
+  const updateDetails = async (mode) => {
+    if (!(initialized && keycloak.authenticated)) return -1;
 
     try {
-      const res = await fetch(
-        process.env.REACT_APP_DEPLOY_API_URL + "/users/" + keycloak.subject,
-        {
-          method: "POST",
-          headers: {
-            Authorization: "Bearer " + keycloak.token,
-          },
-          body: JSON.stringify(user),
-        }
-      );
-
-      const response = await res.json();
+      const data = mode === "keys" ? { publicKeys: user.publicKeys } : user;
+      const response = await updateUser(keycloak.subject, keycloak.token, data);
       console.log(response);
-      enqueueSnackbar("Successfully saved details", { variant: "success" });
+      setValidationError({});
+      enqueueSnackbar("Successfully updated " + mode, { variant: "success" });
     } catch (error) {
-      enqueueSnackbar("Error applying changes: " + error, { variant: "error" });
+      console.log(error);
+      if (error.validationErrors) setValidationError(error.validationErrors);
+      
+      enqueueSnackbar("Error updating " + mode, {
+        variant: "error",
+      });
+
+      // reset keys
+      if(mode === "keys"){
+        loadProfile();
+      }
     }
   };
 
@@ -143,7 +147,7 @@ export function Profile() {
                   {/* Form with user data pre filled */}
                   <Stack spacing={3}>
                     <TextField
-                      label="Name"
+                      label="Username"
                       InputProps={{
                         startAdornment: (
                           <InputAdornment position="start">
@@ -156,6 +160,8 @@ export function Profile() {
                       onChange={(e) => {
                         setUser({ ...user, username: e.target.value });
                       }}
+                      error={validationError.username}
+                      helperText={validationError.username}
                     />
 
                     <TextField
@@ -172,6 +178,8 @@ export function Profile() {
                       onChange={(e) => {
                         setUser({ ...user, email: e.target.value });
                       }}
+                      error={validationError.email}
+                      helperText={validationError.email}
                     />
 
                     <Stack
@@ -201,7 +209,10 @@ export function Profile() {
                       <div style={{ flexGrow: "1" }} />
 
                       <Button
-                        onClick={updateDetails}
+                        onClick={() => updateDetails("profile")}
+                        onKeyDown={(e) => {
+                          wasActivated(e) && updateDetails("profile");
+                        }}
                         variant="contained"
                         to="#"
                         startIcon={<Iconify icon="material-symbols:save" />}
@@ -213,99 +224,18 @@ export function Profile() {
                 </CardContent>
               </Card>
 
-              <Card sx={{ boxShadow: 20 }}>
-                <CardHeader title={"Quotas"} />
-                <CardContent>
-                  <Stack
-                    spacing={3}
-                    direction={"row"}
-                    flexWrap={"wrap"}
-                    useFlexGap={true}
-                  >
-                    <Chip
-                      m={1}
-                      icon={
-                        <Iconify icon="uil:processor" width={24} height={24} />
-                      }
-                      label={
-                        <span>
-                          CPU Cores
-                          <b
-                            style={{
-                              fontFamily: "monospace",
-                              marginLeft: ".75em",
-                            }}
-                          >
-                            {user.usage.cpuCores + "/" + user.quota.cpuCores}
-                          </b>
-                        </span>
-                      }
-                    />
-                    <Chip
-                      m={1}
-                      icon={<Iconify icon="bi:memory" width={24} height={24} />}
-                      label={
-                        <span>
-                          Memory GB
-                          <b
-                            style={{
-                              fontFamily: "monospace",
-                              marginLeft: ".75em",
-                            }}
-                          >
-                            {user.usage.ram + "/" + user.quota.ram}
-                          </b>
-                        </span>
-                      }
-                    />
-                    <Chip
-                      m={1}
-                      icon={
-                        <Iconify icon="uil:processor" width={24} height={24} />
-                      }
-                      label={
-                        <span>
-                          Disk GB
-                          <b
-                            style={{
-                              fontFamily: "monospace",
-                              marginLeft: ".75em",
-                            }}
-                          >
-                            {user.usage.diskSize + "/" + user.quota.diskSize}
-                          </b>
-                        </span>
-                      }
-                    />
-                    <Chip
-                      m={1}
-                      icon={
-                        <Iconify icon="mdi:kubernetes" width={24} height={24} />
-                      }
-                      label={
-                        <span>
-                          Kubernetes Deployments
-                          <b
-                            style={{
-                              fontFamily: "monospace",
-                              marginLeft: ".75em",
-                            }}
-                          >
-                            {user.usage.deployments +
-                              "/" +
-                              user.quota.deployments}
-                          </b>
-                        </span>
-                      }
-                    />
-                  </Stack>
-                </CardContent>
-              </Card>
+              <UserQuotas user={user} />
 
               <Card sx={{ boxShadow: 20 }}>
                 <CardHeader
-                  title={"SSH keys"}
-                  subheader={"Upload your public keys to enable SSH"}
+                  title={"SSH public keys"}
+                  subheader={
+                    <span>
+                      Your public keys will be installed when creating VMs
+                      <br />
+                      Changes will not apply to existing VMs
+                    </span>
+                  }
                 />
                 <CardContent>
                   <TableContainer component={Paper}>
@@ -318,9 +248,9 @@ export function Profile() {
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {user.publicKeys.map((key) => (
+                        {user.publicKeys.map((key, index) => (
                           <TableRow
-                            key={"key_" + key.name}
+                            key={"key_" + key.name + "_" + index}
                             sx={{
                               "&:last-child td, &:last-child th": { border: 0 },
                             }}
@@ -364,6 +294,8 @@ export function Profile() {
                               onChange={(e) => {
                                 setNewKeyName(e.target.value);
                               }}
+                              error={validationError.name}
+                              helperText={validationError.name}
                             />
                           </TableCell>
                           <TableCell>
@@ -375,6 +307,8 @@ export function Profile() {
                                 setNewKey(e.target.value);
                               }}
                               fullWidth
+                              error={Boolean(validationError.key)}
+                              helperText={validationError.key}
                             />
                           </TableCell>
                           <TableCell align="right">

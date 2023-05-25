@@ -9,6 +9,12 @@ export const getJob = async (jobId, token) => {
     }
   );
 
-  if (!res.ok) throw res;
+  if (!res.ok) {
+    const body = await res.json();
+    if (body) {
+      throw body;
+    }
+    throw res;
+  }
   return await res.json();
 };

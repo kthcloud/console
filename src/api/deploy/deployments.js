@@ -51,12 +51,11 @@ export const getDeploymentYaml = async (id, token) => {
   );
 
   if (!res.ok) {
-    try {
-      let body = await res.body.getReader().read();
+    const body = await res.json();
+    if (body) {
       throw body;
-    } catch (e) {
-      throw res;
     }
+    throw res;
   }
   return await res.json();
 };
@@ -78,7 +77,13 @@ export const createDeployment = async (name, envs, token) => {
     }
   );
 
-  if (!res.ok) throw res;
+  if (!res.ok) {
+    const body = await res.json();
+    if (body) {
+      throw body;
+    }
+    throw res;
+  }
   return await res.json();
 };
 
@@ -99,6 +104,12 @@ export const updateDeployment = async (id, envs, privateMode, token) => {
     }
   );
 
-  if (!res.ok) throw res;
+  if (!res.ok) {
+    const body = await res.json();
+    if (body) {
+      throw body;
+    }
+    throw res;
+  }
   return await res.json();
 };

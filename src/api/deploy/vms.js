@@ -18,7 +18,13 @@ export const deleteVM = async (id, token) => {
       Authorization: "Bearer " + token,
     },
   });
-  if (!res.ok) throw res;
+  if (!res.ok) {
+    const body = await res.json();
+    if (body) {
+      throw body;
+    }
+    throw res;
+  }
 
   return await res.json();
 };
@@ -36,7 +42,13 @@ export const attachGPU = async (vm, token) => {
       },
     }
   );
-  if (!res.ok) throw res;
+  if (!res.ok) {
+    const body = await res.json();
+    if (body) {
+      throw body;
+    }
+    throw res;
+  }
   return await res.json();
 };
 
@@ -50,7 +62,13 @@ export const attachGPUById = async (vm, token, id) => {
       },
     }
   );
-  if (!res.ok) throw res;
+  if (!res.ok) {
+    const body = await res.json();
+    if (body) {
+      throw body;
+    }
+    throw res;
+  }
   return await res.json();
 };
 
@@ -61,7 +79,13 @@ export const getGPUs = async (token) => {
       Authorization: "Bearer " + token,
     },
   });
-  if (!res.ok) throw res;
+  if (!res.ok) {
+    const body = await res.json();
+    if (body) {
+      throw body;
+    }
+    throw res;
+  }
   return await res.json();
 };
 
@@ -89,7 +113,13 @@ export const createVM = async (
     body: JSON.stringify(body),
   });
 
-  if (!res.ok) throw res;
+  if (!res.ok) {
+    const body = await res.json();
+    if (body) {
+      throw body;
+    }
+    throw res;
+  }
   return await res.json();
 };
 
@@ -108,6 +138,12 @@ export const updateVM = async (id, ports, cpuCores, ram, token) => {
     body: JSON.stringify(body),
   });
 
-  if (!res.ok) throw res;
+  if (!res.ok) {
+    const body = await res.json();
+    if (body) {
+      throw body;
+    }
+    throw res;
+  }
   return await res.json();
 };
