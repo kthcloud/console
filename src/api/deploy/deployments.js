@@ -87,12 +87,7 @@ export const createDeployment = async (name, envs, token) => {
   return await res.json();
 };
 
-export const updateDeployment = async (id, envs, privateMode, token) => {
-  const body = {
-    envs: envs,
-    private: privateMode,
-  };
-
+export const updateDeployment = async (id, changes, token) => {
   const res = await fetch(
     process.env.REACT_APP_DEPLOY_API_URL + "/deployments/" + id,
     {
@@ -100,7 +95,7 @@ export const updateDeployment = async (id, envs, privateMode, token) => {
       headers: {
         Authorization: "Bearer " + token,
       },
-      body: JSON.stringify(body),
+      body: JSON.stringify(changes),
     }
   );
 

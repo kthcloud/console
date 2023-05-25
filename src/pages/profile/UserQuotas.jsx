@@ -4,7 +4,7 @@ import Iconify from "src/components/Iconify"
 export const UserQuotas = ({user}) => {
     return(
         <Card sx={{ boxShadow: 20 }}>
-        <CardHeader title={"Quotas"} />
+        <CardHeader title={"Quotas"} subheader={"Use resources in any way that fits you, and sums up under these quotas"}/>
         <CardContent>
           <Stack
             spacing={3}

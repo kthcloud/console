@@ -16,7 +16,7 @@ const SSHString = ({ resource }) => {
       <CardHeader
         title="SSH Connection string"
         subheader={
-          "Run this in your terminal to access the VM. Make sure you are using the correct SSH key."
+          "Run this in your terminal to access the VM. Make sure you are uploading your public SSH key"
         }
       />
       <CardContent>
