@@ -54,6 +54,7 @@ import EnvManager from "./EnvManager";
 import GHActions from "./GHActions";
 import SSHString from "./SSHString";
 import Specs from "./Specs";
+import { GPUManager } from "./GPUManager";
 
 export function Edit() {
   const { keycloak, initialized } = useKeycloak();
@@ -195,22 +196,6 @@ export function Edit() {
                       value={resource.name}
                     />
 
-                    {resource.type === "vm" && resource.gpu && (
-                      <TextField
-                        label="GPU"
-                        InputProps={{
-                          startAdornment: (
-                            <InputAdornment position="start">
-                              <Iconify icon="mdi:gpu" />
-                            </InputAdornment>
-                          ),
-                        }}
-                        variant="standard"
-                        value={"NVIDIA " + resource.gpu.name}
-                        disabled
-                      />
-                    )}
-
                     <Stack
                       direction="row"
                       flexWrap={"wrap"}
@@ -222,6 +207,15 @@ export function Edit() {
                       <Chip label={sentenceCase(resource.status)} />
 
                       <div style={{ flexGrow: "1" }} />
+
+                      <Button
+                        onClick={updateResource}
+                        variant="contained"
+                        to="#"
+                        startIcon={<Iconify icon="material-symbols:save" />}
+                      >
+                        Save changes
+                      </Button>
 
                       {resource.type === "vm" && (
                         <>
@@ -249,8 +243,9 @@ export function Edit() {
                             to="#"
                             startIcon={<Iconify icon="mdi:gpu" />}
                             disabled={resource.status !== "resourceRunning"}
+                            color={!resource.gpu ? "primary" : "error"}
                           >
-                            {!resource.gpu ? "Attach GPU" : "Detach GPU"}
+                            {!resource.gpu ? "Lease GPU" : "End GPU Lease"}
                           </Button>
                           <Dialog
                             open={gpuPickerOpen}
@@ -319,14 +314,6 @@ export function Edit() {
                           </Dialog>
                         </>
                       )}
-                      <Button
-                        onClick={updateResource}
-                        variant="contained"
-                        to="#"
-                        startIcon={<Iconify icon="material-symbols:save" />}
-                      >
-                        Save changes
-                      </Button>
 
                       <Button
                         onClick={deleteResource}
@@ -343,6 +330,8 @@ export function Edit() {
               </Card>
 
               {resource.type === "vm" && <Specs vm={resource} />}
+
+              {(resource.type === "vm" && resource.gpu ) && <GPUManager vm={resource} />}
 
               {resource.type === "vm" && (
                 <Card sx={{ boxShadow: 20 }}>
