@@ -38,7 +38,6 @@ import LoadingPage from "../../components/LoadingPage";
 import Iconify from "../../components/Iconify";
 import { deleteDeployment } from "src/api/deploy/deployments";
 import { deleteVM } from "src/api/deploy/vms";
-import { render } from "react-dom";
 
 // ----------------------------------------------------------------------
 
@@ -217,7 +216,7 @@ export function Deploy() {
           {resource.type}
           <Tooltip title={tooltip}>
             <span style={{ display: "flex", alignItems: "center" }}>
-              <Iconify icon="bi:gpu-card" width={20} height={20} ml={1} />
+              <Iconify icon="mdi:gpu" width={20} height={20} ml={1} />
             </span>
           </Tooltip>
         </Typography>

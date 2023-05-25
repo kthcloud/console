@@ -48,6 +48,7 @@ import {
   updateVM,
   getGPUs,
   attachGPUById,
+  applyCommand,
 } from "src/api/deploy/vms";
 import { deleteDeployment, updateDeployment } from "src/api/deploy/deployments";
 import EnvManager from "./EnvManager";
@@ -99,7 +100,6 @@ export function Edit() {
   const loadGPUs = async () => {
     if (type === "vm" && userCanListGPUs) {
       const gpuRes = await getGPUs(keycloak.token);
-      console.log(gpuRes);
       setGpus(gpuRes);
     }
   };
@@ -149,6 +149,17 @@ export function Edit() {
           variant: "error",
         });
       }
+    }
+  };
+
+  const executeCommand = async (command) => {
+    try {
+      await applyCommand(id, command, keycloak.token);
+      enqueueSnackbar(sentenceCase(command) + "ing... ", { variant: "info" });
+    } catch (err) {
+      enqueueSnackbar("Could not execute command " + JSON.stringify(err), {
+        variant: "error",
+      });
     }
   };
 
@@ -217,103 +228,163 @@ export function Edit() {
                         Save changes
                       </Button>
 
-                      {resource.type === "vm" && (
-                        <>
-                          <Button
-                            onClick={async () => {
-                              if (userCanListGPUs() && !resource.gpu) {
-                                setGpuPickerOpen(true);
-                                return;
-                              }
-
-                              try {
-                                const res = await attachGPU(
-                                  resource,
-                                  keycloak.token
-                                );
-                                queueJob(res);
-                              } catch (e) {
-                                enqueueSnackbar(
-                                  "Could not attach GPU " + JSON.stringify(e),
-                                  { variant: "error" }
-                                );
-                              }
-                            }}
-                            variant="contained"
-                            to="#"
-                            startIcon={<Iconify icon="mdi:gpu" />}
-                            disabled={resource.status !== "resourceRunning"}
-                            color={!resource.gpu ? "primary" : "error"}
-                          >
-                            {!resource.gpu ? "Lease GPU" : "End GPU Lease"}
-                          </Button>
-                          <Dialog
-                            open={gpuPickerOpen}
-                            onClose={() => setGpuPickerOpen(false)}
-                          >
-                            <DialogTitle>Attach GPU</DialogTitle>
-                            <DialogContent>
-                              <DialogContentText>
-                                Select a GPU to attach to this VM.
-                              </DialogContentText>
-                              <FormControl fullWidth>
-                                <InputLabel id="gpu-picker-label">
-                                  GPU
-                                </InputLabel>
-                                <Select
-                                  labelId="gpu-picker-label"
-                                  id="gpu-picker"
-                                  value={gpuChoice}
-                                  onChange={(e) => setGpuChoice(e.target.value)}
-                                  label="GPU"
-                                  fullWidth
-                                >
-                                  {gpus.map((gpu) => (
-                                    <MenuItem key={gpu.id} value={gpu.id}>
-                                      {gpu.name}
-                                    </MenuItem>
-                                  ))}
-                                </Select>
-                              </FormControl>
-
-                              <DialogActions>
-                                <Button
-                                  onClick={() => setGpuPickerOpen(false)}
-                                  color="error"
-                                >
-                                  Cancel
-                                </Button>
-                                <Button
-                                  onClick={async () => {
-                                    try {
-                                      const res = await attachGPUById(
-                                        resource,
-                                        keycloak.token,
-                                        gpuChoice
-                                      );
-                                      queueJob(res);
-                                      setGpuPickerOpen(false);
-                                      setGpuChoice("");
-                                      enqueueSnackbar("GPU attached", {
-                                        variant: "success",
-                                      });
-                                    } catch (e) {
-                                      enqueueSnackbar(
-                                        "Could not attach GPU " +
-                                          JSON.stringify(e),
-                                        { variant: "error" }
-                                      );
-                                    }
-                                  }}
-                                  color="primary"
-                                >
-                                  Attach
-                                </Button>
-                              </DialogActions>
-                            </DialogContent>
-                          </Dialog>
-                        </>
+                      {resource.type === "deployment" && (
+                        <Button
+                          onClick={deleteResource}
+                          variant="contained"
+                          to="#"
+                          startIcon={<Iconify icon="mdi:nuke" />}
+                          color="error"
+                        >
+                          Delete
+                        </Button>
                       )}
+                    </Stack>
+                  </Stack>
+                </CardContent>
+              </Card>
+
+              {resource.type === "vm" && (
+                <Card sx={{ boxShadow: 20 }}>
+                  <CardHeader
+                    title={"Danger zone"}
+                    subheader={"Actions may be irreversible"}
+                  />
+                  <CardContent>
+                    <Stack
+                      direction="row"
+                      flexWrap={"wrap"}
+                      alignItems={"center"}
+                      spacing={3}
+                      useFlexGap={true}
+                    >
+                      {resource.status !== "resourceStopped" && (
+                        <Button
+                          onClick={() => executeCommand("stop")}
+                          variant="contained"
+                          to="#"
+                          startIcon={<Iconify icon="mdi:shutdown" />}
+                          color="warning"
+                        >
+                          Stop
+                        </Button>
+                      )}
+                      {resource.status === "resourceRunning" && (
+                        <Button
+                          onClick={() => executeCommand("reboot")}
+                          variant="contained"
+                          to="#"
+                          startIcon={<Iconify icon="mdi:restart" />}
+                          color="warning"
+                        >
+                          Reboot
+                        </Button>
+                      )}
+                      {resource.status !== "resourceRunning" && (
+                        <Button
+                          onClick={() => executeCommand("start")}
+                          variant="contained"
+                          to="#"
+                          startIcon={<Iconify icon="mdi:shutdown" />}
+                          color="warning"
+                        >
+                          Start
+                        </Button>
+                      )}
+
+                      <>
+                        <Button
+                          onClick={async () => {
+                            if (userCanListGPUs() && !resource.gpu) {
+                              setGpuPickerOpen(true);
+                              return;
+                            }
+
+                            try {
+                              const res = await attachGPU(
+                                resource,
+                                keycloak.token
+                              );
+                              queueJob(res);
+                            } catch (e) {
+                              enqueueSnackbar(
+                                "Could not attach GPU " + JSON.stringify(e),
+                                { variant: "error" }
+                              );
+                            }
+                          }}
+                          variant="contained"
+                          to="#"
+                          startIcon={<Iconify icon="mdi:gpu" />}
+                          disabled={resource.status !== "resourceRunning"}
+                          color={!resource.gpu ? "primary" : "warning"}
+                        >
+                          {!resource.gpu ? "Lease GPU" : "End GPU Lease"}
+                        </Button>
+                        <Dialog
+                          open={gpuPickerOpen}
+                          onClose={() => setGpuPickerOpen(false)}
+                        >
+                          <DialogTitle>Attach GPU</DialogTitle>
+                          <DialogContent>
+                            <DialogContentText>
+                              Select a GPU to attach to this VM.
+                            </DialogContentText>
+                            <FormControl fullWidth>
+                              <InputLabel id="gpu-picker-label">GPU</InputLabel>
+                              <Select
+                                labelId="gpu-picker-label"
+                                id="gpu-picker"
+                                value={gpuChoice}
+                                onChange={(e) => setGpuChoice(e.target.value)}
+                                label="GPU"
+                                fullWidth
+                              >
+                                {gpus.map((gpu) => (
+                                  <MenuItem key={gpu.id} value={gpu.id}>
+                                    {gpu.name}
+                                  </MenuItem>
+                                ))}
+                              </Select>
+                            </FormControl>
+
+                            <DialogActions>
+                              <Button
+                                onClick={() => setGpuPickerOpen(false)}
+                                color="error"
+                              >
+                                Cancel
+                              </Button>
+                              <Button
+                                onClick={async () => {
+                                  try {
+                                    const res = await attachGPUById(
+                                      resource,
+                                      keycloak.token,
+                                      gpuChoice
+                                    );
+                                    queueJob(res);
+                                    setGpuPickerOpen(false);
+                                    setGpuChoice("");
+                                    enqueueSnackbar("GPU attached", {
+                                      variant: "success",
+                                    });
+                                  } catch (e) {
+                                    enqueueSnackbar(
+                                      "Could not attach GPU " +
+                                        JSON.stringify(e),
+                                      { variant: "error" }
+                                    );
+                                  }
+                                }}
+                                color="primary"
+                              >
+                                Attach
+                              </Button>
+                            </DialogActions>
+                          </DialogContent>
+                        </Dialog>
+                      </>
 
                       <Button
                         onClick={deleteResource}
@@ -325,13 +396,15 @@ export function Edit() {
                         Delete
                       </Button>
                     </Stack>
-                  </Stack>
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
+              )}
 
               {resource.type === "vm" && <Specs vm={resource} />}
 
-              {(resource.type === "vm" && resource.gpu ) && <GPUManager vm={resource} />}
+              {resource.type === "vm" && resource.gpu && (
+                <GPUManager vm={resource} />
+              )}
 
               {resource.type === "vm" && (
                 <Card sx={{ boxShadow: 20 }}>

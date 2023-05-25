@@ -42,7 +42,7 @@ export const GPUManager = ({ vm }) => {
                   <b
                     style={{
                       fontFamily: "monospace",
-                      marginLeft: ".75em",
+                      marginLeft: ".5em",
                     }}
                   >
                     {leaseEnd}
