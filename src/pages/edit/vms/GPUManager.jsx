@@ -196,7 +196,7 @@ export const GPUManager = ({ vm }) => {
                           key={gpu.id}
                           value={gpu.id}
                           sx={() => {
-                            if (index % 2 == 0)
+                            if (index % 2 === 0)
                               return { backgroundColor: "#eee" };
                           }}
                           disabled={Boolean(gpu.lease)}
