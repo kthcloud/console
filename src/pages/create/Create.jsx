@@ -21,7 +21,6 @@ import { sentenceCase } from "change-case";
 
 // components
 import Page from "../../components/Page";
-import Iconify from "../../components/Iconify";
 import LoadingPage from "../../components/LoadingPage";
 import JobList from "../../components/JobList";
 

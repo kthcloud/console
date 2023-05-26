@@ -127,7 +127,7 @@ const ResourceComparisonTable = () => {
       </Stack>
 
       <Dialog
-        fullwidth
+        fullWidth
         maxWidth={"md"}
         open={dialogOpen}
         onClose={() => setDialogOpen(false)}
