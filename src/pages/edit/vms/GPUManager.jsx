@@ -139,9 +139,7 @@ export const GPUManager = ({ vm }) => {
               />
             )}
 
-            {gpuLoading && (
-              <Skeleton height={"2rem"} sx={{ width: "50%" }} />
-            )}
+            {gpuLoading && <Skeleton height={"2rem"} sx={{ width: "50%" }} />}
 
             {!(gpuPickerOpen || gpuLoading) && (
               <Button
@@ -152,6 +150,7 @@ export const GPUManager = ({ vm }) => {
                   }
 
                   try {
+                    setGpuLoading(true);
                     const res = await attachGPU(vm, keycloak.token);
                     queueJob(res);
                   } catch (e) {
