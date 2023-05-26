@@ -10,7 +10,6 @@ import {
   TextField,
 } from "@mui/material";
 import { useKeycloak } from "@react-keycloak/web";
-import { set } from "lodash";
 import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { getUser } from "src/api/deploy/users";

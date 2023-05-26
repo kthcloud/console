@@ -2,7 +2,6 @@
 import {
   Button,
   TextField,
-  DialogContentText,
   Card,
   CardHeader,
   CardContent,
@@ -13,6 +12,7 @@ import {
   Stack,
   Typography,
   FormHelperText,
+  InputAdornment,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 
@@ -35,21 +35,122 @@ export default function CreateVm({ finished }) {
   const { initialized, keycloak } = useKeycloak();
   const [user, setUser] = useState(null);
 
+  const [cpuError, setCpuError] = useState(null);
+  const [ramError, setRamError] = useState(null);
+  const [diskError, setDiskError] = useState(null);
+
+  const [availableCPU, setAvailableCPU] = useState(0);
+  const [availableRAM, setAvailableRAM] = useState(0);
+  const [availableDisk, setAvailableDisk] = useState(0);
+
   const loadProfile = async () => {
     if (!initialized) return -1;
 
     try {
       const response = await getUser(keycloak.subject, keycloak.token);
       setUser(response);
+      setPublicKey(response.publicKeys[0].key);
     } catch (error) {
       enqueueSnackbar("Error fetching profile: " + error, { variant: "error" });
     }
   };
+
   useEffect(() => {
     loadProfile();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialized]);
+
+  useEffect(() => {
+    if (!user) return;
+
+    setAvailableCPU(user.quota.cpuCores - user.usage.cpuCores);
+    setAvailableRAM(user.quota.ram - user.usage.ram);
+    setAvailableDisk(user.quota.diskSize - user.usage.diskSize);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
+
+  const calculateCPU = (raw) => {
+    const value = parseInt(raw);
+    if (!value) {
+      setCpuCores("");
+      setCpuError("Input a number, 2-" + availableCPU);
+      return;
+    }
+
+    if (value > availableCPU) {
+      setCpuError("Max CPU cores available: " + availableCPU);
+      setCpuCores(value);
+      return;
+    }
+
+    if (value < 1) {
+      setCpuError("Minimum CPU cores: 1");
+      setCpuCores(value);
+
+      return;
+    }
+
+    setCpuError(null);
+    setCpuCores(value);
+  };
+
+  const calculateRAM = (raw) => {
+    const value = parseInt(raw);
+    if (!value) {
+      setRam("");
+      setRamError("Input a number, 4-" + availableRAM);
+      return;
+    }
+
+    if (value > availableRAM) {
+      setRamError("Max RAM available: " + availableRAM);
+      setRam(value);
+      return;
+    }
+
+    if (value < 4) {
+      setRamError("Minimum RAM: 4 GB");
+      setRam(value);
+      return;
+    }
+
+    setRamError(null);
+    setRam(value);
+  };
+
+  const calculateDisk = (raw) => {
+    const value = parseInt(raw);
+    if (!value) {
+      setDiskSize("");
+      setDiskError("Input a number, 20-" + availableDisk);
+      return;
+    }
+
+    if (value > availableDisk) {
+      setDiskError("Max disk available: " + availableDisk);
+      setDiskSize(value);
+      return;
+    }
+
+    if (value < 20) {
+      setDiskError("Minimum disk size: 20 GB");
+      setDiskSize(value);
+      return;
+    }
+
+    setDiskError(null);
+    setDiskSize(value);
+  };
+
+  const verifyUserCanCreate = () => {
+    if (!user) return false;
+    if (availableCPU < 2) return false;
+    if (availableRAM < 4) return false;
+    if (availableDisk < 20) return false;
+    return true;
+  };
 
   const handleCreate = async (stay) => {
     if (!initialized) return;
@@ -85,6 +186,18 @@ export default function CreateVm({ finished }) {
     }
   };
 
+  if(!verifyUserCanCreate())  return(
+    <Card sx={{ boxShadow: 20 }}>
+      <CardHeader title="Create VM" />
+      <CardContent>
+        <Typography variant="body1">
+          You do not have enough resources to create a VM. Please delete some
+          other VMs or contact support.
+        </Typography>
+      </CardContent>
+    </Card>
+  )
+
   return (
     <>
       <Card sx={{ boxShadow: 20 }}>
@@ -105,7 +218,7 @@ export default function CreateVm({ finished }) {
             <FormControl fullWidth sx={{ mt: 3 }}>
               <InputLabel id="publickey-select-label">SSH Key</InputLabel>
               <Select
-                defaultValue=""
+                defaultValue={user.publicKeys[0].key}
                 id="publickey"
                 label="SSH Key"
                 onChange={(e) => {
@@ -132,63 +245,60 @@ export default function CreateVm({ finished }) {
         <Card sx={{ boxShadow: 20 }}>
           <CardHeader title="Select specs" />
           <CardContent>
-            <FormControl fullWidth>
-              <InputLabel id="cpu-select-label">CPU Cores</InputLabel>
-              <Select
-                defaultValue=""
-                id="cpu-select"
+            <Stack
+              spacing={3}
+              direction={"row"}
+              useFlexGap={true}
+              flexWrap={"wrap"}
+            >
+              <TextField
                 label="CPU Cores"
-                onChange={(e) => {
-                  setCpuCores(e.target.value);
-                }}
-              >
-                {[...Array(user.quota.cpuCores - user.usage.cpuCores)].map(
-                  (x, i) => (
-                    <MenuItem key={"cpu" + i} value={i + 1}>
-                      {i + 1 + " cores"}
-                    </MenuItem>
-                  )
-                )}
-              </Select>
-            </FormControl>
+                id="cores"
+                value={cpuCores}
+                onChange={(e) => calculateCPU(e.target.value)}
+                helperText={
+                  cpuError ? cpuError : "Number of CPU cores, 2-" + availableCPU
+                }
+                inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+                error={cpuError ? true : false}
+              />
 
-            <FormControl fullWidth sx={{ mt: 3 }}>
-              <InputLabel id="ram-select-label">System memory</InputLabel>
-              <Select
-                defaultValue=""
-                id="ram-select"
-                label="System memory"
-                onChange={(e) => {
-                  setRam(e.target.value);
+              <TextField
+                label="RAM"
+                id="ram"
+                value={ram}
+                onChange={(e) => calculateRAM(e.target.value)}
+                helperText={
+                  ramError ? ramError : "Amount of RAM in GB, 4-" + availableRAM
+                }
+                InputProps={{
+                  inputMode: "numeric",
+                  pattern: "[0-9]*",
+                  endAdornment: (
+                    <InputAdornment position="end">GB</InputAdornment>
+                  ),
                 }}
-              >
-                {[...Array(user.quota.ram - user.usage.ram)].map((x, i) => (
-                  <MenuItem key={"ram" + i} value={i + 1}>
-                    {i + 1 + " GB"}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+                error={ramError ? true : false}
+              />
 
-            <FormControl fullWidth sx={{ mt: 3 }}>
-              <InputLabel id="disk-select-label">Disk size</InputLabel>
-              <Select
-                defaultValue=""
-                id="disk-select"
-                label="Disk size"
-                onChange={(e) => {
-                  setDiskSize(e.target.value);
+              <TextField
+                label="Disk Size"
+                id="disk"
+                value={diskSize}
+                onChange={(e) => calculateDisk(e.target.value)}
+                helperText={
+                  diskError ? diskError : "Disk size in GB, 20-" + availableDisk
+                }
+                InputProps={{
+                  inputMode: "numeric",
+                  pattern: "[0-9]*",
+                  endAdornment: (
+                    <InputAdornment position="end">GB</InputAdornment>
+                  ),
                 }}
-              >
-                {[...Array(user.quota.diskSize - user.usage.diskSize)].map(
-                  (x, i) => (
-                    <MenuItem key={"disk" + i} value={i + 1}>
-                      {i + 1 + " GB"}
-                    </MenuItem>
-                  )
-                )}
-              </Select>
-            </FormControl>
+                error={diskError ? true : false}
+              />
+            </Stack>
           </CardContent>
         </Card>
       )}
