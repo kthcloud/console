@@ -74,23 +74,9 @@ export const Create = () => {
                       aria-label="resource-type"
                     >
                       <ToggleButton value="deployment">
-                        <Iconify
-                          icon="mdi:kubernetes"
-                          width={24}
-                          height={24}
-                          mr={1}
-                        />{" "}
                         Kubernetes Deployment
                       </ToggleButton>
-                      <ToggleButton value="vm">
-                        <Iconify
-                          icon="carbon:virtual-machine"
-                          width={24}
-                          height={24}
-                          mr={1}
-                        />{" "}
-                        Virtual machine
-                      </ToggleButton>
+                      <ToggleButton value="vm">Virtual machine</ToggleButton>
                     </ToggleButtonGroup>
                   </Stack>
                 </CardContent>

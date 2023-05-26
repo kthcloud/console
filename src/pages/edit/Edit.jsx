@@ -1,35 +1,16 @@
 // mui
 import {
-  Card,
-  CardContent,
   Container,
-  TextField,
-  InputAdornment,
   Typography,
   Stack,
-  CardHeader,
-  Button,
   Chip,
-  FormControlLabel,
-  Switch,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  Select,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  DialogActions,
   Breadcrumbs,
-  Link,
+  Link
 } from "@mui/material";
-import { AccountCircle } from "@mui/icons-material";
 
 //hooks
 import { useState, useEffect } from "react";
 import { useKeycloak } from "@react-keycloak/web";
-import { useSnackbar } from "notistack";
 import useResource from "src/hooks/useResource";
 import { useParams, useNavigate, Link as RouterLink } from "react-router-dom";
 
@@ -38,7 +19,6 @@ import { sentenceCase } from "change-case";
 
 // components
 import Page from "../../components/Page";
-import Iconify from "../../components/Iconify";
 import LoadingPage from "../../components/LoadingPage";
 import PortManager from "./vms/PortManager";
 import JobList from "../../components/JobList";
@@ -52,13 +32,13 @@ import { GPUManager } from "./vms/GPUManager";
 import { PrivateMode } from "./deployments/PrivateMode";
 import { DeploymentCommands } from "./deployments/DeploymentCommands";
 import { VMCommands } from "./vms/VMCommands";
+import { LogsView } from "./deployments/LogsView";
 
 export function Edit() {
-  const { keycloak, initialized } = useKeycloak();
+  const { initialized } = useKeycloak();
   const [resource, setResource] = useState(null);
-  const { enqueueSnackbar } = useSnackbar();
   const [envs, setEnvs] = useState([]);
-  const { rows, initialLoad, queueJob } = useResource();
+  const { rows, initialLoad } = useResource();
   const [loaded, setLoaded] = useState(false);
 
   const allowedTypes = ["vm", "deployment"];
@@ -155,6 +135,10 @@ export function Edit() {
 
               {resource.type === "deployment" && (
                 <GHActions resource={resource} />
+              )}
+
+              {resource.type === "deployment" && (
+                <LogsView deployment={resource} />
               )}
             </Stack>
           </Container>
