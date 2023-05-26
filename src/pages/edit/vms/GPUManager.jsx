@@ -8,12 +8,7 @@ import {
   Tooltip,
   Typography,
   Button,
-  DialogActions,
-  DialogContentText,
   FormControl,
-  Dialog,
-  DialogTitle,
-  DialogContent,
   MenuItem,
   InputLabel,
   Select,
@@ -35,6 +30,7 @@ export const GPUManager = ({ vm }) => {
   const [gpus, setGpus] = useState([]);
   const [gpuPickerOpen, setGpuPickerOpen] = useState(false);
   const [gpuChoice, setGpuChoice] = useState("");
+  const [gpuLoading, setGpuLoading] = useState(false);
 
   const userCanListGPUs = () => {
     if (!initialized) return false;
@@ -48,6 +44,10 @@ export const GPUManager = ({ vm }) => {
     if (!Object.hasOwn(keycloak.userInfo, "groups")) return false;
     return keycloak.userInfo.groups.includes("powerUser");
   };
+
+  useEffect(() => {
+    setGpuLoading(false);
+  }, [vm.gpu]);
 
   useEffect(() => {
     loadGPUs();
@@ -138,7 +138,12 @@ export const GPUManager = ({ vm }) => {
                 }
               />
             )}
-            <>
+
+            {gpuLoading && (
+              <Skeleton height={"2rem"} sx={{ width: "50%" }} />
+            )}
+
+            {!(gpuPickerOpen || gpuLoading) && (
               <Button
                 onClick={async () => {
                   if (userCanListGPUs() && !vm.gpu) {
@@ -169,133 +174,119 @@ export const GPUManager = ({ vm }) => {
               >
                 {!vm.gpu ? "Lease GPU" : "End GPU Lease"}
               </Button>
-              <Dialog
-                open={gpuPickerOpen}
-                onClose={() => setGpuPickerOpen(false)}
-                sx={{
-                  "& .MuiDialog-container": {
-                    alignItems: "flex-start",
-                  },
-                }}
-                fullWidth
-              >
-                <DialogTitle>Lease GPU</DialogTitle>
-                <DialogContent>
-                  <DialogContentText sx={{ mb: 3 }}>
-                    Select a GPU to attach to this VM.
-                  </DialogContentText>
-                  {gpus.length === 0 ? (
-                    <Skeleton height={"5rem"} />
-                  ) : (
-                    <FormControl fullWidth>
-                      <InputLabel id="gpu-picker-label">GPU</InputLabel>
-                      <Select
-                        labelId="gpu-picker-label"
-                        id="gpu-picker"
-                        value={gpuChoice}
-                        onChange={(e) => setGpuChoice(e.target.value)}
-                        label="GPU"
-                        fullWidth
-                      >
-                        {gpus.map((gpu, index) => (
-                          <MenuItem
-                            key={gpu.id}
-                            value={gpu.id}
-                            sx={() => {
-                              if (index % 2 == 0)
-                                return { backgroundColor: "#eee" };
-                            }}
-                            disabled={Boolean(gpu.lease)}
+            )}
+            {gpuPickerOpen && (
+              <>
+                {gpus.length === 0 ? (
+                  <Skeleton height={"5rem"} />
+                ) : (
+                  <FormControl fullWidth>
+                    <InputLabel id="gpu-picker-label">GPU</InputLabel>
+                    <Select
+                      labelId="gpu-picker-label"
+                      id="gpu-picker"
+                      value={gpuChoice}
+                      onChange={(e) => setGpuChoice(e.target.value)}
+                      label="GPU"
+                      fullWidth
+                      defaultOpen
+                    >
+                      {gpus.map((gpu, index) => (
+                        <MenuItem
+                          key={gpu.id}
+                          value={gpu.id}
+                          sx={() => {
+                            if (index % 2 == 0)
+                              return { backgroundColor: "#eee" };
+                          }}
+                          disabled={Boolean(gpu.lease)}
+                        >
+                          <Stack
+                            direction={"row"}
+                            alignItems={"center"}
+                            useFlexGap={true}
+                            justifyContent={"flex-end"}
+                            spacing={3}
+                            flexWrap={"wrap"}
+                            sx={{ width: "100%", my: 1 }}
                           >
-                            <Stack
-                              direction={"row"}
-                              alignItems={"center"}
-                              useFlexGap={true}
-                              justifyContent={"flex-end"}
-                              spacing={3}
-                              flexWrap={"wrap"}
-                              sx={{ width: "100%", my: 1 }}
+                            <span style={{ flexGrow: 1 }}>
+                              {"NVIDIA " + gpu.name}
+                            </span>
+
+                            {gpu.lease && gpu.lease.end && (
+                              <Chip
+                                label={
+                                  <span>
+                                    Leased until
+                                    <b
+                                      style={{
+                                        fontFamily: "monospace",
+                                        marginLeft: ".5em",
+                                      }}
+                                    >
+                                      {new Date(gpu.lease.end).toLocaleString(
+                                        navigator.language
+                                      )}
+                                    </b>
+                                  </span>
+                                }
+                                icon={
+                                  <Iconify
+                                    icon="mdi:clock-outline"
+                                    width={24}
+                                    height={24}
+                                  />
+                                }
+                              />
+                            )}
+
+                            <Typography
+                              variant={"caption"}
+                              color={"grey"}
+                              sx={{ fontFamily: "monospace" }}
                             >
-                              <span style={{ flexGrow: 1 }}>
-                                {"NVIDIA " + gpu.name}
-                              </span>
-
-                              {gpu.lease && gpu.lease.end && (
-                                <Chip
-                                  label={
-                                    <span>
-                                      Leased until
-                                      <b
-                                        style={{
-                                          fontFamily: "monospace",
-                                          marginLeft: ".5em",
-                                        }}
-                                      >
-                                        {new Date(gpu.lease.end).toLocaleString(
-                                          navigator.language
-                                        )}
-                                      </b>
-                                    </span>
-                                  }
-                                  icon={
-                                    <Iconify
-                                      icon="mdi:clock-outline"
-                                      width={24}
-                                      height={24}
-                                    />
-                                  }
-                                />
-                              )}
-
-                              <Typography
-                                variant={"caption"}
-                                color={"grey"}
-                                sx={{ fontFamily: "monospace" }}
-                              >
-                                {hashGPUId(gpu.id)}
-                              </Typography>
-                            </Stack>
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  )}
-                  <DialogActions>
-                    <Button
-                      onClick={() => setGpuPickerOpen(false)}
-                      color="error"
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      onClick={async () => {
-                        try {
-                          const res = await attachGPUById(
-                            vm,
-                            keycloak.token,
-                            gpuChoice
-                          );
-                          queueJob(res);
-                          setGpuPickerOpen(false);
-                          setGpuChoice("");
-                          enqueueSnackbar("GPU attached", {
-                            variant: "success",
-                          });
-                        } catch (e) {
-                          enqueueSnackbar(
-                            "Could not attach GPU " + JSON.stringify(e),
-                            { variant: "error" }
-                          );
-                        }
-                      }}
-                      color="primary"
-                    >
-                      Attach
-                    </Button>
-                  </DialogActions>
-                </DialogContent>
-              </Dialog>
-            </>
+                              {hashGPUId(gpu.id)}
+                            </Typography>
+                          </Stack>
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                )}
+                <Stack direction="row" spacing={3} useFlexGap={true}>
+                  <Button onClick={() => setGpuPickerOpen(false)} color="error">
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={async () => {
+                      setGpuLoading(true);
+                      setGpuPickerOpen(false);
+                      try {
+                        const res = await attachGPUById(
+                          vm,
+                          keycloak.token,
+                          gpuChoice
+                        );
+                        queueJob(res);
+                        setGpuChoice("");
+                        enqueueSnackbar("GPU attached", {
+                          variant: "success",
+                        });
+                      } catch (e) {
+                        enqueueSnackbar(
+                          "Could not attach GPU " + JSON.stringify(e),
+                          { variant: "error" }
+                        );
+                      }
+                    }}
+                    color="primary"
+                  >
+                    Attach
+                  </Button>
+                </Stack>
+              </>
+            )}
           </Stack>
 
           <Typography variant="body2">
