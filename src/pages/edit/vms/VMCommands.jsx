@@ -73,7 +73,9 @@ export const VMCommands = ({ vm }) => {
           Reboot
         </Button>
       )}
-      {vm.status !== "resourceRunning" && (
+      {!(
+        vm.status === "resourceRunning" || vm.status === "resourceStarting"
+      ) && (
         <Button
           onClick={() => executeCommand("start")}
           variant="contained"

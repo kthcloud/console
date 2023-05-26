@@ -4,12 +4,15 @@ import {
   CardActions,
   CardContent,
   CardHeader,
+  Skeleton,
   TextareaAutosize,
+  Tooltip,
+  Typography,
 } from "@mui/material";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 
 const SSHString = ({ resource }) => {
-  const textAreaValue = resource.connectionString;
+  const ssh = resource.connectionString;
 
   return (
     <Card sx={{ boxShadow: 20 }}>
@@ -20,16 +23,25 @@ const SSHString = ({ resource }) => {
         }
       />
       <CardContent>
-        <TextareaAutosize
-          value={textAreaValue ? textAreaValue : "Loading..."}
-          style={{ width: "100%", border: 0 }}
-        />
+        {!ssh ? (
+          <Skeleton height={"2rem"} sx={{maxWidth: "30rem"}}/>
+        ) : (
+              <Typography variant="body1">
+              <CopyToClipboard text={ssh}>
+                <Tooltip title="Copy to clipboard">
+                <b
+                  style={{
+                    fontFamily: "monospace",
+                    cursor: "pointer",
+                  }}
+                >
+                  {ssh}
+                </b>
+            </Tooltip>
+          </CopyToClipboard>
+              </Typography>
+        )}
       </CardContent>
-      <CardActions>
-        <CopyToClipboard text={textAreaValue}>
-          <Button>Copy to clipboard</Button>
-        </CopyToClipboard>{" "}
-      </CardActions>
     </Card>
   );
 };

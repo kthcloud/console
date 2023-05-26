@@ -1,11 +1,10 @@
 import { Stack, TextField, Typography } from "@mui/material";
-import { sentenceCase } from "change-case";
 import { useState } from "react";
 
 export default function RFC1035Input({
   label,
   callToAction = "",
-  type="Fields",
+  type = "Fields",
   fullWidth = true,
   autofocus = false,
   variant = "standard",

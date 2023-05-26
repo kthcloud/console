@@ -19,12 +19,14 @@ import {
   CardHeader,
   CardContent,
   CircularProgress,
+  Tooltip,
 } from "@mui/material";
 import Iconify from "../../../components/Iconify";
 import { enqueueSnackbar } from "notistack";
 import useResource from "src/hooks/useResource";
 import { updateVM } from "src/api/deploy/vms";
 import { useKeycloak } from "@react-keycloak/web";
+import CopyToClipboard from "react-copy-to-clipboard";
 
 export default function PortManager({ vm }) {
   const [ports, setPorts] = useState([]);
@@ -41,7 +43,8 @@ export default function PortManager({ vm }) {
     if (loading) return;
 
     setPorts(vm.ports);
-  })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const applyChanges = async (ports) => {
     if (!initialized) return;
@@ -56,7 +59,7 @@ export default function PortManager({ vm }) {
       enqueueSnackbar("Could not update resource " + JSON.stringify(err), {
         variant: "error",
       });
-    }finally{
+    } finally {
       setLoading(false);
     }
   };
@@ -65,7 +68,26 @@ export default function PortManager({ vm }) {
     <Card sx={{ boxShadow: 20 }}>
       <CardHeader
         title={"Port forwarding"}
-        subheader={"Expose certain ports to the internet"}
+        subheader={
+          <span>
+            Expose certain ports to the internet.
+            <br />
+            Access them at{" "}
+            <CopyToClipboard text={"vm.cloud.cbh.kth.se"}>
+              <Tooltip title="Copy to clipboard">
+                <b
+                  style={{
+                    fontFamily: "monospace",
+                    cursor: "pointer",
+                    color: "#45515c",
+                  }}
+                >
+                  vm.cloud.cbh.kth.se:[external_port]
+                </b>
+              </Tooltip>
+            </CopyToClipboard>
+          </span>
+        }
       />
       <CardContent>
         <TableContainer component={Paper}>

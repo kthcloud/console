@@ -86,13 +86,13 @@ export function Profile() {
     } catch (error) {
       console.log(error);
       if (error.validationErrors) setValidationError(error.validationErrors);
-      
+
       enqueueSnackbar("Error updating " + mode, {
         variant: "error",
       });
 
       // reset keys
-      if(mode === "keys"){
+      if (mode === "keys") {
         loadProfile();
       }
     }

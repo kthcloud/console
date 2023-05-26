@@ -21,7 +21,6 @@ import { updateDeployment } from "src/api/deploy/deployments";
 import { enqueueSnackbar } from "notistack";
 import useResource from "src/hooks/useResource";
 import { useKeycloak } from "@react-keycloak/web";
-import { set } from "lodash";
 
 export default function EnvManager({ deployment }) {
   const [envs, setEnvs] = useState([]);
@@ -33,9 +32,11 @@ export default function EnvManager({ deployment }) {
 
   useEffect(() => {
     if (!deployment.envs) return;
-    if(loading) return;
+    if (loading) return;
     setEnvs(deployment.envs);
-  }, [])
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const applyChanges = async (envs) => {
     if (!initialized) return;
@@ -50,7 +51,9 @@ export default function EnvManager({ deployment }) {
         keycloak.token
       );
       queueJob(res);
-      enqueueSnackbar("Environment variables saving...", { variant: "success" });
+      enqueueSnackbar("Environment variables saving...", {
+        variant: "success",
+      });
     } catch (err) {
       console.error("Could not update deployment envs");
       console.error(err);
@@ -64,7 +67,12 @@ export default function EnvManager({ deployment }) {
 
   return (
     <Card sx={{ boxShadow: 20 }}>
-      <CardHeader title={"Environment variables"} subheader={"These values will be accessible from inside your application"} />
+      <CardHeader
+        title={"Environment variables"}
+        subheader={
+          "These values will be accessible from inside your application"
+        }
+      />
       <CardContent>
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">

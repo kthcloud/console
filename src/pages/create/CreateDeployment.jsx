@@ -2,7 +2,6 @@
 import {
   Button,
   TextField,
-  DialogContentText,
   Card,
   CardContent,
   CardHeader,
@@ -54,8 +53,7 @@ export default function CreateDeployment({ finished }) {
       <Card sx={{ boxShadow: 20 }}>
         <CardHeader title={"Create Deployment"} />
         <CardContent>
-
-        <RFC1035Input
+          <RFC1035Input
             label={"Name"}
             placeholder="name"
             callToAction="Your deployment will be created with the name"
