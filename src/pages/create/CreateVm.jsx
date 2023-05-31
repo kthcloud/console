@@ -49,7 +49,8 @@ export default function CreateVm({ finished }) {
     try {
       const response = await getUser(keycloak.subject, keycloak.token);
       setUser(response);
-      setPublicKey(response.publicKeys[0].key);
+      if (response.publicKeys.length > 0)
+        setPublicKey(response.publicKeys[0].key);
     } catch (error) {
       enqueueSnackbar("Error fetching profile: " + error, { variant: "error" });
     }
@@ -186,17 +187,18 @@ export default function CreateVm({ finished }) {
     }
   };
 
-  if(!verifyUserCanCreate())  return(
-    <Card sx={{ boxShadow: 20 }}>
-      <CardHeader title="Create VM" />
-      <CardContent>
-        <Typography variant="body1">
-          You do not have enough resources to create a VM. Please delete some
-          other VMs or contact support.
-        </Typography>
-      </CardContent>
-    </Card>
-  )
+  if (!verifyUserCanCreate())
+    return (
+      <Card sx={{ boxShadow: 20 }}>
+        <CardHeader title="Create VM" />
+        <CardContent>
+          <Typography variant="body1">
+            You do not have enough resources to create a VM. Please delete some
+            other VMs or contact support.
+          </Typography>
+        </CardContent>
+      </Card>
+    );
 
   return (
     <>
@@ -218,7 +220,7 @@ export default function CreateVm({ finished }) {
             <FormControl fullWidth sx={{ mt: 3 }}>
               <InputLabel id="publickey-select-label">SSH Key</InputLabel>
               <Select
-                defaultValue={user.publicKeys[0].key}
+                defaultValue={user.publicKeys.length > 0 && user.publicKeys[0].key}
                 id="publickey"
                 label="SSH Key"
                 onChange={(e) => {
