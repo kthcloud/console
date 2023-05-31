@@ -1,14 +1,16 @@
 export const getVMs = async (token) => {
-  const res = await fetch(process.env.REACT_APP_DEPLOY_API_URL + "/vms", {
+  const url = `${process.env.REACT_APP_DEPLOY_API_URL}/vms`;
+  const response = await fetch(url, {
     method: "GET",
     headers: {
-      Authorization: "Bearer " + token,
+      Authorization: `Bearer ${token}`,
     },
   });
-  const response = await res.json();
-  const result = response.map((obj) => ({ ...obj, type: "vm" }));
-  if (Array.isArray(result)) return result;
-  else throw new Error("Error getting VMs, response was not an array");
+  const result = await response.json();
+  if (!Array.isArray(result)) {
+    throw new Error("Error getting VMs, response was not an array");
+  }
+  return result.map((obj) => ({ ...obj, type: "vm" }));
 };
 
 export const deleteVM = async (id, token) => {
