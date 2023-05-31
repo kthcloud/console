@@ -16,7 +16,6 @@ export const LogsView = ({ deployment }) => {
     if (!(deployment && initialized)) return;
 
     const ws = new WebSocket(
-      "wss://" +
         process.env.REACT_APP_DEPLOY_SOCKET_URL +
         "/deployments/" +
         deployment.id +
