@@ -26,8 +26,7 @@ export const LogsView = ({ deployment }) => {
     };
 
     ws.onmessage = (event) => {
-      console.log(event);
-      setLogs((logs) => logs + "\n" + event.data);
+      setLogs((logs) => event.data + "\n" + logs);
     };
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -55,6 +54,11 @@ export const LogsView = ({ deployment }) => {
               border: 0,
               borderRadius: 4,
             }}
+            autoComplete="off"
+            autoCorrect="off"
+            autoCapitalize="off"
+            spellCheck="false"
+            
           />
         </Box>
       </CardContent>

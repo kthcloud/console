@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Button, Stack, Link } from "@mui/material";
 import { useKeycloak } from "@react-keycloak/web";
 import { enqueueSnackbar } from "notistack";
 import { useNavigate } from "react-router-dom";
@@ -27,14 +27,38 @@ export const DeploymentCommands = ({ deployment }) => {
     }
   };
   return (
-    <Button
-      onClick={doDelete}
-      variant="contained"
-      to="#"
-      startIcon={<Iconify icon="mdi:nuke" />}
-      color="error"
+    <Stack
+      direction="row"
+      flexWrap={"wrap"}
+      alignItems={"center"}
+      spacing={3}
+      useFlexGap={true}
     >
-      Delete
-    </Button>
+      {deployment.type === "deployment" &&
+        Object.hasOwn(deployment, "url") &&
+        deployment.url !== "" &&
+        deployment.private === false && (
+          <Button
+            component={Link}
+            href={deployment.url}
+            target="_blank"
+            rel="noreferrer"
+            underline="none"
+            startIcon={<Iconify icon="mdi:external-link" />}
+            variant="contained"
+          >
+            Go to page
+          </Button>
+        )}
+      <Button
+        onClick={doDelete}
+        variant="contained"
+        to="#"
+        startIcon={<Iconify icon="mdi:nuke" />}
+        color="error"
+      >
+        Delete
+      </Button>
+    </Stack>
   );
 };
