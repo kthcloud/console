@@ -4,14 +4,12 @@ export const GHLogin = () => {
   const [data, setData] = useState({ errorMessage: "", isLoading: false });
 
   // PROD
-  const client_id = "6c3a489177c7833cc639";
-  const secret = "c47f4b9276a01eacf383b1f8837a4d9b4adfd970";
-  const redirect_uri = "https://cloud.cbh.kth.se/ghlogin";
+  let client_id = "6c3a489177c7833cc639";
+  let redirect_uri = "https://cloud.cbh.kth.se/ghlogin";
 
   if (window.location.href.includes("localhost")) {
     // DEV
     client_id = "12ec7f8b9a291a4817c6";
-    secret = "74bac52a4f1b27d624279f51d9249e865d4c2af8";
     redirect_uri = "http://localhost:3000/ghlogin";
   }
 
