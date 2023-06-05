@@ -22,14 +22,16 @@ import { useSnackbar } from "notistack";
 import { createVM } from "src/api/deploy/vms";
 import { Link } from "react-router-dom";
 import RFC1035Input from "src/components/RFC1035Input";
+import { faker } from '@faker-js/faker';
+
 
 export default function CreateVm({ finished }) {
   const [cleaned, setCleaned] = useState("");
 
   const [publicKey, setPublicKey] = useState("");
-  const [cpuCores, setCpuCores] = useState("");
-  const [diskSize, setDiskSize] = useState("");
-  const [ram, setRam] = useState("");
+  const [cpuCores, setCpuCores] = useState("2");
+  const [diskSize, setDiskSize] = useState("20");
+  const [ram, setRam] = useState("4");
 
   const { enqueueSnackbar } = useSnackbar();
   const { initialized, keycloak } = useKeycloak();
@@ -214,6 +216,7 @@ export default function CreateVm({ finished }) {
             variant="standard"
             cleaned={cleaned}
             setCleaned={setCleaned}
+            initialValue={faker.word.words(3).replace(/[^a-z0-9]|\s+|\r?\n|\r/gmi, "-")}
           />
 
           {user && (
@@ -235,7 +238,7 @@ export default function CreateVm({ finished }) {
               </Select>
               <FormHelperText>
                 {" "}
-                Don't have a key yet? Upload one in your{" "}
+                Don't have a key yet? Add one to your{" "}
                 <Link to="/profile">profile</Link>.
               </FormHelperText>
             </FormControl>

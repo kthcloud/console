@@ -21,6 +21,7 @@ import { createDeployment } from "src/api/deploy/deployments";
 import { useSnackbar } from "notistack";
 import { useKeycloak } from "@react-keycloak/web";
 import RFC1035Input from "src/components/RFC1035Input";
+import { faker } from '@faker-js/faker';
 
 export default function CreateDeployment({ finished }) {
   const [cleaned, setCleaned] = useState("");
@@ -62,6 +63,8 @@ export default function CreateDeployment({ finished }) {
             variant="standard"
             cleaned={cleaned}
             setCleaned={setCleaned}
+            initialValue={faker.word.words(3).replace(/[^a-z0-9]|\s+|\r?\n|\r/gmi, "-")}
+
           />
         </CardContent>
       </Card>

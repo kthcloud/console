@@ -39,7 +39,6 @@ export default function PortManager({ vm }) {
   const [loading, setLoading] = useState(false);
 
   const isSamePort = (p1, p2) => {
-
     if (p1.internal !== p2.internal) return false;
     if (p1.name !== p2.name) return false;
     if (p1.protocol !== p2.protocol) return false;
@@ -52,7 +51,9 @@ export default function PortManager({ vm }) {
     if (loading) return;
 
     let loadingPorts = ports.filter((p) => !p.externalPort);
-    loadingPorts = loadingPorts.filter((p) => !vm.ports.find((p2) => isSamePort(p, p2)));
+    loadingPorts = loadingPorts.filter(
+      (p) => !vm.ports.find((p2) => isSamePort(p, p2))
+    );
 
     let newPorts = Array.from(vm.ports).concat(loadingPorts);
 
@@ -65,6 +66,34 @@ export default function PortManager({ vm }) {
     if (!initialized) return;
     setLoading(true);
     setPorts(newPorts);
+
+    try {
+      const res = await updateVM(vm.id, { ports: newPorts }, keycloak.token);
+      queueJob(res);
+      enqueueSnackbar("Port changes saving...", { variant: "success" });
+    } catch (err) {
+      enqueueSnackbar("Could not update resource " + JSON.stringify(err), {
+        variant: "error",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const deletePort = async (port) => {
+    if (!initialized) return;
+    setLoading(true);
+    // remove externalport from port
+    setPorts(
+      ports.map((item) => {
+        if (isSamePort(item, port)) {
+          item.externalPort = null;
+        }
+        return item;
+      })
+    );
+
+    let newPorts = ports.filter((item) => !isSamePort(item, port));
 
     try {
       const res = await updateVM(vm.id, { ports: newPorts }, keycloak.token);
@@ -155,11 +184,7 @@ export default function PortManager({ vm }) {
                         aria-label="delete port mapping"
                         component="label"
                         disabled={loading}
-                        onClick={() =>
-                          applyChanges(
-                            ports.filter((item) => !isSamePort(item, port))
-                          )
-                        }
+                        onClick={() => deletePort(port)}
                       >
                         <Iconify icon="mdi:delete" />
                       </IconButton>

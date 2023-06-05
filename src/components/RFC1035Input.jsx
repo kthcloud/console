@@ -1,5 +1,5 @@
 import { Stack, TextField, Typography } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function RFC1035Input({
   label,
@@ -10,8 +10,15 @@ export default function RFC1035Input({
   variant = "standard",
   cleaned,
   setCleaned,
+  initialValue = "",
 }) {
   const [value, setValue] = useState("");
+
+  useEffect(() => {
+    setValue(initialValue);
+    clean(initialValue);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const clean = (val) => {
     // convert name to RFC 1035
