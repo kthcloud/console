@@ -327,10 +327,18 @@ export function Profile() {
                                 helperText={validationError.key}
                               />
                               <span>or</span>
-                              <Input
-                                type="file"
-                                onChange={(e) => getKeyFromFile(e.target.files[0])}
-                              />
+
+                              <Button variant="contained" component="label" sx={{whiteSpace: "nowrap", px:3}} >
+                                Select Key File
+                                
+                                <input
+                                  type="file"
+                                  hidden
+                                  onChange={(e) =>
+                                    getKeyFromFile(e.target.files[0])
+                                  }
+                                />
+                              </Button>
                             </Stack>
                           </TableCell>
                           <TableCell align="right">
