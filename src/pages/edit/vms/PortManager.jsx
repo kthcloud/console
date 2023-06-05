@@ -44,13 +44,10 @@ export default function PortManager({ vm }) {
     if (p1.name !== p2.name) return false;
     if (p1.protocol !== p2.protocol) return false;
 
-    console.log(p1,p2)
     return true;
   };
 
   useEffect(() => {
-    console.log("ports", ports);
-    console.log("vm", vm.ports);
     if (!vm.ports) return;
     if (loading) return;
 
