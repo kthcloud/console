@@ -38,21 +38,39 @@ export default function PortManager({ vm }) {
   const { initialized, keycloak } = useKeycloak();
   const [loading, setLoading] = useState(false);
 
+  const isSamePort = (p1, p2) => {
+
+    if (p1.internal !== p2.internal) return false;
+    if (p1.name !== p2.name) return false;
+    if (p1.protocol !== p2.protocol) return false;
+
+    console.log(p1,p2)
+    return true;
+  };
+
   useEffect(() => {
+    console.log("ports", ports);
+    console.log("vm", vm.ports);
     if (!vm.ports) return;
     if (loading) return;
 
-    setPorts(vm.ports);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    let loadingPorts = ports.filter((p) => !p.externalPort);
+    loadingPorts = loadingPorts.filter((p) => !vm.ports.find((p2) => isSamePort(p, p2)));
 
-  const applyChanges = async (ports) => {
+    let newPorts = Array.from(vm.ports).concat(loadingPorts);
+
+    setPorts(newPorts);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [vm]);
+
+  const applyChanges = async (newPorts) => {
     if (!initialized) return;
     setLoading(true);
-    setPorts(ports);
+    setPorts(newPorts);
 
     try {
-      const res = await updateVM(vm.id, { ports: ports }, keycloak.token);
+      const res = await updateVM(vm.id, { ports: newPorts }, keycloak.token);
       queueJob(res);
       enqueueSnackbar("Port changes saving...", { variant: "success" });
     } catch (err) {
@@ -82,10 +100,18 @@ export default function PortManager({ vm }) {
                     color: "#45515c",
                   }}
                 >
-                  vm.cloud.cbh.kth.se:[external_port]
+                  vm.cloud.cbh.kth.se
                 </b>
               </Tooltip>
             </CopyToClipboard>
+            <span
+              style={{
+                fontFamily: "monospace",
+                color: "#45515c",
+              }}
+            >
+              {":[external_port]"}
+            </span>
           </span>
         }
       />
@@ -114,21 +140,33 @@ export default function PortManager({ vm }) {
                   </TableCell>
                   <TableCell>{port.protocol.toUpperCase()}</TableCell>
                   <TableCell>{port.port}</TableCell>
-                  <TableCell>{port.externalPort}</TableCell>
+                  <TableCell>
+                    {port.externalPort ? (
+                      port.externalPort
+                    ) : (
+                      <Iconify
+                        icon="eos-icons:three-dots-loading"
+                        height={24}
+                        width={24}
+                      />
+                    )}
+                  </TableCell>
                   <TableCell align="right">
-                    <IconButton
-                      color="error"
-                      aria-label="delete port mapping"
-                      component="label"
-                      disabled={loading}
-                      onClick={() =>
-                        applyChanges(
-                          ports.filter((item) => item.id !== port.id)
-                        )
-                      }
-                    >
-                      <Iconify icon="mdi:delete" />
-                    </IconButton>
+                    {port.externalPort && (
+                      <IconButton
+                        color="error"
+                        aria-label="delete port mapping"
+                        component="label"
+                        disabled={loading}
+                        onClick={() =>
+                          applyChanges(
+                            ports.filter((item) => !isSamePort(item, port))
+                          )
+                        }
+                      >
+                        <Iconify icon="mdi:delete" />
+                      </IconButton>
+                    )}
                   </TableCell>
                 </TableRow>
               ))}
