@@ -60,11 +60,26 @@ export const getDeploymentYaml = async (id, token) => {
   return await res.json();
 };
 
-export const createDeployment = async (name, envs, token) => {
-  const body = {
+export const createDeployment = async (
+  name,
+  envs,
+  repo,
+  accessToken,
+  token
+) => {
+  let body = {
     name,
     envs,
   };
+
+  if (repo)
+    body = {
+      ...body,
+      github: {
+        repositoryId: repo,
+        token: accessToken,
+      },
+    };
 
   const res = await fetch(
     process.env.REACT_APP_DEPLOY_API_URL + "/deployments",

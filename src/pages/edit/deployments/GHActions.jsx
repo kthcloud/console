@@ -16,8 +16,10 @@ const GHActions = ({ resource }) => {
   const [textAreaValue, setTextAreaValue] = useState(null);
 
   const loadYaml = async () => {
-    const res = await getDeploymentYaml(resource.id, keycloak.token);
-    setTextAreaValue(res.config);
+    try {
+      const res = await getDeploymentYaml(resource.id, keycloak.token);
+      setTextAreaValue(res.config);
+    } catch (e) {}
   };
 
   useEffect(() => {

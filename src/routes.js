@@ -11,7 +11,6 @@ import Create from "./pages/create";
 import NotFound from "./pages/404";
 import Status from "./pages/status";
 import ProtectedRoute from "./components/ProtectedRoute";
-import { GHLogin } from "./pages/github/GHLogin";
 
 // ----------------------------------------------------------------------
 
@@ -53,10 +52,6 @@ export default function Router() {
               <Create />
             </ProtectedRoute>
           ),
-        },
-        {
-          path: "ghlogin",
-          element: <GHLogin />,
         },
       ],
     },

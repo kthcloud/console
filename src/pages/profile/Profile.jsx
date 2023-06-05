@@ -36,7 +36,6 @@ import { AccountCircle, Email } from "@mui/icons-material";
 import { getUser, updateUser } from "src/api/deploy/users";
 import { wasActivated } from "src/utils/eventHandler";
 import { UserQuotas } from "./UserQuotas";
-import { Input } from "@mui/base";
 
 export function Profile() {
   const { keycloak, initialized } = useKeycloak();

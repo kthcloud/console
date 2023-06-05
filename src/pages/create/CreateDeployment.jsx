@@ -22,6 +22,7 @@ import { useSnackbar } from "notistack";
 import { useKeycloak } from "@react-keycloak/web";
 import RFC1035Input from "src/components/RFC1035Input";
 import { faker } from '@faker-js/faker';
+import { GHSelect } from "./GHSelect";
 
 export default function CreateDeployment({ finished }) {
   const [cleaned, setCleaned] = useState("");
@@ -30,12 +31,16 @@ export default function CreateDeployment({ finished }) {
   const [envs, setEnvs] = useState([]);
   const [newEnvName, setNewEnvName] = useState("");
   const [newEnvValue, setNewEnvValue] = useState("");
+
+  const [accessToken, setAccessToken] = useState("");
+  const [repo, setRepo] = useState("");
+
   const { enqueueSnackbar } = useSnackbar();
 
   const handleCreate = async (stay) => {
     if (!initialized) return;
     try {
-      const job = await createDeployment(cleaned, envs, keycloak.token);
+      const job = await createDeployment(cleaned, envs, repo, accessToken, keycloak.token);
       finished(job, stay);
       if (stay) {
         setCleaned("");
@@ -68,6 +73,8 @@ export default function CreateDeployment({ finished }) {
           />
         </CardContent>
       </Card>
+
+      <GHSelect setAccessToken={setAccessToken} repo={repo} setRepo={setRepo} />
 
       <Card sx={{ boxShadow: 20 }}>
         <CardHeader title={"Set environment variables"} />
