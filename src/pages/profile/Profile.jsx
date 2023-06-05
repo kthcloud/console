@@ -36,6 +36,7 @@ import { AccountCircle, Email } from "@mui/icons-material";
 import { getUser, updateUser } from "src/api/deploy/users";
 import { wasActivated } from "src/utils/eventHandler";
 import { UserQuotas } from "./UserQuotas";
+import { Input } from "@mui/base";
 
 export function Profile() {
   const { keycloak, initialized } = useKeycloak();
@@ -127,6 +128,16 @@ export function Profile() {
         </CopyToClipboard>
       </Stack>
     );
+  };
+
+  const getKeyFromFile = (path) => {
+    if (!path) return;
+
+    const reader = new FileReader();
+    reader.addEventListener("load", () => {
+      setNewKey(reader.result);
+    });
+    reader.readAsText(path);
   };
 
   return (
@@ -299,17 +310,28 @@ export function Profile() {
                             />
                           </TableCell>
                           <TableCell>
-                            <TextField
-                              label="Key"
-                              variant="standard"
-                              value={newKey}
-                              onChange={(e) => {
-                                setNewKey(e.target.value);
-                              }}
-                              fullWidth
-                              error={Boolean(validationError.key)}
-                              helperText={validationError.key}
-                            />
+                            <Stack
+                              direction={"row"}
+                              spacing={1}
+                              alignItems={"center"}
+                            >
+                              <TextField
+                                label="Key"
+                                variant="standard"
+                                value={newKey}
+                                onChange={(e) => {
+                                  setNewKey(e.target.value);
+                                }}
+                                fullWidth
+                                error={Boolean(validationError.key)}
+                                helperText={validationError.key}
+                              />
+                              <span>or</span>
+                              <Input
+                                type="file"
+                                onChange={(e) => getKeyFromFile(e.target.files[0])}
+                              />
+                            </Stack>
                           </TableCell>
                           <TableCell align="right">
                             <IconButton
