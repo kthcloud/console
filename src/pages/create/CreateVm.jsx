@@ -86,8 +86,8 @@ export default function CreateVm({ finished }) {
       return;
     }
 
-    if (value < 1) {
-      setCpuError("Minimum CPU cores: 1");
+    if (value < 2) {
+      setCpuError("Minimum CPU cores: 2");
       setCpuCores(value);
 
       return;
