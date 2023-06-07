@@ -172,13 +172,18 @@ export function Deploy() {
       resource.private === false
     ) {
       return (
-        <>
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="flex-end"
+          useFlexGap={true}
+          spacing={2}
+        >
           <Link
             href={resource.url}
             target="_blank"
             rel="noreferrer"
             underline="none"
-            mr={2}
           >
             <Iconify icon="mdi:external-link" width={24} height={24} />
           </Link>
@@ -188,7 +193,7 @@ export function Deploy() {
           >
             <Iconify icon="mdi:pencil" width={24} height={24} />
           </Link>
-        </>
+        </Stack>
       );
     } else {
       return (
@@ -241,17 +246,14 @@ export function Deploy() {
               </span>
             </Tooltip>
           )}
-          {resource.integrations && resource.integrations.includes("github") && (
-            <Tooltip
-              title={
-                "Linked to GitHub"
-              }
-            >
-              <span style={{ display: "flex", alignItems: "center" }}>
-                <Iconify icon="mdi:github" width={20} height={20} ml={1} />
-              </span>
-            </Tooltip>
-          )}
+          {resource.integrations &&
+            resource.integrations.includes("github") && (
+              <Tooltip title={"Linked to GitHub"}>
+                <span style={{ display: "flex", alignItems: "center" }}>
+                  <Iconify icon="mdi:github" width={20} height={20} ml={1} />
+                </span>
+              </Tooltip>
+            )}
         </Typography>
       );
     } else {
