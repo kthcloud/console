@@ -98,7 +98,7 @@ const ResourceComparisonTable = () => {
         <b>Kubernetes Deployment</b>
         <br />
         Used for stateless <u>frontend</u> and <u>backend</u> services. Allows
-        for CI/CD through GitHub Actions.
+        for CI/CD through GitHub Actions and other pipelines. Your repo must have a Dockerfile.
       </Typography>
 
       <Typography variant="body2">
