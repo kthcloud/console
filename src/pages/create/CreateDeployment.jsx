@@ -21,7 +21,7 @@ import { createDeployment } from "src/api/deploy/deployments";
 import { useSnackbar } from "notistack";
 import { useKeycloak } from "@react-keycloak/web";
 import RFC1035Input from "src/components/RFC1035Input";
-import { faker } from '@faker-js/faker';
+import { faker } from "@faker-js/faker";
 import { GHSelect } from "./GHSelect";
 
 export default function CreateDeployment({ finished }) {
@@ -40,7 +40,13 @@ export default function CreateDeployment({ finished }) {
   const handleCreate = async (stay) => {
     if (!initialized) return;
     try {
-      const job = await createDeployment(cleaned, envs, repo, accessToken, keycloak.token);
+      const job = await createDeployment(
+        cleaned,
+        envs,
+        repo,
+        accessToken,
+        keycloak.token
+      );
       finished(job, stay);
       if (stay) {
         setCleaned("");
@@ -68,8 +74,9 @@ export default function CreateDeployment({ finished }) {
             variant="standard"
             cleaned={cleaned}
             setCleaned={setCleaned}
-            initialValue={faker.word.words(3).replace(/[^a-z0-9]|\s+|\r?\n|\r/gmi, "-")}
-
+            initialValue={faker.word
+              .words(3)
+              .replace(/[^a-z0-9]|\s+|\r?\n|\r/gim, "-")}
           />
         </CardContent>
       </Card>

@@ -16,7 +16,7 @@ export const LogsView = ({ deployment }) => {
     if (!(deployment && initialized)) return;
 
     const ws = new WebSocket(
-        process.env.REACT_APP_DEPLOY_SOCKET_URL +
+      process.env.REACT_APP_DEPLOY_SOCKET_URL +
         "/deployments/" +
         deployment.id +
         "/logs"
@@ -58,7 +58,6 @@ export const LogsView = ({ deployment }) => {
             autoCorrect="off"
             autoCapitalize="off"
             spellCheck="false"
-            
           />
         </Box>
       </CardContent>

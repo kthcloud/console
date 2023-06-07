@@ -22,8 +22,7 @@ import { useSnackbar } from "notistack";
 import { createVM } from "src/api/deploy/vms";
 import { Link } from "react-router-dom";
 import RFC1035Input from "src/components/RFC1035Input";
-import { faker } from '@faker-js/faker';
-
+import { faker } from "@faker-js/faker";
 
 export default function CreateVm({ finished }) {
   const [cleaned, setCleaned] = useState("");
@@ -216,14 +215,18 @@ export default function CreateVm({ finished }) {
             variant="standard"
             cleaned={cleaned}
             setCleaned={setCleaned}
-            initialValue={faker.word.words(3).replace(/[^a-z0-9]|\s+|\r?\n|\r/gmi, "-")}
+            initialValue={faker.word
+              .words(3)
+              .replace(/[^a-z0-9]|\s+|\r?\n|\r/gim, "-")}
           />
 
           {user && (
             <FormControl fullWidth sx={{ mt: 3 }}>
               <InputLabel id="publickey-select-label">SSH Key</InputLabel>
               <Select
-                defaultValue={user.publicKeys.length > 0 && user.publicKeys[0].key}
+                defaultValue={
+                  user.publicKeys.length > 0 && user.publicKeys[0].key
+                }
                 id="publickey"
                 label="SSH Key"
                 onChange={(e) => {

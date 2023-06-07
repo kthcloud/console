@@ -21,11 +21,11 @@ const SSHString = ({ resource }) => {
       />
       <CardContent>
         {!ssh ? (
-          <Skeleton height={"2rem"} sx={{maxWidth: "30rem"}}/>
+          <Skeleton height={"2rem"} sx={{ maxWidth: "30rem" }} />
         ) : (
-              <Typography variant="body1">
-              <CopyToClipboard text={ssh}>
-                <Tooltip title="Copy to clipboard">
+          <Typography variant="body1">
+            <CopyToClipboard text={ssh}>
+              <Tooltip title="Copy to clipboard">
                 <b
                   style={{
                     fontFamily: "monospace",
@@ -34,9 +34,9 @@ const SSHString = ({ resource }) => {
                 >
                   {ssh}
                 </b>
-            </Tooltip>
-          </CopyToClipboard>
-              </Typography>
+              </Tooltip>
+            </CopyToClipboard>
+          </Typography>
         )}
       </CardContent>
     </Card>

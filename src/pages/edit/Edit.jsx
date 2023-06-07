@@ -5,7 +5,7 @@ import {
   Stack,
   Chip,
   Breadcrumbs,
-  Link
+  Link,
 } from "@mui/material";
 
 //hooks
@@ -133,9 +133,10 @@ export function Edit() {
                 <PrivateMode deployment={resource} />
               )}
 
-              {resource.type === "deployment" && !resource.integrations.includes("github") && (
-                <GHActions resource={resource} />
-              )}
+              {resource.type === "deployment" &&
+                !resource.integrations.includes("github") && (
+                  <GHActions resource={resource} />
+                )}
 
               {resource.type === "deployment" && (
                 <LogsView deployment={resource} />

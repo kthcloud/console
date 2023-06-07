@@ -48,7 +48,7 @@ export default function Specs({ vm }) {
     if (vm) {
       setSpecs(vm.specs);
     }
-    
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [vm]);
 

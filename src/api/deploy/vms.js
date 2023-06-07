@@ -75,15 +75,12 @@ export const attachGPUById = async (vm, token, id) => {
 };
 
 export const getGPUs = async (token) => {
-  const res = await fetch(
-    process.env.REACT_APP_DEPLOY_API_URL + "/gpus",
-    {
-      method: "GET",
-      headers: {
-        Authorization: "Bearer " + token,
-      },
-    }
-  );
+  const res = await fetch(process.env.REACT_APP_DEPLOY_API_URL + "/gpus", {
+    method: "GET",
+    headers: {
+      Authorization: "Bearer " + token,
+    },
+  });
   if (!res.ok) {
     const body = await res.json();
     if (body) {

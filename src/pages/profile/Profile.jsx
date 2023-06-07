@@ -327,9 +327,12 @@ export function Profile() {
                               />
                               <span>or</span>
 
-                              <Button variant="contained" component="label" sx={{whiteSpace: "nowrap", px:3}} >
+                              <Button
+                                variant="contained"
+                                component="label"
+                                sx={{ whiteSpace: "nowrap", px: 3 }}
+                              >
                                 Select Key File
-                                
                                 <input
                                   type="file"
                                   hidden
