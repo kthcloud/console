@@ -221,10 +221,7 @@ export function Deploy() {
           </Tooltip>
         </Typography>
       );
-    } else if (resource.type === "deployment" && resource.private === true) {
-      const tooltip =
-        "This deployment is private. It is not visible on the Internet.";
-
+    } else if (resource.type === "deployment") {
       return (
         <Typography
           variant="body2"
@@ -233,11 +230,28 @@ export function Deploy() {
           alignItems="center"
         >
           {resource.type}
-          <Tooltip title={tooltip}>
-            <span style={{ display: "flex", alignItems: "center" }}>
-              <Iconify icon="mdi:eye-off" width={20} height={20} ml={1} />
-            </span>
-          </Tooltip>
+          {resource.private === true && (
+            <Tooltip
+              title={
+                "This deployment is private, it is not visible on the Internet"
+              }
+            >
+              <span style={{ display: "flex", alignItems: "center" }}>
+                <Iconify icon="mdi:eye-off" width={20} height={20} ml={1} />
+              </span>
+            </Tooltip>
+          )}
+          {resource.integrations && resource.integrations.includes("github") && (
+            <Tooltip
+              title={
+                "Linked to GitHub"
+              }
+            >
+              <span style={{ display: "flex", alignItems: "center" }}>
+                <Iconify icon="mdi:github" width={20} height={20} ml={1} />
+              </span>
+            </Tooltip>
+          )}
         </Typography>
       );
     } else {

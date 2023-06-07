@@ -1,4 +1,4 @@
-import { Button, Stack, Link } from "@mui/material";
+import { Button, Stack, Link, Tooltip } from "@mui/material";
 import { useKeycloak } from "@react-keycloak/web";
 import { enqueueSnackbar } from "notistack";
 import { useNavigate } from "react-router-dom";
@@ -34,6 +34,14 @@ export const DeploymentCommands = ({ deployment }) => {
       spacing={3}
       useFlexGap={true}
     >
+      {deployment.integrations &&
+        deployment.integrations.includes("github") && (
+          <Tooltip title={"Linked to GitHub"}>
+            <span style={{ display: "flex", alignItems: "center" }}>
+              <Iconify icon="mdi:github" width={24} height={24} />
+            </span>
+          </Tooltip>
+        )}
       {deployment.type === "deployment" &&
         Object.hasOwn(deployment, "url") &&
         deployment.url !== "" &&
