@@ -133,7 +133,7 @@ export function Edit() {
                 <PrivateMode deployment={resource} />
               )}
 
-              {resource.type === "deployment" && (
+              {resource.type === "deployment" && !resource.integrations.includes("github") && (
                 <GHActions resource={resource} />
               )}
 
