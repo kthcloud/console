@@ -29,9 +29,9 @@ export default function CreateVm({ finished }) {
   const [cleaned, setCleaned] = useState("");
 
   const [publicKey, setPublicKey] = useState("");
-  const [cpuCores, setCpuCores] = useState("2");
-  const [diskSize, setDiskSize] = useState("20");
-  const [ram, setRam] = useState("4");
+  const [cpuCores, setCpuCores] = useState(2);
+  const [diskSize, setDiskSize] = useState(20);
+  const [ram, setRam] = useState(4);
 
   const { enqueueSnackbar } = useSnackbar();
   const { initialized, keycloak } = useKeycloak();
