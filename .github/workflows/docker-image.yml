@@ -21,5 +21,5 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
-          tags: registry.cloud.cbh.kth.se/system/landing-frontend:latest
+          tags: registry.cloud.cbh.kth.se/landing/landing-frontend:latest
 
