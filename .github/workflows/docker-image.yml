@@ -24,6 +24,7 @@ jobs:
         with:
           push: true
           tags: registry.cloud.cbh.kth.se/landing/landing-frontend:latest
-        env:
-            RELEASE_BRANCH: release
-            RELEASE_COMMIT: ${{ github.sha }}
+          build-args: |
+            "RELEASE_BRANCH=release"
+            "RELEASE_DATE=${{ env.RELEASE_DATE }}"
+            "RELEASE_COMMIT=${{ github.sha }}"
