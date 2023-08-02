@@ -24,7 +24,6 @@ jobs:
         with:
           push: true
           tags: registry.cloud.cbh.kth.se/landing/landing-frontend:latest
-          context: .
           build-args: |
             "RELEASE_BRANCH=release"
             "RELEASE_DATE=${{ env.REACT_APP_RELEASE_DATE }}"
