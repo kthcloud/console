@@ -12,6 +12,9 @@ jobs:
       - name: Get current date
         id: date
         run: echo "{date}={$(date +'%Y-%m-%d')}" >> $GITHUB_OUTPUT
+      
+      - name: Show where we at
+        run: ls
 
       - name: Get current branch hash
         id: branch
