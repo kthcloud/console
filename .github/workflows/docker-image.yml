@@ -15,7 +15,7 @@ jobs:
       - name: Test with environment variables
         run: echo $REACT_APP_RELEASE_NAME
         env:
-          REACT_APP_RELEASE_NAME: kthcloud-landing-frontend-release-${{ steps.date.outputs.date }}-$(git rev-parse --short "$GITHUB_SHA")
+          REACT_APP_RELEASE_NAME: kthcloud-landing-frontend-release-${{ steps.date.outputs.date }}-${{ git rev-parse --short "$GITHUB_SHA")}}
 
       - name: Login to DockerHub
         uses: docker/login-action@v2

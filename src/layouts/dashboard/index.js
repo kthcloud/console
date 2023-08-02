@@ -3,6 +3,7 @@ import { Outlet } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 //
 import Navbar from "./Navbar";
+import { Container } from "@mui/material";
 
 // ----------------------------------------------------------------------
 
@@ -36,6 +37,9 @@ export default function DashboardLayout() {
       <Navbar />
       <MainStyle>
         <Outlet />
+        <Container sx={{opacity: 0.5, textAlign: "center", padding:"2rem"}} >
+          <p><span style={{opacity: 0.75}}>kthcloud/landing-frontend</span> {process.env.REACT_APP_RELEASE_NAME}</p>
+        </Container>
       </MainStyle>
     </RootStyle>
   );
