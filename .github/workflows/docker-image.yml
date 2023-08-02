@@ -18,7 +18,7 @@ jobs:
 
       - name: Get current branch hash
         id: branch
-        run: echo "{branch}={$(git rev-parse --short "$GITHUB_REF")}" >> $GITHUB_OUTPUT 
+        run: echo "{branch}={${{ github.sha }}}" >> $GITHUB_OUTPUT 
 
       - name: Test with environment variables
         run: echo $REACT_APP_RELEASE_NAME
