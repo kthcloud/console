@@ -24,7 +24,15 @@ export const VMCommands = ({ vm }) => {
         navigate("/deploy");
       }
     } catch (err) {
-      enqueueSnackbar(err, { variant: "error" });
+      const errorMessage = "Cannot delete vm: "
+      if(err.hasOwnProperty("errors") && Array.isArray(err.errors)) {
+        err.errors.forEach((error) => {
+          enqueueSnackbar(errorMessage + sentenceCase(error.code) + " - " + error.msg, { variant: "error" });
+        });
+      }
+      else{
+        enqueueSnackbar(errorMessage + JSON.stringify(err), { variant: "error" });
+      }
     }
   };
 
@@ -37,9 +45,15 @@ export const VMCommands = ({ vm }) => {
         variant: "info",
       });
     } catch (err) {
-      enqueueSnackbar("Could not execute command " + JSON.stringify(err), {
-        variant: "error",
-      });
+      const errorMessage = "Cannot execute command: "
+      if(err.hasOwnProperty("errors") && Array.isArray(err.errors)) {
+        err.errors.forEach((error) => {
+          enqueueSnackbar(errorMessage + sentenceCase(error.code) + " - " + error.msg, { variant: "error" });
+        });
+      }
+      else{
+        enqueueSnackbar(errorMessage + JSON.stringify(err), { variant: "error" });
+      }
     }
   };
 
