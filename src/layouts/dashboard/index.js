@@ -31,6 +31,12 @@ const MainStyle = styled("div")(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
+const releaseBranch = process.env.REACT_APP_RELEASE_BRANCH;
+const releaseDate = process.env.REACT_APP_RELEASE_DATE;
+const releaseCommit = process.env.REACT_APP_RELEASE_COMMIT;
+const name = releaseBranch+"-"+releaseDate+"-"+releaseCommit.slice(0,7);
+
+
 export default function DashboardLayout() {
   return (
     <RootStyle>
@@ -38,7 +44,7 @@ export default function DashboardLayout() {
       <MainStyle>
         <Outlet />
         <Container sx={{opacity: 0.5, textAlign: "center", padding:"2rem"}} >
-          <p><span style={{opacity: 0.75}}>kthcloud/landing-frontend</span> {process.env.REACT_APP_RELEASE_NAME}</p>
+          <p><span style={{opacity: 0.75}}>kthcloud/landing-frontend</span> {name}</p>
         </Container>
       </MainStyle>
     </RootStyle>
