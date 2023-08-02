@@ -3,16 +3,20 @@ name: ci
 on:
   push:
     branches:
-      - 'main'
+      - "main"
 
 jobs:
   docker:
     runs-on: ubuntu-latest
     steps:
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+
       - name: Test with environment variables
         run: echo $REACT_APP_RELEASE_NAME
         env:
-          REACT_APP_RELEASE_NAME: release-$(date +'%Y-%m-%d')-${{ github.sha }}
+          REACT_APP_RELEASE_NAME: release-${{ steps.date.outputs.date }}-${{ github.sha }}
 
       - name: Login to DockerHub
         uses: docker/login-action@v2
@@ -26,4 +30,3 @@ jobs:
         with:
           push: true
           tags: registry.cloud.cbh.kth.se/landing/landing-frontend:latest
-
