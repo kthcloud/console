@@ -30,10 +30,9 @@ const MainStyle = styled("div")(({ theme }) => ({
 }));
 
 // ----------------------------------------------------------------------
-
-const releaseBranch = process.env.REACT_APP_RELEASE_BRANCH;
-const releaseDate = process.env.REACT_APP_RELEASE_DATE;
-const releaseCommit = process.env.REACT_APP_RELEASE_COMMIT;
+const releaseBranch = process.env.REACT_APP_RELEASE_BRANCH || "dev";
+const releaseDate = process.env.REACT_APP_RELEASE_DATE || "1970-01-01_00:00";
+const releaseCommit = process.env.REACT_APP_RELEASE_COMMIT || "0000000000000000000000000000000000000000" ;
 const name = releaseBranch+"-"+releaseDate+"-"+releaseCommit.slice(0,7);
 
 
