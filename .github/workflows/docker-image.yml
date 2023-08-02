@@ -18,13 +18,13 @@ jobs:
           registry: registry.cloud.cbh.kth.se
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-          
+
       - name: Build and push
         uses: docker/build-push-action@v3
         with:
           push: true
           tags: registry.cloud.cbh.kth.se/landing/landing-frontend:latest
           build-args: |
-            "REACT_APP_RELEASE_BRANCH: release"
-            "REACT_APP_RELEASE_DATE: ${{ env.REACT_APP_RELEASE_DATE }}"
-            "REACT_APP_RELEASE_COMMIT: ${{ github.sha }}"
+            "RELEASE_BRANCH=release"
+            "RELEASE_DATE=${{ env.REACT_APP_RELEASE_DATE }}"
+            "RELEASE_COMMIT=${{ github.sha }}"
