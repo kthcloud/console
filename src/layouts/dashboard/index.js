@@ -44,7 +44,7 @@ export default function DashboardLayout() {
       <MainStyle>
         <Outlet />
         <Container sx={{opacity: 0.5, textAlign: "center", padding:"2rem"}} >
-          <p><span style={{opacity: 0.75}}>kthcloud/landing-frontend</span> {name}</p>
+          <p><a style={{opacity: 0.75, color: "inherit"}} href="https://github.com/kthcloud/landing-frontend">kthcloud/landing-frontend</a> {name}</p>
         </Container>
       </MainStyle>
     </RootStyle>
