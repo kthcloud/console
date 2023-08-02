@@ -9,15 +9,8 @@ jobs:
   docker:
     runs-on: ubuntu-latest
     steps:
-      - name: Set release date
-        run: echo "REACT_APP_RELEASE_DATE=$( date '+%F_%H:%M' )" >> .env
-      - name: Set release branch
-        run: echo "REACT_APP_RELEASE_BRANCH=release" >> .env
-      - name: Set release date
-        run: echo "REACT_APP_RELEASE_DATE=${{ github.sha }}" >> .env
-
-      - name: Check release
-        run: cat .env
+      - name: Set release env
+        run: echo "REACT_APP_RELEASE_DATE=$( date '+%F_%H:%M' )" >> $GITHUB_ENV
 
       - name: Login to DockerHub
         uses: docker/login-action@v2
@@ -25,9 +18,13 @@ jobs:
           registry: registry.cloud.cbh.kth.se
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-
+          
       - name: Build and push
         uses: docker/build-push-action@v3
         with:
           push: true
           tags: registry.cloud.cbh.kth.se/landing/landing-frontend:latest
+          build-args: |
+            "REACT_APP_RELEASE_BRANCH: release"
+            "REACT_APP_RELEASE_DATE: ${{ env.REACT_APP_RELEASE_DATE }}"
+            "REACT_APP_RELEASE_COMMIT: ${{ github.sha }}"
