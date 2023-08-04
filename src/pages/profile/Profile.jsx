@@ -244,6 +244,7 @@ export function Profile() {
                       Your public keys will be installed when creating VMs
                       <br />
                       Changes will not apply to existing VMs
+                      <br /> Make sure you are uploading your public SSH key
                     </span>
                   }
                 />
