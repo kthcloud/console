@@ -142,72 +142,14 @@ export default function Menu() {
           <>
             <Divider sx={{ borderStyle: "dashed" }} />
 
-            {/* DEV */}
+
             <Box sx={{ mt: 1.5, px: 2.5 }}>
               <Typography
                 variant="body2"
                 sx={{ color: "text.secondary" }}
                 noWrap
               >
-                Development
-              </Typography>
-            </Box>
-
-            <Stack sx={{ p: 1 }}>
-              <MenuItem
-                href={"https://k8s.dev.cloud.cbh.kth.se"}
-                component={Link}
-                onClick={handleClose}
-              >
-                Kubernetes
-              </MenuItem>
-              <MenuItem
-                href={"https://proxy.dev.cloud.cbh.kth.se"}
-                component={Link}
-                onClick={handleClose}
-              >
-                Proxy
-              </MenuItem>
-            </Stack>
-            <Divider sx={{ borderStyle: "dashed" }} />
-
-            {/* PROD */}
-            <Box sx={{ mt: 1.5, px: 2.5 }}>
-              <Typography
-                variant="body2"
-                sx={{ color: "text.secondary" }}
-                noWrap
-              >
-                Production
-              </Typography>
-            </Box>
-
-            <Stack sx={{ p: 1 }}>
-              <MenuItem
-                href={"https://k8s.prod.cloud.cbh.kth.se"}
-                component={Link}
-                onClick={handleClose}
-              >
-                Kubernetes
-              </MenuItem>
-              <MenuItem
-                href={"https://proxy.prod.cloud.cbh.kth.se"}
-                component={Link}
-                onClick={handleClose}
-              >
-                Proxy
-              </MenuItem>
-            </Stack>
-            <Divider sx={{ borderStyle: "dashed" }} />
-
-            {/* INTERNAL */}
-            <Box sx={{ mt: 1.5, px: 2.5 }}>
-              <Typography
-                variant="body2"
-                sx={{ color: "text.secondary" }}
-                noWrap
-              >
-                Internal
+                Admin
               </Typography>
             </Box>
 
@@ -217,21 +159,29 @@ export default function Menu() {
                 component={Link}
                 onClick={handleClose}
               >
-                Dashboard
+                CloudStack
               </MenuItem>
               <MenuItem
                 href={"https://k8s.cloud.cbh.kth.se"}
                 component={Link}
                 onClick={handleClose}
               >
-                Kubernetes
+                K8s sys
               </MenuItem>
+
               <MenuItem
-                href={"https://proxy.cloud.cbh.kth.se"}
+                href={"https://k8s.prod.cloud.cbh.kth.se"}
                 component={Link}
                 onClick={handleClose}
               >
-                Proxy
+                K8s prod
+              </MenuItem>
+              <MenuItem
+                href={"https://k8s.dev.cloud.cbh.kth.se"}
+                component={Link}
+                onClick={handleClose}
+              >
+                K8s dev
               </MenuItem>
               <MenuItem
                 href={"https://iam.cloud.cbh.kth.se"}
