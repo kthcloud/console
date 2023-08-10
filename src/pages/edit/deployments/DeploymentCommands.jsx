@@ -2,9 +2,10 @@ import { Button, Stack, Link, Tooltip } from "@mui/material";
 import { useKeycloak } from "@react-keycloak/web";
 import { enqueueSnackbar } from "notistack";
 import { useNavigate } from "react-router-dom";
-import { deleteDeployment } from "src/api/deploy/deployments";
+import { deleteDeployment, applyCommand } from "src/api/deploy/deployments";
 import Iconify from "src/components/Iconify";
 import useResource from "src/hooks/useResource";
+import { sentenceCase } from "change-case";
 
 export const DeploymentCommands = ({ deployment }) => {
   const { queueJob } = useResource();
@@ -26,6 +27,32 @@ export const DeploymentCommands = ({ deployment }) => {
       enqueueSnackbar(err, { variant: "error" });
     }
   };
+
+  const executeCommand = async (command) => {
+    if (!(initialized && keycloak.authenticated)) return;
+
+    try {
+      await applyCommand(deployment.id, command, keycloak.token);
+      enqueueSnackbar(sentenceCase(command) + " deployment in progress... ", {
+        variant: "info",
+      });
+    } catch (err) {
+      const errorMessage = "Cannot execute command: ";
+      if (err.hasOwnProperty("errors") && Array.isArray(err.errors)) {
+        err.errors.forEach((error) => {
+          enqueueSnackbar(
+            errorMessage + sentenceCase(error.code) + " - " + error.msg,
+            { variant: "error" }
+          );
+        });
+      } else {
+        enqueueSnackbar(errorMessage + JSON.stringify(err), {
+          variant: "error",
+        });
+      }
+    }
+  };
+
   return (
     <Stack
       direction="row"
@@ -42,6 +69,18 @@ export const DeploymentCommands = ({ deployment }) => {
             </span>
           </Tooltip>
         )}
+
+      {deployment.status === "resourceRunning" && (
+        <Button
+          onClick={() => executeCommand("restart")}
+          variant="contained"
+          to="#"
+          startIcon={<Iconify icon="mdi:restart" />}
+          color="warning"
+        >
+          Restart
+        </Button>
+      )}
       {deployment.type === "deployment" &&
         Object.hasOwn(deployment, "url") &&
         deployment.url !== "" &&
