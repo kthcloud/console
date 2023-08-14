@@ -289,7 +289,7 @@ export const GPUManager = ({ vm }) => {
           </Stack>
 
           <Typography variant="body2">
-            Leasing a GPU allow you to use it allocate it for a limited time.
+            Leasing a GPU allow you to use it for a limited time.
             You will need to install the drivers and software yourself.
             <br />
             For Ubuntu VMs,{" "}
