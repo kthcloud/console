@@ -37,6 +37,7 @@ export default function PortManager({ vm }) {
   const { queueJob } = useResource();
   const { initialized, keycloak } = useKeycloak();
   const [loading, setLoading] = useState(false);
+  const [publicIP, setPublicIP] = useState("");
 
   const isSamePort = (p1, p2) => {
     if (p1.internal !== p2.internal) return false;
@@ -59,8 +60,20 @@ export default function PortManager({ vm }) {
 
     setPorts(newPorts);
 
+    loadPublicIP();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [vm]);
+
+  const loadPublicIP = async () => {
+    const res = await fetch(
+      "https://dns.google/resolve?name=vm.cloud.cbh.kth.se&type=A"
+    );
+    const json = await res.json();
+    if (json.Answer) {
+      setPublicIP(json.Answer[0].data);
+    }
+  };
 
   const applyChanges = async (newPorts) => {
     if (!initialized) return;
@@ -138,6 +151,32 @@ export default function PortManager({ vm }) {
             >
               {":[external_port]"}
             </span>
+            {publicIP && (
+              <>
+                {" or "}
+                <CopyToClipboard text={publicIP}>
+                  <Tooltip title="Copy to clipboard">
+                    <b
+                      style={{
+                        fontFamily: "monospace",
+                        cursor: "pointer",
+                        color: "#45515c",
+                      }}
+                    >
+                      {publicIP}
+                    </b>
+                  </Tooltip>
+                </CopyToClipboard>
+                <span
+                  style={{
+                    fontFamily: "monospace",
+                    color: "#45515c",
+                  }}
+                >
+                  {":[external_port]"}
+                </span>
+              </>
+            )}
           </span>
         }
       />

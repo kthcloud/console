@@ -292,7 +292,7 @@ export const GPUManager = ({ vm }) => {
             Leasing a GPU allows you to use it for a limited time.
             You will need to install the drivers and software yourself.
             <br />
-            For Ubuntu VMs,{" "}
+            On Ubuntu, run{" "}
             <CopyToClipboard text="sudo ubuntu-drivers install --gpgpu">
               <Tooltip title="Copy to clipboard">
                 <span
@@ -306,7 +306,7 @@ export const GPUManager = ({ vm }) => {
                 </span>
               </Tooltip>
             </CopyToClipboard>{" "}
-            can be used to install drivers.{" "}
+            to install the latest drivers.
             <Link
               href="https://help.ubuntu.com/community/NvidiaDriversInstallation"
               target="_blank"
