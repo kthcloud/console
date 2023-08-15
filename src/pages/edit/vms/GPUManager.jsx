@@ -154,6 +154,7 @@ export const GPUManager = ({ vm }) => {
                     const res = await attachGPU(vm, keycloak.token);
                     queueJob(res);
                   } catch (e) {
+                    setGpuLoading(false);
                     enqueueSnackbar(
                       "Could not attach GPU " + JSON.stringify(e),
                       { variant: "error" }
@@ -273,6 +274,7 @@ export const GPUManager = ({ vm }) => {
                           variant: "success",
                         });
                       } catch (e) {
+                        setGpuLoading(false);
                         enqueueSnackbar(
                           "Could not attach GPU " + JSON.stringify(e),
                           { variant: "error" }
