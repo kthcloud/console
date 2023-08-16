@@ -38,6 +38,7 @@ import LoadingPage from "../../components/LoadingPage";
 import Iconify from "../../components/Iconify";
 import { deleteDeployment } from "src/api/deploy/deployments";
 import { deleteVM } from "src/api/deploy/vms";
+import { getReasonPhrase } from "http-status-codes";
 
 // ----------------------------------------------------------------------
 
@@ -282,6 +283,28 @@ export function Deploy() {
     );
   };
 
+
+  const renderStatusCode = (row) => {
+    if(!row.pingResult)
+      return <></>
+    
+    let codeType = parseInt(row.pingResult.toString().charAt(0))
+
+    let color = "info"
+    if (codeType === 2 || codeType === 3) {
+      color = "success"
+    } else if (codeType === 4 || codeType === 5) {
+      color = "error"
+    }
+    
+    return (
+      <Label variant="ghost" color={color} style={{fontFamily: "monospace"}}>
+        {row.pingResult + " " + getReasonPhrase(row.pingResult)}
+      </Label>
+    );
+  };
+
+
   return (
     <>
       {!initialLoad ? (
@@ -373,7 +396,10 @@ export function Deploy() {
                               {renderResourceType(row)}
                             </TableCell>
                             <TableCell align="left">
+                              <Stack direction="row" alignItems="center" spacing={1}>
                               {renderResourceStatus(row)}
+                              {renderStatusCode(row)}
+                              </Stack>
                             </TableCell>
 
                             <TableCell align="right">
