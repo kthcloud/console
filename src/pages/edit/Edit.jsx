@@ -33,6 +33,7 @@ import { PrivateMode } from "./deployments/PrivateMode";
 import { DeploymentCommands } from "./deployments/DeploymentCommands";
 import { VMCommands } from "./vms/VMCommands";
 import { LogsView } from "./deployments/LogsView";
+import { getReasonPhrase } from "http-status-codes";
 
 export function Edit() {
   const { initialized } = useKeycloak();
@@ -101,7 +102,8 @@ export function Edit() {
                 useFlexGap={true}
               >
                 <Typography variant="h4">{resource.name}</Typography>
-                <Chip label={sentenceCase(resource.status.replace("resource", "").trim())} />
+                {resource.status && <Chip label={sentenceCase(resource.status.replace("resource", "").trim())} /> }
+                {resource.pingResult && <Chip label={sentenceCase(resource.pingResult.toString()) + " " + getReasonPhrase(resource.pingResult)} /> }
                 <div style={{ flexGrow: "1" }} />
 
                 {resource.type === "deployment" && (
