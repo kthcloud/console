@@ -101,7 +101,7 @@ export function Edit() {
                 useFlexGap={true}
               >
                 <Typography variant="h4">{resource.name}</Typography>
-                <Chip label={sentenceCase(resource.status)} />
+                <Chip label={sentenceCase(resource.status.replace("resource", "").trim())} />
                 <div style={{ flexGrow: "1" }} />
 
                 {resource.type === "deployment" && (

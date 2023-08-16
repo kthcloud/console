@@ -276,9 +276,11 @@ export function Deploy() {
 
     if (!color) color = "info";
 
+    let statusMessage = row.status.replace("resource", "").trim()
+
     return (
       <Label variant="ghost" color={color}>
-        {sentenceCase(row.status)}
+        {sentenceCase(statusMessage)}
       </Label>
     );
   };
