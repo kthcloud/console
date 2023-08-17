@@ -47,6 +47,7 @@ export const GPUManager = ({ vm }) => {
 
   useEffect(() => {
     setGpuLoading(false);
+    loadGPUs();
   }, [vm.gpu]);
 
   useEffect(() => {
