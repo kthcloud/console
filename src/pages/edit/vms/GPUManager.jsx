@@ -48,6 +48,8 @@ export const GPUManager = ({ vm }) => {
   useEffect(() => {
     setGpuLoading(false);
     loadGPUs();
+    
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [vm.gpu]);
 
   useEffect(() => {

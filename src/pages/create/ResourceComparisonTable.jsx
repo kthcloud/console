@@ -11,7 +11,6 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Typography,
 } from "@mui/material";
 
 import { useState } from "react";
@@ -94,22 +93,6 @@ const ResourceComparisonTable = () => {
 
   return (
     <>
-      <Typography variant="body2">
-        <b>Kubernetes Deployment</b>
-        <br />
-        Used for stateless <u>frontend</u> and <u>backend</u> services. Allows
-        for CI/CD through GitHub Actions and other pipelines. Your repo must have a Dockerfile.
-      </Typography>
-
-      <Typography variant="body2">
-        <b>VM (Virtual Machine)</b>
-        <br />
-        Provides the ability to run an operating system directly. More versatile
-        but deployment and maintenance will be more difficult. Ideal for{" "}
-        <u>GPU compute</u> and <u>databases</u>, anything that requires{" "}
-        <u>persistent storage</u>.
-      </Typography>
-
       <Stack spacing={3} direction="row">
         <Button
           variant="outlined"

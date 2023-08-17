@@ -29,6 +29,7 @@ import ResourceComparisonTable from "./ResourceComparisonTable";
 import CreateDeployment from "./CreateDeployment";
 import CreateVm from "./CreateVm";
 import { useNavigate } from "react-router-dom";
+import ResourceTypeChat from "./ResourceTypeChat";
 
 export const Create = () => {
   const { initialized } = useKeycloak();
@@ -63,20 +64,23 @@ export const Create = () => {
                 <CardHeader title={"Resource type"} />
                 <CardContent>
                   <Stack spacing={3}>
-                    <ResourceComparisonTable />
+                    <ResourceTypeChat />
 
-                    <ToggleButtonGroup
-                      color="primary"
-                      value={alignment}
-                      exclusive
-                      onChange={(e) => setAlignment(e.target.value)}
-                      aria-label="resource-type"
-                    >
-                      <ToggleButton value="deployment">
-                        Kubernetes Deployment
-                      </ToggleButton>
-                      <ToggleButton value="vm">Virtual machine</ToggleButton>
-                    </ToggleButtonGroup>
+                    <Stack spacing={3} direction="row">
+                      <ToggleButtonGroup
+                        color="primary"
+                        value={alignment}
+                        exclusive
+                        onChange={(e) => setAlignment(e.target.value)}
+                        aria-label="resource-type"
+                      >
+                        <ToggleButton value="deployment">
+                          Kubernetes Deployment
+                        </ToggleButton>
+                        <ToggleButton value="vm">Virtual machine</ToggleButton>
+                      </ToggleButtonGroup>
+                      <ResourceComparisonTable />
+                    </Stack>
                   </Stack>
                 </CardContent>
               </Card>
