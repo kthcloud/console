@@ -48,7 +48,7 @@ export const GPUManager = ({ vm }) => {
   useEffect(() => {
     setGpuLoading(false);
     loadGPUs();
-    
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [vm.gpu]);
 
@@ -79,6 +79,12 @@ export const GPUManager = ({ vm }) => {
     }
     hash = Math.abs(hash) % 10000; // Ensure that the hash is a 4 digit number
     return "#" + String(hash).padStart(4, "0"); // Format the hash with leading zeroes if required
+  };
+
+  const renderButtonText = () => {
+    if (!vm.gpu) return "Lease GPU";
+    if (vm.gpu.expired) return "Renew lease";
+    return "End GPU Lease";
   };
 
   return (
@@ -118,7 +124,7 @@ export const GPUManager = ({ vm }) => {
               />
             )}
 
-            {vm.gpu && (
+            {vm.gpu && !vm.gpu.expired && (
               <Chip
                 m={1}
                 icon={
@@ -142,13 +148,59 @@ export const GPUManager = ({ vm }) => {
               />
             )}
 
+            {vm.gpu && vm.gpu.expired && (
+              <Chip
+                m={1}
+                color="error"
+                icon={
+                  <Iconify icon="mdi:clock-outline" width={24} height={24} />
+                }
+                label={
+                  <span>
+                    Leased expired
+                    <b
+                      style={{
+                        fontFamily: "monospace",
+                        marginLeft: ".5em",
+                      }}
+                    >
+                      {new Date(vm.gpu.leaseEnd).toLocaleString(
+                        navigator.language
+                      )}
+                    </b>
+                  </span>
+                }
+              />
+            )}
+
             {gpuLoading && <Skeleton height={"2rem"} sx={{ width: "50%" }} />}
+
 
             {!(gpuPickerOpen || gpuLoading) && (
               <Button
                 onClick={async () => {
                   if (userCanListGPUs() && !vm.gpu) {
                     setGpuPickerOpen(true);
+                    return;
+                  }
+
+                  if (vm.gpu && vm.gpu.expired) {
+                    try {
+                      setGpuLoading(true);
+                      const res = await attachGPUById(
+                        vm,
+                        keycloak.token,
+                        vm.gpu.id
+                      );
+                      queueJob(res);
+                    } catch (e) {
+                      enqueueSnackbar(
+                        "Could not attach GPU " + JSON.stringify(e),
+                        { variant: "error" }
+                      );
+                    } finally {
+                      setGpuLoading(false);
+                    }
                     return;
                   }
 
@@ -175,9 +227,20 @@ export const GPUManager = ({ vm }) => {
                   )
                 }
               >
-                {!vm.gpu ? "Lease GPU" : "End GPU Lease"}
+                {renderButtonText()}
               </Button>
             )}
+
+            {vm.gpu && vm.gpu.expired && (
+              <>
+                <Typography variant="body2">
+                  <b>Your lease has expired.</b> The GPU will remain attached
+                  until someone else leases it. If you want to use it again, you
+                  will need to lease it again.
+                </Typography>
+              </>
+            )}
+
             {gpuPickerOpen && (
               <>
                 {gpus.length === 0 ? (
@@ -294,8 +357,8 @@ export const GPUManager = ({ vm }) => {
           </Stack>
 
           <Typography variant="body2">
-            Leasing a GPU allows you to use it for a limited time.
-            You will need to install the drivers and software yourself.
+            Leasing a GPU allows you to use it for a limited time. You will need
+            to install the drivers and software yourself.
             <br />
             On Ubuntu, run{" "}
             <CopyToClipboard text="sudo ubuntu-drivers install --gpgpu">
