@@ -4,10 +4,16 @@ Welcome to the kthcloud/landing-frontend repository! This project is the React f
 
 ## Table of Contents
 
+- [Services](#services)
 - [Setup](#setup)
 - [Contributing](#contributing)
 - [Formatting](#formatting)
 - [License](#license)
+
+## Services
+- [landing-api](https://github.com/kthcloud/landing-api): Provides stats and capacities
+- [go-deploy](https://github.com/kthcloud/go-deploy): Backend for creation, and management of resources
+- [llama](https://llama.app.cloud.cbh.kth.se/): Enables genAI features
 
 ## Setup
 
