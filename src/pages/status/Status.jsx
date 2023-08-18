@@ -202,52 +202,23 @@ export function Status() {
   };
 
   const getHeaderGenerated = async () => {
-    let body = JSON.stringify({
-      prompt:
-        'This is a conversation between user and llama, a friendly chatbot. respond in simple markdown.\n\nUser: Write a new header and subheader for our website, kthcloud. It is a cloud computing service for students and researchers at KTH, the royal institute of technology in stockholm, sweden. Keep it short - one sentence long. Return as a JSON with the header as the "header" and "sub" objects. \n\n\nllama: {"header": "Welcome to kthcloud", "sub": "Start deploying your projects today"}\n\nUser: Another one?\n\n\nllama:',
-      frequency_penalty: 0,
-      n_predict: 400,
-      presence_penalty: 0,
-      repeat_last_n: 256,
-      repeat_penalty: 1.18,
-      stop: ["</s>", "llama:", "User:"],
-      temperature: 0.7,
-      tfs_z: 1,
-      top_k: 40,
-      top_p: 0.5,
-      typical_p: 1,
-    });
 
     try {
-      let res = await fetch("https://llama.app.cloud.cbh.kth.se/completion", {
-        method: "POST",
-        body: body,
-      });
+      let res = await fetch("https://llama-prefetch.app.cloud.cbh.kth.se/query")
 
-      let data = await res.json();
-
-      let content = JSON.parse(data.content);
+      let content = await res.json();
 
       if (content.header) {
-        setHeader(fixCase(content.header));
+        setHeader(content.header);
       }
       if (content.sub) {
-        setSubheader(fixCase(content.sub));
+        setSubheader(content.sub);
       }
 
     } catch (_) {
     } finally {
       setHeaderLoading(false);
     }
-  };
-
-  const fixCase = (str) => {
-    let low_str = str.toLowerCase();
-    let index = low_str.indexOf("kthcloud");
-    if (index === -1) {
-      return str;
-    }
-    return str.substring(0, index) + "kthcloud" + str.substring(index + 8);
   };
 
   useEffect(() => {
