@@ -85,6 +85,7 @@ export const UserQuotas = ({ user }) => {
               </span>
             }
           />
+          {JSON.stringify(user.quota)}
         </Stack>
       </CardContent>
     </Card>

@@ -28,6 +28,7 @@ import EnvManager from "./deployments/EnvManager";
 import GHActions from "./deployments/GHActions";
 import SSHString from "./vms/SSHString";
 import Specs from "./vms/Specs";
+import SnapshotManager from "./vms/SnapshotManager";
 import { GPUManager } from "./vms/GPUManager";
 import { PrivateMode } from "./deployments/PrivateMode";
 import { DeploymentCommands } from "./deployments/DeploymentCommands";
@@ -115,13 +116,15 @@ export function Edit() {
 
               <JobList />
 
-              {resource.type === "vm" && <Specs vm={resource} />}
+              {resource.type === "vm" && <SSHString resource={resource} />}
 
               {resource.type === "vm" && <GPUManager vm={resource} />}
 
+              {resource.type === "vm" && <SnapshotManager vm={resource} />}
+
               {resource.type === "vm" && <PortManager vm={resource} />}
 
-              {resource.type === "vm" && <SSHString resource={resource} />}
+              {resource.type === "vm" && <Specs vm={resource} />}
 
               {resource.type === "deployment" && (
                 <EnvManager

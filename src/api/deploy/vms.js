@@ -166,3 +166,50 @@ export const applyCommand = async (id, command, token) => {
   }
   return true;
 };
+
+
+export const getSnapshots = async (id, token) => {
+  const res = await fetch(
+    process.env.REACT_APP_DEPLOY_API_URL + "/vms/" + id + "/snapshots",
+    {
+      method: "GET",
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    }
+  );
+
+  if (!res.ok) {
+    const body = await res.json();
+    if (body) {
+      throw body;
+    }
+    throw res;
+  }
+  const snapshots = await res.json();
+  return snapshots;
+};
+
+export const createSnapshot = async (id, name, token) => {
+  const body = { name: name };
+  const res = await fetch(
+    process.env.REACT_APP_DEPLOY_API_URL + "/vms/" + id + "/snapshots",
+    {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+      body: JSON.stringify(body),
+    }
+  );
+
+  if (!res.ok) {
+    const body = await res.json();
+    if (body) {
+      throw body;
+    }
+    throw res;
+  }
+
+  return await res.json();
+}
