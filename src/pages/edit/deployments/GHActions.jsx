@@ -55,7 +55,7 @@ const GHActions = ({ resource }) => {
     <>
       <Card sx={{ boxShadow: 20 }}>
         <CardHeader
-          title="Manually push image to registry"
+          title="Deploy with Docker CLI"
           subheader={"Run this in your terminal to publish your app"}
         />
         <CardContent>
@@ -73,7 +73,7 @@ const GHActions = ({ resource }) => {
 
       <Card sx={{ boxShadow: 20 }}>
         <CardHeader
-          title="GitHub Actions YAML"
+          title="Deploy with GitHub Actions"
           subheader={"Run this workflow to publish your app"}
         />
         <CardContent>
