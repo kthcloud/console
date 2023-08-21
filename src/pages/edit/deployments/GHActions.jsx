@@ -9,7 +9,9 @@ import {
   CardActions,
   CardContent,
   CardHeader,
+  Link,
   TextareaAutosize,
+  Typography,
 } from "@mui/material";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 
@@ -81,6 +83,18 @@ const GHActions = ({ resource }) => {
             value={actionsFile ? actionsFile : "Loading..."}
             style={{ width: "100%", border: 0 }}
           />
+
+          <Typography variant="body2">
+            Unsure where to paste this?
+            <Link
+              href="https://docs.github.com/en/actions/quickstart"
+              target="_blank"
+              rel="noreferrer"
+              ml={1}
+            >
+              GitHub Actions Quickstart
+            </Link>
+          </Typography>
         </CardContent>
         <CardActions>
           <CopyToClipboard text={actionsFile}>
