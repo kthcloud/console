@@ -175,7 +175,6 @@ export const GPUManager = ({ vm }) => {
 
             {gpuLoading && <Skeleton height={"2rem"} sx={{ width: "50%" }} />}
 
-
             {!(gpuPickerOpen || gpuLoading) && (
               <Button
                 onClick={async () => {
@@ -265,7 +264,7 @@ export const GPUManager = ({ vm }) => {
                             if (index % 2 === 0)
                               return { backgroundColor: "#eee" };
                           }}
-                          disabled={Boolean(gpu.lease)}
+                          disabled={Boolean(gpu.lease && !gpu.lease.expired)}
                         >
                           <Stack
                             direction={"row"}
@@ -280,7 +279,7 @@ export const GPUManager = ({ vm }) => {
                               {"NVIDIA " + gpu.name}
                             </span>
 
-                            {gpu.lease && gpu.lease.end && (
+                            {gpu.lease && gpu.lease.end && !gpu.lease.expired && (
                               <Chip
                                 label={
                                   <span>
