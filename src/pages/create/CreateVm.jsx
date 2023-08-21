@@ -44,6 +44,10 @@ export default function CreateVm({ finished }) {
   const [availableRAM, setAvailableRAM] = useState(0);
   const [availableDisk, setAvailableDisk] = useState(0);
 
+  const [initialName, setInitialName] = useState(
+    faker.word.words(3).replace(/[^a-z0-9]|\s+|\r?\n|\r/gim, "-")
+  );
+
   const loadProfile = async () => {
     if (!initialized) return -1;
 
@@ -175,11 +179,13 @@ export default function CreateVm({ finished }) {
       finished(job, stay);
 
       if (stay) {
+        setInitialName(
+          faker.word.words(3).replace(/[^a-z0-9]|\s+|\r?\n|\r/gim, "-")
+        );
         setCleaned("");
-        setPublicKey("");
-        setCpuCores("");
-        setDiskSize("");
-        setRam("");
+        setCpuCores(2);
+        setDiskSize(20);
+        setRam(4);
       }
     } catch (e) {
       enqueueSnackbar("Error creating vm " + JSON.stringify(e), {
@@ -215,9 +221,7 @@ export default function CreateVm({ finished }) {
             variant="standard"
             cleaned={cleaned}
             setCleaned={setCleaned}
-            initialValue={faker.word
-              .words(3)
-              .replace(/[^a-z0-9]|\s+|\r?\n|\r/gim, "-")}
+            initialValue={initialName}
           />
 
           {user && (

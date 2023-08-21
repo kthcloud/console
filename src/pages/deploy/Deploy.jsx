@@ -104,26 +104,32 @@ export function Deploy() {
     if (!initialized) return;
     setLoading(true);
 
-    const promises = selected.map(async (id) => {
-      if (rows.find((row) => row.id === id).type === "vm") {
-        console.log("deleting vm");
-        const res = await deleteVM(id, keycloak.token);
-        queueJob(res);
-        return;
-      }
-      if (rows.find((row) => row.id === id).type === "deployment") {
-        console.log("deleting k8s");
-        const res = await deleteDeployment(id, keycloak.token);
-        queueJob(res);
-        return;
-      }
-    });
+    try {
+      const promises = selected.map(async (id) => {
+        if (rows.find((row) => row.id === id).type === "vm") {
+          console.log("deleting vm");
+          const res = await deleteVM(id, keycloak.token);
+          queueJob(res);
+          return;
+        }
+        if (rows.find((row) => row.id === id).type === "deployment") {
+          console.log("deleting k8s");
+          const res = await deleteDeployment(id, keycloak.token);
+          queueJob(res);
+          return;
+        }
+      });
 
-    await Promise.all(promises);
-
-    setSelected([]);
-    enqueueSnackbar("Deleting resources", { variant: "info" });
-    setLoading(false);
+      await Promise.all(promises);
+      enqueueSnackbar("Deleting resources", { variant: "info" });
+    } catch (err) {
+      enqueueSnackbar("Error deleting resources: " + JSON.stringify(err), {
+        variant: "error",
+      });
+    } finally {
+      setSelected([]);
+      setLoading(false);
+    }
   };
 
   const handleRequestSort = (event, property) => {
@@ -276,7 +282,7 @@ export function Deploy() {
 
     if (!color) color = "info";
 
-    let statusMessage = row.status.replace("resource", "").trim()
+    let statusMessage = row.status.replace("resource", "").trim();
 
     return (
       <Label variant="ghost" color={color}>
@@ -285,27 +291,24 @@ export function Deploy() {
     );
   };
 
-
   const renderStatusCode = (row) => {
-    if(!row.pingResult)
-      return <></>
-    
-    let codeType = parseInt(row.pingResult.toString().charAt(0))
+    if (!row.pingResult) return <></>;
 
-    let color = "info"
+    let codeType = parseInt(row.pingResult.toString().charAt(0));
+
+    let color = "info";
     if (codeType === 2 || codeType === 3) {
-      color = "success"
+      color = "success";
     } else if (codeType === 4 || codeType === 5) {
-      color = "error"
+      color = "error";
     }
-    
+
     return (
-      <Label variant="ghost" color={color} style={{fontFamily: "monospace"}}>
+      <Label variant="ghost" color={color} style={{ fontFamily: "monospace" }}>
         {row.pingResult + " " + getReasonPhrase(row.pingResult)}
       </Label>
     );
   };
-
 
   return (
     <>
@@ -398,9 +401,13 @@ export function Deploy() {
                               {renderResourceType(row)}
                             </TableCell>
                             <TableCell align="left">
-                              <Stack direction="row" alignItems="center" spacing={1}>
-                              {renderResourceStatus(row)}
-                              {renderStatusCode(row)}
+                              <Stack
+                                direction="row"
+                                alignItems="center"
+                                spacing={1}
+                              >
+                                {renderResourceStatus(row)}
+                                {renderStatusCode(row)}
                               </Stack>
                             </TableCell>
 

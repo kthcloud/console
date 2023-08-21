@@ -18,7 +18,7 @@ export default function RFC1035Input({
     setValue(initialValue);
     clean(initialValue);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [initialValue]);
 
   const clean = (val) => {
     // convert name to RFC 1035
