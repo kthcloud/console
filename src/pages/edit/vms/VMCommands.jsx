@@ -4,6 +4,7 @@ import { sentenceCase } from "change-case";
 import { enqueueSnackbar } from "notistack";
 import { useNavigate } from "react-router-dom";
 import { deleteVM, applyCommand } from "src/api/deploy/vms";
+import ConfirmButton from "src/components/ConfirmButton";
 import Iconify from "src/components/Iconify";
 import useResource from "src/hooks/useResource";
 
@@ -24,14 +25,18 @@ export const VMCommands = ({ vm }) => {
         navigate("/deploy");
       }
     } catch (err) {
-      const errorMessage = "Cannot delete vm: "
-      if(err.hasOwnProperty("errors") && Array.isArray(err.errors)) {
+      const errorMessage = "Cannot delete vm: ";
+      if (err.hasOwnProperty("errors") && Array.isArray(err.errors)) {
         err.errors.forEach((error) => {
-          enqueueSnackbar(errorMessage + sentenceCase(error.code) + " - " + error.msg, { variant: "error" });
+          enqueueSnackbar(
+            errorMessage + sentenceCase(error.code) + " - " + error.msg,
+            { variant: "error" }
+          );
         });
-      }
-      else{
-        enqueueSnackbar(errorMessage + JSON.stringify(err), { variant: "error" });
+      } else {
+        enqueueSnackbar(errorMessage + JSON.stringify(err), {
+          variant: "error",
+        });
       }
     }
   };
@@ -45,14 +50,18 @@ export const VMCommands = ({ vm }) => {
         variant: "info",
       });
     } catch (err) {
-      const errorMessage = "Cannot execute command: "
-      if(err.hasOwnProperty("errors") && Array.isArray(err.errors)) {
+      const errorMessage = "Cannot execute command: ";
+      if (err.hasOwnProperty("errors") && Array.isArray(err.errors)) {
         err.errors.forEach((error) => {
-          enqueueSnackbar(errorMessage + sentenceCase(error.code) + " - " + error.msg, { variant: "error" });
+          enqueueSnackbar(
+            errorMessage + sentenceCase(error.code) + " - " + error.msg,
+            { variant: "error" }
+          );
         });
-      }
-      else{
-        enqueueSnackbar(errorMessage + JSON.stringify(err), { variant: "error" });
+      } else {
+        enqueueSnackbar(errorMessage + JSON.stringify(err), {
+          variant: "error",
+        });
       }
     }
   };
@@ -101,15 +110,16 @@ export const VMCommands = ({ vm }) => {
         </Button>
       )}
 
-      <Button
-        onClick={doDelete}
-        variant="contained"
-        to="#"
-        startIcon={<Iconify icon="mdi:nuke" />}
-        color="error"
-      >
-        Delete
-      </Button>
+      <ConfirmButton
+        action="Delete"
+        actionText={"delete " + vm.name}
+        callback={doDelete}
+        props={{
+          color: "error",
+          variant: "contained",
+          startIcon: <Iconify icon="mdi:nuke" />,
+        }}
+      />
     </Stack>
   );
 };

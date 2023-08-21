@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 // component
 import Iconify from "../../components/Iconify";
+import ConfirmButton from "src/components/ConfirmButton";
 
 // ----------------------------------------------------------------------
 
@@ -79,11 +80,18 @@ export default function ListToolbar({
       )}
 
       {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton onClick={onDelete}>
-            <Iconify icon="eva:trash-2-fill" />
-          </IconButton>
-        </Tooltip>
+        <ConfirmButton
+          action="Delete"
+          actionText={
+            "delete " + numSelected + " resource" + (numSelected > 1 ? "s" : "")
+          }
+          callback={onDelete}
+          props={{
+            color: "error",
+            variant: "contained",
+            startIcon: <Iconify icon="eva:trash-2-fill" />,
+          }}
+        />
       ) : (
         <>
           {loading ? (

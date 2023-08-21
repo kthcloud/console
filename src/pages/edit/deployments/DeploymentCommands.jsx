@@ -6,6 +6,7 @@ import { deleteDeployment, applyCommand } from "src/api/deploy/deployments";
 import Iconify from "src/components/Iconify";
 import useResource from "src/hooks/useResource";
 import { sentenceCase } from "change-case";
+import ConfirmButton from "src/components/ConfirmButton";
 
 export const DeploymentCommands = ({ deployment }) => {
   const { queueJob } = useResource();
@@ -97,15 +98,16 @@ export const DeploymentCommands = ({ deployment }) => {
             Go to page
           </Button>
         )}
-      <Button
-        onClick={doDelete}
-        variant="contained"
-        to="#"
-        startIcon={<Iconify icon="mdi:nuke" />}
-        color="error"
-      >
-        Delete
-      </Button>
+      <ConfirmButton
+        action="Delete"
+        actionText={"delete " + deployment.name}
+        callback={doDelete}
+        props={{
+          color: "error",
+          variant: "contained",
+          startIcon: <Iconify icon="mdi:nuke" />,
+        }}
+      />
     </Stack>
   );
 };
