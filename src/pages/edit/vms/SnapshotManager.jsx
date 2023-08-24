@@ -111,81 +111,87 @@ export default function Specs({ vm }) {
         }
       />
       <CardContent>
-        <Stack spacing={2} direction={"column"}>
-          {snapshots.length > 0 && (
-            <>
-              <Typography variant="body">Your snapshots</Typography>
-              <Stack
-                spacing={2}
-                direction={"row"}
-                flexWrap={"wrap"}
-                useFlexGap={true}
-                alignItems={"center"}
-              >
-                <Select
-                  value={selectedSnapshot}
-                  onChange={(e) => setSelectedSnapshot(e.target.value)}
+        {vm.gpu ? (
+          <Typography variant="body">
+            Snapshots are not supported while a GPU is attached.
+          </Typography>
+        ) : (
+          <Stack spacing={2} direction={"column"}>
+            {snapshots.length > 0 && (
+              <>
+                <Typography variant="body">Your snapshots</Typography>
+                <Stack
+                  spacing={2}
+                  direction={"row"}
+                  flexWrap={"wrap"}
+                  useFlexGap={true}
+                  alignItems={"center"}
                 >
-                  {snapshots &&
-                    snapshots.map((snapshot) => (
-                      <MenuItem value={snapshot.id} key={snapshot.id}>
-                        <Stack
-                          direction="row"
-                          justifyContent="space-between"
-                          alignItems="center"
-                          spacing={3}
-                        >
-                          <Typography variant={"body1"}>
-                            {snapshot.displayname}
-                          </Typography>
-                          {snapshot.current && <Chip label={"Latest"} />}
-                        </Stack>
-                      </MenuItem>
-                    ))}
-                </Select>
-                <ConfirmButton
-                  action="Revert"
-                  actionText="revert to this snapshot"
-                  callback={() => revertVMSnapshot(selectedSnapshot)}
-                  props={{
-                    color: "error",
-                    variant: "contained",
-                    startIcon: <Iconify icon="dashicons:backup" />,
-                  }}
-                />
-              </Stack>
-              <br />
-            </>
-          )}
+                  <Select
+                    value={selectedSnapshot}
+                    onChange={(e) => setSelectedSnapshot(e.target.value)}
+                  >
+                    {snapshots &&
+                      snapshots.map((snapshot) => (
+                        <MenuItem value={snapshot.id} key={snapshot.id}>
+                          <Stack
+                            direction="row"
+                            justifyContent="space-between"
+                            alignItems="center"
+                            spacing={3}
+                          >
+                            <Typography variant={"body1"}>
+                              {snapshot.displayname}
+                            </Typography>
+                            {snapshot.current && <Chip label={"Latest"} />}
+                          </Stack>
+                        </MenuItem>
+                      ))}
+                  </Select>
+                  <ConfirmButton
+                    action="Revert"
+                    actionText="revert to this snapshot"
+                    callback={() => revertVMSnapshot(selectedSnapshot)}
+                    props={{
+                      color: "error",
+                      variant: "contained",
+                      startIcon: <Iconify icon="dashicons:backup" />,
+                    }}
+                  />
+                </Stack>
+                <br />
+              </>
+            )}
 
-          <Typography variant="body">Create new snapshot</Typography>
+            <Typography variant="body">Create new snapshot</Typography>
 
-          <Stack
-            spacing={2}
-            direction={"row"}
-            flexWrap={"wrap"}
-            useFlexGap={true}
-            alignItems={"center"}
-          >
-            <RFC1035Input
-              label="Snapshot Name"
-              type="Snapshot Name"
-              cleaned={snapshotName}
-              setCleaned={setSnapshotName}
-              initialValue={snapshotName}
-              callToAction="Your snapshot will be created as"
-            />
-
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => createVMSnapshot(snapshotName)}
-              startIcon={<Iconify icon="material-symbols:save" />}
+            <Stack
+              spacing={2}
+              direction={"row"}
+              flexWrap={"wrap"}
+              useFlexGap={true}
+              alignItems={"center"}
             >
-              Create
-            </Button>
+              <RFC1035Input
+                label="Snapshot Name"
+                type="Snapshot Name"
+                cleaned={snapshotName}
+                setCleaned={setSnapshotName}
+                initialValue={snapshotName}
+                callToAction="Your snapshot will be created as"
+              />
+
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => createVMSnapshot(snapshotName)}
+                startIcon={<Iconify icon="material-symbols:save" />}
+              >
+                Create
+              </Button>
+            </Stack>
           </Stack>
-        </Stack>
+        )}
       </CardContent>
     </Card>
   );
