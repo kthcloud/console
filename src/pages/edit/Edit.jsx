@@ -103,8 +103,22 @@ export function Edit() {
                 useFlexGap={true}
               >
                 <Typography variant="h4">{resource.name}</Typography>
-                {resource.status && <Chip label={sentenceCase(resource.status.replace("resource", "").trim())} /> }
-                {resource.pingResult && <Chip label={sentenceCase(resource.pingResult.toString()) + " " + getReasonPhrase(resource.pingResult)} /> }
+                {resource.status && (
+                  <Chip
+                    label={sentenceCase(
+                      resource.status.replace("resource", "").trim()
+                    )}
+                  />
+                )}
+                {resource.pingResult && (
+                  <Chip
+                    label={
+                      sentenceCase(resource.pingResult.toString()) +
+                      " " +
+                      getReasonPhrase(resource.pingResult)
+                    }
+                  />
+                )}
                 <div style={{ flexGrow: "1" }} />
 
                 {resource.type === "deployment" && (

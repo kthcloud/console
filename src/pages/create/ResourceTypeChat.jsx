@@ -98,8 +98,7 @@ const ResourceTypeChat = () => {
         </>
       )}
 
-      <Typography variant="body2" mb={0}>
-      </Typography>
+      <Typography variant="body2" mb={0}></Typography>
 
       <Stack spacing={3} direction="row">
         <TextField
@@ -107,7 +106,6 @@ const ResourceTypeChat = () => {
           InputProps={{
             startAdornment: <InputAdornment position="start"></InputAdornment>,
           }}
-
           variant="standard"
           value={input}
           placeholder={lastInput}
@@ -120,6 +118,7 @@ const ResourceTypeChat = () => {
           }}
           fullWidth
           sx={{ maxWidth: 400 }}
+          autoFocus
         />
 
         <IconButton onClick={() => askLlama(input)} size="large">

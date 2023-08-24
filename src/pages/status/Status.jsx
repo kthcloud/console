@@ -1,6 +1,14 @@
 // mui
 import { useTheme } from "@mui/material/styles";
-import { Grid, Container, Typography } from "@mui/material";
+import {
+  Grid,
+  Container,
+  Typography,
+  CardHeader,
+  Card,
+  CardContent,
+  Stack,
+} from "@mui/material";
 
 // components
 import Page from "../../components/Page";
@@ -23,11 +31,12 @@ export function Status() {
   const [overviewData, _setOverviewData] = useState([]);
   const [statusLock, setStatusLock] = useState(false);
   const [capacitiesLock, setCapacitiesLock] = useState(false);
-  const [headerLoading, setHeaderLoading] = useState(true);
-  const [header, setHeader] = useState("Welcome to cbhcloud");
-  const [subheader, setSubheader] = useState(
-    "Start deploying your projects today"
-  );
+  const [posts, setPosts] = useState([]);
+
+  // Capacities
+  const [ram, setRam] = useState(0);
+  const [cpuCores, setCpuCores] = useState(0);
+  const [gpus, setGpus] = useState(0);
 
   const setOverviewData = (data) => {
     let cpuTemp = [];
@@ -157,14 +166,6 @@ export function Status() {
       });
   };
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(getStats, []);
-
-  // Capacities
-  const [ram, setRam] = useState(0);
-  const [cpuCores, setCpuCores] = useState(0);
-  const [gpus, setGpus] = useState(0);
-
   const getCapacities = () => {
     if (capacitiesLock) return;
     setCapacitiesLock(true);
@@ -201,65 +202,33 @@ export function Status() {
       });
   };
 
-  const getHeaderGenerated = async () => {
-
+  const getMastodonPosts = async () => {
     try {
-      let res = await fetch("https://llama-prefetch.app.cloud.cbh.kth.se/query")
-
-      let content = await res.json();
-
-      if (content.header) {
-        setHeader(content.header);
-      }
-      if (content.sub) {
-        setSubheader(content.sub);
-      }
-
-    } catch (_) {
-    } finally {
-      setHeaderLoading(false);
-    }
+      let res = await fetch(
+        "https://mastodon.social/api/v1/accounts/110213092906619761/statuses"
+      );
+      let posts = await res.json();
+      setPosts(posts.slice(0, 3));
+    } catch (_) {}
   };
 
   useEffect(() => {
+    getMastodonPosts();
     getCapacities();
-    getHeaderGenerated();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useInterval(() => {
-    getCapacities();
-  }, 1000);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(getStats, []);
 
   const theme = useTheme();
 
   return (
     <Page title="Status">
       <Container maxWidth="xl">
-        {headerLoading ? (
-          <Typography variant="h4" sx={{ opacity: 0 }}>
-            Welcome to cbhcloud
-          </Typography>
-        ) : (
-          <Typography variant="h4">{header}</Typography>
-        )}
-
-        {headerLoading ? (
-          <Typography
-            variant="h5"
-            sx={{ mb: 5, fontWeight: "normal", opacity: 0 }}
-          >
-            Start deploying your projects today
-          </Typography>
-        ) : (
-          <Typography
-            variant="h5"
-            sx={{ mb: 5, opacity: 0.5, fontWeight: "normal" }}
-          >
-            {subheader}
-          </Typography>
-        )}
-
+        <Typography variant="h4" gutterBottom mb={5}>
+          Status
+        </Typography>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={3}>
             <WidgetSummary
@@ -346,7 +315,49 @@ export function Status() {
               )}
             />
           </Grid>
+
+          {posts.length > 0 && (
+            <Grid item xs={12} md={12} lg={12}>
+              <Card sx={{ boxShadow: 20 }}>
+                <CardHeader title="Latest posts on Mastodon" />
+                <CardContent>
+                  <Stack
+                    spacing={2}
+                    direction={"row"}
+                    alignItems={"center"}
+                    useFlexGap
+                    flexWrap="wrap"
+                    justifyContent={"space-evenly"}
+                    sm={{ direction: "column" }}
+                  >
+                    {posts.map((post) => (
+                      <iframe
+                        key={post.id}
+                        title="Mastodon"
+                        style={{
+                          width: "30%",
+                          height: 500,
+                          border: 0,
+                          borderRadius: 4,
+                          minWidth: 300,
+                        }}
+                        src={
+                          "https://mastodon.social/@kthcloud/" +
+                          post.id +
+                          "/embed"
+                        }
+                        className="mastodon-embed"
+                        allowFullScreen
+                      ></iframe>
+                    ))}
+                  </Stack>
+                </CardContent>
+              </Card>
+            </Grid>
+          )}
         </Grid>
+
+        <script src="https://mastodon.social/embed.js" async="async"></script>
       </Container>
     </Page>
   );

@@ -200,21 +200,33 @@ export function Profile() {
                       justifyContent={"space-between"}
                       alignItems={"center"}
                     >
-                      {user.roles &&
-                        user.roles.map((role, index) => (
-                          <Chip
-                            m={1}
-                            key={"roles" + index}
-                            icon={
-                              <Iconify
-                                icon="eos-icons:admin"
-                                width={24}
-                                height={24}
-                              />
-                            }
-                            label={sentenceCase(role)}
-                          />
-                        ))}
+                      {user.role && (
+                        <Chip
+                          m={1}
+                          icon={
+                            <Iconify
+                              icon="eos-icons:admin"
+                              width={24}
+                              height={24}
+                            />
+                          }
+                          label={sentenceCase(user.role.description)}
+                        />
+                      )}
+
+                      {user.admin && (
+                        <Chip
+                          m={1}
+                          icon={
+                            <Iconify
+                              icon="eos-icons:admin"
+                              width={24}
+                              height={24}
+                            />
+                          }
+                          label={"Admin"}
+                        />
+                      )}
 
                       <div style={{ flexGrow: "1" }} />
 
@@ -241,10 +253,14 @@ export function Profile() {
                   title={"SSH public keys"}
                   subheader={
                     <span>
-                      Your public keys will be installed when creating VMs
-                      <br />
-                      Changes will not apply to existing VMs
-                      <br /> Make sure you are uploading your public SSH key
+                      Your public keys will be installed when creating a VM.
+                      Changes will not apply to existing resources
+                      <br /> Please ensure you are uploading your public SSH key
+                      (e.g.{" "}
+                      <span style={{ fontFamily: "monospace" }}>
+                        id_rsa.pub
+                      </span>
+                      )
                     </span>
                   }
                 />

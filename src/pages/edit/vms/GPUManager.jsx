@@ -59,16 +59,18 @@ export const GPUManager = ({ vm }) => {
 
   const loadGPUs = async () => {
     if (userCanListGPUs) {
-      const gpuRes = await getGPUs(keycloak.token);
+      try {
+        const gpuRes = await getGPUs(keycloak.token);
 
-      // sort by name
-      gpuRes.sort((a, b) => {
-        if (a.name < b.name) return 1;
-        if (a.name > b.name) return -1;
-        return hashGPUId(a.id) < hashGPUId(b.id) ? -1 : 1;
-      });
+        // sort by name
+        gpuRes.sort((a, b) => {
+          if (a.name < b.name) return 1;
+          if (a.name > b.name) return -1;
+          return hashGPUId(a.id) < hashGPUId(b.id) ? -1 : 1;
+        });
 
-      setGpus(gpuRes);
+        setGpus(gpuRes);
+      } catch (_) {}
     }
   };
 
@@ -88,303 +90,310 @@ export const GPUManager = ({ vm }) => {
   };
 
   return (
-    <Card sx={{ boxShadow: 20 }}>
-      <CardHeader title={"GPU Lease"} />
-      <CardContent>
-        <Stack spacing={3} direction={"column"} useFlexGap={true}>
-          <Stack
-            spacing={3}
-            direction={"row"}
-            flexWrap={"wrap"}
-            useFlexGap={true}
-            alignItems={"center"}
-          >
-            {vm.gpu && (
-              <Chip
-                m={1}
-                icon={<Iconify icon="mdi:gpu" width={24} height={24} />}
-                label={
-                  <Stack
-                    direction={"row"}
-                    alignItems={"center"}
-                    useFlexGap={true}
-                    justifyContent={"space-between"}
-                    spacing={2}
-                  >
-                    <span>{"NVIDIA " + vm.gpu.name}</span>
-                    <Typography
-                      variant={"caption"}
-                      color={"grey"}
-                      sx={{ fontFamily: "monospace" }}
+    gpus.length > 0 && (
+      <Card sx={{ boxShadow: 20 }}>
+        <CardHeader title={"GPU Lease"} />
+        <CardContent>
+          <Stack spacing={3} direction={"column"} useFlexGap={true}>
+            <Stack
+              spacing={3}
+              direction={"row"}
+              flexWrap={"wrap"}
+              useFlexGap={true}
+              alignItems={"center"}
+            >
+              {vm.gpu && (
+                <Chip
+                  m={1}
+                  icon={<Iconify icon="mdi:gpu" width={24} height={24} />}
+                  label={
+                    <Stack
+                      direction={"row"}
+                      alignItems={"center"}
+                      useFlexGap={true}
+                      justifyContent={"space-between"}
+                      spacing={2}
                     >
-                      {hashGPUId(vm.gpu.id)}
-                    </Typography>
-                  </Stack>
-                }
-              />
-            )}
-
-            {vm.gpu && !vm.gpu.expired && (
-              <Chip
-                m={1}
-                icon={
-                  <Iconify icon="mdi:clock-outline" width={24} height={24} />
-                }
-                label={
-                  <span>
-                    Leased until
-                    <b
-                      style={{
-                        fontFamily: "monospace",
-                        marginLeft: ".5em",
-                      }}
-                    >
-                      {new Date(vm.gpu.leaseEnd).toLocaleString(
-                        navigator.language
-                      )}
-                    </b>
-                  </span>
-                }
-              />
-            )}
-
-            {vm.gpu && vm.gpu.expired && (
-              <Chip
-                m={1}
-                color="error"
-                icon={
-                  <Iconify icon="mdi:clock-outline" width={24} height={24} />
-                }
-                label={
-                  <span>
-                    Leased expired
-                    <b
-                      style={{
-                        fontFamily: "monospace",
-                        marginLeft: ".5em",
-                      }}
-                    >
-                      {new Date(vm.gpu.leaseEnd).toLocaleString(
-                        navigator.language
-                      )}
-                    </b>
-                  </span>
-                }
-              />
-            )}
-
-            {gpuLoading && <Skeleton height={"2rem"} sx={{ width: "50%" }} />}
-
-            {!(gpuPickerOpen || gpuLoading) && (
-              <Button
-                onClick={async () => {
-                  if (userCanListGPUs() && !vm.gpu) {
-                    setGpuPickerOpen(true);
-                    return;
+                      <span>{"NVIDIA " + vm.gpu.name}</span>
+                      <Typography
+                        variant={"caption"}
+                        color={"grey"}
+                        sx={{ fontFamily: "monospace" }}
+                      >
+                        {hashGPUId(vm.gpu.id)}
+                      </Typography>
+                    </Stack>
                   }
+                />
+              )}
 
-                  if (vm.gpu && vm.gpu.expired) {
-                    try {
-                      setGpuLoading(true);
-                      const res = await attachGPUById(
-                        vm,
-                        keycloak.token,
-                        vm.gpu.id
-                      );
-                      queueJob(res);
-                    } catch (e) {
-                      enqueueSnackbar(
-                        "Could not attach GPU " + JSON.stringify(e),
-                        { variant: "error" }
-                      );
-                    } finally {
-                      setGpuLoading(false);
+              {vm.gpu && !vm.gpu.expired && (
+                <Chip
+                  m={1}
+                  icon={
+                    <Iconify icon="mdi:clock-outline" width={24} height={24} />
+                  }
+                  label={
+                    <span>
+                      Leased until
+                      <b
+                        style={{
+                          fontFamily: "monospace",
+                          marginLeft: ".5em",
+                        }}
+                      >
+                        {new Date(vm.gpu.leaseEnd).toLocaleString(
+                          navigator.language
+                        )}
+                      </b>
+                    </span>
+                  }
+                />
+              )}
+
+              {vm.gpu && vm.gpu.expired && (
+                <Chip
+                  m={1}
+                  color="error"
+                  icon={
+                    <Iconify icon="mdi:clock-outline" width={24} height={24} />
+                  }
+                  label={
+                    <span>
+                      Leased expired
+                      <b
+                        style={{
+                          fontFamily: "monospace",
+                          marginLeft: ".5em",
+                        }}
+                      >
+                        {new Date(vm.gpu.leaseEnd).toLocaleString(
+                          navigator.language
+                        )}
+                      </b>
+                    </span>
+                  }
+                />
+              )}
+
+              {gpuLoading && <Skeleton height={"2rem"} sx={{ width: "50%" }} />}
+
+              {!(gpuPickerOpen || gpuLoading) && (
+                <Button
+                  onClick={async () => {
+                    if (userCanListGPUs() && !vm.gpu) {
+                      setGpuPickerOpen(true);
+                      return;
                     }
-                    return;
-                  }
 
-                  try {
-                    setGpuLoading(true);
-                    const res = await attachGPU(vm, keycloak.token);
-                    queueJob(res);
-                  } catch (e) {
-                    setGpuLoading(false);
-                    enqueueSnackbar(
-                      "Could not attach GPU " + JSON.stringify(e),
-                      { variant: "error" }
-                    );
-                  }
-                }}
-                variant="contained"
-                to="#"
-                startIcon={<Iconify icon="mdi:gpu" />}
-                color={!vm.gpu ? "primary" : "warning"}
-                disabled={
-                  !(
-                    vm.status === "resourceRunning" ||
-                    vm.status === "resourceStopped"
-                  )
-                }
-              >
-                {renderButtonText()}
-              </Button>
-            )}
-
-            {vm.gpu && vm.gpu.expired && (
-              <>
-                <Typography variant="body2">
-                  <b>Your lease has expired.</b> The GPU will remain attached
-                  until someone else leases it. If you want to use it again, you
-                  will need to lease it again.
-                </Typography>
-              </>
-            )}
-
-            {gpuPickerOpen && (
-              <>
-                {gpus.length === 0 ? (
-                  <Skeleton height={"5rem"} />
-                ) : (
-                  <FormControl fullWidth>
-                    <InputLabel id="gpu-picker-label">GPU</InputLabel>
-                    <Select
-                      labelId="gpu-picker-label"
-                      id="gpu-picker"
-                      value={gpuChoice}
-                      onChange={(e) => setGpuChoice(e.target.value)}
-                      label="GPU"
-                      fullWidth
-                      defaultOpen
-                    >
-                      {gpus.map((gpu, index) => (
-                        <MenuItem
-                          key={gpu.id}
-                          value={gpu.id}
-                          sx={() => {
-                            if (index % 2 === 0)
-                              return { backgroundColor: "#eee" };
-                          }}
-                          disabled={Boolean(gpu.lease && !gpu.lease.expired)}
-                        >
-                          <Stack
-                            direction={"row"}
-                            alignItems={"center"}
-                            useFlexGap={true}
-                            justifyContent={"flex-end"}
-                            spacing={3}
-                            flexWrap={"wrap"}
-                            sx={{ width: "100%", my: 1 }}
-                          >
-                            <span style={{ flexGrow: 1 }}>
-                              {"NVIDIA " + gpu.name}
-                            </span>
-
-                            {gpu.lease && gpu.lease.end && !gpu.lease.expired && (
-                              <Chip
-                                label={
-                                  <span>
-                                    Leased until
-                                    <b
-                                      style={{
-                                        fontFamily: "monospace",
-                                        marginLeft: ".5em",
-                                      }}
-                                    >
-                                      {new Date(gpu.lease.end).toLocaleString(
-                                        navigator.language
-                                      )}
-                                    </b>
-                                  </span>
-                                }
-                                icon={
-                                  <Iconify
-                                    icon="mdi:clock-outline"
-                                    width={24}
-                                    height={24}
-                                  />
-                                }
-                              />
-                            )}
-
-                            <Typography
-                              variant={"caption"}
-                              color={"grey"}
-                              sx={{ fontFamily: "monospace" }}
-                            >
-                              {hashGPUId(gpu.id)}
-                            </Typography>
-                          </Stack>
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                )}
-                <Stack direction="row" spacing={3} useFlexGap={true}>
-                  <Button onClick={() => setGpuPickerOpen(false)} color="error">
-                    Cancel
-                  </Button>
-                  <Button
-                    onClick={async () => {
-                      setGpuLoading(true);
-                      setGpuPickerOpen(false);
+                    if (vm.gpu && vm.gpu.expired) {
                       try {
+                        setGpuLoading(true);
                         const res = await attachGPUById(
                           vm,
                           keycloak.token,
-                          gpuChoice
+                          vm.gpu.id
                         );
                         queueJob(res);
-                        setGpuChoice("");
-                        enqueueSnackbar("GPU attached", {
-                          variant: "success",
-                        });
                       } catch (e) {
-                        setGpuLoading(false);
                         enqueueSnackbar(
                           "Could not attach GPU " + JSON.stringify(e),
                           { variant: "error" }
                         );
+                      } finally {
+                        setGpuLoading(false);
                       }
-                    }}
-                    color="primary"
-                  >
-                    Attach
-                  </Button>
-                </Stack>
-              </>
-            )}
-          </Stack>
+                      return;
+                    }
 
-          <Typography variant="body2">
-            Leasing a GPU allows you to use it for a limited time. You will need
-            to install the drivers and software yourself.
-            <br />
-            On Ubuntu, run{" "}
-            <CopyToClipboard text="sudo ubuntu-drivers install --gpgpu">
-              <Tooltip title="Copy to clipboard">
-                <span
-                  style={{
-                    fontFamily: "monospace",
-                    fontWeight: "bold",
-                    cursor: "pointer",
+                    try {
+                      setGpuLoading(true);
+                      const res = await attachGPU(vm, keycloak.token);
+                      queueJob(res);
+                    } catch (e) {
+                      setGpuLoading(false);
+                      enqueueSnackbar(
+                        "Could not attach GPU " + JSON.stringify(e),
+                        { variant: "error" }
+                      );
+                    }
                   }}
+                  variant="contained"
+                  to="#"
+                  startIcon={<Iconify icon="mdi:gpu" />}
+                  color={!vm.gpu ? "primary" : "warning"}
+                  disabled={
+                    !(
+                      vm.status === "resourceRunning" ||
+                      vm.status === "resourceStopped"
+                    )
+                  }
                 >
-                  sudo ubuntu-drivers install --gpgpu
-                </span>
-              </Tooltip>
-            </CopyToClipboard>{" "}
-            to install the latest drivers.
-            <Link
-              href="https://help.ubuntu.com/community/NvidiaDriversInstallation"
-              target="_blank"
-              rel="noreferrer"
-              ml={1}
-            >
-              Learn more
-            </Link>
-          </Typography>
-        </Stack>
-      </CardContent>
-    </Card>
+                  {renderButtonText()}
+                </Button>
+              )}
+
+              {vm.gpu && vm.gpu.expired && (
+                <>
+                  <Typography variant="body2">
+                    <b>Your lease has expired.</b> The GPU will remain attached
+                    until someone else leases it. If you want to use it again,
+                    you will need to lease it again.
+                  </Typography>
+                </>
+              )}
+
+              {gpuPickerOpen && (
+                <>
+                  {gpus.length === 0 ? (
+                    <Skeleton height={"5rem"} />
+                  ) : (
+                    <FormControl fullWidth>
+                      <InputLabel id="gpu-picker-label">GPU</InputLabel>
+                      <Select
+                        labelId="gpu-picker-label"
+                        id="gpu-picker"
+                        value={gpuChoice}
+                        onChange={(e) => setGpuChoice(e.target.value)}
+                        label="GPU"
+                        fullWidth
+                        defaultOpen
+                      >
+                        {gpus.map((gpu, index) => (
+                          <MenuItem
+                            key={gpu.id}
+                            value={gpu.id}
+                            sx={() => {
+                              if (index % 2 === 0)
+                                return { backgroundColor: "#eee" };
+                            }}
+                            disabled={Boolean(gpu.lease && !gpu.lease.expired)}
+                          >
+                            <Stack
+                              direction={"row"}
+                              alignItems={"center"}
+                              useFlexGap={true}
+                              justifyContent={"flex-end"}
+                              spacing={3}
+                              flexWrap={"wrap"}
+                              sx={{ width: "100%", my: 1 }}
+                            >
+                              <span style={{ flexGrow: 1 }}>
+                                {"NVIDIA " + gpu.name}
+                              </span>
+
+                              {gpu.lease &&
+                                gpu.lease.end &&
+                                !gpu.lease.expired && (
+                                  <Chip
+                                    label={
+                                      <span>
+                                        Leased until
+                                        <b
+                                          style={{
+                                            fontFamily: "monospace",
+                                            marginLeft: ".5em",
+                                          }}
+                                        >
+                                          {new Date(
+                                            gpu.lease.end
+                                          ).toLocaleString(navigator.language)}
+                                        </b>
+                                      </span>
+                                    }
+                                    icon={
+                                      <Iconify
+                                        icon="mdi:clock-outline"
+                                        width={24}
+                                        height={24}
+                                      />
+                                    }
+                                  />
+                                )}
+
+                              <Typography
+                                variant={"caption"}
+                                color={"grey"}
+                                sx={{ fontFamily: "monospace" }}
+                              >
+                                {hashGPUId(gpu.id)}
+                              </Typography>
+                            </Stack>
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  )}
+                  <Stack direction="row" spacing={3} useFlexGap={true}>
+                    <Button
+                      onClick={() => setGpuPickerOpen(false)}
+                      color="error"
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      onClick={async () => {
+                        setGpuLoading(true);
+                        setGpuPickerOpen(false);
+                        try {
+                          const res = await attachGPUById(
+                            vm,
+                            keycloak.token,
+                            gpuChoice
+                          );
+                          queueJob(res);
+                          setGpuChoice("");
+                          enqueueSnackbar("GPU attached", {
+                            variant: "success",
+                          });
+                        } catch (e) {
+                          setGpuLoading(false);
+                          enqueueSnackbar(
+                            "Could not attach GPU " + JSON.stringify(e),
+                            { variant: "error" }
+                          );
+                        }
+                      }}
+                      color="primary"
+                    >
+                      Attach
+                    </Button>
+                  </Stack>
+                </>
+              )}
+            </Stack>
+
+            <Typography variant="body2">
+              Leasing a GPU allows you to use it for a limited time. You will
+              need to install the drivers and software yourself.
+              <br />
+              On Ubuntu, run{" "}
+              <CopyToClipboard text="sudo ubuntu-drivers install --gpgpu">
+                <Tooltip title="Copy to clipboard">
+                  <span
+                    style={{
+                      fontFamily: "monospace",
+                      fontWeight: "bold",
+                      cursor: "pointer",
+                    }}
+                  >
+                    sudo ubuntu-drivers install --gpgpu
+                  </span>
+                </Tooltip>
+              </CopyToClipboard>{" "}
+              to install the latest drivers.
+              <Link
+                href="https://help.ubuntu.com/community/NvidiaDriversInstallation"
+                target="_blank"
+                rel="noreferrer"
+                ml={1}
+              >
+                Learn more
+              </Link>
+            </Typography>
+          </Stack>
+        </CardContent>
+      </Card>
+    )
   );
 };

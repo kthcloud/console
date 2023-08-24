@@ -115,7 +115,7 @@ export default function Menu() {
           </Typography>
         </Box>
         <Stack sx={{ p: 1 }}>
-          <MenuItem to={"/"} component={RouterLink} onClick={handleClose}>
+          <MenuItem to={"/status"} component={RouterLink} onClick={handleClose}>
             Status
           </MenuItem>
           <MenuItem
@@ -141,7 +141,6 @@ export default function Menu() {
         {shouldRenderAdmin() && (
           <>
             <Divider sx={{ borderStyle: "dashed" }} />
-
 
             <Box sx={{ mt: 1.5, px: 2.5 }}>
               <Typography

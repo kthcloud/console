@@ -1,0 +1,37 @@
+.hero-svg {
+  transform: translateX(289px);
+  width: 400px;
+}
+
+.hero-p {
+  max-width: 330px;
+  margin-top: 40px;
+  margin-bottom: 52px;
+}
+
+@media screen and (max-width: 900px) {
+  .hero-svg {
+    transform: translate(218px, 12px);
+  }
+  .hero-svg svg {
+    width: 230px;
+    transform: rotate(6deg);
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .hero-svg {
+    transform: translate(146px, 12px);
+    width: 150px;
+  }
+  .hero-svg svg {
+    width: 150px;
+    transform: rotate(13deg);
+  }
+}
+
+@media screen and (max-width: 340px) {
+  .hero-svg {
+    display: none;
+  }
+}

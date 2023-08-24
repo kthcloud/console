@@ -42,7 +42,7 @@ export default function WidgetSummary({
     <Card
       sx={{
         py: 5,
-        boxShadow: 0,
+        boxShadow: 20,
         textAlign: "center",
         color: (theme) => theme.palette[color].darker,
         bgcolor: (theme) => theme.palette[color].lighter,
