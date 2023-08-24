@@ -2,7 +2,7 @@ name: kthcloud-ci-beta
 on:
   push:
     branches:
-      - "main"
+      - "beta"
 
 jobs:
   docker:
@@ -24,6 +24,6 @@ jobs:
           push: true
           tags: registry.cloud.cbh.kth.se/deploy-3de025ba-ed43-43e0-ab50-03c04b7ef968/landing-beta
           build-args: |
-            "RELEASE_BRANCH=release"
+            "RELEASE_BRANCH=beta"
             "RELEASE_DATE=${{ env.RELEASE_DATE }}"
             "RELEASE_COMMIT=${{ github.sha }}"
