@@ -15,9 +15,7 @@ const SSHString = ({ resource }) => {
     <Card sx={{ boxShadow: 20 }}>
       <CardHeader
         title="SSH Connection string"
-        subheader={
-          "Run this in your terminal to access the VM."
-        }
+        subheader={"Run this in your terminal to access the VM."}
       />
       <CardContent>
         {!ssh ? (

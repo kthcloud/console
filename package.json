@@ -47,7 +47,10 @@
     "@mui/lab": "^5.0.0-alpha.88",
     "@mui/material": "^5.8.6",
     "@react-keycloak/web": "^3.4.0",
+    "@react-three/drei": "^9.80.6",
+    "@react-three/fiber": "^8.13.7",
     "@testing-library/jest-dom": "^5.16.4",
+    "@types/three": "^0.155.0",
     "apexcharts": "^3.35.3",
     "change-case": "^4.1.2",
     "date-fns": "^2.28.0",
@@ -68,6 +71,7 @@
     "react-scripts": "^5.0.1",
     "simplebar": "^5.3.8",
     "simplebar-react": "^2.4.1",
+    "three": "^0.155.0",
     "web-vitals": "^2.1.4",
     "yaml": "^2.3.1",
     "yup": "^0.32.11"

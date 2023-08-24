@@ -123,7 +123,7 @@ export default function ServerStats({
   });
 
   return (
-    <Card {...other}>
+    <Card sx={{ boxShadow: 20 }} {...other}>
       <CardContent>
         <CardHeader title={title} subheader={subheader} />
         <ChartWrapperStyle dir="ltr">

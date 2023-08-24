@@ -85,7 +85,23 @@ export const UserQuotas = ({ user }) => {
               </span>
             }
           />
-          {JSON.stringify(user.quota)}
+          <Chip
+            m={1}
+            icon={<Iconify icon="material-symbols:save" width={24} height={24} />}
+            label={
+              <span>
+                Snapshots
+                <b
+                  style={{
+                    fontFamily: "monospace",
+                    marginLeft: ".75em",
+                  }}
+                >
+                  {user.usage.snapshots + "/" + user.quota.snapshots}
+                </b>
+              </span>
+            }
+          />
         </Stack>
       </CardContent>
     </Card>

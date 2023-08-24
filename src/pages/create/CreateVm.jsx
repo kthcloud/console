@@ -217,7 +217,6 @@ export default function CreateVm({ finished }) {
             placeholder="name"
             callToAction="Your VM will be created with the name"
             type="VM Name"
-            autofocus={true}
             variant="standard"
             cleaned={cleaned}
             setCleaned={setCleaned}

@@ -41,7 +41,7 @@ export default function TreeMap({ title, subheader, chartData, chartColors }) {
     },
   });
   return (
-    <Card>
+    <Card sx={{ boxShadow: 20 }}>
       <CardContent>
         <CardHeader title={title} subheader={subheader} />
         <ChartWrapperStyle dir="ltr">

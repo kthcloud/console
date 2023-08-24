@@ -1,0 +1,43 @@
+.lil-curve {
+  width: 64px;
+  text-align: center;
+}
+.jeremy-card {
+  z-index: 10;
+}
+.blur {
+  position: relative;
+  top: 100px;
+  left: -150px;
+  z-index: 1;
+  margin-top: -100px;
+  width: 500px;
+}
+
+@media screen and (min-width: 900px) {
+  .lil-curve {
+    transform: translateY(-100px);
+  }
+}
+@media screen and (max-width: 900px) {
+  .blur {
+    position: relative;
+    top: 0px;
+    left: -10px;
+    margin: 0 auto;
+    margin-top: -100px;
+    margin-bottom: -30px;
+
+    text-align: center;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .blur {
+    top: 0px;
+    left: -500px;
+    margin-bottom: -30px;
+
+    text-align: center;
+  }
+}

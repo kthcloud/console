@@ -14,7 +14,7 @@ const ConfirmButton = ({ action, actionText, callback, props }) => {
 
   return (
     <>
-      <Dialog open={open} onClose={()=> setOpen(false)}>
+      <Dialog open={open} onClose={() => setOpen(false)}>
         <DialogTitle>Confirm {action}</DialogTitle>
         <DialogContent>
           <DialogContentText>

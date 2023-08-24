@@ -7,6 +7,7 @@ import Edit from "./pages/edit";
 import Deploy from "./pages/deploy";
 import Profile from "./pages/profile";
 import Create from "./pages/create";
+import Landing from "./pages/landing";
 
 import NotFound from "./pages/404";
 import Status from "./pages/status";
@@ -20,7 +21,8 @@ export default function Router() {
       path: "/",
       element: <DashboardLayout />,
       children: [
-        { path: "/", element: <Status /> },
+        { path: "/", element: <Landing /> },
+        { path: "/status", element: <Status /> },
         {
           path: "deploy",
           element: (

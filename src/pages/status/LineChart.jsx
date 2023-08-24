@@ -73,7 +73,7 @@ export default function LineChart({
   });
 
   return (
-    <Card>
+    <Card sx={{ boxShadow: 20 }}>
       <CardContent>
         <CardHeader title={title} subheader={subheader} />
         <ChartWrapperStyle dir="ltr">

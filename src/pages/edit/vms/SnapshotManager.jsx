@@ -24,7 +24,7 @@ export default function Specs({ vm }) {
   const { queueJob } = useResource();
 
   const [initialLoad, setInitialLoad] = useState(false);
-  const [snapshots, setSnapshots] = useState(null);
+  const [snapshots, setSnapshots] = useState([]);
   const [snapshotName, setSnapshotName] = useState("");
   const [selectedSnapshot, setSelectedSnapshot] = useState("");
 
@@ -33,6 +33,9 @@ export default function Specs({ vm }) {
 
     try {
       const response = await getSnapshots(vm.id, keycloak.token);
+
+      if (response.length === 0) return;
+
       response.reverse();
       setSnapshots(response);
       if (!initialLoad) setSelectedSnapshot(response.find((s) => s.current).id);
@@ -109,47 +112,52 @@ export default function Specs({ vm }) {
       />
       <CardContent>
         <Stack spacing={2} direction={"column"}>
-          <Typography variant="body">Your snapshots</Typography>
-          <Stack
-            spacing={2}
-            direction={"row"}
-            flexWrap={"wrap"}
-            useFlexGap={true}
-            alignItems={"center"}
-          >
-            <Select
-              value={selectedSnapshot}
-              onChange={(e) => setSelectedSnapshot(e.target.value)}
-            >
-              {snapshots &&
-                snapshots.map((snapshot) => (
-                  <MenuItem value={snapshot.id} key={snapshot.id}>
-                    <Stack
-                      direction="row"
-                      justifyContent="space-between"
-                      alignItems="center"
-                      spacing={3}
-                    >
-                      <Typography variant={"body1"}>
-                        {snapshot.displayname}
-                      </Typography>
-                      {snapshot.current && <Chip label={"Latest"} />}
-                    </Stack>
-                  </MenuItem>
-                ))}
-            </Select>
-            <ConfirmButton
-              action="Revert"
-              actionText="revert to this snapshot"
-              callback={() => revertVMSnapshot(selectedSnapshot)}
-              props={{
-                color: "error",
-                variant: "contained",
-                startIcon: <Iconify icon="dashicons:backup" />,
-              }}
-            />
-          </Stack>
-          <br />
+          {snapshots.length > 0 && (
+            <>
+              <Typography variant="body">Your snapshots</Typography>
+              <Stack
+                spacing={2}
+                direction={"row"}
+                flexWrap={"wrap"}
+                useFlexGap={true}
+                alignItems={"center"}
+              >
+                <Select
+                  value={selectedSnapshot}
+                  onChange={(e) => setSelectedSnapshot(e.target.value)}
+                >
+                  {snapshots &&
+                    snapshots.map((snapshot) => (
+                      <MenuItem value={snapshot.id} key={snapshot.id}>
+                        <Stack
+                          direction="row"
+                          justifyContent="space-between"
+                          alignItems="center"
+                          spacing={3}
+                        >
+                          <Typography variant={"body1"}>
+                            {snapshot.displayname}
+                          </Typography>
+                          {snapshot.current && <Chip label={"Latest"} />}
+                        </Stack>
+                      </MenuItem>
+                    ))}
+                </Select>
+                <ConfirmButton
+                  action="Revert"
+                  actionText="revert to this snapshot"
+                  callback={() => revertVMSnapshot(selectedSnapshot)}
+                  props={{
+                    color: "error",
+                    variant: "contained",
+                    startIcon: <Iconify icon="dashicons:backup" />,
+                  }}
+                />
+              </Stack>
+              <br />
+            </>
+          )}
+
           <Typography variant="body">Create new snapshot</Typography>
 
           <Stack

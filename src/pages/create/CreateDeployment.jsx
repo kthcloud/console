@@ -34,9 +34,9 @@ export default function CreateDeployment({ finished }) {
 
   const [accessToken, setAccessToken] = useState("");
   const [repo, setRepo] = useState("");
-  const [initialName, setInitialName] = useState(faker.word
-    .words(3)
-    .replace(/[^a-z0-9]|\s+|\r?\n|\r/gim, "-"));
+  const [initialName, setInitialName] = useState(
+    faker.word.words(3).replace(/[^a-z0-9]|\s+|\r?\n|\r/gim, "-")
+  );
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -52,9 +52,9 @@ export default function CreateDeployment({ finished }) {
       );
       finished(job, stay);
       if (stay) {
-        setInitialName(faker.word
-          .words(3)
-          .replace(/[^a-z0-9]|\s+|\r?\n|\r/gim, "-"));
+        setInitialName(
+          faker.word.words(3).replace(/[^a-z0-9]|\s+|\r?\n|\r/gim, "-")
+        );
         setCleaned("");
         setEnvs([]);
         setNewEnvName("");
@@ -76,7 +76,6 @@ export default function CreateDeployment({ finished }) {
             placeholder="name"
             callToAction="Your deployment will be created with the name"
             type="Deployment name"
-            autofocus={true}
             variant="standard"
             cleaned={cleaned}
             setCleaned={setCleaned}
