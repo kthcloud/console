@@ -12,7 +12,7 @@ import { Cloud } from "./Cloud";
 import { Canvas } from "@react-three/fiber";
 import { useKeycloak } from "@react-keycloak/web";
 
-const Jeremy = () => {
+const Intro = () => {
   const { keycloak, initialized } = useKeycloak();
 
   return (
@@ -65,7 +65,7 @@ const Jeremy = () => {
                 }}
               >
                 <Canvas height="250px" width="100%">
-                  <Cloud position={[0, 0, 0]} />
+                  <Cloud mobile position={[0, 0, 0]} />
                 </Canvas>
               </Box>
             </Grid>
@@ -113,4 +113,4 @@ const Jeremy = () => {
   );
 };
 
-export default Jeremy;
+export default Intro;
