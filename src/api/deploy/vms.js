@@ -31,12 +31,29 @@ export const deleteVM = async (id, token) => {
   return await res.json();
 };
 
+export const detachGPU = async (vm, token) => {
+  const res = await fetch(
+    process.env.REACT_APP_DEPLOY_API_URL + "/vms/" + vm.id + "/detachGpu",
+    {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    }
+  );
+  if (!res.ok) {
+    const body = await res.json();
+    if (body) {
+      throw body;
+    }
+    throw res;
+  }
+  return await res.json();
+};
+
 export const attachGPU = async (vm, token) => {
   const res = await fetch(
-    process.env.REACT_APP_DEPLOY_API_URL +
-      "/vms/" +
-      vm.id +
-      (!vm.gpu ? "/attachGpu" : "/detachGpu"),
+    process.env.REACT_APP_DEPLOY_API_URL + "/vms/" + vm.id + "/attachGpu",
     {
       method: "POST",
       headers: {
