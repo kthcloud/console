@@ -11,17 +11,21 @@ function CloudModel() {
   return <primitive object={gltf.scene}></primitive>;
 }
 
-export function Cloud(props) {
+export function Cloud({ mobile, position }) {
   const meshRef = useRef();
-  useFrame((state, delta) => (meshRef.current.rotation.y += delta));
 
-  useFrame(({ camera, mouse }) => {
-    const vector = new Vector3(mouse.x, mouse.y, 0);
-    vector.unproject(camera);
-    meshRef.current.rotation.set(1 - vector.y - 0.8, vector.x, 0);
+  useFrame(({ camera, mouse }, delta) => {
+    if (mobile) {
+      meshRef.current.rotation.y += delta;
+    } else {
+      const vector = new Vector3(mouse.x, mouse.y, 0);
+      vector.unproject(camera);
+      meshRef.current.rotation.set(1 - vector.y - 0.8, vector.x, 0);
+    }
   });
+
   return (
-    <mesh {...props} ref={meshRef}>
+    <mesh position={position} ref={meshRef}>
       <CloudModel />
       <Environment preset="sunset" />
     </mesh>
