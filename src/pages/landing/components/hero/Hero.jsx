@@ -205,7 +205,7 @@ const Hero = () => {
               variant="h2"
               sx={{ textAlign: { md: "left", xs: "center" } }}
             >
-              {(ram / 1000).toString().substring(0, 5)}
+              {(ram / 1000).toString().substring(0, 3)}
             </Typography>
             <Typography
               variant="body2"
