@@ -1,8 +1,6 @@
 import { sentenceCase } from "change-case";
 
 export const errorHandler = (error) => {
-    console.log("hello")
-  console.log(error);
   let errors = [];
 
   if (Object.hasOwn(error, "validationErrors")) {
@@ -17,6 +15,10 @@ export const errorHandler = (error) => {
     error.errors.forEach((element) => {
       errors.push(sentenceCase(element.msg));
     });
+  }
+
+  if (errors.length === 0) {
+    errors.push("Unknown error");
   }
 
   return errors;
