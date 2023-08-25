@@ -276,7 +276,13 @@ export const Admin = () => {
             <CardHeader title="Deployments" />
 
             <CardContent>
-              <Stack direction="row" alignItems={"center"} mb={2} spacing={2} flexWrap={"wrap"}>
+              <Stack
+                direction="row"
+                alignItems={"center"}
+                mb={2}
+                spacing={2}
+                flexWrap={"wrap"}
+              >
                 <TextField
                   label="Filter"
                   variant="outlined"
@@ -365,7 +371,13 @@ export const Admin = () => {
             <CardHeader title="Virtual Machines" />
 
             <CardContent>
-              <Stack direction="row" alignItems={"center"} mb={2} spacing={2} flexWrap={"wrap"}>
+              <Stack
+                direction="row"
+                alignItems={"center"}
+                mb={2}
+                spacing={2}
+                flexWrap={"wrap"}
+              >
                 <TextField
                   label="Filter"
                   variant="outlined"
@@ -484,7 +496,13 @@ export const Admin = () => {
             />
 
             <CardContent>
-              <Stack direction="row" alignItems={"center"} mb={2} spacing={2} flexWrap={"wrap"}>
+              <Stack
+                direction="row"
+                alignItems={"center"}
+                mb={2}
+                spacing={2}
+                flexWrap={"wrap"}
+              >
                 <TextField
                   label="Filter"
                   variant="outlined"
@@ -567,7 +585,13 @@ export const Admin = () => {
             <CardHeader title="GPU" />
 
             <CardContent>
-              <Stack direction="row" alignItems={"center"} mb={2} spacing={2} flexWrap={"wrap"}>
+              <Stack
+                direction="row"
+                alignItems={"center"}
+                mb={2}
+                spacing={2}
+                flexWrap={"wrap"}
+              >
                 <TextField
                   label="Filter"
                   variant="outlined"
