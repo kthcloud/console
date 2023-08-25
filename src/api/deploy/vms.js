@@ -1,5 +1,6 @@
-export const getVMs = async (token) => {
-  const url = `${process.env.REACT_APP_DEPLOY_API_URL}/vms`;
+export const getVMs = async (token, all=false) => {
+  const allQuery = all ? "?all=true" : "";
+  const url = `${process.env.REACT_APP_DEPLOY_API_URL}/vms${allQuery}`;
   const response = await fetch(url, {
     method: "GET",
     headers: {

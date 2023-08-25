@@ -8,6 +8,7 @@ import Deploy from "./pages/deploy";
 import Profile from "./pages/profile";
 import Create from "./pages/create";
 import Landing from "./pages/landing";
+import Admin from "./pages/admin";
 
 import NotFound from "./pages/404";
 import Status from "./pages/status";
@@ -55,6 +56,14 @@ export default function Router() {
             </ProtectedRoute>
           ),
         },
+        {
+          path: "admin",
+          element: (
+            <ProtectedRoute>
+              <Admin />
+            </ProtectedRoute>
+          )
+        }
       ],
     },
     {

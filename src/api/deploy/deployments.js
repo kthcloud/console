@@ -1,13 +1,12 @@
-export const getDeployments = async (token) => {
-  const res = await fetch(
-    process.env.REACT_APP_DEPLOY_API_URL + "/deployments",
-    {
-      method: "GET",
-      headers: {
-        Authorization: "Bearer " + token,
-      },
-    }
-  );
+export const getDeployments = async (token, all = false) => {
+  const allQuery = all ? "?all=true" : "";
+  const url = `${process.env.REACT_APP_DEPLOY_API_URL}/deployments${allQuery}`;
+  const res = await fetch(url, {
+    method: "GET",
+    headers: {
+      Authorization: "Bearer " + token,
+    },
+  });
   const response = await res.json();
   const result = response.map((obj) => ({ ...obj, type: "deployment" }));
   if (Array.isArray(result)) return result;
