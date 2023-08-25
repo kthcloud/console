@@ -21,6 +21,7 @@ import { updateDeployment } from "src/api/deploy/deployments";
 import { enqueueSnackbar } from "notistack";
 import useResource from "src/hooks/useResource";
 import { useKeycloak } from "@react-keycloak/web";
+import { errorHandler } from "src/utils/errorHandler";
 
 export default function EnvManager({ deployment }) {
   const [envs, setEnvs] = useState([]);
@@ -54,12 +55,12 @@ export default function EnvManager({ deployment }) {
       enqueueSnackbar("Environment variables saving...", {
         variant: "success",
       });
-    } catch (err) {
-      console.error("Could not update deployment envs");
-      console.error(err);
-      enqueueSnackbar("Could not update environment variables", {
-        variant: "error",
-      });
+    } catch (error) {
+      errorHandler(error).forEach((e) =>
+        enqueueSnackbar("Could not update environment variables: " + e, {
+          variant: "error",
+        })
+      );
     } finally {
       setLoading(false);
     }

@@ -36,6 +36,8 @@ import { AccountCircle, Email } from "@mui/icons-material";
 import { getUser, updateUser } from "src/api/deploy/users";
 import { wasActivated } from "src/utils/eventHandler";
 import { UserQuotas } from "./UserQuotas";
+import { errorHandler } from "src/utils/errorHandler";
+import JobList from "src/components/JobList";
 
 export function Profile() {
   const { keycloak, initialized } = useKeycloak();
@@ -54,7 +56,11 @@ export function Profile() {
       const response = await getUser(keycloak.subject, keycloak.token);
       setUser(response);
     } catch (error) {
-      enqueueSnackbar("Error fetching profile: " + error, { variant: "error" });
+      errorHandler(error).forEach((e) =>
+        enqueueSnackbar("Could fetch profile: " + e, {
+          variant: "error",
+        })
+      );
     }
   };
 
@@ -151,6 +157,8 @@ export function Profile() {
                 Profile
               </Typography>
 
+              <JobList />
+
               <Card sx={{ boxShadow: 20 }}>
                 <CardHeader title={"Details"} />
                 <CardContent>
@@ -174,24 +182,6 @@ export function Profile() {
                       helperText={validationError.username}
                     />
 
-                    <TextField
-                      label="Email"
-                      InputProps={{
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            <Email />
-                          </InputAdornment>
-                        ),
-                      }}
-                      variant="standard"
-                      value={user.email}
-                      onChange={(e) => {
-                        setUser({ ...user, email: e.target.value });
-                      }}
-                      error={validationError.email}
-                      helperText={validationError.email}
-                    />
-
                     <Stack
                       spacing={3}
                       direction={"row"}
@@ -200,6 +190,8 @@ export function Profile() {
                       justifyContent={"space-between"}
                       alignItems={"center"}
                     >
+                      <Chip m={1} icon={<Email />} label={user.email} />
+
                       {user.role && (
                         <Chip
                           m={1}

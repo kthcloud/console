@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import { useKeycloak } from "@react-keycloak/web";
 import useResource from "src/hooks/useResource";
 import { updateDeployment } from "src/api/deploy/deployments";
+import { errorHandler } from "src/utils/errorHandler";
 
 export const PrivateMode = ({ deployment }) => {
   const [privateMode, setPrivateMode] = useState(null);
@@ -33,10 +34,12 @@ export const PrivateMode = ({ deployment }) => {
 
       queueJob(res);
       enqueueSnackbar("Visibility saving...", { variant: "success" });
-    } catch (e) {
-      console.error("Failed to update deployment private mode:");
-      console.error(e);
-      enqueueSnackbar("Failed to update visibility", { variant: "error" });
+    } catch (error) {
+      errorHandler(error).forEach((e) =>
+        enqueueSnackbar("Failed to update visibility: " + e, {
+          variant: "error",
+        })
+      );
     } finally {
       setLoading(false);
     }

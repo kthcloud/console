@@ -8,6 +8,7 @@ import { useKeycloak } from "@react-keycloak/web";
 import { getJob } from "src/api/deploy/jobs";
 import { getVMs } from "src/api/deploy/vms";
 import { getDeployments } from "src/api/deploy/deployments";
+import { errorHandler } from "src/utils/errorHandler";
 
 const initialState = {
   rows: [],
@@ -56,9 +57,10 @@ export const ResourceContextProvider = ({ children }) => {
         })
       );
     } catch (error) {
-      enqueueSnackbar(
-        "Error refreshing job " + jobId + ": " + JSON.stringify(error),
-        { variant: "error" }
+      errorHandler(error).forEach((e) =>
+        enqueueSnackbar("Error refreshing job: " + e, {
+          variant: "error",
+        })
       );
     }
   };
@@ -82,9 +84,11 @@ export const ResourceContextProvider = ({ children }) => {
       mergeLists(await Promise.all(promises));
       setInitialLoad(true);
     } catch (error) {
-      enqueueSnackbar("Error fetching resources: " + JSON.stringify(error), {
-        variant: "error",
-      });
+      errorHandler(error).forEach((e) =>
+        enqueueSnackbar("Error fetching resources: " + e, {
+          variant: "error",
+        })
+      );
     }
   };
 

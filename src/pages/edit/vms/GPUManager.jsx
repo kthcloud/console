@@ -26,6 +26,7 @@ import {
   getGPUs,
   attachGPUById,
 } from "src/api/deploy/vms";
+import { errorHandler } from "src/utils/errorHandler";
 
 export const GPUManager = ({ vm }) => {
   const { keycloak, initialized } = useKeycloak();
@@ -200,10 +201,11 @@ export const GPUManager = ({ vm }) => {
                             vm.gpu.id
                           );
                           queueJob(res);
-                        } catch (e) {
-                          enqueueSnackbar(
-                            "Could not attach GPU " + JSON.stringify(e),
-                            { variant: "error" }
+                        } catch (error) {
+                          errorHandler(error).forEach((e) =>
+                            enqueueSnackbar("Could not attach GPU: " + e, {
+                              variant: "error",
+                            })
                           );
                         } finally {
                           setGpuLoading(false);
@@ -215,11 +217,12 @@ export const GPUManager = ({ vm }) => {
                         setGpuLoading(true);
                         const res = await attachGPU(vm, keycloak.token);
                         queueJob(res);
-                      } catch (e) {
+                      } catch (error) {
                         setGpuLoading(false);
-                        enqueueSnackbar(
-                          "Could not attach GPU " + JSON.stringify(e),
-                          { variant: "error" }
+                        errorHandler(error).forEach((e) =>
+                          enqueueSnackbar("Could not attach GPU: " + e, {
+                            variant: "error",
+                          })
                         );
                       }
                     }}
@@ -245,10 +248,11 @@ export const GPUManager = ({ vm }) => {
                       setGpuLoading(true);
                       const res = await detachGPU(vm, keycloak.token);
                       queueJob(res);
-                    } catch (e) {
-                      enqueueSnackbar(
-                        "Could not detach GPU " + JSON.stringify(e),
-                        { variant: "error" }
+                    } catch (error) {
+                      errorHandler(error).forEach((e) =>
+                        enqueueSnackbar("Could not detach GPU: " + e, {
+                          variant: "error",
+                        })
                       );
                     } finally {
                       setGpuLoading(false);
@@ -382,11 +386,13 @@ export const GPUManager = ({ vm }) => {
                           enqueueSnackbar("GPU attached", {
                             variant: "success",
                           });
-                        } catch (e) {
+                        } catch (error) {
                           setGpuLoading(false);
-                          enqueueSnackbar(
-                            "Could not attach GPU " + JSON.stringify(e),
-                            { variant: "error" }
+
+                          errorHandler(error).forEach((e) =>
+                            enqueueSnackbar("Could not attach GPU: " + e, {
+                              variant: "error",
+                            })
                           );
                         }
                       }}

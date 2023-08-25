@@ -154,6 +154,13 @@ export default function Menu() {
 
             <Stack sx={{ p: 1 }}>
               <MenuItem
+                href={"/admin"}
+                component={Link}
+                onClick={handleClose}
+              >
+                Admin panel
+              </MenuItem>
+              <MenuItem
                 href={"https://dashboard.cloud.cbh.kth.se"}
                 component={Link}
                 onClick={handleClose}
@@ -161,33 +168,18 @@ export default function Menu() {
                 CloudStack
               </MenuItem>
               <MenuItem
-                href={"https://k8s.cloud.cbh.kth.se"}
+                href={"https://rancher.mgmt.cloud.cbh.kth.se/"}
                 component={Link}
                 onClick={handleClose}
               >
-                K8s sys
-              </MenuItem>
-
-              <MenuItem
-                href={"https://k8s.prod.cloud.cbh.kth.se"}
-                component={Link}
-                onClick={handleClose}
-              >
-                K8s prod
-              </MenuItem>
-              <MenuItem
-                href={"https://k8s.dev.cloud.cbh.kth.se"}
-                component={Link}
-                onClick={handleClose}
-              >
-                K8s dev
+                Rancher (K8s)
               </MenuItem>
               <MenuItem
                 href={"https://iam.cloud.cbh.kth.se"}
                 component={Link}
                 onClick={handleClose}
               >
-                IAM
+                Keycloak (IAM)
               </MenuItem>
               <MenuItem
                 href={"https://dns.cloud.cbh.kth.se"}

@@ -18,6 +18,7 @@ import ConfirmButton from "src/components/ConfirmButton";
 import Iconify from "src/components/Iconify";
 import RFC1035Input from "src/components/RFC1035Input";
 import useResource from "src/hooks/useResource";
+import { errorHandler } from "src/utils/errorHandler";
 
 export default function Specs({ vm }) {
   const { initialized, keycloak } = useKeycloak();
@@ -57,9 +58,11 @@ export default function Specs({ vm }) {
         variant: "success",
       });
     } catch (error) {
-      enqueueSnackbar("Error creating snapshot: " + JSON.stringify(error), {
-        variant: "error",
-      });
+      errorHandler(error).forEach((e) =>
+        enqueueSnackbar("Error creating snapshot: " + e, {
+          variant: "error",
+        })
+      );
     }
   };
 
@@ -75,11 +78,10 @@ export default function Specs({ vm }) {
         variant: "success",
       });
     } catch (error) {
-      enqueueSnackbar(
-        "Error reverting VM to snapshot: " + JSON.stringify(error),
-        {
+      errorHandler(error).forEach((e) =>
+        enqueueSnackbar("Error reverting VM to snapshot: " + e, {
           variant: "error",
-        }
+        })
       );
     }
   };

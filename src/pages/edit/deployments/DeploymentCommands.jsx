@@ -7,6 +7,7 @@ import Iconify from "src/components/Iconify";
 import useResource from "src/hooks/useResource";
 import { sentenceCase } from "change-case";
 import ConfirmButton from "src/components/ConfirmButton";
+import { errorHandler } from "src/utils/errorHandler";
 
 export const DeploymentCommands = ({ deployment }) => {
   const { queueJob } = useResource();
@@ -24,8 +25,12 @@ export const DeploymentCommands = ({ deployment }) => {
         enqueueSnackbar("Resource deleting... ", { variant: "info" });
         navigate("/deploy");
       }
-    } catch (err) {
-      enqueueSnackbar(err, { variant: "error" });
+    } catch (error) {
+      errorHandler(error).forEach((e) =>
+        enqueueSnackbar("Error deleting resource: " + e, {
+          variant: "error",
+        })
+      );
     }
   };
 
@@ -37,20 +42,12 @@ export const DeploymentCommands = ({ deployment }) => {
       enqueueSnackbar(sentenceCase(command) + " deployment in progress... ", {
         variant: "info",
       });
-    } catch (err) {
-      const errorMessage = "Cannot execute command: ";
-      if (err.hasOwnProperty("errors") && Array.isArray(err.errors)) {
-        err.errors.forEach((error) => {
-          enqueueSnackbar(
-            errorMessage + sentenceCase(error.code) + " - " + error.msg,
-            { variant: "error" }
-          );
-        });
-      } else {
-        enqueueSnackbar(errorMessage + JSON.stringify(err), {
+    } catch (error) {
+      errorHandler(error).forEach((e) =>
+        enqueueSnackbar("Failed to update visibility: " + e, {
           variant: "error",
-        });
-      }
+        })
+      );
     }
   };
 

@@ -16,6 +16,7 @@ import { getUser } from "src/api/deploy/users";
 import { updateVM } from "src/api/deploy/vms";
 import Iconify from "src/components/Iconify";
 import useResource from "src/hooks/useResource";
+import { errorHandler } from "src/utils/errorHandler";
 
 export default function Specs({ vm }) {
   const [specs, setSpecs] = useState(null);
@@ -38,7 +39,11 @@ export default function Specs({ vm }) {
       const response = await getUser(keycloak.subject, keycloak.token);
       setUser(response);
     } catch (error) {
-      enqueueSnackbar("Error fetching quotas: " + error, { variant: "error" });
+      errorHandler(error).forEach((e) =>
+        enqueueSnackbar("Error fetching quotas: " + e, {
+          variant: "error",
+        })
+      );
     }
   };
 
@@ -135,10 +140,12 @@ export default function Specs({ vm }) {
       );
       queueJob(res);
       enqueueSnackbar("Specs saving...", { variant: "success" });
-    } catch (err) {
-      enqueueSnackbar("Could not update specs " + JSON.stringify(err), {
-        variant: "error",
-      });
+    } catch (error) {
+      errorHandler(error).forEach((e) =>
+        enqueueSnackbar("Could not update specs: " + e, {
+          variant: "error",
+        })
+      );
     } finally {
       setLoading(false);
     }
