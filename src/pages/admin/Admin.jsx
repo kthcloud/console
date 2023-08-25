@@ -22,7 +22,6 @@ import { useNavigate } from "react-router-dom";
 import { deleteDeployment, getDeployments } from "src/api/deploy/deployments";
 import { getAllUsers, getUser } from "src/api/deploy/users";
 import { deleteVM, detachGPU, getGPUs, getVMs } from "src/api/deploy/vms";
-import ConfirmButton from "src/components/ConfirmButton";
 import Page from "src/components/Page";
 import { errorHandler } from "src/utils/errorHandler";
 
