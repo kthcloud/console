@@ -23,6 +23,7 @@ import { useKeycloak } from "@react-keycloak/web";
 import RFC1035Input from "src/components/RFC1035Input";
 import { faker } from "@faker-js/faker";
 import { GHSelect } from "./GHSelect";
+import { errorHandler } from "src/utils/errorHandler";
 
 export default function CreateDeployment({ finished }) {
   const [cleaned, setCleaned] = useState("");
@@ -60,12 +61,15 @@ export default function CreateDeployment({ finished }) {
         setNewEnvName("");
         setNewEnvValue("");
       }
-    } catch (e) {
-      enqueueSnackbar("Error creating deployment " + JSON.stringify(e), {
-        variant: "error",
-      });
+    } catch (error) {
+      errorHandler(error).forEach((e) =>
+        enqueueSnackbar("Error creating deployment: " + e, {
+          variant: "error",
+        })
+      );
     }
   };
+  
   return (
     <>
       <Card sx={{ boxShadow: 20 }}>

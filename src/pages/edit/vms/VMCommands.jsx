@@ -7,6 +7,7 @@ import { deleteVM, applyCommand } from "src/api/deploy/vms";
 import ConfirmButton from "src/components/ConfirmButton";
 import Iconify from "src/components/Iconify";
 import useResource from "src/hooks/useResource";
+import { errorHandler } from "src/utils/errorHandler";
 
 export const VMCommands = ({ vm }) => {
   const { initialized, keycloak } = useKeycloak();
@@ -24,20 +25,12 @@ export const VMCommands = ({ vm }) => {
         enqueueSnackbar("VM deleting... ", { variant: "info" });
         navigate("/deploy");
       }
-    } catch (err) {
-      const errorMessage = "Cannot delete vm: ";
-      if (err.hasOwnProperty("errors") && Array.isArray(err.errors)) {
-        err.errors.forEach((error) => {
-          enqueueSnackbar(
-            errorMessage + sentenceCase(error.code) + " - " + error.msg,
-            { variant: "error" }
-          );
-        });
-      } else {
-        enqueueSnackbar(errorMessage + JSON.stringify(err), {
+    } catch (error) {
+      errorHandler(error).forEach((e) =>
+        enqueueSnackbar("Could not delete vm: " + e, {
           variant: "error",
-        });
-      }
+        })
+      );
     }
   };
 
@@ -49,20 +42,12 @@ export const VMCommands = ({ vm }) => {
       enqueueSnackbar(sentenceCase(command) + " VM in progress... ", {
         variant: "info",
       });
-    } catch (err) {
-      const errorMessage = "Cannot execute command: ";
-      if (err.hasOwnProperty("errors") && Array.isArray(err.errors)) {
-        err.errors.forEach((error) => {
-          enqueueSnackbar(
-            errorMessage + sentenceCase(error.code) + " - " + error.msg,
-            { variant: "error" }
-          );
-        });
-      } else {
-        enqueueSnackbar(errorMessage + JSON.stringify(err), {
+    } catch (error) {
+      errorHandler(error).forEach((e) =>
+        enqueueSnackbar("Could execute command: " + e, {
           variant: "error",
-        });
-      }
+        })
+      );
     }
   };
 

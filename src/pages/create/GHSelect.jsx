@@ -14,6 +14,7 @@ import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { getRepositories } from "src/api/deploy/github";
 import Iconify from "src/components/Iconify";
+import { errorHandler } from "src/utils/errorHandler";
 
 export const GHSelect = ({ setAccessToken, repo, setRepo }) => {
   const [code, setCode] = useState("");
@@ -38,10 +39,12 @@ export const GHSelect = ({ setAccessToken, repo, setRepo }) => {
       setAccessToken(res.accessToken);
       setRepos(res.repositories);
       setLoading(false);
-    } catch (e) {
-      enqueueSnackbar("Error getting repositories " + JSON.stringify(e), {
-        variant: "error",
-      });
+    } catch (error) {
+      errorHandler(error).forEach((e) =>
+        enqueueSnackbar("Error getting repositories: " + e, {
+          variant: "error",
+        })
+      );
     }
   };
 

@@ -23,6 +23,7 @@ import { createVM } from "src/api/deploy/vms";
 import { Link } from "react-router-dom";
 import RFC1035Input from "src/components/RFC1035Input";
 import { faker } from "@faker-js/faker";
+import { errorHandler } from "src/utils/errorHandler";
 
 export default function CreateVm({ finished }) {
   const [cleaned, setCleaned] = useState("");
@@ -57,7 +58,11 @@ export default function CreateVm({ finished }) {
       if (response.publicKeys.length > 0)
         setPublicKey(response.publicKeys[0].key);
     } catch (error) {
-      enqueueSnackbar("Error fetching profile: " + error, { variant: "error" });
+      errorHandler(error).forEach((e) =>
+        enqueueSnackbar("Error fetching profile: " + e, {
+          variant: "error",
+        })
+      );
     }
   };
 
@@ -163,7 +168,6 @@ export default function CreateVm({ finished }) {
 
     if (!cleaned || !publicKey || !cpuCores || !diskSize || !ram) {
       enqueueSnackbar("Please fill all fields", { variant: "error" });
-      console.log(cleaned, publicKey, cpuCores, diskSize, ram);
       return;
     }
 
@@ -187,10 +191,12 @@ export default function CreateVm({ finished }) {
         setDiskSize(20);
         setRam(4);
       }
-    } catch (e) {
-      enqueueSnackbar("Error creating vm " + JSON.stringify(e), {
-        variant: "error",
-      });
+    } catch (error) {
+      errorHandler(error).forEach((e) =>
+        enqueueSnackbar("Error creating vm: " + e, {
+          variant: "error",
+        })
+      );
     }
   };
 

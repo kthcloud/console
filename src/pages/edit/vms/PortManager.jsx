@@ -27,6 +27,7 @@ import useResource from "src/hooks/useResource";
 import { updateVM } from "src/api/deploy/vms";
 import { useKeycloak } from "@react-keycloak/web";
 import CopyToClipboard from "react-copy-to-clipboard";
+import { errorHandler } from "src/utils/errorHandler";
 
 export default function PortManager({ vm }) {
   const [ports, setPorts] = useState([]);
@@ -84,10 +85,12 @@ export default function PortManager({ vm }) {
       const res = await updateVM(vm.id, { ports: newPorts }, keycloak.token);
       queueJob(res);
       enqueueSnackbar("Port changes saving...", { variant: "success" });
-    } catch (err) {
-      enqueueSnackbar("Could not update resource " + JSON.stringify(err), {
-        variant: "error",
-      });
+    } catch (error) {
+      errorHandler(error).forEach((e) =>
+        enqueueSnackbar("Could not change ports: " + e, {
+          variant: "error",
+        })
+      );
     } finally {
       setLoading(false);
     }
@@ -112,10 +115,12 @@ export default function PortManager({ vm }) {
       const res = await updateVM(vm.id, { ports: newPorts }, keycloak.token);
       queueJob(res);
       enqueueSnackbar("Port changes saving...", { variant: "success" });
-    } catch (err) {
-      enqueueSnackbar("Could not update resource " + JSON.stringify(err), {
-        variant: "error",
-      });
+    } catch (error) {
+      errorHandler(error).forEach((e) =>
+        enqueueSnackbar("Could not remove port: " + e, {
+          variant: "error",
+        })
+      );
     } finally {
       setLoading(false);
     }

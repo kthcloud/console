@@ -39,6 +39,7 @@ import Iconify from "../../components/Iconify";
 import { deleteDeployment } from "src/api/deploy/deployments";
 import { deleteVM } from "src/api/deploy/vms";
 import { getReasonPhrase } from "http-status-codes";
+import { errorHandler } from "src/utils/errorHandler";
 
 // ----------------------------------------------------------------------
 
@@ -122,10 +123,12 @@ export function Deploy() {
 
       await Promise.all(promises);
       enqueueSnackbar("Deleting resources", { variant: "info" });
-    } catch (err) {
-      enqueueSnackbar("Error deleting resources: " + JSON.stringify(err), {
-        variant: "error",
-      });
+    } catch (error) {
+      errorHandler(error).forEach((e) =>
+        enqueueSnackbar("Error deleting resources: " + e, {
+          variant: "error",
+        })
+      );
     } finally {
       setSelected([]);
       setLoading(false);
