@@ -20,7 +20,12 @@ import { useEffect, useState } from "react";
 import CopyToClipboard from "react-copy-to-clipboard";
 import Iconify from "src/components/Iconify";
 import useResource from "src/hooks/useResource";
-import { attachGPU, getGPUs, attachGPUById } from "src/api/deploy/vms";
+import {
+  attachGPU,
+  detachGPU,
+  getGPUs,
+  attachGPUById,
+} from "src/api/deploy/vms";
 
 export const GPUManager = ({ vm }) => {
   const { keycloak, initialized } = useKeycloak();
@@ -85,8 +90,7 @@ export const GPUManager = ({ vm }) => {
 
   const renderButtonText = () => {
     if (!vm.gpu) return "Lease GPU";
-    if (vm.gpu.expired) return "Renew lease";
-    return "End GPU Lease";
+    return "Renew GPU Lease";
   };
 
   return (
@@ -102,7 +106,7 @@ export const GPUManager = ({ vm }) => {
               useFlexGap={true}
               alignItems={"center"}
             >
-              {vm.gpu && (
+              {vm.gpu && !gpuLoading && (
                 <Chip
                   m={1}
                   icon={<Iconify icon="mdi:gpu" width={24} height={24} />}
@@ -127,7 +131,7 @@ export const GPUManager = ({ vm }) => {
                 />
               )}
 
-              {vm.gpu && !vm.gpu.expired && (
+              {vm.gpu && !vm.gpu.expired && !gpuLoading && (
                 <Chip
                   m={1}
                   icon={
@@ -151,7 +155,7 @@ export const GPUManager = ({ vm }) => {
                 />
               )}
 
-              {vm.gpu && vm.gpu.expired && (
+              {vm.gpu && vm.gpu.expired && !gpuLoading && (
                 <Chip
                   m={1}
                   color="error"
@@ -178,50 +182,82 @@ export const GPUManager = ({ vm }) => {
 
               {gpuLoading && <Skeleton height={"2rem"} sx={{ width: "50%" }} />}
 
-              {!(gpuPickerOpen || gpuLoading) && (
-                <Button
-                  onClick={async () => {
-                    if (userCanListGPUs() && !vm.gpu) {
-                      setGpuPickerOpen(true);
-                      return;
-                    }
+              {!(gpuPickerOpen || gpuLoading) &&
+                (!vm.gpu || (vm.gpu && vm.gpu.expired)) && (
+                  <Button
+                    onClick={async () => {
+                      if (userCanListGPUs() && !vm.gpu) {
+                        setGpuPickerOpen(true);
+                        return;
+                      }
 
-                    if (vm.gpu && vm.gpu.expired) {
+                      if (vm.gpu && vm.gpu.expired) {
+                        try {
+                          setGpuLoading(true);
+                          const res = await attachGPUById(
+                            vm,
+                            keycloak.token,
+                            vm.gpu.id
+                          );
+                          queueJob(res);
+                        } catch (e) {
+                          enqueueSnackbar(
+                            "Could not attach GPU " + JSON.stringify(e),
+                            { variant: "error" }
+                          );
+                        } finally {
+                          setGpuLoading(false);
+                        }
+                        return;
+                      }
+
                       try {
                         setGpuLoading(true);
-                        const res = await attachGPUById(
-                          vm,
-                          keycloak.token,
-                          vm.gpu.id
-                        );
+                        const res = await attachGPU(vm, keycloak.token);
                         queueJob(res);
                       } catch (e) {
+                        setGpuLoading(false);
                         enqueueSnackbar(
                           "Could not attach GPU " + JSON.stringify(e),
                           { variant: "error" }
                         );
-                      } finally {
-                        setGpuLoading(false);
                       }
-                      return;
+                    }}
+                    variant="contained"
+                    to="#"
+                    startIcon={<Iconify icon="mdi:gpu" />}
+                    color={!vm.gpu ? "primary" : "warning"}
+                    disabled={
+                      !(
+                        vm.status === "resourceRunning" ||
+                        vm.status === "resourceStopped"
+                      )
                     }
+                  >
+                    {renderButtonText()}
+                  </Button>
+                )}
 
+              {!(gpuPickerOpen || gpuLoading || !vm.gpu) && (
+                <Button
+                  onClick={async () => {
                     try {
                       setGpuLoading(true);
-                      const res = await attachGPU(vm, keycloak.token);
+                      const res = await detachGPU(vm, keycloak.token);
                       queueJob(res);
                     } catch (e) {
-                      setGpuLoading(false);
                       enqueueSnackbar(
-                        "Could not attach GPU " + JSON.stringify(e),
+                        "Could not detach GPU " + JSON.stringify(e),
                         { variant: "error" }
                       );
+                    } finally {
+                      setGpuLoading(false);
                     }
                   }}
                   variant="contained"
                   to="#"
-                  startIcon={<Iconify icon="mdi:gpu" />}
-                  color={!vm.gpu ? "primary" : "warning"}
+                  startIcon={<Iconify icon="eva:trash-2-fill" />}
+                  color={"error"}
                   disabled={
                     !(
                       vm.status === "resourceRunning" ||
@@ -229,7 +265,7 @@ export const GPUManager = ({ vm }) => {
                     )
                   }
                 >
-                  {renderButtonText()}
+                  Detach GPU
                 </Button>
               )}
 
