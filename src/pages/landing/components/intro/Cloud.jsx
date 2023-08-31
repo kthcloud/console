@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { useFrame, useLoader } from "@react-three/fiber";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { Environment } from "@react-three/drei";
@@ -12,13 +12,30 @@ function CloudModel() {
 }
 
 export function Cloud({ mobile, position }) {
+  const [mouseCoordinates, setMouseCoordinates] = useState({ x: 0, y: 0 });
   const meshRef = useRef();
 
-  useFrame(({ camera, mouse }, delta) => {
+  const mouseMoveHandler = (event) => {
+    setMouseCoordinates({
+      x: event.clientX,
+      y: event.clientY,
+    });
+  };
+
+  useEffect(() => {
+    window.addEventListener("mousemove", mouseMoveHandler);
+    return () => {
+      window.removeEventListener("mousemove", mouseMoveHandler);
+    };
+  }, []);
+
+  useFrame(({ camera }, delta) => {
     if (mobile) {
       meshRef.current.rotation.y += delta;
     } else {
-      const vector = new Vector3(mouse.x, mouse.y, 0);
+      let x =  mouseCoordinates.x / window.innerWidth;
+      let y = 1 - mouseCoordinates.y / window.innerHeight;
+      const vector = new Vector3(x, y, 0);
       vector.unproject(camera);
       meshRef.current.rotation.set(1 - vector.y - 0.8, vector.x, 0);
     }

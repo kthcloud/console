@@ -47,7 +47,7 @@ export default function Menu() {
 
   return (
     <>
-      <IconButton ref={anchorRef} onClick={handleOpen}>
+      <IconButton ref={anchorRef} onClick={handleOpen} aria-label="Menu">
         <Iconify icon="material-symbols:menu-rounded" width={20} height={20} />
       </IconButton>
 
