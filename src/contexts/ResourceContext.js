@@ -41,12 +41,19 @@ export const ResourceContextProvider = ({ children }) => {
         }, 5000);
       }
 
+      if(response.status === "jobTerminated") {
+        setTimeout(() => {
+          setJobs((jobs) => jobs.filter((job) => job.jobId !== jobId));
+        }, 5000);
+      }
+
       // set type and status
       setJobs((jobs) =>
         jobs.map((job) => {
           if (job.jobId === jobId) {
             job.type = response.type;
             job.status = response.status;
+            job.lastError = response.lastError;
             try {
               job.name = rows.filter((row) => row.id === job.id)[0].name;
             } catch (e) {
@@ -103,7 +110,7 @@ export const ResourceContextProvider = ({ children }) => {
 
   useInterval(async () => {
     for (let i = 0; i < jobs.length; i++) {
-      if (jobs[i].status !== "jobFinished") {
+      if (jobs[i].status !== "jobFinished" && jobs[i].status !== "jobTerminated") {
         await refreshJob(jobs[i].jobId);
       }
     }

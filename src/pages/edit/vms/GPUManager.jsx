@@ -48,7 +48,7 @@ export const GPUManager = ({ vm }) => {
     if (!keycloak.userInfo) return false;
 
     if (!Object.hasOwn(keycloak.userInfo, "groups")) return false;
-    return keycloak.userInfo.groups.includes("powerUser");
+    return keycloak.userInfo.groups.includes("platinum");
   };
 
   useEffect(() => {

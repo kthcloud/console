@@ -34,12 +34,13 @@ export const deleteVM = async (id, token) => {
 
 export const detachGPU = async (vm, token) => {
   const res = await fetch(
-    process.env.REACT_APP_DEPLOY_API_URL + "/vms/" + vm.id + "/detachGpu",
+    process.env.REACT_APP_DEPLOY_API_URL + "/vms/" + vm.id,
     {
       method: "POST",
       headers: {
         Authorization: "Bearer " + token,
       },
+      body: JSON.stringify({gpuId: ""}),
     }
   );
   if (!res.ok) {
@@ -54,12 +55,13 @@ export const detachGPU = async (vm, token) => {
 
 export const attachGPU = async (vm, token) => {
   const res = await fetch(
-    process.env.REACT_APP_DEPLOY_API_URL + "/vms/" + vm.id + "/attachGpu",
+    process.env.REACT_APP_DEPLOY_API_URL + "/vms/" + vm.id,
     {
       method: "POST",
       headers: {
         Authorization: "Bearer " + token,
       },
+      body: JSON.stringify({gpuId: "any"}),
     }
   );
   if (!res.ok) {
@@ -74,12 +76,13 @@ export const attachGPU = async (vm, token) => {
 
 export const attachGPUById = async (vm, token, id) => {
   const res = await fetch(
-    process.env.REACT_APP_DEPLOY_API_URL + "/vms/" + vm.id + "/attachGpu/" + id,
+    process.env.REACT_APP_DEPLOY_API_URL + "/vms/" + vm.id,
     {
       method: "POST",
       headers: {
         Authorization: "Bearer " + token,
       },
+      body: JSON.stringify({gpuId: id}),
     }
   );
   if (!res.ok) {
