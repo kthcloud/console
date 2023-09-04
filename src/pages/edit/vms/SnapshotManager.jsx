@@ -113,11 +113,6 @@ export default function Specs({ vm }) {
         }
       />
       <CardContent>
-        {vm.gpu ? (
-          <Typography variant="body">
-            Snapshots are not supported while a GPU is attached.
-          </Typography>
-        ) : (
           <Stack spacing={2} direction={"column"}>
             {snapshots.length > 0 && (
               <>
@@ -193,7 +188,6 @@ export default function Specs({ vm }) {
               </Button>
             </Stack>
           </Stack>
-        )}
       </CardContent>
     </Card>
   );

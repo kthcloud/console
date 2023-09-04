@@ -15,6 +15,54 @@ export default function JobList() {
     );
   };
 
+  const resolveColor = (status) => {
+    switch (status) {
+      case "jobFinished":
+        return "primary";
+      case "jobTerminated":
+        return "error";
+      default:
+        return "default";
+    }
+  };
+
+  const fixAbbr = (jobType) => {
+    return jobType
+      .replace("vm", "VM")
+      .replace("gpu", "GPU")
+      .replace("Vm", "VM");
+  };
+
+  const renderText = (job) => {
+    if (job.lastError && job.lastError !== "") {
+      return (
+        <>
+          <span>
+            {fixAbbr(sentenceCase(job.type)) + " " + job.name}
+            <b>{" Error: " + fixAbbr(sentenceCase(job.lastError))}</b>
+          </span>
+        </>
+      );
+    }
+
+    if (job.status !== "jobRunning" && job.status !== "jobFinished") {
+      return (
+        <>
+          <span>
+            {fixAbbr(sentenceCase(job.type)) + " " + job.name + " - "}
+            <b>{" " + fixAbbr(sentenceCase(job.status.replace("job", "")))}</b>
+          </span>
+        </>
+      );
+    }
+
+    return (
+      <>
+        <span>{fixAbbr(sentenceCase(job.type)) + " " + job.name}</span>
+      </>
+    );
+  };
+
   return (
     <Stack direction={"row"} flexWrap={"wrap"} mb={2}>
       {jobs.map(
@@ -36,16 +84,12 @@ export default function JobList() {
                   <CircularProgress size={20} mx={1} />
                 )
               }
-              label={
-                <>
-                  <span>{sentenceCase(job.type) + " " + job.name}</span>
-                </>
-              }
+              label={renderText(job)}
               sx={{
                 mb: 2,
                 mr: 2,
               }}
-              color={job.status === "jobFinished" ? "primary" : "default"}
+              color={resolveColor(job.status)}
               onDelete={() => handleDelete(job)}
             />
           )
