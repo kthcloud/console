@@ -116,7 +116,7 @@ export default function Specs({ vm }) {
           <Stack spacing={2} direction={"column"}>
             {snapshots.length > 0 && (
               <>
-                <Typography variant="body">Your snapshots</Typography>
+                <Typography variant="body">Your snapshots ({snapshots.length})</Typography>
                 <Stack
                   spacing={2}
                   direction={"row"}
