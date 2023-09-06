@@ -15,6 +15,7 @@ import {
   CardContent,
   CardHeader,
   Card,
+  Typography,
 } from "@mui/material";
 import Iconify from "../../../components/Iconify";
 import { updateDeployment } from "src/api/deploy/deployments";
@@ -75,6 +76,9 @@ export default function EnvManager({ deployment }) {
         }
       />
       <CardContent>
+        <Typography variant="body" color="text.secondary">
+          Your app needs to listen to $DEPLOY_APP_PORT
+        </Typography>
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
