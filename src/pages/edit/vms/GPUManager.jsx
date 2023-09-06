@@ -27,6 +27,7 @@ import {
   attachGPUById,
 } from "src/api/deploy/vms";
 import { errorHandler } from "src/utils/errorHandler";
+import { getUser } from "src/api/deploy/users";
 
 export const GPUManager = ({ vm }) => {
   const { keycloak, initialized } = useKeycloak();
@@ -37,18 +38,36 @@ export const GPUManager = ({ vm }) => {
   const [gpuPickerOpen, setGpuPickerOpen] = useState(false);
   const [gpuChoice, setGpuChoice] = useState("");
   const [gpuLoading, setGpuLoading] = useState(false);
+  const [user, setUser] = useState(null);
+
+  const loadProfile = async () => {
+    if (!initialized) return -1;
+
+    try {
+      const response = await getUser(keycloak.subject, keycloak.token);
+      setUser(response);
+    } catch (error) {
+      errorHandler(error).forEach((e) =>
+        enqueueSnackbar("Error fetching profile: " + e, {
+          variant: "error",
+        })
+      );
+    }
+  };
+
+  useEffect(() => {
+    loadProfile();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialized]);
 
   const userCanListGPUs = () => {
-    if (!initialized) return false;
-    if (!keycloak) return false;
-    if (!keycloak.authenticated) return false;
+    if (!user) return false;
+    return user.role.permissions.includes("chooseGpu");
+  };
 
-    keycloak.loadUserInfo();
-
-    if (!keycloak.userInfo) return false;
-
-    if (!Object.hasOwn(keycloak.userInfo, "groups")) return false;
-    return keycloak.userInfo.groups.includes("platinum");
+  const userCanUseGPUs = () => {
+    if (!user) return false;
+    return user.role.permissions.includes("useGpus");
   };
 
   useEffect(() => {
@@ -95,7 +114,7 @@ export const GPUManager = ({ vm }) => {
   };
 
   return (
-    gpus.length > 0 && (
+    userCanUseGPUs() && (
       <Card sx={{ boxShadow: 20 }}>
         <CardHeader title={"GPU Lease"} />
         <CardContent>
