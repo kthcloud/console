@@ -9,7 +9,6 @@ import {
 } from "@mui/material";
 import "./intro.css";
 import { Cloud } from "./Cloud";
-import { Canvas } from "@react-three/fiber";
 import { useKeycloak } from "@react-keycloak/web";
 
 const Intro = () => {
@@ -28,17 +27,7 @@ const Intro = () => {
               },
             }}
           >
-            <Canvas
-              height="100%"
-              width="100%"
-              style={{
-                position: "absolute",
-                top: "0",
-                left: "0",
-              }}
-            >
-              <Cloud position={[-3, 0, 0]} />
-            </Canvas>
+            <Cloud position={[-3, 0, 0]} />
           </Box>
           <Grid
             container
@@ -64,9 +53,7 @@ const Intro = () => {
                   padding: 0,
                 }}
               >
-                <Canvas height="250px" width="100%">
-                  <Cloud mobile position={[0, 0, 0]} />
-                </Canvas>
+                <Cloud mobile position={[0, 0, 0]} />
               </Box>
             </Grid>
             <Grid item xs={12} md={5}>
