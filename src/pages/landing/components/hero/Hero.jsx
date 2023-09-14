@@ -86,7 +86,7 @@ const Hero = () => {
             backgroundImage: {
               xs: "none",
               sm: `url(${
-                process.env.PUBLIC_URL + "/static/landing/hero-portrait.png"
+                process.env.PUBLIC_URL + "/static/landing/hero-portrait.webp"
               })`,
             },
             backgroundRepeat: "no-repeat",
@@ -154,7 +154,7 @@ const Hero = () => {
         >
           <CardMedia
             component="img"
-            src={process.env.PUBLIC_URL + "/static/landing/hero-landscape.png"}
+            src={process.env.PUBLIC_URL + "/static/landing/hero-landscape.webp"}
             alt="hero phone"
           />
         </Grid>
