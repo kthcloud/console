@@ -17,8 +17,8 @@ export function Cloud({ mobile, position }) {
       }
     >
       <ambientLight intensity={0.5}/>
-      <directionalLight position={[5, 5, 5]} intensity={2} />
-      <directionalLight position={[5, 5, 5]} intensity={2} color={"#faa"} />
+      <directionalLight position={[5, 5, 5]} intensity={2} color={"#fffecc"}/>
+      <directionalLight position={[5, -5, 5]} intensity={1} color={"#faa"} />
       <directionalLight position={[-5, 5, 5]} intensity={1} color={"#aaf"} />
 
       <CloudMesh
