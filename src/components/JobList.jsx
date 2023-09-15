@@ -34,16 +34,7 @@ export default function JobList() {
   };
 
   const renderText = (job) => {
-    if (job.lastError && job.lastError !== "") {
-      return (
-        <>
-          <span>
-            {fixAbbr(sentenceCase(job.type)) + " " + job.name}
-            <b>{" Error: " + fixAbbr(sentenceCase(job.lastError))}</b>
-          </span>
-        </>
-      );
-    }
+
 
     if (job.status !== "jobRunning" && job.status !== "jobFinished") {
       return (
