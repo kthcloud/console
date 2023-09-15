@@ -119,13 +119,22 @@ export default function Menu() {
             Status
           </MenuItem>
           <MenuItem
+            href={"https://wiki.cloud.cbh.kth.se/"}
+            component={Link}
+            onClick={handleClose}
+            target="_blank"
+            rel="me"
+          >
+            Wiki
+          </MenuItem>
+          <MenuItem
             href={"https://discord.gg/MuHQd6QEtM"}
             component={Link}
             onClick={handleClose}
             target="_blank"
             rel="noopener noreferrer"
           >
-            Request account
+            Support
           </MenuItem>
           <MenuItem
             href={"https://mastodon.social/@kthcloud"}
@@ -153,11 +162,7 @@ export default function Menu() {
             </Box>
 
             <Stack sx={{ p: 1 }}>
-              <MenuItem
-                href={"/admin"}
-                component={Link}
-                onClick={handleClose}
-              >
+              <MenuItem href={"/admin"} component={Link} onClick={handleClose}>
                 Admin panel
               </MenuItem>
               <MenuItem

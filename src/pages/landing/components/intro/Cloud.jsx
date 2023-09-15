@@ -1,50 +1,36 @@
-import React, { useRef, useEffect, useState } from "react";
-import { useFrame, useLoader } from "@react-three/fiber";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
-import { Environment } from "@react-three/drei";
-import { Vector3 } from "three";
-
-const url = process.env.PUBLIC_URL + "/static/models/cloud.gltf";
-
-function CloudModel() {
-  const gltf = useLoader(GLTFLoader, url);
-  return <primitive object={gltf.scene}></primitive>;
-}
+import { Canvas } from "@react-three/fiber";
+import { CloudMesh } from "./CloudMesh";
+import * as THREE from "three";
 
 export function Cloud({ mobile, position }) {
-  const [mouseCoordinates, setMouseCoordinates] = useState({ x: 0, y: 0 });
-  const meshRef = useRef();
-
-  const mouseMoveHandler = (event) => {
-    setMouseCoordinates({
-      x: event.clientX,
-      y: event.clientY,
-    });
-  };
-
-  useEffect(() => {
-    window.addEventListener("mousemove", mouseMoveHandler);
-    return () => {
-      window.removeEventListener("mousemove", mouseMoveHandler);
-    };
-  }, []);
-
-  useFrame(({ camera }, delta) => {
-    if (mobile) {
-      meshRef.current.rotation.y += delta;
-    } else {
-      let x =  mouseCoordinates.x / window.innerWidth;
-      let y = 1 - mouseCoordinates.y / window.innerHeight;
-      const vector = new Vector3(x, y, 0);
-      vector.unproject(camera);
-      meshRef.current.rotation.set(1 - vector.y - 0.8, vector.x, 0);
-    }
-  });
 
   return (
-    <mesh position={position} ref={meshRef}>
-      <CloudModel />
-      <Environment preset="sunset" />
-    </mesh>
+    <Canvas
+      height={mobile ? "250px" : "100%"}
+      width="100%"
+      style={
+        !mobile && {
+          position: "absolute",
+          top: "0",
+          left: "0",
+        }
+      }
+    >
+      <ambientLight intensity={0.5}/>
+      <directionalLight position={[5, 5, 5]} intensity={2} color={"#fffecc"}/>
+      <directionalLight position={[5, -5, 5]} intensity={1} color={"#faa"} />
+      <directionalLight position={[-5, 5, 5]} intensity={1} color={"#aaf"} />
+
+      <CloudMesh
+        mobile={mobile}
+        position={position}
+        props={{
+          material: new THREE.MeshBasicMaterial({
+            color: "yellow",
+            flatShading: true,
+          }),
+        }}
+      />
+    </Canvas>
   );
 }
