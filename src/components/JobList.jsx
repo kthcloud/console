@@ -40,7 +40,7 @@ export default function JobList() {
       return (
         <>
           <span>
-            {fixAbbr(sentenceCase(job.type)) + " " + job.name + " - "}
+            {fixAbbr(sentenceCase(job.type)) + " " + job.name + "  "}
             <b>{" " + fixAbbr(sentenceCase(job.status.replace("job", "")))}</b>
           </span>
         </>
