@@ -15,7 +15,6 @@ import {
   CardContent,
   CardHeader,
   Card,
-  Typography,
 } from "@mui/material";
 import Iconify from "../../../components/Iconify";
 import { updateDeployment } from "src/api/deploy/deployments";
