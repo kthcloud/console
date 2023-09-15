@@ -95,6 +95,23 @@ export const DeploymentCommands = ({ deployment }) => {
             Go to page
           </Button>
         )}
+
+      {deployment.type === "deployment" &&
+        Object.hasOwn(deployment, "storageUrl") &&
+        deployment.storageUrl !== "" && (
+          <Button
+            component={Link}
+            href={deployment.storageUrl}
+            target="_blank"
+            rel="noreferrer"
+            underline="none"
+            startIcon={<Iconify icon="mdi:folder" />}
+            variant="contained"
+          >
+            Go to storage
+          </Button>
+        )}
+
       <ConfirmButton
         action="Delete"
         actionText={"delete " + deployment.name}
