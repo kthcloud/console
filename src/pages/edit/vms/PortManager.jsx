@@ -132,7 +132,7 @@ export default function PortManager({ vm }) {
         title={"Port forwarding"}
         subheader={
           <span>
-            Expose certain ports to the internet.
+            Expose certain ports to the internet
             <br />
             Access them at{" "}
             <CopyToClipboard text={"vm.cloud.cbh.kth.se"}>

@@ -165,7 +165,7 @@ export default function Specs({ vm }) {
     <Card sx={{ boxShadow: 20 }}>
       <CardHeader
         title={"Specs"}
-        subheader={"Grow or shrink your VM to match your use case."}
+        subheader={"Grow or shrink your VM to match your use case"}
       />
       <CardContent>
         <Stack

@@ -85,7 +85,7 @@ export default function CreateDeployment({ finished }) {
         <CardHeader
           title={"Create Deployment"}
           subheader={
-            "Choose a nice name for your deployment, as it will also be its subdomain!"
+            "Choose a nice name for your deployment, as it will also be its subdomain"
           }
         />
         <CardContent>
@@ -108,7 +108,7 @@ export default function CreateDeployment({ finished }) {
         <CardHeader
           title={"Set environment variables"}
           subheader={
-            "Environment variables are accessible from inside your deployment and can be used to configure your application, store secrets, and more."
+            "Environment variables are accessible from inside your deployment and can be used to configure your application, store secrets, and more"
           }
         />
         <CardContent>
@@ -211,7 +211,7 @@ export default function CreateDeployment({ finished }) {
         <CardHeader
           title={"Persistent storage"}
           subheader={
-            "Persistent storage allows data to be stored and accessed across multiple deployments."
+            "Persistent storage allows data to be stored and accessed across multiple deployments"
           }
         />
         <CardContent>

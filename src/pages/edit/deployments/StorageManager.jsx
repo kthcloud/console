@@ -62,7 +62,7 @@ const StorageManager = ({ deployment, persistent, setPersistent }) => {
       <CardHeader
         title={"Persistent storage"}
         subheader={
-          "Persistent storage allows data to be stored and accessed across multiple deployments."
+          "Persistent storage allows data to be stored and accessed across multiple deployments"
         }
       />
       <CardContent>

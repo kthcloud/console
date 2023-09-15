@@ -116,7 +116,7 @@ export const GPUManager = ({ vm }) => {
   return (
     userCanUseGPUs() && (
       <Card sx={{ boxShadow: 20 }}>
-        <CardHeader title={"GPU Lease"} />
+        <CardHeader title={"GPU Lease"} subheader={"Leasing a GPU allows you to use it for a limited time"} />
         <CardContent>
           <Stack spacing={3} direction={"column"} useFlexGap={true}>
             <Stack
@@ -425,7 +425,7 @@ export const GPUManager = ({ vm }) => {
             </Stack>
 
             <Typography variant="body2">
-              Leasing a GPU allows you to use it for a limited time. You will
+              You will
               need to install the drivers and software yourself.
               <br />
               On Ubuntu, run{" "}
