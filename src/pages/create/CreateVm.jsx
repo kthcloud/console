@@ -46,8 +46,11 @@ export default function CreateVm({ finished }) {
   const [availableDisk, setAvailableDisk] = useState(0);
 
   const [initialName, setInitialName] = useState(
-    faker.word.words(3).replace(/[^a-z0-9]|\s+|\r?\n|\r/gim, "-")
+    process.env.REACT_APP_RELEASE_BRANCH
+      ? ""
+      : faker.word.words(3).replace(/[^a-z0-9]|\s+|\r?\n|\r/gim, "-")
   );
+
 
   const loadProfile = async () => {
     if (!initialized) return -1;
@@ -183,9 +186,10 @@ export default function CreateVm({ finished }) {
       finished(job, stay);
 
       if (stay) {
-        setInitialName(
-          faker.word.words(3).replace(/[^a-z0-9]|\s+|\r?\n|\r/gim, "-")
-        );
+        if (!process.env.REACT_APP_RELEASE_BRANCH)
+          setInitialName(
+            faker.word.words(3).replace(/[^a-z0-9]|\s+|\r?\n|\r/gim, "-")
+          );
         setCleaned("");
         setCpuCores(2);
         setDiskSize(20);

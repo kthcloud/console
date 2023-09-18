@@ -43,10 +43,12 @@ export default function CreateDeployment({ finished }) {
 
   const [accessToken, setAccessToken] = useState("");
   const [repo, setRepo] = useState("");
-  const [initialName, setInitialName] = useState(
-    faker.word.words(3).replace(/[^a-z0-9]|\s+|\r?\n|\r/gim, "-")
-  );
 
+  const [initialName, setInitialName] = useState(
+    process.env.REACT_APP_RELEASE_BRANCH
+      ? ""
+      : faker.word.words(3).replace(/[^a-z0-9]|\s+|\r?\n|\r/gim, "-")
+  );
   const { enqueueSnackbar } = useSnackbar();
 
   const handleCreate = async (stay) => {
@@ -62,9 +64,10 @@ export default function CreateDeployment({ finished }) {
       );
       finished(job, stay);
       if (stay) {
-        setInitialName(
-          faker.word.words(3).replace(/[^a-z0-9]|\s+|\r?\n|\r/gim, "-")
-        );
+        if (!process.env.REACT_APP_RELEASE_BRANCH)
+          setInitialName(
+            faker.word.words(3).replace(/[^a-z0-9]|\s+|\r?\n|\r/gim, "-")
+          );
         setCleaned("");
         setEnvs([]);
         setNewEnvName("");
