@@ -69,7 +69,7 @@ export const GHSelect = ({ setAccessToken, repo, setRepo }) => {
     <Card sx={{ boxShadow: 20 }}>
       <CardHeader
         title={"Connect GitHub repository"}
-        subheader="Link your GitHub repo for automatic Continuous Delivery. If not linked, instructions for pushing your container image will be provided."
+        subheader="Link your GitHub repo for automatic Continuous Delivery. If not linked, instructions for pushing your container image will be provided later"
       />
       <CardContent>
         {loading ? (

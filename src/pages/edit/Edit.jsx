@@ -35,11 +35,13 @@ import { DeploymentCommands } from "./deployments/DeploymentCommands";
 import { VMCommands } from "./vms/VMCommands";
 import { LogsView } from "./deployments/LogsView";
 import { getReasonPhrase } from "http-status-codes";
+import StorageManager from "./deployments/StorageManager";
 
 export function Edit() {
   const { initialized } = useKeycloak();
   const [resource, setResource] = useState(null);
   const [envs, setEnvs] = useState([]);
+  const [persistent, setPersistent] = useState([]);
   const { rows, initialLoad } = useResource();
   const [loaded, setLoaded] = useState(false);
 
@@ -58,6 +60,7 @@ export function Edit() {
     setResource(row);
     if (type === "deployment" && !loaded) {
       setEnvs(row.envs);
+      setPersistent(row.volumes);
     }
     setLoaded(true);
   };
@@ -145,6 +148,14 @@ export function Edit() {
                   deployment={resource}
                   envs={envs}
                   setEnvs={setEnvs}
+                />
+              )}
+
+              {resource.type === "deployment" && (
+                <StorageManager
+                  deployment={resource}
+                  persistent={persistent}
+                  setPersistent={setPersistent}
                 />
               )}
 

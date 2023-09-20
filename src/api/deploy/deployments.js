@@ -63,12 +63,14 @@ export const createDeployment = async (
   name,
   envs,
   repo,
+  volumes,
   accessToken,
   token
 ) => {
   let body = {
     name,
     envs,
+    volumes,
   };
 
   if (repo)

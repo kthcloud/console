@@ -109,7 +109,7 @@ export default function Specs({ vm }) {
       <CardHeader
         title={"Snapshots"}
         subheader={
-          "Snapshots allow you to save the state of the virtual machine at a point in time. You can then revert to that state at any time."
+          "Snapshots allow you to save the state of the virtual machine at a point in time. You can revert to that state at any time"
         }
       />
       <CardContent>
