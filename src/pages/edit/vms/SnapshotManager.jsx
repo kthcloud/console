@@ -1,15 +1,15 @@
 import {
+  Box,
   Button,
   Card,
   CardContent,
   CardHeader,
   Chip,
   CircularProgress,
-  MenuItem,
-  Select,
   Stack,
   Typography,
 } from "@mui/material";
+import { TreeItem, TreeView } from "@mui/x-tree-view";
 import { useKeycloak } from "@react-keycloak/web";
 import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
@@ -19,6 +19,8 @@ import Iconify from "src/components/Iconify";
 import RFC1035Input from "src/components/RFC1035Input";
 import useResource from "src/hooks/useResource";
 import { errorHandler } from "src/utils/errorHandler";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
 export default function Specs({ vm }) {
   const { initialized, keycloak } = useKeycloak();
@@ -29,6 +31,18 @@ export default function Specs({ vm }) {
   const [snapshotName, setSnapshotName] = useState("");
   const [selectedSnapshot, setSelectedSnapshot] = useState("");
 
+  // Treeview
+  const [expanded, setExpanded] = useState([]);
+
+  const handleToggle = (event, nodeIds) => {
+    setExpanded(nodeIds);
+  };
+
+  const handleSelect = (event, nodeIds) => {
+    setSelectedSnapshot(nodeIds.slice(-1)[0]);
+  };
+
+  // Load resources
   const loadVMSnapshots = async () => {
     if (!initialized) return -1;
 
@@ -94,6 +108,29 @@ export default function Specs({ vm }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [vm, initialized]);
 
+  function getSnapshotLabel(snapshot) {
+    return (
+      <Stack direction={"row"} spacing={2} alignItems={"center"}>
+        <Typography variant={"body1"}>{snapshot.displayname}</Typography>
+        {snapshot.current && <Chip label={"Latest"} />}
+      </Stack>
+    );
+  }
+
+  function getSnapshotChildren(snapshot) {
+    return snapshots
+      .filter((s) => s.parentName === snapshot.displayname)
+      .map((child) => (
+        <TreeItem
+          nodeId={child.id}
+          label={getSnapshotLabel(child)}
+          key={child.id}
+        >
+          {getSnapshotChildren(child)}
+        </TreeItem>
+      ));
+  }
+
   if (!initialLoad)
     return (
       <Card sx={{ boxShadow: 20 }}>
@@ -113,38 +150,65 @@ export default function Specs({ vm }) {
         }
       />
       <CardContent>
-          <Stack spacing={2} direction={"column"}>
-            {snapshots.length > 0 && (
-              <>
-                <Typography variant="body">Your snapshots ({snapshots.length})</Typography>
-                <Stack
-                  spacing={2}
-                  direction={"row"}
-                  flexWrap={"wrap"}
-                  useFlexGap={true}
-                  alignItems={"center"}
+        <Stack spacing={2} direction={"column"} w={100}>
+          {snapshots.length > 0 && (
+            <>
+              <Typography variant="body">
+                Your snapshots ({snapshots.length})
+              </Typography>
+              <Stack
+                spacing={2}
+                direction={"row"}
+                flexWrap={"wrap"}
+                useFlexGap={true}
+                alignItems={"center"}
+                justifyContent={"space-between"}
+                maxWidth={800}
+              >
+                <TreeView
+                  aria-label="controlled"
+                  defaultCollapseIcon={<ExpandMoreIcon />}
+                  defaultExpandIcon={<ChevronRightIcon />}
+                  expanded={expanded}
+                  selected={selectedSnapshot}
+                  onNodeToggle={handleToggle}
+                  onNodeSelect={handleSelect}
+                  multiSelect
                 >
-                  <Select
-                    value={selectedSnapshot}
-                    onChange={(e) => setSelectedSnapshot(e.target.value)}
-                  >
-                    {snapshots &&
-                      snapshots.map((snapshot) => (
-                        <MenuItem value={snapshot.id} key={snapshot.id}>
-                          <Stack
-                            direction="row"
-                            justifyContent="space-between"
-                            alignItems="center"
-                            spacing={3}
-                          >
-                            <Typography variant={"body1"}>
-                              {snapshot.displayname}
-                            </Typography>
-                            {snapshot.current && <Chip label={"Latest"} />}
-                          </Stack>
-                        </MenuItem>
-                      ))}
-                  </Select>
+                  {snapshots
+                    .filter((s) => !s.parentName)
+                    .map((snapshot) => (
+                      <TreeItem
+                        nodeId={snapshot.id}
+                        label={getSnapshotLabel(snapshot)}
+                        key={snapshot.id}
+                      >
+                        {getSnapshotChildren(snapshot)}
+                      </TreeItem>
+                    ))}
+                </TreeView>
+
+                <Stack
+                  direction={"column"}
+                  justifyContent={"space-between"}
+                  alignItems={"center"}
+                  spacing={2}
+                  sx={{
+                    border: 1,
+                    p: 2,
+                    borderRadius: 1,
+                    borderColor: "#ff534c",
+                  }}
+                  useFlexGap
+                  boxShadow={10}
+                >
+                  <Typography variant="body">Selected snapshot</Typography>
+                  <Typography variant="body2">
+                    {snapshots.find((s) => s.id === selectedSnapshot) &&
+                      snapshots.find((s) => s.id === selectedSnapshot)
+                        .displayname
+                    }
+                  </Typography>
                   <ConfirmButton
                     action="Revert"
                     actionText="revert to this snapshot"
@@ -156,38 +220,39 @@ export default function Specs({ vm }) {
                     }}
                   />
                 </Stack>
-                <br />
-              </>
-            )}
+              </Stack>
+              <br />
+            </>
+          )}
 
-            <Typography variant="body">Create new snapshot</Typography>
+          <Typography variant="body">Create new snapshot</Typography>
 
-            <Stack
-              spacing={2}
-              direction={"row"}
-              flexWrap={"wrap"}
-              useFlexGap={true}
-              alignItems={"center"}
+          <Stack
+            spacing={2}
+            direction={"row"}
+            flexWrap={"wrap"}
+            useFlexGap={true}
+            alignItems={"center"}
+          >
+            <RFC1035Input
+              label="Snapshot Name"
+              type="Snapshot Name"
+              cleaned={snapshotName}
+              setCleaned={setSnapshotName}
+              initialValue={snapshotName}
+              callToAction="Your snapshot will be created as"
+            />
+
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => createVMSnapshot(snapshotName)}
+              startIcon={<Iconify icon="material-symbols:save" />}
             >
-              <RFC1035Input
-                label="Snapshot Name"
-                type="Snapshot Name"
-                cleaned={snapshotName}
-                setCleaned={setSnapshotName}
-                initialValue={snapshotName}
-                callToAction="Your snapshot will be created as"
-              />
-
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => createVMSnapshot(snapshotName)}
-                startIcon={<Iconify icon="material-symbols:save" />}
-              >
-                Create
-              </Button>
-            </Stack>
+              Create
+            </Button>
           </Stack>
+        </Stack>
       </CardContent>
     </Card>
   );
