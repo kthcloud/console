@@ -35,13 +35,13 @@ export const ResourceContextProvider = ({ children }) => {
     try {
       const response = await getJob(jobId, keycloak.token);
 
-      if (response.status === "jobFinished") {
+      if (response.status.toLoweCase().includes("finished")) {
         setTimeout(() => {
           setJobs((jobs) => jobs.filter((job) => job.jobId !== jobId));
         }, 5000);
       }
 
-      if(response.status === "jobTerminated") {
+      if(response.status.toLoweCase().includes("terminated")) {
         setTimeout(() => {
           setJobs((jobs) => jobs.filter((job) => job.jobId !== jobId));
         }, 5000);

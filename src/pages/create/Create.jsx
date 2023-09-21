@@ -42,6 +42,7 @@ export const Create = () => {
   };
 
   const navigate = useNavigate();
+  // eslint-disable-next-line no-unused-vars
   let [_, setSearchParams] = useSearchParams();
 
   useEffect(() => {
