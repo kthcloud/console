@@ -91,7 +91,7 @@ export default function EnvManager({ deployment }) {
                 {Array.isArray(envs) &&
                   envs.map((env) => (
                     <TableRow
-                      key={"env" + env.name}
+                      key={"env" + env.name + env.value}
                       sx={{
                         "&:last-child td, &:last-child th": { border: 0 },
                       }}

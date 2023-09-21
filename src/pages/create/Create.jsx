@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 
 //hooks
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useKeycloak } from "@react-keycloak/web";
 import { useSnackbar } from "notistack";
 import useResource from "src/hooks/useResource";
@@ -28,15 +28,26 @@ import JobList from "../../components/JobList";
 import ResourceComparisonTable from "./ResourceComparisonTable";
 import CreateDeployment from "./CreateDeployment";
 import CreateVm from "./CreateVm";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import ResourceTypeChat from "./ResourceTypeChat";
 
 export const Create = () => {
   const { initialized } = useKeycloak();
   const { enqueueSnackbar } = useSnackbar();
   const { queueJob } = useResource();
-  const [alignment, setAlignment] = useState("deployment");
+  const [alignment, _setAlignment] = useState("");
+  const setAlignment = (newAlignment) => {
+    _setAlignment(newAlignment);
+    setSearchParams({ type: newAlignment });
+  };
+
   const navigate = useNavigate();
+  let [_, setSearchParams] = useSearchParams();
+
+  useEffect(() => {
+    setAlignment("deployment");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const finished = (job, stay) => {
     queueJob(job);

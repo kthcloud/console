@@ -75,7 +75,7 @@ export default function Menu() {
                     sx={{ color: "text.secondary" }}
                     noWrap
                   >
-                    Manage
+                    Manage resources
                   </Typography>
                 </Box>
 
@@ -85,7 +85,7 @@ export default function Menu() {
                     component={RouterLink}
                     onClick={handleClose}
                   >
-                    Deploy
+                    Dashboard
                   </MenuItem>
                   <MenuItem
                     to={"/create"}

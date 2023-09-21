@@ -331,7 +331,7 @@ export function Deploy() {
               direction="row"
             >
               <Typography variant="h4" gutterBottom>
-                Deploy
+                Dashboard
               </Typography>
 
               <Button
