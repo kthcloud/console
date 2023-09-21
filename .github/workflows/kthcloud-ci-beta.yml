@@ -22,7 +22,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
-          tags: registry.cloud.cbh.kth.se/deploy-3de025ba-ed43-43e0-ab50-03c04b7ef968/landing-beta
+          tags: registry.cloud.cbh.kth.se/deploy-3cf9c142-b974-4b8b-b979-e057da3b6ae3/landing-beta
           build-args: |
             "RELEASE_BRANCH=beta"
             "RELEASE_DATE=${{ env.RELEASE_DATE }}"
