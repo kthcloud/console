@@ -13,6 +13,7 @@ import {
   Typography,
   FormHelperText,
   InputAdornment,
+  CircularProgress,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 
@@ -24,6 +25,7 @@ import { Link } from "react-router-dom";
 import RFC1035Input from "src/components/RFC1035Input";
 import { faker } from "@faker-js/faker";
 import { errorHandler } from "src/utils/errorHandler";
+import useResource from "src/hooks/useResource";
 
 export default function CreateVm({ finished }) {
   const [cleaned, setCleaned] = useState("");
@@ -35,7 +37,7 @@ export default function CreateVm({ finished }) {
 
   const { enqueueSnackbar } = useSnackbar();
   const { initialized, keycloak } = useKeycloak();
-  const [user, setUser] = useState(null);
+  const { initialLoad, user } = useResource();
 
   const [cpuError, setCpuError] = useState(null);
   const [ramError, setRamError] = useState(null);
@@ -50,30 +52,6 @@ export default function CreateVm({ finished }) {
       ? ""
       : faker.word.words(3).replace(/[^a-z0-9]|\s+|\r?\n|\r/gim, "-")
   );
-
-
-  const loadProfile = async () => {
-    if (!initialized) return -1;
-
-    try {
-      const response = await getUser(keycloak.subject, keycloak.token);
-      setUser(response);
-      if (response.publicKeys.length > 0)
-        setPublicKey(response.publicKeys[0].key);
-    } catch (error) {
-      errorHandler(error).forEach((e) =>
-        enqueueSnackbar("Error fetching profile: " + e, {
-          variant: "error",
-        })
-      );
-    }
-  };
-
-  useEffect(() => {
-    loadProfile();
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initialized]);
 
   useEffect(() => {
     if (!user) return;
@@ -219,129 +197,141 @@ export default function CreateVm({ finished }) {
 
   return (
     <>
-      <Card sx={{ boxShadow: 20 }}>
-        <CardHeader title="Create VM" />
-        <CardContent>
-          <RFC1035Input
-            label={"Name"}
-            placeholder="name"
-            callToAction="Your VM will be created with the name"
-            type="VM Name"
-            variant="standard"
-            cleaned={cleaned}
-            setCleaned={setCleaned}
-            initialValue={initialName}
-          />
+      {!(initialLoad, user) ? (
+        <CircularProgress />
+      ) : (
+        <>
+          <Card sx={{ boxShadow: 20 }}>
+            <CardHeader title="Create VM" />
+            <CardContent>
+              <RFC1035Input
+                label={"Name"}
+                placeholder="name"
+                callToAction="Your VM will be created with the name"
+                type="VM Name"
+                variant="standard"
+                cleaned={cleaned}
+                setCleaned={setCleaned}
+                initialValue={initialName}
+              />
+
+              {user && (
+                <FormControl fullWidth sx={{ mt: 3 }}>
+                  <InputLabel id="publickey-select-label">SSH Key</InputLabel>
+                  <Select
+                    defaultValue={
+                      user.publicKeys.length > 0 && user.publicKeys[0].key
+                    }
+                    id="publickey"
+                    label="SSH Key"
+                    onChange={(e) => {
+                      setPublicKey(e.target.value);
+                    }}
+                  >
+                    {user.publicKeys.map((key) => (
+                      <MenuItem key={"ssh" + key.name} value={key.key}>
+                        {key.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  <FormHelperText>
+                    {" "}
+                    Don't have a key yet? Add one to your{" "}
+                    <Link to="/profile">profile</Link>.
+                  </FormHelperText>
+                </FormControl>
+              )}
+            </CardContent>
+          </Card>
 
           {user && (
-            <FormControl fullWidth sx={{ mt: 3 }}>
-              <InputLabel id="publickey-select-label">SSH Key</InputLabel>
-              <Select
-                defaultValue={
-                  user.publicKeys.length > 0 && user.publicKeys[0].key
-                }
-                id="publickey"
-                label="SSH Key"
-                onChange={(e) => {
-                  setPublicKey(e.target.value);
-                }}
-              >
-                {user.publicKeys.map((key) => (
-                  <MenuItem key={"ssh" + key.name} value={key.key}>
-                    {key.name}
-                  </MenuItem>
-                ))}
-              </Select>
-              <FormHelperText>
-                {" "}
-                Don't have a key yet? Add one to your{" "}
-                <Link to="/profile">profile</Link>.
-              </FormHelperText>
-            </FormControl>
+            <Card sx={{ boxShadow: 20 }}>
+              <CardHeader title="Select specs" />
+              <CardContent>
+                <Stack
+                  spacing={3}
+                  direction={"row"}
+                  useFlexGap={true}
+                  flexWrap={"wrap"}
+                >
+                  <TextField
+                    label="CPU Cores"
+                    id="cores"
+                    value={cpuCores}
+                    onChange={(e) => calculateCPU(e.target.value)}
+                    helperText={
+                      cpuError
+                        ? cpuError
+                        : "Number of CPU cores, 2-" + availableCPU
+                    }
+                    inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
+                    error={cpuError ? true : false}
+                  />
+
+                  <TextField
+                    label="RAM"
+                    id="ram"
+                    value={ram}
+                    onChange={(e) => calculateRAM(e.target.value)}
+                    helperText={
+                      ramError
+                        ? ramError
+                        : "Amount of RAM in GB, 4-" + availableRAM
+                    }
+                    InputProps={{
+                      inputMode: "numeric",
+                      pattern: "[0-9]*",
+                      endAdornment: (
+                        <InputAdornment position="end">GB</InputAdornment>
+                      ),
+                    }}
+                    error={ramError ? true : false}
+                  />
+
+                  <TextField
+                    label="Disk Size"
+                    id="disk"
+                    value={diskSize}
+                    onChange={(e) => calculateDisk(e.target.value)}
+                    helperText={
+                      diskError
+                        ? diskError
+                        : "Disk size in GB, 20-" + availableDisk
+                    }
+                    InputProps={{
+                      inputMode: "numeric",
+                      pattern: "[0-9]*",
+                      endAdornment: (
+                        <InputAdornment position="end">GB</InputAdornment>
+                      ),
+                    }}
+                    error={diskError ? true : false}
+                  />
+                </Stack>
+              </CardContent>
+            </Card>
           )}
-        </CardContent>
-      </Card>
 
-      {user && (
-        <Card sx={{ boxShadow: 20 }}>
-          <CardHeader title="Select specs" />
-          <CardContent>
-            <Stack
-              spacing={3}
-              direction={"row"}
-              useFlexGap={true}
-              flexWrap={"wrap"}
-            >
-              <TextField
-                label="CPU Cores"
-                id="cores"
-                value={cpuCores}
-                onChange={(e) => calculateCPU(e.target.value)}
-                helperText={
-                  cpuError ? cpuError : "Number of CPU cores, 2-" + availableCPU
-                }
-                inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
-                error={cpuError ? true : false}
-              />
+          <Stack
+            justifyContent="flex-end"
+            alignItems="center"
+            direction="row"
+            spacing={3}
+          >
+            <Typography variant="body2">
+              You can attach a GPU in the next step.
+            </Typography>
 
-              <TextField
-                label="RAM"
-                id="ram"
-                value={ram}
-                onChange={(e) => calculateRAM(e.target.value)}
-                helperText={
-                  ramError ? ramError : "Amount of RAM in GB, 4-" + availableRAM
-                }
-                InputProps={{
-                  inputMode: "numeric",
-                  pattern: "[0-9]*",
-                  endAdornment: (
-                    <InputAdornment position="end">GB</InputAdornment>
-                  ),
-                }}
-                error={ramError ? true : false}
-              />
+            <Button onClick={() => handleCreate(true)} variant="outlined">
+              Create and stay
+            </Button>
 
-              <TextField
-                label="Disk Size"
-                id="disk"
-                value={diskSize}
-                onChange={(e) => calculateDisk(e.target.value)}
-                helperText={
-                  diskError ? diskError : "Disk size in GB, 20-" + availableDisk
-                }
-                InputProps={{
-                  inputMode: "numeric",
-                  pattern: "[0-9]*",
-                  endAdornment: (
-                    <InputAdornment position="end">GB</InputAdornment>
-                  ),
-                }}
-                error={diskError ? true : false}
-              />
-            </Stack>
-          </CardContent>
-        </Card>
+            <Button onClick={() => handleCreate(false)} variant="contained">
+              Create
+            </Button>
+          </Stack>
+        </>
       )}
-
-      <Stack
-        justifyContent="flex-end"
-        alignItems="center"
-        direction="row"
-        spacing={3}
-      >
-        <Typography variant="body2">
-          You can attach a GPU in the next step.
-        </Typography>
-
-        <Button onClick={() => handleCreate(true)} variant="outlined">
-          Create and stay
-        </Button>
-
-        <Button onClick={() => handleCreate(false)} variant="contained">
-          Create
-        </Button>
-      </Stack>
     </>
   );
 }
