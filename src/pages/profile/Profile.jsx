@@ -38,6 +38,7 @@ import { wasActivated } from "src/utils/eventHandler";
 import { UserQuotas } from "./UserQuotas";
 import { errorHandler } from "src/utils/errorHandler";
 import JobList from "src/components/JobList";
+import { ResetOnboarding } from "./ResetOnboarding";
 
 export function Profile() {
   const { keycloak, initialized } = useKeycloak();
@@ -383,6 +384,8 @@ export function Profile() {
                   </TableContainer>
                 </CardContent>
               </Card>
+
+              <ResetOnboarding />
             </Stack>
           </Container>
         </Page>

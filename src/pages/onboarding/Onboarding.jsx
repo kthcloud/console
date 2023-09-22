@@ -428,7 +428,7 @@ export const Onboarding = () => {
                               cloud services.
                             </Typography>
 
-                            {user.role.permissions.includes("useGpus") && (
+                            {user && user.role && user.permissions && user.role.permissions.includes("useGpus") && (
                               <Typography variant="body1" gutterBottom mb={3}>
                                 You can also request a GPU for your virtual
                                 machine. Please note that GPU resources are
