@@ -26,6 +26,7 @@ export const ResourceContextProvider = ({ children }) => {
   const { initialized, keycloak } = useKeycloak();
 
   const [rows, setRows] = useState([]);
+  const [userRows, setUserRows] = useState([]);
   const [jobs, setJobs] = useState([]);
   const [user, setUser] = useState(null);
   const [initialLoad, setInitialLoad] = useState(false);
@@ -83,17 +84,20 @@ export const ResourceContextProvider = ({ children }) => {
   const mergeLists = (resources) => {
     let array = resources[0].concat(resources[1]);
     setRows(array);
+
+    setUserRows(array.filter((row) => row.ownerId === user.id));
   };
 
   const loadResources = async () => {
     if (!(initialized && keycloak.authenticated)) return;
 
     try {
-      const promises = [getVMs(keycloak.token), getDeployments(keycloak.token)];
-      mergeLists(await Promise.all(promises));
 
       const user = await getUser(keycloak.subject, keycloak.token);
       setUser(user);
+
+      const promises = [getVMs(keycloak.token, user.admin), getDeployments(keycloak.token, user.admin)];
+      mergeLists(await Promise.all(promises));
 
       setInitialLoad(true);
     } catch (error) {
@@ -130,6 +134,8 @@ export const ResourceContextProvider = ({ children }) => {
       value={{
         rows,
         setRows,
+        userRows,
+        setUserRows,
         jobs,
         setJobs,
         user, 
