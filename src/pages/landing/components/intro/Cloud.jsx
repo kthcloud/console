@@ -27,7 +27,6 @@ export function Cloud({ mobile, position }) {
         props={{
           material: new THREE.MeshBasicMaterial({
             color: "yellow",
-            flatShading: true,
           }),
         }}
       />

@@ -9,6 +9,7 @@ import { getJob } from "src/api/deploy/jobs";
 import { getVMs } from "src/api/deploy/vms";
 import { getDeployments } from "src/api/deploy/deployments";
 import { errorHandler } from "src/utils/errorHandler";
+import { getUser } from "src/api/deploy/users";
 
 const initialState = {
   rows: [],
@@ -26,6 +27,7 @@ export const ResourceContextProvider = ({ children }) => {
 
   const [rows, setRows] = useState([]);
   const [jobs, setJobs] = useState([]);
+  const [user, setUser] = useState(null);
   const [initialLoad, setInitialLoad] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
 
@@ -41,7 +43,7 @@ export const ResourceContextProvider = ({ children }) => {
         }, 5000);
       }
 
-      if(response.status.toLoweCase().includes("terminated")) {
+      if (response.status.toLoweCase().includes("terminated")) {
         setTimeout(() => {
           setJobs((jobs) => jobs.filter((job) => job.jobId !== jobId));
         }, 5000);
@@ -89,6 +91,10 @@ export const ResourceContextProvider = ({ children }) => {
     try {
       const promises = [getVMs(keycloak.token), getDeployments(keycloak.token)];
       mergeLists(await Promise.all(promises));
+
+      const user = await getUser(keycloak.subject, keycloak.token);
+      setUser(user);
+
       setInitialLoad(true);
     } catch (error) {
       errorHandler(error).forEach((e) =>
@@ -110,7 +116,10 @@ export const ResourceContextProvider = ({ children }) => {
 
   useInterval(async () => {
     for (let i = 0; i < jobs.length; i++) {
-      if (jobs[i].status !== "jobFinished" && jobs[i].status !== "jobTerminated") {
+      if (
+        jobs[i].status !== "jobFinished" &&
+        jobs[i].status !== "jobTerminated"
+      ) {
         await refreshJob(jobs[i].jobId);
       }
     }
@@ -123,6 +132,8 @@ export const ResourceContextProvider = ({ children }) => {
         setRows,
         jobs,
         setJobs,
+        user, 
+        setUser,
         queueJob,
         initialLoad,
         setInitialLoad,
