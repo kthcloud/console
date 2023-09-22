@@ -13,6 +13,7 @@ import Admin from "./pages/admin";
 import NotFound from "./pages/404";
 import Status from "./pages/status";
 import ProtectedRoute from "./components/ProtectedRoute";
+import Onboarding from "./pages/onboarding";
 
 // ----------------------------------------------------------------------
 
@@ -57,13 +58,21 @@ export default function Router() {
           ),
         },
         {
+          path: "onboarding",
+          element: (
+            <ProtectedRoute>
+              <Onboarding />
+            </ProtectedRoute>
+          ),
+        },
+        {
           path: "admin",
           element: (
             <ProtectedRoute>
               <Admin />
             </ProtectedRoute>
-          )
-        }
+          ),
+        },
       ],
     },
     {

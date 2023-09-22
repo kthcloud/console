@@ -38,24 +38,33 @@ const releaseCommit =
 const name =
   releaseBranch + "-" + releaseDate + "-" + releaseCommit.slice(0, 7);
 
+
 export default function DashboardLayout() {
   return (
     <RootStyle>
       <Navbar />
       <MainStyle>
         <Outlet />
-        <Container sx={{ opacity: 0.5, textAlign: "center", padding: "2rem" }}>
-          <p>
-            {" "}
-            <a
-              style={{ opacity: 0.75, color: "inherit", whiteSpace: "nowrap" }}
-              href="https://github.com/kthcloud/landing-frontend"
-            >
-              kthcloud/landing-frontend
-            </a>{" "}
-            <span style={{ whiteSpace: "nowrap" }}>{name}</span>
-          </p>
-        </Container>
+        {window.location.pathname !== "/onboarding" && window.location.pathname !== "/" && (
+          <Container
+            sx={{ opacity: 0.5, textAlign: "center", padding: "2rem" }}
+          >
+            <p>
+              {" "}
+              <a
+                style={{
+                  opacity: 0.75,
+                  color: "inherit",
+                  whiteSpace: "nowrap",
+                }}
+                href="https://github.com/kthcloud/landing-frontend"
+              >
+                kthcloud/landing-frontend
+              </a>{" "}
+              <span style={{ whiteSpace: "nowrap" }}>{name}</span>
+            </p>
+          </Container>
+        )}
       </MainStyle>
     </RootStyle>
   );

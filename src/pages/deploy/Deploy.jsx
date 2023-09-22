@@ -18,8 +18,9 @@ import {
 // hooks
 import { useSnackbar } from "notistack";
 import useResource from "src/hooks/useResource";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useKeycloak } from "@react-keycloak/web";
+import { useNavigate } from "react-router-dom";
 
 // utils
 import { filter } from "lodash";
@@ -93,13 +94,14 @@ export function Deploy() {
 
   const [filterName, setFilterName] = useState("");
 
-  const { rows, initialLoad, queueJob } = useResource();
+  const { rows, user, initialLoad, queueJob } = useResource();
 
   const [loading, setLoading] = useState(false);
 
   const { keycloak, initialized } = useKeycloak();
 
   const { enqueueSnackbar } = useSnackbar();
+  const navigate = useNavigate();
 
   const bulkDelete = async () => {
     if (!initialized) return;
@@ -313,6 +315,14 @@ export function Deploy() {
     );
   };
 
+  useEffect(() => {
+    if (user && !user.onboarded) {
+      navigate("/onboarding");
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialLoad]);
+
   return (
     <>
       {!initialLoad ? (
@@ -331,7 +341,7 @@ export function Deploy() {
               direction="row"
             >
               <Typography variant="h4" gutterBottom>
-                Deploy
+                Dashboard
               </Typography>
 
               <Button

@@ -20,9 +20,11 @@ import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { deleteDeployment, getDeployments } from "src/api/deploy/deployments";
-import { getAllUsers, getUser } from "src/api/deploy/users";
+import { getAllUsers } from "src/api/deploy/users";
 import { deleteVM, detachGPU, getGPUs, getVMs } from "src/api/deploy/vms";
+import LoadingPage from "src/components/LoadingPage";
 import Page from "src/components/Page";
+import useResource from "src/hooks/useResource";
 import { errorHandler } from "src/utils/errorHandler";
 
 export const Admin = () => {
@@ -30,29 +32,8 @@ export const Admin = () => {
   // Keycloak/user session
 
   const { keycloak, initialized } = useKeycloak();
-  const [user, setUser] = useState(null);
+  const { initialLoad, user } = useResource();
   const navigate = useNavigate();
-
-  const loadProfile = async () => {
-    if (!initialized) return -1;
-
-    try {
-      const response = await getUser(keycloak.subject, keycloak.token);
-      setUser(response);
-    } catch (error) {
-      errorHandler(error).forEach((e) =>
-        enqueueSnackbar("Could fetch profile: " + e, {
-          variant: "error",
-        })
-      );
-    }
-  };
-
-  // Run once on load
-  useEffect(() => {
-    loadProfile();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   useEffect(() => {
     if (!user) return;
@@ -242,427 +223,454 @@ export const Admin = () => {
   };
 
   return (
-    <Page title="Admin">
-      <Container maxWidth="xl">
-        <Stack spacing={3}>
-          <Stack
-            sx={{
-              flexDirection: { xs: "column", sm: "row" },
-              alignItems: { xs: "flex-begin", sm: "center" },
-            }}
-            alignItems="center"
-            justifyContent="space-between"
-            mb={2}
-            direction="row"
-          >
-            <Typography variant="h4" gutterBottom>
-              Admin
-            </Typography>
-
-            <Stack direction="row" alignItems={"center"} spacing={3}>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={getResources}
-              >
-                Refresh resources
-              </Button>
-              <Typography variant="body1" gutterBottom>
-                {loading ? "Loading..." : "Last load: " + lastRefresh}
-              </Typography>
-            </Stack>
-          </Stack>
-          <Card sx={{ boxShadow: 20 }}>
-            <CardHeader title="Deployments" />
-
-            <CardContent>
+    <>
+      {!(initialLoad && user) ? (
+        <LoadingPage />
+      ) : (
+        <Page title="Admin">
+          <Container maxWidth="xl">
+            <Stack spacing={3}>
               <Stack
-                direction="row"
-                alignItems={"center"}
+                sx={{
+                  flexDirection: { xs: "column", sm: "row" },
+                  alignItems: { xs: "flex-begin", sm: "center" },
+                }}
+                alignItems="center"
+                justifyContent="space-between"
                 mb={2}
-                spacing={2}
-                flexWrap={"wrap"}
-              >
-                <TextField
-                  label="Filter"
-                  variant="outlined"
-                  value={deploymentsFilter}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") filterDeployments();
-                  }}
-                  onChange={(e) => {
-                    setDeploymentsFilter(e.target.value.trim());
-                  }}
-                />
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={filterDeployments}
-                >
-                  Search
-                </Button>
-                <Button
-                  variant="contained"
-                  onClick={() => {
-                    setDeployments([]);
-                    setLoadedDeployments(false);
-                    setDeploymentsFilter("");
-                  }}
-                  disabled={!loadedDeployments}
-                >
-                  Hide all
-                </Button>
-                <Typography variant="body1" gutterBottom>
-                  {"Showing " +
-                    deployments.length +
-                    "/" +
-                    dbDeployments.length +
-                    " loaded deployments"}
-                </Typography>
-              </Stack>
-              <TableContainer>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Name</TableCell>
-                      <TableCell>User</TableCell>
-                      <TableCell>Visibility</TableCell>
-                      <TableCell>Integrations</TableCell>
-                      <TableCell>Status</TableCell>
-                      <TableCell>Actions</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {deployments.map((deployment) => (
-                      <TableRow key={deployment.id}>
-                        <TableCell>{deployment.name}</TableCell>
-                        <TableCell>
-                          {renderUsername(deployment.ownerId)}
-                        </TableCell>
-                        <TableCell>
-                          {deployment.private ? "Private" : "Public"}
-                        </TableCell>
-                        <TableCell>
-                          {deployment.integrations &&
-                            deployment.integrations.join(", ")}
-                        </TableCell>
-                        <TableCell>{deployment.status}</TableCell>
-                        <TableCell>
-                          <Stack direction="row">
-                            <Button
-                              color="error"
-                              onClick={() =>
-                                deleteDeployment(deployment.id, keycloak.token)
-                              }
-                            >
-                              Delete
-                            </Button>
-                          </Stack>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </CardContent>
-          </Card>
-
-          <Card sx={{ boxShadow: 20 }}>
-            <CardHeader title="Virtual Machines" />
-
-            <CardContent>
-              <Stack
                 direction="row"
-                alignItems={"center"}
-                mb={2}
-                spacing={2}
-                flexWrap={"wrap"}
               >
-                <TextField
-                  label="Filter"
-                  variant="outlined"
-                  value={vmFilter}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") filterVms();
-                  }}
-                  onChange={(e) => {
-                    setVmFilter(e.target.value.trim());
-                  }}
-                />
-                <Button variant="contained" color="primary" onClick={filterVms}>
-                  Search
-                </Button>
-                <Button
-                  variant="contained"
-                  onClick={() => {
-                    setVms([]);
-                    setLoadedVms(false);
-                    setVmFilter("");
-                  }}
-                  disabled={!loadedVms}
-                >
-                  Hide all
-                </Button>
-                <Typography variant="body1" gutterBottom>
-                  {"Showing " + vms.length + "/" + dbVMs.length + " loaded vms"}
+                <Typography variant="h4" gutterBottom>
+                  Admin
                 </Typography>
-              </Stack>
-              <TableContainer>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Name</TableCell>
-                      <TableCell>User</TableCell>
-                      <TableCell>Specs</TableCell>
-                      <TableCell>GPU</TableCell>
-                      <TableCell>Status</TableCell>
-                      <TableCell>Actions</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {vms.map((vm) => (
-                      <TableRow key={vm.id}>
-                        <TableCell>{vm.name}</TableCell>
-                        <TableCell>{renderUsername(vm.ownerId)}</TableCell>
-                        <TableCell>
-                          <Typography variant="caption">
-                            <Stack direction={"column"}>
-                              {Object.keys(vm.specs).map((key) => (
-                                <Typography variant="caption" key={vm.id + key}>
-                                  {key + ": " + vm.specs[key]}
-                                </Typography>
-                              ))}
-                            </Stack>
-                          </Typography>
-                        </TableCell>
-                        <TableCell>
-                          {vm.gpu && (
-                            <Stack direction={"column"}>
-                              <Typography variant="caption">
-                                {decode(vm.gpu.id)}
-                              </Typography>
-                              <Typography variant="caption">
-                                {vm.gpu.leaseEnd}
-                              </Typography>
-                              <Typography variant="caption">
-                                {vm.gpu.expired ? "Expired" : "Active"}
-                              </Typography>
-                            </Stack>
-                          )}
-                        </TableCell>
-                        <TableCell>{vm.status}</TableCell>
-                        <TableCell>
-                          <Stack direction="row">
-                            {vm.gpu && (
-                              <Button
-                                color="error"
-                                onClick={() => detachGPU(vm, keycloak.token)}
-                              >
-                                Detach GPU
-                              </Button>
-                            )}
 
-                            <Button
-                              color="error"
-                              onClick={() => deleteVM(vm.id, keycloak.token)}
-                            >
-                              Delete
-                            </Button>
-                          </Stack>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </CardContent>
-          </Card>
-
-          <Card sx={{ boxShadow: 20 }}>
-            <CardHeader
-              title="Users"
-              subheader={
-                <Typography variant="body2">
-                  Edit user roles and permissions in{" "}
-                  <a
-                    href="https://iam.cloud.cbh.kth.se"
-                    target="_blank"
-                    rel="noopener noreferrer"
+                <Stack direction="row" alignItems={"center"} spacing={3}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={getResources}
                   >
-                    Keycloak
-                  </a>
-                </Typography>
-              }
-            />
-
-            <CardContent>
-              <Stack
-                direction="row"
-                alignItems={"center"}
-                mb={2}
-                spacing={2}
-                flexWrap={"wrap"}
-              >
-                <TextField
-                  label="Filter"
-                  variant="outlined"
-                  value={usersFilter}
-                  onChange={(e) => {
-                    setUsersFilter(e.target.value.trim());
-                  }}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") filterUsers();
-                  }}
-                />
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={filterUsers}
-                >
-                  Search
-                </Button>
-                <Button
-                  variant="contained"
-                  onClick={() => {
-                    setUsers([]);
-                    setLoadedUsers(false);
-                    setUsersFilter("");
-                  }}
-                  disabled={!loadedUsers}
-                >
-                  Hide all
-                </Button>
-                <Typography variant="body1" gutterBottom>
-                  {"Showing " +
-                    users.length +
-                    "/" +
-                    dbUsers.length +
-                    " loaded users"}
-                </Typography>
+                    Refresh resources
+                  </Button>
+                  <Typography variant="body1" gutterBottom>
+                    {loading ? "Loading..." : "Last load: " + lastRefresh}
+                  </Typography>
+                </Stack>
               </Stack>
-              <TableContainer>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>ID</TableCell>
-                      <TableCell>Username</TableCell>
-                      <TableCell>Email</TableCell>
-                      <TableCell>Role</TableCell>
-                      <TableCell>Admin</TableCell>
-                      <TableCell>Usage</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {users.map((user) => (
-                      <TableRow key={user.id}>
-                        <TableCell>{user.id}</TableCell>
-                        <TableCell>{user.username}</TableCell>
-                        <TableCell>{user.email}</TableCell>
-                        <TableCell>{user.role.name}</TableCell>
-                        <TableCell>{user.admin && "Admin"}</TableCell>
-                        <TableCell>
-                          <Stack direction={"column"}>
-                            {Object.keys(user.usage).map((key) => (
-                              <Typography variant="caption" key={user.id + key}>
-                                {key +
-                                  ": " +
-                                  user.usage[key] +
-                                  "/" +
-                                  user.quota[key]}
+              <Card sx={{ boxShadow: 20 }}>
+                <CardHeader title="Deployments" />
+
+                <CardContent>
+                  <Stack
+                    direction="row"
+                    alignItems={"center"}
+                    mb={2}
+                    spacing={2}
+                    flexWrap={"wrap"}
+                  >
+                    <TextField
+                      label="Filter"
+                      variant="outlined"
+                      value={deploymentsFilter}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") filterDeployments();
+                      }}
+                      onChange={(e) => {
+                        setDeploymentsFilter(e.target.value.trim());
+                      }}
+                    />
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={filterDeployments}
+                    >
+                      Search
+                    </Button>
+                    <Button
+                      variant="contained"
+                      onClick={() => {
+                        setDeployments([]);
+                        setLoadedDeployments(false);
+                        setDeploymentsFilter("");
+                      }}
+                      disabled={!loadedDeployments}
+                    >
+                      Hide all
+                    </Button>
+                    <Typography variant="body1" gutterBottom>
+                      {"Showing " +
+                        deployments.length +
+                        "/" +
+                        dbDeployments.length +
+                        " loaded deployments"}
+                    </Typography>
+                  </Stack>
+                  <TableContainer>
+                    <Table>
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>Name</TableCell>
+                          <TableCell>User</TableCell>
+                          <TableCell>Visibility</TableCell>
+                          <TableCell>Integrations</TableCell>
+                          <TableCell>Status</TableCell>
+                          <TableCell>Actions</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {deployments.map((deployment) => (
+                          <TableRow key={deployment.id}>
+                            <TableCell>{deployment.name}</TableCell>
+                            <TableCell>
+                              {renderUsername(deployment.ownerId)}
+                            </TableCell>
+                            <TableCell>
+                              {deployment.private ? "Private" : "Public"}
+                            </TableCell>
+                            <TableCell>
+                              {deployment.integrations &&
+                                deployment.integrations.join(", ")}
+                            </TableCell>
+                            <TableCell>{deployment.status}</TableCell>
+                            <TableCell>
+                              <Stack direction="row">
+                                <Button
+                                  color="error"
+                                  onClick={() =>
+                                    deleteDeployment(
+                                      deployment.id,
+                                      keycloak.token
+                                    )
+                                  }
+                                >
+                                  Delete
+                                </Button>
+                              </Stack>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </CardContent>
+              </Card>
+
+              <Card sx={{ boxShadow: 20 }}>
+                <CardHeader title="Virtual Machines" />
+
+                <CardContent>
+                  <Stack
+                    direction="row"
+                    alignItems={"center"}
+                    mb={2}
+                    spacing={2}
+                    flexWrap={"wrap"}
+                  >
+                    <TextField
+                      label="Filter"
+                      variant="outlined"
+                      value={vmFilter}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") filterVms();
+                      }}
+                      onChange={(e) => {
+                        setVmFilter(e.target.value.trim());
+                      }}
+                    />
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={filterVms}
+                    >
+                      Search
+                    </Button>
+                    <Button
+                      variant="contained"
+                      onClick={() => {
+                        setVms([]);
+                        setLoadedVms(false);
+                        setVmFilter("");
+                      }}
+                      disabled={!loadedVms}
+                    >
+                      Hide all
+                    </Button>
+                    <Typography variant="body1" gutterBottom>
+                      {"Showing " +
+                        vms.length +
+                        "/" +
+                        dbVMs.length +
+                        " loaded vms"}
+                    </Typography>
+                  </Stack>
+                  <TableContainer>
+                    <Table>
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>Name</TableCell>
+                          <TableCell>User</TableCell>
+                          <TableCell>Specs</TableCell>
+                          <TableCell>GPU</TableCell>
+                          <TableCell>Status</TableCell>
+                          <TableCell>Actions</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {vms.map((vm) => (
+                          <TableRow key={vm.id}>
+                            <TableCell>{vm.name}</TableCell>
+                            <TableCell>{renderUsername(vm.ownerId)}</TableCell>
+                            <TableCell>
+                              <Typography variant="caption">
+                                <Stack direction={"column"}>
+                                  {Object.keys(vm.specs).map((key) => (
+                                    <Typography
+                                      variant="caption"
+                                      key={vm.id + key}
+                                    >
+                                      {key + ": " + vm.specs[key]}
+                                    </Typography>
+                                  ))}
+                                </Stack>
                               </Typography>
-                            ))}
-                          </Stack>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </CardContent>
-          </Card>
+                            </TableCell>
+                            <TableCell>
+                              {vm.gpu && (
+                                <Stack direction={"column"}>
+                                  <Typography variant="caption">
+                                    {decode(vm.gpu.id)}
+                                  </Typography>
+                                  <Typography variant="caption">
+                                    {vm.gpu.leaseEnd}
+                                  </Typography>
+                                  <Typography variant="caption">
+                                    {vm.gpu.expired ? "Expired" : "Active"}
+                                  </Typography>
+                                </Stack>
+                              )}
+                            </TableCell>
+                            <TableCell>{vm.status}</TableCell>
+                            <TableCell>
+                              <Stack direction="row">
+                                {vm.gpu && (
+                                  <Button
+                                    color="error"
+                                    onClick={() =>
+                                      detachGPU(vm, keycloak.token)
+                                    }
+                                  >
+                                    Detach GPU
+                                  </Button>
+                                )}
 
-          <Card sx={{ boxShadow: 20 }}>
-            <CardHeader title="GPU" />
+                                <Button
+                                  color="error"
+                                  onClick={() =>
+                                    deleteVM(vm.id, keycloak.token)
+                                  }
+                                >
+                                  Delete
+                                </Button>
+                              </Stack>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </CardContent>
+              </Card>
 
-            <CardContent>
-              <Stack
-                direction="row"
-                alignItems={"center"}
-                mb={2}
-                spacing={2}
-                flexWrap={"wrap"}
-              >
-                <TextField
-                  label="Filter"
-                  variant="outlined"
-                  value={gpusFilter}
-                  onChange={(e) => {
-                    setGPUsFilter(e.target.value.trim());
-                  }}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") filterGPUs();
-                  }}
+              <Card sx={{ boxShadow: 20 }}>
+                <CardHeader
+                  title="Users"
+                  subheader={
+                    <Typography variant="body2">
+                      Edit user roles and permissions in{" "}
+                      <a
+                        href="https://iam.cloud.cbh.kth.se"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Keycloak
+                      </a>
+                    </Typography>
+                  }
                 />
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={filterGPUs}
-                >
-                  Search
-                </Button>
-                <Button
-                  variant="contained"
-                  onClick={() => {
-                    setGPUs([]);
-                    setLoadedGPUs(false);
-                    setGPUsFilter("");
-                  }}
-                  disabled={!loadedGPUs}
-                >
-                  Hide all
-                </Button>
-                <Typography variant="body1" gutterBottom>
-                  {"Showing " +
-                    gpus.length +
-                    "/" +
-                    dbGPUs.length +
-                    " loaded GPUs"}
-                </Typography>
-              </Stack>
-              <TableContainer>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>ID</TableCell>
-                      <TableCell>Name</TableCell>
-                      <TableCell>Leased until</TableCell>
-                      <TableCell>Expired</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {gpus.map((gpu) => (
-                      <TableRow key={gpu.id}>
-                        <TableCell>{decode(gpu.id)}</TableCell>
-                        <TableCell>{gpu.name}</TableCell>
-                        <TableCell>
-                          {gpu.lease &&
-                            gpu.lease.end
-                              .replace("Z", "")
-                              .replace("T", " ")
-                              .split(".")[0] + " UTC"}
-                        </TableCell>
-                        <TableCell>
-                          {gpu.lease && gpu.lease.expired ? "Expired" : ""}
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </CardContent>
-          </Card>
-        </Stack>
-      </Container>
-    </Page>
+
+                <CardContent>
+                  <Stack
+                    direction="row"
+                    alignItems={"center"}
+                    mb={2}
+                    spacing={2}
+                    flexWrap={"wrap"}
+                  >
+                    <TextField
+                      label="Filter"
+                      variant="outlined"
+                      value={usersFilter}
+                      onChange={(e) => {
+                        setUsersFilter(e.target.value.trim());
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") filterUsers();
+                      }}
+                    />
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={filterUsers}
+                    >
+                      Search
+                    </Button>
+                    <Button
+                      variant="contained"
+                      onClick={() => {
+                        setUsers([]);
+                        setLoadedUsers(false);
+                        setUsersFilter("");
+                      }}
+                      disabled={!loadedUsers}
+                    >
+                      Hide all
+                    </Button>
+                    <Typography variant="body1" gutterBottom>
+                      {"Showing " +
+                        users.length +
+                        "/" +
+                        dbUsers.length +
+                        " loaded users"}
+                    </Typography>
+                  </Stack>
+                  <TableContainer>
+                    <Table>
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>ID</TableCell>
+                          <TableCell>Username</TableCell>
+                          <TableCell>Email</TableCell>
+                          <TableCell>Role</TableCell>
+                          <TableCell>Admin</TableCell>
+                          <TableCell>Usage</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {users.map((user) => (
+                          <TableRow key={user.id}>
+                            <TableCell>{user.id}</TableCell>
+                            <TableCell>{user.username}</TableCell>
+                            <TableCell>{user.email}</TableCell>
+                            <TableCell>{user.role.name}</TableCell>
+                            <TableCell>{user.admin && "Admin"}</TableCell>
+                            <TableCell>
+                              <Stack direction={"column"}>
+                                {Object.keys(user.usage).map((key) => (
+                                  <Typography
+                                    variant="caption"
+                                    key={user.id + key}
+                                  >
+                                    {key +
+                                      ": " +
+                                      user.usage[key] +
+                                      "/" +
+                                      user.quota[key]}
+                                  </Typography>
+                                ))}
+                              </Stack>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </CardContent>
+              </Card>
+
+              <Card sx={{ boxShadow: 20 }}>
+                <CardHeader title="GPU" />
+
+                <CardContent>
+                  <Stack
+                    direction="row"
+                    alignItems={"center"}
+                    mb={2}
+                    spacing={2}
+                    flexWrap={"wrap"}
+                  >
+                    <TextField
+                      label="Filter"
+                      variant="outlined"
+                      value={gpusFilter}
+                      onChange={(e) => {
+                        setGPUsFilter(e.target.value.trim());
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") filterGPUs();
+                      }}
+                    />
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={filterGPUs}
+                    >
+                      Search
+                    </Button>
+                    <Button
+                      variant="contained"
+                      onClick={() => {
+                        setGPUs([]);
+                        setLoadedGPUs(false);
+                        setGPUsFilter("");
+                      }}
+                      disabled={!loadedGPUs}
+                    >
+                      Hide all
+                    </Button>
+                    <Typography variant="body1" gutterBottom>
+                      {"Showing " +
+                        gpus.length +
+                        "/" +
+                        dbGPUs.length +
+                        " loaded GPUs"}
+                    </Typography>
+                  </Stack>
+                  <TableContainer>
+                    <Table>
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>ID</TableCell>
+                          <TableCell>Name</TableCell>
+                          <TableCell>Leased until</TableCell>
+                          <TableCell>Expired</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {gpus.map((gpu) => (
+                          <TableRow key={gpu.id}>
+                            <TableCell>{decode(gpu.id)}</TableCell>
+                            <TableCell>{gpu.name}</TableCell>
+                            <TableCell>
+                              {gpu.lease &&
+                                gpu.lease.end
+                                  .replace("Z", "")
+                                  .replace("T", " ")
+                                  .split(".")[0] + " UTC"}
+                            </TableCell>
+                            <TableCell>
+                              {gpu.lease && gpu.lease.expired ? "Expired" : ""}
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </CardContent>
+              </Card>
+            </Stack>
+          </Container>
+        </Page>
+      )}
+    </>
   );
 };
