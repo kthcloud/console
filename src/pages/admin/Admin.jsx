@@ -20,7 +20,7 @@ import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { deleteDeployment, getDeployments } from "src/api/deploy/deployments";
-import { getAllUsers, getUser } from "src/api/deploy/users";
+import { getAllUsers } from "src/api/deploy/users";
 import { deleteVM, detachGPU, getGPUs, getVMs } from "src/api/deploy/vms";
 import LoadingPage from "src/components/LoadingPage";
 import Page from "src/components/Page";

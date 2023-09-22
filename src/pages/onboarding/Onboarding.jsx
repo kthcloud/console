@@ -17,8 +17,8 @@ import {
 } from "@mui/material";
 import { useKeycloak } from "@react-keycloak/web";
 import { enqueueSnackbar } from "notistack";
-import { useEffect, useState } from "react";
-import { getUser, updateUser } from "src/api/deploy/users";
+import { useState } from "react";
+import { updateUser } from "src/api/deploy/users";
 import LoadingPage from "src/components/LoadingPage";
 import Page from "src/components/Page";
 import { errorHandler } from "src/utils/errorHandler";
@@ -69,10 +69,10 @@ export const Onboarding = () => {
       const response = await updateUser(keycloak.subject, keycloak.token, {
         onboarded: true,
       });
-      if (response){
-        setUser(response)
+      if (response) {
+        setUser(response);
         navigate("/deploy", { replace: true });
-      } 
+      }
     } catch (error) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar("Could not fetch profile: " + e, {

@@ -17,7 +17,6 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 
-import { getUser } from "src/api/deploy/users";
 import { useKeycloak } from "@react-keycloak/web";
 import { useSnackbar } from "notistack";
 import { createVM } from "src/api/deploy/vms";
@@ -318,9 +317,11 @@ export default function CreateVm({ finished }) {
             direction="row"
             spacing={3}
           >
-            <Typography variant="body2">
-              You can attach a GPU in the next step.
-            </Typography>
+            {user.role.permissions.includes("useGpus") && (
+              <Typography variant="body2">
+                You can attach a GPU in the next step.
+              </Typography>
+            )}
 
             <Button onClick={() => handleCreate(true)} variant="outlined">
               Create and stay

@@ -12,7 +12,6 @@ import {
 import { useKeycloak } from "@react-keycloak/web";
 import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
-import { getUser } from "src/api/deploy/users";
 import { updateVM } from "src/api/deploy/vms";
 import Iconify from "src/components/Iconify";
 import useResource from "src/hooks/useResource";

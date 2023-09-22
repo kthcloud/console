@@ -28,10 +28,9 @@ import {
   attachGPUById,
 } from "src/api/deploy/vms";
 import { errorHandler } from "src/utils/errorHandler";
-import { getUser } from "src/api/deploy/users";
 
 export const GPUManager = ({ vm }) => {
-  const { keycloak, initialized } = useKeycloak();
+  const { keycloak } = useKeycloak();
   const { enqueueSnackbar } = useSnackbar();
   const { queueJob } = useResource();
 
