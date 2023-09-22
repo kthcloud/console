@@ -372,8 +372,7 @@ export const Onboarding = () => {
                           <OnboardingCard id={"deployments"}>
                             <Typography variant="body1" gutterBottom mb={3}>
                               Deployments are the most common resource type on
-                              kthcloud. They are a collection of virtual
-                              machines that are automatically created and
+                              kthcloud. They are automatically created and
                               managed by kthcloud.
                             </Typography>
 
@@ -417,9 +416,8 @@ export const Onboarding = () => {
                           <OnboardingCard id={"vms"}>
                             <Typography variant="body1" gutterBottom mb={3}>
                               Virtual machines are the most flexible resource
-                              type on kthcloud. You can install any operating
-                              system you want and have full control over the
-                              machine.
+                              type on kthcloud. You can install any programs you
+                              want and have full control over the machine.
                             </Typography>
 
                             <Typography variant="body1" gutterBottom mb={3}>
@@ -428,14 +426,17 @@ export const Onboarding = () => {
                               cloud services.
                             </Typography>
 
-                            {user.role.permissions.includes("useGpus") && (
-                              <Typography variant="body1" gutterBottom mb={3}>
-                                You can also request a GPU for your virtual
-                                machine. Please note that GPU resources are
-                                limited, for extended use you may want to
-                                provide your own GPU.
-                              </Typography>
-                            )}
+                            {user &&
+                              user.role &&
+                              user.permissions &&
+                              user.role.permissions.includes("useGpus") && (
+                                <Typography variant="body1" gutterBottom mb={3}>
+                                  You can also request a GPU for your virtual
+                                  machine. Please note that GPU resources are
+                                  limited, for extended use you may want to
+                                  provide your own GPU.
+                                </Typography>
+                              )}
                           </OnboardingCard>
                         </div>
                       </Fade>

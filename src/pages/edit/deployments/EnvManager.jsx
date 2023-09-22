@@ -15,6 +15,7 @@ import {
   CardContent,
   CardHeader,
   Card,
+  Stack,
 } from "@mui/material";
 import Iconify from "../../../components/Iconify";
 import { updateDeployment } from "src/api/deploy/deployments";
@@ -84,7 +85,7 @@ export default function EnvManager({ deployment }) {
                 <TableRow>
                   <TableCell>Name</TableCell>
                   <TableCell>Value</TableCell>
-                  <TableCell align="right">Action</TableCell>
+                  <TableCell align="right">Actions</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -101,19 +102,43 @@ export default function EnvManager({ deployment }) {
                       </TableCell>
                       <TableCell>{env.value}</TableCell>
                       <TableCell align="right">
-                        <IconButton
-                          color="error"
-                          aria-label="delete env"
-                          component="label"
-                          onClick={() =>
-                            applyChanges(
-                              envs.filter((item) => item.name !== env.name)
-                            )
-                          }
-                          disabled={loading}
+                        <Stack
+                          direction="row"
+                          spacing={1}
+                          useFlexGap
+                          alignItems={"center"}
+                          justifyContent={"flex-end"}
                         >
-                          <Iconify icon="mdi:delete" />
-                        </IconButton>
+                          <IconButton
+                            color="primary"
+                            aria-label="edit env"
+                            component="label"
+                            onClick={() => {
+                              setNewEnvName(env.name);
+                              setNewEnvValue(env.value);
+                              setEnvs(
+                                envs.filter((item) => item.name !== env.name)
+                              );
+                            }}
+                            disabled={loading}
+                          >
+                            <Iconify icon="mdi:pencil" />
+                          </IconButton>
+
+                          <IconButton
+                            color="error"
+                            aria-label="delete env"
+                            component="label"
+                            onClick={() =>
+                              applyChanges(
+                                envs.filter((item) => item.name !== env.name)
+                              )
+                            }
+                            disabled={loading}
+                          >
+                            <Iconify icon="mdi:delete" />
+                          </IconButton>
+                        </Stack>
                       </TableCell>
                     </TableRow>
                   ))}
