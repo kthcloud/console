@@ -53,6 +53,8 @@ export default function Specs({ vm }) {
       response.reverse();
       setSnapshots(response);
       if (!initialLoad) setSelectedSnapshot(response.find((s) => s.current).id);
+
+      setExpanded(response.slice(0, 5).map((s) => s.id));
     } catch (error) {
       console.error("Error fetching snapshots: " + error);
     } finally {
