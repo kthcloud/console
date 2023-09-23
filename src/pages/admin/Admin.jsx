@@ -21,7 +21,7 @@ import { useKeycloak } from "@react-keycloak/web";
 import { decode } from "js-base64";
 import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { deleteDeployment, getDeployments } from "src/api/deploy/deployments";
 import { getAllUsers } from "src/api/deploy/users";
 import { deleteVM, detachGPU, getGPUs, getVMs } from "src/api/deploy/vms";
@@ -36,7 +36,8 @@ export const Admin = () => {
   // Keycloak/user session
 
   const { keycloak, initialized } = useKeycloak();
-  const { user } = useResource();
+  const { user, setImpersonatingDeployment, setImpersonatingVm } =
+    useResource();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -253,9 +254,19 @@ export const Admin = () => {
     setTimeDiffSinceLastRefresh("0 seconds ago");
   }, 1000);
 
+  const impersonate = (resourceType, id) => {
+    if (resourceType === "vm") {
+      setImpersonatingVm(id);
+      navigate("/edit/vm/" + id);
+    } else if (resourceType === "deployment") {
+      setImpersonatingDeployment(id);
+      navigate("/edit/deployment/" + id);
+    }
+  };
+
   return (
     <>
-      {!(user) ? (
+      {!user ? (
         <LoadingPage />
       ) : (
         <Page title="Admin">
@@ -309,6 +320,7 @@ export const Admin = () => {
                     mb={2}
                     spacing={2}
                     flexWrap={"wrap"}
+                    useFlexGap
                   >
                     <TextField
                       label="Filter"
@@ -370,7 +382,8 @@ export const Admin = () => {
                                 <Typography variant="caption">
                                   {deployment.name}
                                 </Typography>
-                              </Stack></TableCell>
+                              </Stack>
+                            </TableCell>
                             <TableCell>
                               {renderUsername(deployment.ownerId)}
                             </TableCell>
@@ -386,8 +399,9 @@ export const Admin = () => {
                               <Stack direction="row">
                                 <Button
                                   size="small"
-                                  component={Link}
-                                  to={"/edit/deployment/" + deployment.id}
+                                  onClick={() =>
+                                    impersonate("deployment", deployment.id)
+                                  }
                                 >
                                   Edit
                                 </Button>
@@ -422,6 +436,7 @@ export const Admin = () => {
                     mb={2}
                     spacing={2}
                     flexWrap={"wrap"}
+                    useFlexGap
                   >
                     <TextField
                       label="Filter"
@@ -520,8 +535,7 @@ export const Admin = () => {
                               <Stack direction="row">
                                 <Button
                                   size="small"
-                                  component={Link}
-                                  to={"/edit/vm/" + vm.id}
+                                  onClick={() => impersonate("vm", vm.id)}
                                 >
                                   Edit
                                 </Button>
@@ -578,6 +592,7 @@ export const Admin = () => {
                     mb={2}
                     spacing={2}
                     flexWrap={"wrap"}
+                    useFlexGap
                   >
                     <TextField
                       label="Filter"
@@ -670,6 +685,7 @@ export const Admin = () => {
                     mb={2}
                     spacing={2}
                     flexWrap={"wrap"}
+                    useFlexGap
                   >
                     <TextField
                       label="Filter"
