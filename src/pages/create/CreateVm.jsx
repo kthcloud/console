@@ -58,6 +58,8 @@ export default function CreateVm({ finished }) {
     setAvailableCPU(user.quota.cpuCores - user.usage.cpuCores);
     setAvailableRAM(user.quota.ram - user.usage.ram);
     setAvailableDisk(user.quota.diskSize - user.usage.diskSize);
+    if (publicKey === "" && user.publicKeys.length > 0)
+      setPublicKey(user.publicKeys[0].key);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
@@ -147,6 +149,7 @@ export default function CreateVm({ finished }) {
     if (!initialized) return;
 
     if (!cleaned || !publicKey || !cpuCores || !diskSize || !ram) {
+      console.log(cleaned, publicKey, cpuCores, diskSize, ram);
       enqueueSnackbar("Please fill all fields", { variant: "error" });
       return;
     }
@@ -218,11 +221,9 @@ export default function CreateVm({ finished }) {
                 <FormControl fullWidth sx={{ mt: 3 }}>
                   <InputLabel id="publickey-select-label">SSH Key</InputLabel>
                   <Select
-                    defaultValue={
-                      user.publicKeys.length > 0 && user.publicKeys[0].key
-                    }
                     id="publickey"
                     label="SSH Key"
+                    value={publicKey}
                     onChange={(e) => {
                       setPublicKey(e.target.value);
                     }}
