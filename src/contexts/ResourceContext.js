@@ -6,8 +6,8 @@ import { useKeycloak } from "@react-keycloak/web";
 
 // api
 import { getJob } from "src/api/deploy/jobs";
-import { getVMs } from "src/api/deploy/vms";
-import { getDeployments } from "src/api/deploy/deployments";
+import { getVM, getVMs } from "src/api/deploy/vms";
+import { getDeployment, getDeployments } from "src/api/deploy/deployments";
 import { errorHandler } from "src/utils/errorHandler";
 import { getUser } from "src/api/deploy/users";
 
@@ -25,7 +25,10 @@ export const ResourceContext = createContext({
 export const ResourceContextProvider = ({ children }) => {
   const { initialized, keycloak } = useKeycloak();
 
+  const [impersonatingDeployment, setImpersonatingDeployment] = useState(null);
+  const [impersonatingVm, setImpersonatingVm] = useState(null);
   const [rows, setRows] = useState([]);
+  const [userRows, setUserRows] = useState([]);
   const [jobs, setJobs] = useState([]);
   const [user, setUser] = useState(null);
   const [initialLoad, setInitialLoad] = useState(false);
@@ -81,19 +84,37 @@ export const ResourceContextProvider = ({ children }) => {
   };
 
   const mergeLists = (resources) => {
-    let array = resources[0].concat(resources[1]);
+    let array = [];
+
+    resources.forEach((resource) => {
+      if (resource) {
+        array = array.concat(resource);
+      }
+    });
+
     setRows(array);
+
+    setUserRows(array.filter((row) => row.ownerId === user.id));
   };
 
   const loadResources = async () => {
     if (!(initialized && keycloak.authenticated)) return;
 
     try {
-      const promises = [getVMs(keycloak.token), getDeployments(keycloak.token)];
-      mergeLists(await Promise.all(promises));
-
       const user = await getUser(keycloak.subject, keycloak.token);
       setUser(user);
+
+      const promises = [getVMs(keycloak.token), getDeployments(keycloak.token)];
+
+      if (user.admin && impersonatingVm) {
+        promises.push(getVM(keycloak.token, impersonatingVm));
+      }
+
+      if (user.admin && impersonatingDeployment) {
+        promises.push(getDeployment(keycloak.token, impersonatingDeployment));
+      }
+
+      mergeLists(await Promise.all(promises));
 
       setInitialLoad(true);
     } catch (error) {
@@ -130,13 +151,19 @@ export const ResourceContextProvider = ({ children }) => {
       value={{
         rows,
         setRows,
+        userRows,
+        setUserRows,
         jobs,
         setJobs,
-        user, 
+        user,
         setUser,
         queueJob,
         initialLoad,
         setInitialLoad,
+        impersonatingDeployment,
+        setImpersonatingDeployment,
+        impersonatingVm,
+        setImpersonatingVm,
       }}
     >
       {children}

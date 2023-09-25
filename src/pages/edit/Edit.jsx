@@ -6,6 +6,10 @@ import {
   Chip,
   Breadcrumbs,
   Link,
+  Toolbar,
+  Box,
+  Button,
+  AppBar,
 } from "@mui/material";
 
 //hooks
@@ -42,7 +46,7 @@ export function Edit() {
   const [resource, setResource] = useState(null);
   const [envs, setEnvs] = useState([]);
   const [persistent, setPersistent] = useState([]);
-  const { rows, initialLoad } = useResource();
+  const { user, rows, initialLoad } = useResource();
   const [loaded, setLoaded] = useState(false);
 
   const allowedTypes = ["vm", "deployment"];
@@ -75,6 +79,33 @@ export function Edit() {
         <LoadingPage />
       ) : (
         <Page title={"Editing " + resource.name}>
+          {user.id !== resource.ownerId && (
+            <AppBar
+              position="fixed"
+              color="error"
+              sx={{
+                top: "auto",
+                bottom: 0,
+              }}
+            >
+              <Toolbar>
+                <Typography variant="h4">
+                  You are impersonating user {resource.ownerId}
+                </Typography>
+                <Box sx={{ flexGrow: 1 }} />
+                <Stack direction="row" alignItems={"center"} spacing={3}>
+                  <Button
+                    variant="outlined"
+                    onClick={() => navigate("/admin")}
+                    style={{ color: "white", borderColor: "white" }}
+                  >
+                    Back to admin panel
+                  </Button>
+                </Stack>
+              </Toolbar>
+            </AppBar>
+          )}
+
           <Container>
             <Stack spacing={3}>
               <Breadcrumbs aria-label="breadcrumb">

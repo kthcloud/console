@@ -1,3 +1,18 @@
+export const getVM = async (token, id) => {
+  const url = `${process.env.REACT_APP_DEPLOY_API_URL}/vms/${id}`;
+  const response = await fetch(url, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  const result = [await response.json()];
+  if (!Array.isArray(result)) {
+    throw new Error("Error getting VMs, response was not an array");
+  }
+  return result.map((obj) => ({ ...obj, type: "vm" }));
+};
+
 export const getVMs = async (token, all=false) => {
   const allQuery = all ? "?all=true" : "";
   const url = `${process.env.REACT_APP_DEPLOY_API_URL}/vms${allQuery}`;

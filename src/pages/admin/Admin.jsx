@@ -1,4 +1,6 @@
 import {
+  AppBar,
+  Box,
   Button,
   Card,
   CardContent,
@@ -12,6 +14,7 @@ import {
   TableHead,
   TableRow,
   TextField,
+  Toolbar,
   Typography,
 } from "@mui/material";
 import { useKeycloak } from "@react-keycloak/web";
@@ -24,6 +27,7 @@ import { getAllUsers } from "src/api/deploy/users";
 import { deleteVM, detachGPU, getGPUs, getVMs } from "src/api/deploy/vms";
 import LoadingPage from "src/components/LoadingPage";
 import Page from "src/components/Page";
+import useInterval from "src/hooks/useInterval";
 import useResource from "src/hooks/useResource";
 import { errorHandler } from "src/utils/errorHandler";
 
@@ -32,7 +36,8 @@ export const Admin = () => {
   // Keycloak/user session
 
   const { keycloak, initialized } = useKeycloak();
-  const { initialLoad, user } = useResource();
+  const { user, setImpersonatingDeployment, setImpersonatingVm } =
+    useResource();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -48,7 +53,9 @@ export const Admin = () => {
 
   // ==================================================
   // Get resources
+  const [lastRefreshRtt, setLastRefreshRtt] = useState(0);
   const [lastRefresh, setLastRefresh] = useState(0);
+  const [timeDiffSinceLastRefresh, setTimeDiffSinceLastRefresh] = useState("");
   const [loading, setLoading] = useState(true);
   const getResources = async () => {
     const startTimer = Date.now();
@@ -97,7 +104,8 @@ export const Admin = () => {
     }
 
     // end timer and set last refresh, show in ms
-    setLastRefresh(Date.now() - startTimer + " ms");
+    setLastRefresh(new Date());
+    setLastRefreshRtt(Date.now() - startTimer + " ms");
     setLoading(false);
   };
 
@@ -222,41 +230,86 @@ export const Admin = () => {
     setGPUs(filtered);
   };
 
+  useInterval(() => {
+    const now = new Date();
+    const diff = now - lastRefresh;
+    const seconds = Math.floor(diff / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+
+    if (hours > 0) {
+      setTimeDiffSinceLastRefresh(hours + " hours ago");
+      return;
+    }
+    if (minutes > 0) {
+      setTimeDiffSinceLastRefresh(minutes + " minutes ago");
+      return;
+    }
+
+    if (seconds > 0) {
+      setTimeDiffSinceLastRefresh(seconds + " seconds ago");
+      return;
+    }
+
+    setTimeDiffSinceLastRefresh("0 seconds ago");
+  }, 1000);
+
+  const impersonate = (resourceType, id) => {
+    if (resourceType === "vm") {
+      setImpersonatingVm(id);
+      navigate("/edit/vm/" + id);
+    } else if (resourceType === "deployment") {
+      setImpersonatingDeployment(id);
+      navigate("/edit/deployment/" + id);
+    }
+  };
+
   return (
     <>
-      {!(initialLoad && user) ? (
+      {!user ? (
         <LoadingPage />
       ) : (
         <Page title="Admin">
+          <AppBar
+            position="fixed"
+            color="inherit"
+            sx={{
+              top: "auto",
+              bottom: 0,
+              borderTop: 1,
+              borderRadius: 1,
+              borderColor: "#ccd6e1",
+            }}
+          >
+            <Toolbar>
+              <Typography variant="h4">Admin</Typography>
+              <Box sx={{ flexGrow: 1 }} />
+              <Stack direction="row" alignItems={"center"} spacing={3}>
+                <Button variant="contained" onClick={getResources}>
+                  Refresh resources
+                </Button>
+                <Typography variant="body1">
+                  {loading ? (
+                    "Loading..."
+                  ) : (
+                    <span>
+                      Last load:
+                      <span style={{ fontFamily: "monospace" }}>
+                        {" " + lastRefreshRtt + " "}
+                      </span>
+                      RTT:
+                      <span style={{ fontFamily: "monospace" }}>
+                        {" " + timeDiffSinceLastRefresh}
+                      </span>
+                    </span>
+                  )}
+                </Typography>
+              </Stack>
+            </Toolbar>
+          </AppBar>
+
           <Container maxWidth="xl">
             <Stack spacing={3}>
-              <Stack
-                sx={{
-                  flexDirection: { xs: "column", sm: "row" },
-                  alignItems: { xs: "flex-begin", sm: "center" },
-                }}
-                alignItems="center"
-                justifyContent="space-between"
-                mb={2}
-                direction="row"
-              >
-                <Typography variant="h4" gutterBottom>
-                  Admin
-                </Typography>
-
-                <Stack direction="row" alignItems={"center"} spacing={3}>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={getResources}
-                  >
-                    Refresh resources
-                  </Button>
-                  <Typography variant="body1" gutterBottom>
-                    {loading ? "Loading..." : "Last load: " + lastRefresh}
-                  </Typography>
-                </Stack>
-              </Stack>
               <Card sx={{ boxShadow: 20 }}>
                 <CardHeader title="Deployments" />
 
@@ -267,6 +320,7 @@ export const Admin = () => {
                     mb={2}
                     spacing={2}
                     flexWrap={"wrap"}
+                    useFlexGap
                   >
                     <TextField
                       label="Filter"
@@ -295,7 +349,7 @@ export const Admin = () => {
                       }}
                       disabled={!loadedDeployments}
                     >
-                      Hide all
+                      Clear
                     </Button>
                     <Typography variant="body1" gutterBottom>
                       {"Showing " +
@@ -320,7 +374,16 @@ export const Admin = () => {
                       <TableBody>
                         {deployments.map((deployment) => (
                           <TableRow key={deployment.id}>
-                            <TableCell>{deployment.name}</TableCell>
+                            <TableCell>
+                              <Stack direction={"column"}>
+                                <Typography variant="caption">
+                                  {deployment.id}
+                                </Typography>
+                                <Typography variant="caption">
+                                  {deployment.name}
+                                </Typography>
+                              </Stack>
+                            </TableCell>
                             <TableCell>
                               {renderUsername(deployment.ownerId)}
                             </TableCell>
@@ -334,6 +397,14 @@ export const Admin = () => {
                             <TableCell>{deployment.status}</TableCell>
                             <TableCell>
                               <Stack direction="row">
+                                <Button
+                                  size="small"
+                                  onClick={() =>
+                                    impersonate("deployment", deployment.id)
+                                  }
+                                >
+                                  Edit
+                                </Button>
                                 <Button
                                   color="error"
                                   onClick={() =>
@@ -365,6 +436,7 @@ export const Admin = () => {
                     mb={2}
                     spacing={2}
                     flexWrap={"wrap"}
+                    useFlexGap
                   >
                     <TextField
                       label="Filter"
@@ -393,7 +465,7 @@ export const Admin = () => {
                       }}
                       disabled={!loadedVms}
                     >
-                      Hide all
+                      Clear
                     </Button>
                     <Typography variant="body1" gutterBottom>
                       {"Showing " +
@@ -418,7 +490,16 @@ export const Admin = () => {
                       <TableBody>
                         {vms.map((vm) => (
                           <TableRow key={vm.id}>
-                            <TableCell>{vm.name}</TableCell>
+                            <TableCell>
+                              <Stack direction={"column"}>
+                                <Typography variant="caption">
+                                  {vm.id}
+                                </Typography>
+                                <Typography variant="caption">
+                                  {vm.name}
+                                </Typography>
+                              </Stack>
+                            </TableCell>
                             <TableCell>{renderUsername(vm.ownerId)}</TableCell>
                             <TableCell>
                               <Typography variant="caption">
@@ -444,7 +525,7 @@ export const Admin = () => {
                                     {vm.gpu.leaseEnd}
                                   </Typography>
                                   <Typography variant="caption">
-                                    {vm.gpu.expired ? "Expired" : "Active"}
+                                    {vm.gpu.expired ? <b>Expired</b> : "Active"}
                                   </Typography>
                                 </Stack>
                               )}
@@ -452,6 +533,12 @@ export const Admin = () => {
                             <TableCell>{vm.status}</TableCell>
                             <TableCell>
                               <Stack direction="row">
+                                <Button
+                                  size="small"
+                                  onClick={() => impersonate("vm", vm.id)}
+                                >
+                                  Edit
+                                </Button>
                                 {vm.gpu && (
                                   <Button
                                     color="error"
@@ -505,6 +592,7 @@ export const Admin = () => {
                     mb={2}
                     spacing={2}
                     flexWrap={"wrap"}
+                    useFlexGap
                   >
                     <TextField
                       label="Filter"
@@ -533,7 +621,7 @@ export const Admin = () => {
                       }}
                       disabled={!loadedUsers}
                     >
-                      Hide all
+                      Clear
                     </Button>
                     <Typography variant="body1" gutterBottom>
                       {"Showing " +
@@ -597,6 +685,7 @@ export const Admin = () => {
                     mb={2}
                     spacing={2}
                     flexWrap={"wrap"}
+                    useFlexGap
                   >
                     <TextField
                       label="Filter"
@@ -625,7 +714,7 @@ export const Admin = () => {
                       }}
                       disabled={!loadedGPUs}
                     >
-                      Hide all
+                      Clear
                     </Button>
                     <Typography variant="body1" gutterBottom>
                       {"Showing " +

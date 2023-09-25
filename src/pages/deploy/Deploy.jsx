@@ -94,7 +94,7 @@ export function Deploy() {
 
   const [filterName, setFilterName] = useState("");
 
-  const { rows, user, initialLoad, queueJob } = useResource();
+  const { userRows, user, initialLoad, queueJob } = useResource();
 
   const [loading, setLoading] = useState(false);
 
@@ -109,13 +109,13 @@ export function Deploy() {
 
     try {
       const promises = selected.map(async (id) => {
-        if (rows.find((row) => row.id === id).type === "vm") {
+        if (userRows.find((row) => row.id === id).type === "vm") {
           console.log("deleting vm");
           const res = await deleteVM(id, keycloak.token);
           queueJob(res);
           return;
         }
-        if (rows.find((row) => row.id === id).type === "deployment") {
+        if (userRows.find((row) => row.id === id).type === "deployment") {
           console.log("deleting k8s");
           const res = await deleteDeployment(id, keycloak.token);
           queueJob(res);
@@ -145,7 +145,7 @@ export function Deploy() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n.id);
+      const newSelecteds = userRows.map((n) => n.id);
       setSelected(newSelecteds);
       return;
     }
@@ -174,7 +174,7 @@ export function Deploy() {
     setFilterName(event.target.value);
   };
 
-  const noResultsFound = rows.length === 0;
+  const noResultsFound = userRows.length === 0;
 
   const renderResourceButtons = (resource) => {
     if (
@@ -373,14 +373,14 @@ export function Deploy() {
                       order={order}
                       orderBy={orderBy}
                       headLabel={TABLE_HEAD}
-                      rowCount={rows.length}
+                      rowCount={userRows.length}
                       numSelected={selected.length}
                       onRequestSort={handleRequestSort}
                       onSelectAllClick={handleSelectAllClick}
                     />
                     <TableBody>
                       {applySortFilter(
-                        rows,
+                        userRows,
                         getComparator(order, orderBy),
                         filterName
                       ).map((row) => {
