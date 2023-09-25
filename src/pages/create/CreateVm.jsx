@@ -149,7 +149,6 @@ export default function CreateVm({ finished }) {
     if (!initialized) return;
 
     if (!cleaned || !publicKey || !cpuCores || !diskSize || !ram) {
-      console.log(cleaned, publicKey, cpuCores, diskSize, ram);
       enqueueSnackbar("Please fill all fields", { variant: "error" });
       return;
     }
