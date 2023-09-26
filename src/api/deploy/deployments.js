@@ -22,7 +22,7 @@ export const getDeployments = async (token, all = false) => {
     },
   });
   const response = await res.json();
-  const result = response.map((obj) => ({ ...obj, type: "deployment" }));
+  const result = response.map((obj) => ({ ...obj, deploymentType: obj.type, type: "deployment" }));
   if (Array.isArray(result)) return result;
   else throw new Error("Error getting deployments, response was not an array");
 };
@@ -75,6 +75,7 @@ export const getDeploymentYaml = async (id, token) => {
 
 export const createDeployment = async (
   name,
+  image,
   envs,
   repo,
   volumes,
@@ -87,7 +88,9 @@ export const createDeployment = async (
     volumes,
   };
 
-  if (repo)
+  if (image) body = { ...body, image };
+
+  if (!image && repo)
     body = {
       ...body,
       github: {
