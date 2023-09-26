@@ -31,6 +31,8 @@ export default function CreateDeployment({ finished }) {
   const [cleaned, setCleaned] = useState("");
   const { initialized, keycloak } = useKeycloak();
 
+  const [image, setImage] = useState("");
+
   const [envs, setEnvs] = useState([]);
   const [newEnvName, setNewEnvName] = useState("");
   const [newEnvValue, setNewEnvValue] = useState("");
@@ -56,6 +58,7 @@ export default function CreateDeployment({ finished }) {
     try {
       const job = await createDeployment(
         cleaned,
+        image,
         envs,
         repo,
         persistent,
@@ -105,8 +108,31 @@ export default function CreateDeployment({ finished }) {
         </CardContent>
       </Card>
 
-      <GHSelect setAccessToken={setAccessToken} repo={repo} setRepo={setRepo} />
+      <Card sx={{ boxShadow: 20 }}>
+        <CardHeader
+          title={"Image"}
+          subheader="If you would like to use a prebuilt image, enter its name below. For example mongo, mongo:4.4 or quay.io/keycloak/keycloak"
+        />
+        <CardContent>
+          <TextField
+            label="Image"
+            variant="outlined"
+            value={image}
+            onChange={(e) => {
+              setImage(e.target.value.trim());
+            }}
+            fullWidth
+          />
+        </CardContent>
+      </Card>
 
+      {image === "" && (
+        <GHSelect
+          setAccessToken={setAccessToken}
+          repo={repo}
+          setRepo={setRepo}
+        />
+      )}
       <Card sx={{ boxShadow: 20 }}>
         <CardHeader
           title={"Set environment variables"}

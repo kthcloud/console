@@ -40,6 +40,7 @@ import { VMCommands } from "./vms/VMCommands";
 import { LogsView } from "./deployments/LogsView";
 import { getReasonPhrase } from "http-status-codes";
 import StorageManager from "./deployments/StorageManager";
+import { ImageManager } from "./deployments/ImageManager";
 
 export function Edit() {
   const { initialized } = useKeycloak();
@@ -195,6 +196,12 @@ export function Edit() {
               )}
 
               {resource.type === "deployment" &&
+                resource.deploymentType === "prebuilt" && (
+                  <ImageManager deployment={resource} />
+                )}
+
+              {resource.type === "deployment" &&
+                resource.deploymentType !== "prebuilt" &&
                 !resource.integrations.includes("github") && (
                   <GHActions resource={resource} />
                 )}
