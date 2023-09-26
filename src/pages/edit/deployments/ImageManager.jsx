@@ -34,7 +34,7 @@ export const ImageManager = ({ deployment }) => {
       );
       queueJob(res);
       enqueueSnackbar("Saving image update...", {
-        variant: "success",
+        variant: "info",
       });
     } catch (error) {
       errorHandler(error).forEach((e) =>

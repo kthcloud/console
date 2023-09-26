@@ -33,7 +33,7 @@ export const PrivateMode = ({ deployment }) => {
       );
 
       queueJob(res);
-      enqueueSnackbar("Visibility saving...", { variant: "success" });
+      enqueueSnackbar("Visibility saving...", { variant: "info" });
     } catch (error) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar("Failed to update visibility: " + e, {
