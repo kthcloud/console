@@ -280,23 +280,48 @@ export function Profile() {
                             </TableCell>
                             <TableCell>{renderKey(key.key)}</TableCell>
                             <TableCell align="right">
-                              <IconButton
-                                color="error"
-                                aria-label="delete key"
-                                component="label"
-                                onClick={() => {
-                                  setUser({
-                                    ...user,
-                                    publicKeys: user.publicKeys.filter(
-                                      (k) => k.name !== key.name
-                                    ),
-                                  });
-
-                                  setChangeInKeys(true);
-                                }}
+                              <Stack
+                                direction="row"
+                                spacing={1}
+                                useFlexGap
+                                alignItems={"center"}
+                                justifyContent={"flex-end"}
                               >
-                                <Iconify icon="mdi:delete" />
-                              </IconButton>
+                                <IconButton
+                                  color="primary"
+                                  aria-label="edit key"
+                                  component="label"
+                                  onClick={() => {
+                                    setNewKey(key.key);
+                                    setNewKeyName(key.name);
+                                    setUser({
+                                      ...user,
+                                      publicKeys: user.publicKeys.filter(
+                                        (k) => k.name !== key.name
+                                      ),
+                                    });
+                                  }}
+                                >
+                                  <Iconify icon="mdi:pencil" />
+                                </IconButton>
+                                <IconButton
+                                  color="error"
+                                  aria-label="delete key"
+                                  component="label"
+                                  onClick={() => {
+                                    setUser({
+                                      ...user,
+                                      publicKeys: user.publicKeys.filter(
+                                        (k) => k.name !== key.name
+                                      ),
+                                    });
+
+                                    setChangeInKeys(true);
+                                  }}
+                                >
+                                  <Iconify icon="mdi:delete" />
+                                </IconButton>
+                              </Stack>
                             </TableCell>
                           </TableRow>
                         ))}

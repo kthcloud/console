@@ -5,6 +5,7 @@ import {
   CircularProgress,
   IconButton,
   Paper,
+  Stack,
   Table,
   TableBody,
   TableCell,
@@ -102,20 +103,51 @@ const StorageManager = ({ deployment, persistent, setPersistent }) => {
                       </b>
                     </TableCell>
                     <TableCell align="right">
-                      <IconButton
-                        color="error"
-                        aria-label="delete env"
-                        component="label"
-                        onClick={() =>
-                          applyChanges(
-                            persistent.filter(
-                              (item) => item.name !== persistentRecord.name
-                            )
-                          )
-                        }
+                      <Stack
+                        direction="row"
+                        spacing={1}
+                        useFlexGap
+                        alignItems={"center"}
+                        justifyContent={"flex-end"}
                       >
-                        <Iconify icon="mdi:delete" />
-                      </IconButton>
+                        <IconButton
+                          color="primary"
+                          aria-label="edit persistent record"
+                          component="label"
+                          onClick={() => {
+                            
+                            setNewPersistentName(persistentRecord.name);
+                            setNewPersistentAppPath(persistentRecord.appPath);
+                            setNewPersistentServerPath(
+                              persistentRecord.serverPath
+                            );
+
+                            setPersistent(
+                              persistent.filter(
+                                (item) => item.name !== persistentRecord.name
+                              )
+                            );
+                          }}
+                          disabled={loading}
+                        >
+                          <Iconify icon="mdi:pencil" />
+                        </IconButton>
+
+                        <IconButton
+                          color="error"
+                          aria-label="delete env"
+                          component="label"
+                          onClick={() =>
+                            applyChanges(
+                              persistent.filter(
+                                (item) => item.name !== persistentRecord.name
+                              )
+                            )
+                          }
+                        >
+                          <Iconify icon="mdi:delete" />
+                        </IconButton>
+                      </Stack>
                     </TableCell>
                   </TableRow>
                 ))}
