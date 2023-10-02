@@ -97,20 +97,25 @@ export const ResourceContextProvider = ({ children }) => {
     setUserRows(array.filter((row) => row.ownerId === user.id));
   };
 
+  const loadUser = async () => {
+    if (!(initialized && keycloak.authenticated)) return;
+    const user = await getUser(keycloak.subject, keycloak.token);
+    setUser(user);
+  };
+
   const loadResources = async () => {
     if (!(initialized && keycloak.authenticated)) return;
 
     try {
-      const user = await getUser(keycloak.subject, keycloak.token);
-      setUser(user);
-
       const promises = [getVMs(keycloak.token), getDeployments(keycloak.token)];
 
       if (user.admin && impersonatingVm) {
+        console.log("Getting impersonation vm");
         promises.push(getVM(keycloak.token, impersonatingVm));
       }
 
       if (user.admin && impersonatingDeployment) {
+        console.log("Getting impersonation deployment");
         promises.push(getDeployment(keycloak.token, impersonatingDeployment));
       }
 
@@ -127,12 +132,17 @@ export const ResourceContextProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    loadResources();
+    loadUser();
     // eslint-disable-next-line
   }, [initialized]);
 
-  useInterval(() => {
+  useEffect(() => {
     loadResources();
+    // eslint-disable-next-line
+  }, [user]);
+
+  useInterval(() => {
+    loadUser();
   }, 5000);
 
   useInterval(async () => {

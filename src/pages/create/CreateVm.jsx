@@ -139,6 +139,7 @@ export default function CreateVm({ finished }) {
 
   const verifyUserCanCreate = () => {
     if (!user) return false;
+    if (user.admin) return true;
     if (availableCPU < 2) return false;
     if (availableRAM < 4) return false;
     if (availableDisk < 20) return false;
