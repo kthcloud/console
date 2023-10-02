@@ -26,12 +26,27 @@ import RFC1035Input from "src/components/RFC1035Input";
 import { faker } from "@faker-js/faker";
 import { GHSelect } from "./GHSelect";
 import { errorHandler } from "src/utils/errorHandler";
+import useResource from "src/hooks/useResource";
 
 export default function CreateDeployment({ finished }) {
-  const [cleaned, setCleaned] = useState("");
+  const [cleaned, _setCleaned] = useState("");
+  const setCleaned = (value) => {
+    if (rows.find((row) => row.name === value)) {
+      enqueueSnackbar("Name " + value + " already taken", {
+        variant: "error",
+      });
+      return;
+    }
+
+    _setCleaned(value);
+  };
+
   const { initialized, keycloak } = useKeycloak();
 
+  const { rows } = useResource();
+
   const [image, setImage] = useState("");
+  const [domain, setDomain] = useState("");
 
   const [envs, setEnvs] = useState([]);
   const [newEnvName, setNewEnvName] = useState("");
@@ -59,6 +74,7 @@ export default function CreateDeployment({ finished }) {
       const job = await createDeployment(
         cleaned,
         image,
+        domain,
         envs,
         repo,
         persistent,
@@ -117,9 +133,29 @@ export default function CreateDeployment({ finished }) {
           <TextField
             label="Image"
             variant="outlined"
+            placeholder="mongo:latest"
             value={image}
             onChange={(e) => {
               setImage(e.target.value.trim());
+            }}
+            fullWidth
+          />
+        </CardContent>
+      </Card>
+
+      <Card sx={{ boxShadow: 20 }}>
+        <CardHeader
+          title={"Custom Domain"}
+          subheader="Specify a custom domain. Add a CNAME record for this domain pointing to app.cloud.cbh.kth.se. If you are using Cloudflare or some other proxy service, disable the proxy so our DNS lookup resolves correctly. You can reenable the proxy after the deployment is created."
+        />
+        <CardContent>
+          <TextField
+            label="Domain"
+            variant="outlined"
+            value={domain}
+            placeholder="example.com"
+            onChange={(e) => {
+              setDomain(e.target.value.trim());
             }}
             fullWidth
           />

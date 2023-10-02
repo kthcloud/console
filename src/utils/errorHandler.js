@@ -1,19 +1,22 @@
-import { sentenceCase } from "change-case";
-
 export const errorHandler = (error) => {
   let errors = [];
 
   if (Object.hasOwn(error, "validationErrors")) {
-    if (Object.hasOwn(error.validationErrors, "name")) {
-      errors.validationErrors.name.forEach((element) => {
-        errors.push(sentenceCase("Name " + element.message));
+    let errorTypes = Object.keys(error.validationErrors);
+    errorTypes.forEach((type) => {
+      let errorTypeErrors = error.validationErrors[type];
+
+      errorTypeErrors.forEach((msg) => {
+        if (type !== "name") {
+          errors.push(msg);
+        }
       });
-    }
+    });
   }
 
   if (Object.hasOwn(error, "errors")) {
     error.errors.forEach((element) => {
-      errors.push(sentenceCase(element.msg));
+      errors.push(element.msg);
     });
   }
 
