@@ -10,21 +10,25 @@ import {
   CardContent,
   CardHeader,
   Link,
+  Stack,
   TextareaAutosize,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { CopyToClipboard } from "react-copy-to-clipboard";
+import Iconify from "src/components/Iconify";
 
 const GHActions = ({ resource }) => {
   const { keycloak, initialized } = useKeycloak();
   const [actionsFile, setActionsFile] = useState(null);
   const [cliCommands, setCliCommands] = useState(null);
+  const [secrets, setSecrets] = useState([]);
+  const [showSecrets, setShowSecrets] = useState(false);
 
   const loadYaml = async () => {
     try {
       // Get the deployment yaml
       const res = await getDeploymentYaml(resource.id, keycloak.token);
-      setActionsFile(res.config);
 
       // Parse docker login, build, tag, and push
       const parsed = parse(res.config);
@@ -42,6 +46,35 @@ const GHActions = ({ resource }) => {
       // escape $ for bash
       const commandString = commands.join("\n").replace(/\$/g, "\\$");
       setCliCommands(commandString);
+
+      // Get the secrets
+      const secrets = [
+        {
+          name: "DOCKER_USERNAME",
+          value: username,
+        },
+        {
+          name: "DOCKER_PASSWORD",
+          value: password,
+        },
+        {
+          name: "DOCKER_TAG",
+          value: tag,
+        },
+      ];
+
+      setSecrets(secrets);
+
+      let cleaned = res.config;
+
+      secrets.forEach((secret) => {
+        cleaned = cleaned.replace(
+          secret.value,
+          "${{ secrets." + secret.name + " }}"
+        );
+      });
+
+      setActionsFile(cleaned);
     } catch (e) {}
   };
 
@@ -79,28 +112,95 @@ const GHActions = ({ resource }) => {
           subheader={"Run this workflow to publish your app"}
         />
         <CardContent>
-          <TextareaAutosize
-            value={actionsFile ? actionsFile : "Loading..."}
-            style={{ width: "100%", border: 0 }}
-          />
+          <Stack spacing={1} useFlexGap alignItems={"flex-start"}>
+            <TextareaAutosize
+              value={actionsFile ? actionsFile : "Loading..."}
+              style={{ width: "100%", border: 0 }}
+            />
 
-          <Typography variant="body2">
-            Unsure where to paste this?
-            <Link
-              href="https://docs.github.com/en/actions/quickstart"
-              target="_blank"
-              rel="noreferrer"
-              ml={1}
+            <Stack
+              direction={"row"}
+              spacing={1}
+              useFlexGap
+              alignItems={"center"}
             >
-              GitHub Actions Quickstart
-            </Link>
-          </Typography>
+              <CopyToClipboard text={actionsFile}>
+                <Button>Copy to clipboard</Button>
+              </CopyToClipboard>
+
+              <Typography variant="body2">
+                Unsure where to paste this?
+                <Link
+                  href="https://docs.github.com/en/actions/quickstart"
+                  target="_blank"
+                  rel="noreferrer"
+                  ml={1}
+                >
+                  GitHub Actions Quickstart
+                </Link>
+              </Typography>
+            </Stack>
+
+            <Button
+              variant={showSecrets ? "contained" : "outlined"}
+              onClick={() => setShowSecrets(!showSecrets)}
+              startIcon={<Iconify icon="mdi:eye" />}
+              color={showSecrets ? "primary" : "error"}
+            >
+              {showSecrets ? "Hide" : "Show"} Secrets
+            </Button>
+
+            {showSecrets && (
+              <Stack
+                spacing={1}
+                useFlexGap
+                alignItems={"flex-start"}
+                my={2}
+                py={3}
+                sx={{
+                  border: 1,
+                  p: 2,
+                  borderRadius: 1,
+                  borderColor: "#ff534c",
+                }}
+                boxShadow={10}
+              >
+                <Typography variant="h6">
+                  Danger zone! These secrets are sensitive and should not be
+                  shared.
+                </Typography>
+                <Typography variant="body2">
+                  Add these secrets to your GitHub repository:
+                </Typography>
+                {secrets.map((secret) => (
+                  <Typography
+                    variant="body2"
+                    fontFamily={"monospace"}
+                    sx={{ cursor: "pointer" }}
+                  >
+                    <CopyToClipboard text={secret.name}>
+                      <Tooltip title="Copy to clipboard">
+                        {`${secret.name}: `}
+                      </Tooltip>
+                    </CopyToClipboard>
+                    <CopyToClipboard text={secret.value}>
+                      <Tooltip title="Copy to clipboard">
+                        <b
+                          style={{
+                            fontFamily: "monospace",
+                            cursor: "pointer",
+                          }}
+                        >
+                          {secret.value}
+                        </b>
+                      </Tooltip>
+                    </CopyToClipboard>
+                  </Typography>
+                ))}
+              </Stack>
+            )}
+          </Stack>
         </CardContent>
-        <CardActions>
-          <CopyToClipboard text={actionsFile}>
-            <Button>Copy to clipboard</Button>
-          </CopyToClipboard>{" "}
-        </CardActions>
       </Card>
     </>
   );

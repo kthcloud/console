@@ -11,6 +11,7 @@ import { useKeycloak } from "@react-keycloak/web";
 import { useEffect, useState } from "react";
 import CopyToClipboard from "react-copy-to-clipboard";
 import Iconify from "src/components/Iconify";
+import polyfilledEventSource from "@sanity/eventsource";
 
 export const LogsView = ({ deployment }) => {
   const { initialized, keycloak } = useKeycloak();
@@ -21,17 +22,21 @@ export const LogsView = ({ deployment }) => {
   useEffect(() => {
     if (!(deployment && initialized)) return;
 
-    const ws = new WebSocket(
-      process.env.REACT_APP_DEPLOY_SOCKET_URL +
-        "/deployments/" +
-        deployment.id +
-        "/logs"
+    const sse = new polyfilledEventSource(
+      `${process.env.REACT_APP_API_URL}/deploy/v1/deployments/${deployment.id}/logs-sse`,
+      {
+        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${keycloak.token}`,
+        },
+      }
     );
-    ws.onopen = () => {
-      ws.send("Bearer " + keycloak.token);
+
+    sse.onerror = () => {
+      sse.close();
     };
 
-    ws.onmessage = (event) => {
+    sse.onmessage = (event) => {
       setLogs((logs) => [event.data, ...logs]);
     };
 
@@ -43,8 +48,6 @@ export const LogsView = ({ deployment }) => {
   return (
     <Card sx={{ boxShadow: 20 }}>
       <CardHeader title={"Logs"} subheader={"View logs from your deployment"} />
-
-      {/* TODO: add download logs button */}
 
       <CardContent>
         <Stack direction="column" spacing={2}>

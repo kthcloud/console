@@ -50,6 +50,7 @@
     "@react-keycloak/web": "^3.4.0",
     "@react-three/drei": "^9.80.6",
     "@react-three/fiber": "^8.13.7",
+    "@sanity/eventsource": "^5.0.1",
     "@testing-library/jest-dom": "^5.16.4",
     "@types/three": "^0.155.0",
     "apexcharts": "^3.35.3",
