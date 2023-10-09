@@ -27,6 +27,7 @@ import {
   IconButton,
   Chip,
   Tooltip,
+  Link,
 } from "@mui/material";
 
 // components
@@ -161,7 +162,22 @@ export function Profile() {
               <JobList />
 
               <Card sx={{ boxShadow: 20 }}>
-                <CardHeader title={"Details"} />
+                <CardHeader
+                  title={"Details"}
+                  subheader={
+                    <Typography variant="body2" sx={{ color: "#637381" }}>
+                      We use Gravatar for profile pictures. Change it at
+                      <Link
+                        href="https://gravatar.com/connect/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        sx={{ ml: 0.5 }}
+                      >
+                        gravatar.com
+                      </Link>
+                    </Typography>
+                  }
+                />
                 <CardContent>
                   {/* Form with user data pre filled */}
                   <Stack spacing={3}>

@@ -10,8 +10,11 @@ const {
 } = require("@mui/material");
 
 const ConfirmButton = ({ action, actionText, callback, props }) => {
-  const [open, setOpen] = useState(false);
-
+  const [open, _setOpen] = useState(false);
+  const setOpen = (state) => {
+    if (state) navigator.vibrate?.(50);
+    _setOpen(state);
+  };
   return (
     <>
       <Dialog open={open} onClose={() => setOpen(false)}>

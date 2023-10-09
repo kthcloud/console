@@ -54,6 +54,7 @@
     "@types/three": "^0.155.0",
     "apexcharts": "^3.35.3",
     "change-case": "^4.1.2",
+    "crypto-js": "^4.1.1",
     "date-fns": "^2.28.0",
     "history": "^5.3.0",
     "http-status-codes": "^2.2.0",
