@@ -7,22 +7,28 @@ import { updateDeployment } from "src/api/deploy/deployments";
 import Iconify from "src/components/Iconify";
 import useResource from "src/hooks/useResource";
 import { errorHandler } from "src/utils/errorHandler";
+import { toUnicode } from "punycode";
 
 export const DomainManager = ({ deployment }) => {
-  const [domain, setDomain] = useState();
+  const [domain, setDomain] = useState("");
   const [loading, setLoading] = useState(false);
   const { keycloak } = useKeycloak();
   const { queueJob } = useResource();
+  const [initialDomain, setInitialDomain] = useState("");
 
   useEffect(() => {
-    if (!deployment.url) return;
-    setDomain(deployment.url);
+    if (!deployment.customDomainUrl) return;
+
+    const cleaned = toUnicode(
+      deployment.customDomainUrl.replace("https://", "").trim()
+    );
+    setDomain(cleaned);
+    setInitialDomain(cleaned);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleSave = async (d) => {
     const newDomain = d.trim();
-    if (newDomain === deployment.url) return;
 
     setLoading(true);
 
@@ -58,10 +64,10 @@ export const DomainManager = ({ deployment }) => {
           <TextField
             label="Domain"
             variant="outlined"
-            placeholder={deployment.url}
+            placeholder={initialDomain}
             value={domain}
             onChange={(e) => {
-              setDomain(e.target.value.trim());
+              setDomain(e.target.value);
             }}
             onKeyDown={(e) => {
               if (e.key === "Enter") {

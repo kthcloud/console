@@ -9,7 +9,7 @@ import useResource from "src/hooks/useResource";
 import { errorHandler } from "src/utils/errorHandler";
 
 export const ImageManager = ({ deployment }) => {
-  const [image, setImage] = useState();
+  const [image, setImage] = useState("");
   const [loading, setLoading] = useState(false);
   const { keycloak } = useKeycloak();
   const { queueJob } = useResource();
@@ -60,9 +60,7 @@ export const ImageManager = ({ deployment }) => {
             variant="outlined"
             placeholder={deployment.image}
             value={image}
-            onChange={(e) => {
-              setImage(e.target.value.trim());
-            }}
+            onChange={(e) => setImage(e.target.value.trim())}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 handleSave(e.target.value);
