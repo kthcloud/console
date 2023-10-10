@@ -13,7 +13,7 @@ export const getVM = async (token, id) => {
   return result.map((obj) => ({ ...obj, type: "vm" }));
 };
 
-export const getVMs = async (token, all=false) => {
+export const getVMs = async (token, all = false) => {
   const allQuery = all ? "?all=true" : "";
   const url = `${process.env.REACT_APP_DEPLOY_API_URL}/vms${allQuery}`;
   const response = await fetch(url, {
@@ -55,7 +55,7 @@ export const detachGPU = async (vm, token) => {
       headers: {
         Authorization: "Bearer " + token,
       },
-      body: JSON.stringify({gpuId: ""}),
+      body: JSON.stringify({ gpuId: "" }),
     }
   );
   if (!res.ok) {
@@ -76,7 +76,7 @@ export const attachGPU = async (vm, token) => {
       headers: {
         Authorization: "Bearer " + token,
       },
-      body: JSON.stringify({gpuId: "any"}),
+      body: JSON.stringify({ gpuId: "any" }),
     }
   );
   if (!res.ok) {
@@ -97,7 +97,7 @@ export const attachGPUById = async (vm, token, id) => {
       headers: {
         Authorization: "Bearer " + token,
       },
-      body: JSON.stringify({gpuId: id}),
+      body: JSON.stringify({ gpuId: id }),
     }
   );
   if (!res.ok) {
@@ -110,13 +110,18 @@ export const attachGPUById = async (vm, token, id) => {
   return await res.json();
 };
 
-export const getGPUs = async (token, availableOnly=false) => {
-  const res = await fetch(process.env.REACT_APP_DEPLOY_API_URL + "/gpus" + (availableOnly ? "?available=true" : ""), {
-    method: "GET",
-    headers: {
-      Authorization: "Bearer " + token,
-    },
-  });
+export const getGPUs = async (token, availableOnly = false) => {
+  const res = await fetch(
+    process.env.REACT_APP_DEPLOY_API_URL +
+      "/gpus" +
+      (availableOnly ? "?available=true" : ""),
+    {
+      method: "GET",
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    }
+  );
   if (!res.ok) {
     const body = await res.json();
     if (body) {
@@ -129,19 +134,24 @@ export const getGPUs = async (token, availableOnly=false) => {
 
 export const createVM = async (
   name,
+  zone,
   sshPublicKey,
   cpuCores,
   diskSize,
   ram,
   token
 ) => {
-  const body = {
+  let body = {
     name,
     sshPublicKey,
     cpuCores,
     diskSize,
     ram,
   };
+
+  if (zone) {
+    body.zone = zone;
+  }
 
   const res = await fetch(process.env.REACT_APP_DEPLOY_API_URL + "/vms", {
     method: "POST",

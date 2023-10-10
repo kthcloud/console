@@ -10,6 +10,7 @@ import { getVM, getVMs } from "src/api/deploy/vms";
 import { getDeployment, getDeployments } from "src/api/deploy/deployments";
 import { errorHandler } from "src/utils/errorHandler";
 import { getUser } from "src/api/deploy/users";
+import { getZones } from "src/api/deploy/zones";
 
 const initialState = {
   rows: [],
@@ -31,6 +32,7 @@ export const ResourceContextProvider = ({ children }) => {
   const [userRows, setUserRows] = useState([]);
   const [jobs, setJobs] = useState([]);
   const [user, setUser] = useState(null);
+  const [zones, setZones] = useState([]);
   const [initialLoad, setInitialLoad] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
 
@@ -105,6 +107,20 @@ export const ResourceContextProvider = ({ children }) => {
     setUser(user);
   };
 
+  const loadZones = async () => {
+    if (!(initialized && keycloak.authenticated)) return;
+    try {
+      const zones = await getZones(keycloak.token);
+      setZones(zones);
+    } catch (error) {
+      errorHandler(error).forEach((e) =>
+        enqueueSnackbar("Error fetching zones: " + e, {
+          variant: "error",
+        })
+      );
+    }
+  };
+
   const loadResources = async () => {
     if (!(initialized && keycloak.authenticated)) return;
 
@@ -143,16 +159,18 @@ export const ResourceContextProvider = ({ children }) => {
     // eslint-disable-next-line
   }, [user]);
 
+  useEffect(() => {
+    user && user?.role?.permissions?.includes("chooseZone") && loadZones();
+    // eslint-disable-next-line
+  }, [user]);
+
   useInterval(() => {
     loadUser();
   }, 5000);
 
   useInterval(async () => {
     for (let i = 0; i < jobs.length; i++) {
-      if (
-        jobs[i].status !== "finished" &&
-        jobs[i].status !== "terminated"
-      ) {
+      if (jobs[i].status !== "finished" && jobs[i].status !== "terminated") {
         await refreshJob(jobs[i].jobId);
       }
     }
@@ -169,6 +187,8 @@ export const ResourceContextProvider = ({ children }) => {
         setJobs,
         user,
         setUser,
+        zones,
+        setZones,
         queueJob,
         initialLoad,
         setInitialLoad,

@@ -79,6 +79,7 @@ export const getDeploymentYaml = async (id, token) => {
 
 export const createDeployment = async (
   name,
+  zone,
   image,
   domain,
   envs,
@@ -91,10 +92,11 @@ export const createDeployment = async (
     name,
   };
 
-  if (envs) body = { ...body, envs };
-  if (volumes) body = { ...body, volumes };
+  if (zone) body = { ...body, zone };
   if (image) body = { ...body, image };
   if (domain) body = { ...body, customDomain: domain };
+  if (envs) body = { ...body, envs };
+  if (volumes) body = { ...body, volumes };
 
   if (!image && repo)
     body = {

@@ -27,6 +27,7 @@ import { faker } from "@faker-js/faker";
 import { GHSelect } from "./GHSelect";
 import { errorHandler } from "src/utils/errorHandler";
 import useResource from "src/hooks/useResource";
+import ZoneSelector from "./ZoneSelector";
 
 export default function CreateDeployment({ finished }) {
   const [cleaned, _setCleaned] = useState("");
@@ -45,6 +46,7 @@ export default function CreateDeployment({ finished }) {
 
   const { rows, user } = useResource();
 
+  const [selectedZone, setSelectedZone] = useState("");
   const [image, setImage] = useState("");
   const [domain, setDomain] = useState("");
 
@@ -106,6 +108,7 @@ export default function CreateDeployment({ finished }) {
     try {
       const job = await createDeployment(
         cleaned,
+        selectedZone,
         image,
         domain,
         newEnvs,
@@ -156,6 +159,12 @@ export default function CreateDeployment({ finished }) {
           />
         </CardContent>
       </Card>
+
+      <ZoneSelector
+        alignment={"deployment"}
+        selectedZone={selectedZone}
+        setSelectedZone={setSelectedZone}
+      />
 
       <Card sx={{ boxShadow: 20 }}>
         <CardHeader
