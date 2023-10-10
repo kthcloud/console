@@ -53,7 +53,7 @@ export const Create = () => {
   const finished = (job, stay) => {
     queueJob(job);
     enqueueSnackbar(`Creating ${sentenceCase(alignment)}`, {
-      variant: "primary",
+      variant: "info",
     });
     if (!stay) navigate("/edit/" + alignment + "/" + job.id);
   };
