@@ -201,9 +201,10 @@ export function Edit() {
                   <ImageManager deployment={resource} />
                 )}
 
-              {resource.type === "deployment" && (
-                <DomainManager deployment={resource} />
-              )}
+              {resource.type === "deployment" &&
+                user?.role?.permissions.includes("useCustomDomains") && (
+                  <DomainManager deployment={resource} />
+                )}
 
               {resource.type === "deployment" &&
                 resource.deploymentType !== "prebuilt" &&

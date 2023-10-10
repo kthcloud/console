@@ -43,7 +43,7 @@ export default function CreateDeployment({ finished }) {
 
   const { initialized, keycloak } = useKeycloak();
 
-  const { rows } = useResource();
+  const { rows, user } = useResource();
 
   const [image, setImage] = useState("");
   const [domain, setDomain] = useState("");
@@ -176,24 +176,26 @@ export default function CreateDeployment({ finished }) {
         </CardContent>
       </Card>
 
-      <Card sx={{ boxShadow: 20 }}>
-        <CardHeader
-          title={"Custom Domain"}
-          subheader="Specify a custom domain. Add a CNAME record for this domain pointing to app.cloud.cbh.kth.se. If you are using Cloudflare or some other proxy service, disable the proxy so our DNS lookup resolves correctly. You can reenable the proxy after the deployment is created."
-        />
-        <CardContent>
-          <TextField
-            label="Domain"
-            variant="outlined"
-            value={domain}
-            placeholder="example.com"
-            onChange={(e) => {
-              setDomain(e.target.value.trim());
-            }}
-            fullWidth
+      {user?.role?.permissions.includes("useCustomDomains") && (
+        <Card sx={{ boxShadow: 20 }}>
+          <CardHeader
+            title={"Custom Domain"}
+            subheader="Specify a custom domain. Add a CNAME record for this domain pointing to app.cloud.cbh.kth.se. If you are using Cloudflare or some other proxy service, disable the proxy so our DNS lookup resolves correctly. You can reenable the proxy after the deployment is created."
           />
-        </CardContent>
-      </Card>
+          <CardContent>
+            <TextField
+              label="Domain"
+              variant="outlined"
+              value={domain}
+              placeholder="example.com"
+              onChange={(e) => {
+                setDomain(e.target.value.trim());
+              }}
+              fullWidth
+            />
+          </CardContent>
+        </Card>
+      )}
 
       {image === "" && (
         <GHSelect
