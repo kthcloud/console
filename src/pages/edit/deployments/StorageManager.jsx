@@ -44,7 +44,7 @@ const StorageManager = ({ deployment, persistent, setPersistent }) => {
       );
       queueJob(res);
       enqueueSnackbar("Storage saving...", {
-        variant: "success",
+        variant: "info",
       });
     } catch (error) {
       errorHandler(error).forEach((e) =>

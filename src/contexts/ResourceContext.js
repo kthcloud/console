@@ -40,13 +40,15 @@ export const ResourceContextProvider = ({ children }) => {
     try {
       const response = await getJob(jobId, keycloak.token);
 
-      if (response.status.toLoweCase().includes("finished")) {
+      if (response.status === "finished") {
+        navigator.vibrate?.(30);
         setTimeout(() => {
           setJobs((jobs) => jobs.filter((job) => job.jobId !== jobId));
         }, 5000);
       }
 
-      if (response.status.toLoweCase().includes("terminated")) {
+      if (response.status === "terminated") {
+        navigator.vibrate?.(30);
         setTimeout(() => {
           setJobs((jobs) => jobs.filter((job) => job.jobId !== jobId));
         }, 5000);
@@ -148,8 +150,8 @@ export const ResourceContextProvider = ({ children }) => {
   useInterval(async () => {
     for (let i = 0; i < jobs.length; i++) {
       if (
-        jobs[i].status !== "jobFinished" &&
-        jobs[i].status !== "jobTerminated"
+        jobs[i].status !== "finished" &&
+        jobs[i].status !== "terminated"
       ) {
         await refreshJob(jobs[i].jobId);
       }

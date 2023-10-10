@@ -85,7 +85,7 @@ export default function PortManager({ vm }) {
     try {
       const res = await updateVM(vm.id, { ports: newPorts }, keycloak.token);
       queueJob(res);
-      enqueueSnackbar("Port changes saving...", { variant: "success" });
+      enqueueSnackbar("Port changes saving...", { variant: "info" });
     } catch (error) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar("Could not change ports: " + e, {
@@ -115,7 +115,7 @@ export default function PortManager({ vm }) {
     try {
       const res = await updateVM(vm.id, { ports: newPorts }, keycloak.token);
       queueJob(res);
-      enqueueSnackbar("Port changes saving...", { variant: "success" });
+      enqueueSnackbar("Port changes saving...", { variant: "info" });
     } catch (error) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar("Could not remove port: " + e, {

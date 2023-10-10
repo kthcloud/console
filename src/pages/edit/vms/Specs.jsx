@@ -118,7 +118,7 @@ export default function Specs({ vm }) {
         keycloak.token
       );
       queueJob(res);
-      enqueueSnackbar("Specs saving...", { variant: "success" });
+      enqueueSnackbar("Specs saving...", { variant: "info" });
     } catch (error) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar("Could not update specs: " + e, {

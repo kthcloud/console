@@ -12,6 +12,7 @@ export default function Shortcuts() {
   const { keycloak, initialized } = useKeycloak();
   const { user } = useResource();
   const [userAvatar, setUserAvatar] = useState(null);
+  const [hasFetched, setHasFetched] = useState(false);
 
   const gravatar = async () => {
     const cleaned = user.email.trim().toLowerCase();
@@ -28,7 +29,7 @@ export default function Shortcuts() {
 
   const fetchProfilePic = async () => {
     const gravatarUri = await gravatar();
-
+    setHasFetched(true);
     if (gravatarUri) {
       setUserAvatar(gravatarUri);
       return;
@@ -36,7 +37,7 @@ export default function Shortcuts() {
   };
 
   useEffect(() => {
-    if (!(user && user.email)) return;
+    if (!(user && user.email && !hasFetched)) return;
     fetchProfilePic();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
