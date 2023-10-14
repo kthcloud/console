@@ -23,9 +23,8 @@ export const LogsView = ({ deployment }) => {
     if (!(deployment && initialized)) return;
 
     const sse = new polyfilledEventSource(
-      `${process.env.REACT_APP_API_URL}/deploy/v1/deployments/${deployment.id}/logs-sse`,
+      `${process.env.REACT_APP_DEPLOY_API_URL}/deployments/${deployment.id}/logs-sse`,
       {
-        withCredentials: true,
         headers: {
           Authorization: `Bearer ${keycloak.token}`,
         },
