@@ -43,14 +43,14 @@ export const ResourceContextProvider = ({ children }) => {
       const response = await getJob(jobId, keycloak.token);
 
       if (response.status === "finished") {
-        navigator.vibrate?.(30);
+        navigator?.vibrate([0.1, 5, 0.1]);
         setTimeout(() => {
           setJobs((jobs) => jobs.filter((job) => job.jobId !== jobId));
         }, 5000);
       }
 
       if (response.status === "terminated") {
-        navigator.vibrate?.(30);
+        navigator?.vibrate([0.1, 5, 0.1]);
         setTimeout(() => {
           setJobs((jobs) => jobs.filter((job) => job.jobId !== jobId));
         }, 5000);

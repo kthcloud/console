@@ -12,7 +12,7 @@ const {
 const ConfirmButton = ({ action, actionText, callback, props }) => {
   const [open, _setOpen] = useState(false);
   const setOpen = (state) => {
-    if (state) navigator.vibrate?.(50);
+    if (state) navigator.vibrate?.([0.1, 5, 0.1]);
     _setOpen(state);
   };
   return (
