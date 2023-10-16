@@ -85,7 +85,7 @@ export const DeploymentCommands = ({ deployment }) => {
         deployment.private === false && (
           <Button
             component={Link}
-            href={deployment.url}
+            href={deployment.customDomainUrl ? deployment.customDomainUrl : deployment.url}
             target="_blank"
             rel="noreferrer"
             underline="none"
