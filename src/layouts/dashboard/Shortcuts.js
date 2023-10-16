@@ -18,7 +18,7 @@ export default function Shortcuts() {
     const cleaned = user.email.trim().toLowerCase();
     const hash = MD5(cleaned, { encoding: "binary" }).toString();
 
-    const uri = encodeURI(`https:/www.gravatar.com/avatar/${hash}?d=404`);
+    const uri = encodeURI(`https://www.gravatar.com/avatar/${hash}?d=404`);
 
     const response = await fetch(uri);
     if (response.status === 200) {
