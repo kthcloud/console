@@ -160,11 +160,11 @@ export const Onboarding = () => {
 
   const renderCardDirection = (id) => {
     if (lastAction === "next") {
-      if (id === lastDismissed) return "left";
-      return "right";
-    } else {
       if (id === lastDismissed) return "right";
       return "left";
+    } else {
+      if (id === lastDismissed) return "left";
+      return "right";
     }
   };
 
