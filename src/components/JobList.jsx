@@ -17,9 +17,9 @@ export default function JobList() {
 
   const resolveColor = (status) => {
     switch (status) {
-      case "jobFinished":
+      case "finished":
         return "primary";
-      case "jobTerminated":
+      case "terminated":
         return "error";
       default:
         return "default";
@@ -34,9 +34,7 @@ export default function JobList() {
   };
 
   const renderText = (job) => {
-
-
-    if (job.status !== "jobRunning" && job.status !== "jobFinished") {
+    if (job.status !== "running" && job.status !== "finished") {
       return (
         <>
           <span>
@@ -64,7 +62,7 @@ export default function JobList() {
             <Chip
               key={job.jobId}
               icon={
-                job.status === "jobFinished" ? (
+                job.status === "finished" ? (
                   <Iconify
                     icon="carbon:checkmark-filled"
                     width={20}

@@ -7,38 +7,44 @@ import { updateDeployment } from "src/api/deploy/deployments";
 import Iconify from "src/components/Iconify";
 import useResource from "src/hooks/useResource";
 import { errorHandler } from "src/utils/errorHandler";
+import { toUnicode } from "punycode";
 
-export const ImageManager = ({ deployment }) => {
-  const [image, setImage] = useState("");
+export const DomainManager = ({ deployment }) => {
+  const [domain, setDomain] = useState("");
   const [loading, setLoading] = useState(false);
   const { keycloak } = useKeycloak();
   const { queueJob } = useResource();
+  const [initialDomain, setInitialDomain] = useState("");
 
   useEffect(() => {
-    if (!deployment.image) return;
-    setImage(deployment.image);
+    if (!deployment.customDomainUrl) return;
+
+    const cleaned = toUnicode(
+      deployment.customDomainUrl.replace("https://", "").trim()
+    );
+    setDomain(cleaned);
+    setInitialDomain(cleaned);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleSave = async (img) => {
-    const newImage = img.trim();
-    if (newImage === deployment.image) return;
+  const handleSave = async (d) => {
+    const newDomain = d.trim();
 
     setLoading(true);
 
     try {
       const res = await updateDeployment(
         deployment.id,
-        { image: newImage },
+        { customDomain: newDomain },
         keycloak.token
       );
       queueJob(res);
-      enqueueSnackbar("Saving image update...", {
+      enqueueSnackbar("Saving domain update...", {
         variant: "info",
       });
     } catch (error) {
       errorHandler(error).forEach((e) =>
-        enqueueSnackbar("Could not update image: " + e, {
+        enqueueSnackbar("Could not update domain: " + e, {
           variant: "error",
         })
       );
@@ -50,17 +56,19 @@ export const ImageManager = ({ deployment }) => {
   return (
     <Card sx={{ boxShadow: 20 }}>
       <CardHeader
-        title={"Image"}
-        subheader="Edit or update your deployment's image. For example mongo, mongo:4.4 or quay.io/keycloak/keycloak"
+        title={"Domain"}
+        subheader="Edit or update your deployment's domain. Add a CNAME record for this domain pointing to app.cloud.cbh.kth.se. If you are using Cloudflare or some other proxy service, disable the proxy so our DNS lookup resolves correctly. You can reenable the proxy after the deployment is created."
       />
       <CardContent>
         <Stack direction="row" spacing={3} useFlexGap>
           <TextField
-            label="Image"
+            label="Domain"
             variant="outlined"
-            placeholder={deployment.image}
-            value={image}
-            onChange={(e) => setImage(e.target.value.trim())}
+            placeholder={initialDomain}
+            value={domain}
+            onChange={(e) => {
+              setDomain(e.target.value);
+            }}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 handleSave(e.target.value);
@@ -72,7 +80,7 @@ export const ImageManager = ({ deployment }) => {
           />
           <LoadingButton
             variant="contained"
-            onClick={() => handleSave(image)}
+            onClick={() => handleSave(domain)}
             startIcon={<Iconify icon="material-symbols:save" />}
             loading={loading}
           >

@@ -54,7 +54,7 @@ export default function EnvManager({ deployment }) {
       );
       queueJob(res);
       enqueueSnackbar("Environment variables saving...", {
-        variant: "success",
+        variant: "info",
       });
     } catch (error) {
       errorHandler(error).forEach((e) =>

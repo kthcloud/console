@@ -52,8 +52,8 @@ export const Create = () => {
 
   const finished = (job, stay) => {
     queueJob(job);
-    enqueueSnackbar(sentenceCase(alignment) + " created successfully", {
-      variant: "success",
+    enqueueSnackbar(`Creating ${sentenceCase(alignment)}`, {
+      variant: "info",
     });
     if (!stay) navigate("/edit/" + alignment + "/" + job.id);
   };

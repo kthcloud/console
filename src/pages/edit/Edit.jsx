@@ -41,6 +41,7 @@ import { LogsView } from "./deployments/LogsView";
 import { getReasonPhrase } from "http-status-codes";
 import StorageManager from "./deployments/StorageManager";
 import { ImageManager } from "./deployments/ImageManager";
+import { DomainManager } from "./deployments/DomainManager";
 
 export function Edit() {
   const { initialized } = useKeycloak();
@@ -198,6 +199,11 @@ export function Edit() {
               {resource.type === "deployment" &&
                 resource.deploymentType === "prebuilt" && (
                   <ImageManager deployment={resource} />
+                )}
+
+              {resource.type === "deployment" &&
+                user?.role?.permissions.includes("useCustomDomains") && (
+                  <DomainManager deployment={resource} />
                 )}
 
               {resource.type === "deployment" &&

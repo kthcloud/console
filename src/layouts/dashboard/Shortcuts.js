@@ -1,12 +1,46 @@
-import { IconButton, Tooltip } from "@mui/material";
+import { Avatar, IconButton, Tooltip } from "@mui/material";
 import Iconify from "../../components/Iconify";
 import { useKeycloak } from "@react-keycloak/web";
 import { Link } from "react-router-dom";
 import HelpButton from "./HelpButton";
+import useResource from "src/hooks/useResource";
+import { useEffect, useState } from "react";
+import { MD5 } from "crypto-js";
 // ----------------------------------------------------------------------
 
 export default function Shortcuts() {
   const { keycloak, initialized } = useKeycloak();
+  const { user } = useResource();
+  const [userAvatar, setUserAvatar] = useState(null);
+  const [hasFetched, setHasFetched] = useState(false);
+
+  const gravatar = async () => {
+    const cleaned = user.email.trim().toLowerCase();
+    const hash = MD5(cleaned, { encoding: "binary" }).toString();
+
+    const uri = encodeURI(`https://www.gravatar.com/avatar/${hash}?d=404`);
+
+    const response = await fetch(uri);
+    if (response.status === 200) {
+      return uri;
+    }
+    return null;
+  };
+
+  const fetchProfilePic = async () => {
+    const gravatarUri = await gravatar();
+    setHasFetched(true);
+    if (gravatarUri) {
+      setUserAvatar(gravatarUri);
+      return;
+    }
+  };
+
+  useEffect(() => {
+    if (!(user && user.email && !hasFetched)) return;
+    fetchProfilePic();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
 
   return (
     <>
@@ -69,12 +103,11 @@ export default function Shortcuts() {
                 },
               }}
             >
-              <Iconify
-                icon="mdi:user-circle"
-                width={20}
-                height={20}
-                title="Profile"
-              />
+              {user && userAvatar ? (
+                <Avatar sx={{ width: 20, height: 20 }} src={userAvatar} />
+              ) : (
+                <Iconify icon="mdi:user-circle" title="Profile" />
+              )}
             </IconButton>
           </Tooltip>
         </>

@@ -25,10 +25,12 @@ import RFC1035Input from "src/components/RFC1035Input";
 import { faker } from "@faker-js/faker";
 import { errorHandler } from "src/utils/errorHandler";
 import useResource from "src/hooks/useResource";
+import ZoneSelector from "./ZoneSelector";
 
 export default function CreateVm({ finished }) {
   const [cleaned, setCleaned] = useState("");
 
+  const [selectedZone, setSelectedZone] = useState("");
   const [publicKey, setPublicKey] = useState("");
   const [cpuCores, setCpuCores] = useState(2);
   const [diskSize, setDiskSize] = useState(20);
@@ -139,6 +141,7 @@ export default function CreateVm({ finished }) {
 
   const verifyUserCanCreate = () => {
     if (!user) return false;
+    if (user.admin) return true;
     if (availableCPU < 2) return false;
     if (availableRAM < 4) return false;
     if (availableDisk < 20) return false;
@@ -156,6 +159,7 @@ export default function CreateVm({ finished }) {
     try {
       const job = await createVM(
         cleaned,
+        selectedZone,
         publicKey,
         cpuCores,
         diskSize,
@@ -234,7 +238,6 @@ export default function CreateVm({ finished }) {
                     ))}
                   </Select>
                   <FormHelperText>
-                    {" "}
                     Don't have a key yet? Add one to your{" "}
                     <Link to="/profile">profile</Link>.
                   </FormHelperText>
@@ -242,6 +245,12 @@ export default function CreateVm({ finished }) {
               )}
             </CardContent>
           </Card>
+
+          <ZoneSelector
+            alignment={"vm"}
+            selectedZone={selectedZone}
+            setSelectedZone={setSelectedZone}
+          />
 
           {user && (
             <Card sx={{ boxShadow: 20 }}>

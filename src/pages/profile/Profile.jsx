@@ -27,6 +27,7 @@ import {
   IconButton,
   Chip,
   Tooltip,
+  Link,
 } from "@mui/material";
 
 // components
@@ -161,7 +162,22 @@ export function Profile() {
               <JobList />
 
               <Card sx={{ boxShadow: 20 }}>
-                <CardHeader title={"Details"} />
+                <CardHeader
+                  title={"Details"}
+                  subheader={
+                    <Typography variant="body2" sx={{ color: "#637381" }}>
+                      We use Gravatar for profile pictures. Change it at
+                      <Link
+                        href="https://gravatar.com/connect/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        sx={{ ml: 0.5 }}
+                      >
+                        gravatar.com
+                      </Link>
+                    </Typography>
+                  }
+                />
                 <CardContent>
                   {/* Form with user data pre filled */}
                   <Stack spacing={3}>
@@ -280,23 +296,48 @@ export function Profile() {
                             </TableCell>
                             <TableCell>{renderKey(key.key)}</TableCell>
                             <TableCell align="right">
-                              <IconButton
-                                color="error"
-                                aria-label="delete key"
-                                component="label"
-                                onClick={() => {
-                                  setUser({
-                                    ...user,
-                                    publicKeys: user.publicKeys.filter(
-                                      (k) => k.name !== key.name
-                                    ),
-                                  });
-
-                                  setChangeInKeys(true);
-                                }}
+                              <Stack
+                                direction="row"
+                                spacing={1}
+                                useFlexGap
+                                alignItems={"center"}
+                                justifyContent={"flex-end"}
                               >
-                                <Iconify icon="mdi:delete" />
-                              </IconButton>
+                                <IconButton
+                                  color="primary"
+                                  aria-label="edit key"
+                                  component="label"
+                                  onClick={() => {
+                                    setNewKey(key.key);
+                                    setNewKeyName(key.name);
+                                    setUser({
+                                      ...user,
+                                      publicKeys: user.publicKeys.filter(
+                                        (k) => k.name !== key.name
+                                      ),
+                                    });
+                                  }}
+                                >
+                                  <Iconify icon="mdi:pencil" />
+                                </IconButton>
+                                <IconButton
+                                  color="error"
+                                  aria-label="delete key"
+                                  component="label"
+                                  onClick={() => {
+                                    setUser({
+                                      ...user,
+                                      publicKeys: user.publicKeys.filter(
+                                        (k) => k.name !== key.name
+                                      ),
+                                    });
+
+                                    setChangeInKeys(true);
+                                  }}
+                                >
+                                  <Iconify icon="mdi:delete" />
+                                </IconButton>
+                              </Stack>
                             </TableCell>
                           </TableRow>
                         ))}

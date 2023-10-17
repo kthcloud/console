@@ -70,7 +70,7 @@ export default function Specs({ vm }) {
       const response = await createSnapshot(vm.id, name, keycloak.token);
       queueJob(response);
       enqueueSnackbar("Creating snapshot", {
-        variant: "success",
+        variant: "info",
       });
     } catch (error) {
       errorHandler(error).forEach((e) =>
@@ -90,7 +90,7 @@ export default function Specs({ vm }) {
       const response = await updateVM(vm.id, update, keycloak.token);
       queueJob(response);
       enqueueSnackbar("VM reverting to snapshot", {
-        variant: "success",
+        variant: "info",
       });
     } catch (error) {
       errorHandler(error).forEach((e) =>

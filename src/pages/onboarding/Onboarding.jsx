@@ -160,11 +160,11 @@ export const Onboarding = () => {
 
   const renderCardDirection = (id) => {
     if (lastAction === "next") {
-      if (id === lastDismissed) return "left";
-      return "right";
-    } else {
       if (id === lastDismissed) return "right";
       return "left";
+    } else {
+      if (id === lastDismissed) return "left";
+      return "right";
     }
   };
 
@@ -372,20 +372,14 @@ export const Onboarding = () => {
                           <OnboardingCard id={"deployments"}>
                             <Typography variant="body1" gutterBottom mb={3}>
                               Deployments are the most common resource type on
-                              kthcloud. They are automatically created and
-                              managed by kthcloud.
+                              kthcloud. They are perfect for running
+                              experiments, or hosting websites.
                             </Typography>
 
                             <Typography variant="body1" gutterBottom mb={3}>
-                              Deployments are perfect for running experiments,
-                              hosting websites or running your own cloud
-                              services.
-                            </Typography>
-
-                            <Typography variant="body1" gutterBottom mb={3}>
-                              All you need is a Docker image and a little bit of
-                              configuration. kthcloud will take care of the
-                              rest.
+                              All you need is a Docker image or a repo with a
+                              Dockerfile, and a little bit of configuration.
+                              kthcloud will take care of the rest.
                             </Typography>
                           </OnboardingCard>
                         </div>
@@ -421,9 +415,9 @@ export const Onboarding = () => {
                             </Typography>
 
                             <Typography variant="body1" gutterBottom mb={3}>
-                              Virtual machines are perfect for running
-                              experiments, hosting websites or running your own
-                              cloud services.
+                              Virtual machines are perfect for running machine
+                              learning models, databases and other more complex
+                              applications.
                             </Typography>
 
                             {user &&

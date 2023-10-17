@@ -85,7 +85,7 @@ export const DeploymentCommands = ({ deployment }) => {
         deployment.private === false && (
           <Button
             component={Link}
-            href={deployment.url}
+            href={deployment.customDomainUrl ? deployment.customDomainUrl : deployment.url}
             target="_blank"
             rel="noreferrer"
             underline="none"
@@ -101,7 +101,7 @@ export const DeploymentCommands = ({ deployment }) => {
         deployment.storageUrl !== "" && (
           <Button
             component={Link}
-            href={deployment.storageUrl}
+            href={`https://${deployment.storageUrl}`}
             target="_blank"
             rel="noreferrer"
             underline="none"

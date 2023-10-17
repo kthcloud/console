@@ -26,14 +26,31 @@ import RFC1035Input from "src/components/RFC1035Input";
 import { faker } from "@faker-js/faker";
 import { GHSelect } from "./GHSelect";
 import { errorHandler } from "src/utils/errorHandler";
+import useResource from "src/hooks/useResource";
+import ZoneSelector from "./ZoneSelector";
 
 export default function CreateDeployment({ finished }) {
-  const [cleaned, setCleaned] = useState("");
+  const [cleaned, _setCleaned] = useState("");
+  const setCleaned = (value) => {
+    if (rows.find((row) => row.name === value)) {
+      enqueueSnackbar("Name " + value + " already taken", {
+        variant: "error",
+      });
+      return;
+    }
+
+    _setCleaned(value);
+  };
+
   const { initialized, keycloak } = useKeycloak();
 
-  const [image, setImage] = useState("");
+  const { rows, user } = useResource();
 
-  const [envs, setEnvs] = useState([]);
+  const [selectedZone, setSelectedZone] = useState("");
+  const [image, setImage] = useState("");
+  const [domain, setDomain] = useState("");
+
+  const [envs, setEnvs] = useState([{ name: "PORT", value: "8080" }]);
   const [newEnvName, setNewEnvName] = useState("");
   const [newEnvValue, setNewEnvValue] = useState("");
 
@@ -55,13 +72,48 @@ export default function CreateDeployment({ finished }) {
 
   const handleCreate = async (stay) => {
     if (!initialized) return;
+
+    let newEnvs = envs;
+    // Apply unsaved ENVS
+    if (newEnvName && newEnvValue) {
+      newEnvs = [
+        ...envs,
+        {
+          name: newEnvName,
+          value: newEnvValue,
+        },
+      ];
+
+      setNewEnvName("");
+      setNewEnvValue("");
+    }
+
+    let newPersistent = persistent;
+    // Apply unsaved persitent
+    if (newPersistentName && newPersistentAppPath && newPersistentServerPath) {
+      newPersistent = [
+        ...persistent,
+        {
+          name: newPersistentName,
+          appPath: newPersistentAppPath,
+          serverPath: newPersistentServerPath,
+        },
+      ];
+
+      setNewPersistentName("");
+      setNewPersistentAppPath("");
+      setNewPersistentServerPath("");
+    }
+
     try {
       const job = await createDeployment(
         cleaned,
+        selectedZone,
         image,
-        envs,
+        domain,
+        newEnvs,
         repo,
-        persistent,
+        newPersistent,
         accessToken,
         keycloak.token
       );
@@ -108,6 +160,12 @@ export default function CreateDeployment({ finished }) {
         </CardContent>
       </Card>
 
+      <ZoneSelector
+        alignment={"deployment"}
+        selectedZone={selectedZone}
+        setSelectedZone={setSelectedZone}
+      />
+
       <Card sx={{ boxShadow: 20 }}>
         <CardHeader
           title={"Image"}
@@ -117,6 +175,7 @@ export default function CreateDeployment({ finished }) {
           <TextField
             label="Image"
             variant="outlined"
+            placeholder="mongo:latest"
             value={image}
             onChange={(e) => {
               setImage(e.target.value.trim());
@@ -125,6 +184,27 @@ export default function CreateDeployment({ finished }) {
           />
         </CardContent>
       </Card>
+
+      {user?.role?.permissions.includes("useCustomDomains") && (
+        <Card sx={{ boxShadow: 20 }}>
+          <CardHeader
+            title={"Custom Domain"}
+            subheader="Specify a custom domain. Add a CNAME record for this domain pointing to app.cloud.cbh.kth.se. If you are using Cloudflare or some other proxy service, disable the proxy so our DNS lookup resolves correctly. You can reenable the proxy after the deployment is created."
+          />
+          <CardContent>
+            <TextField
+              label="Domain"
+              variant="outlined"
+              value={domain}
+              placeholder="example.com"
+              onChange={(e) => {
+                setDomain(e.target.value.trim());
+              }}
+              fullWidth
+            />
+          </CardContent>
+        </Card>
+      )}
 
       {image === "" && (
         <GHSelect
@@ -137,7 +217,7 @@ export default function CreateDeployment({ finished }) {
         <CardHeader
           title={"Set environment variables"}
           subheader={
-            "Environment variables are accessible from inside your deployment and can be used to configure your application, store secrets, and more"
+            "Environment variables are accessible from inside your deployment and can be used to configure your application, store secrets, and more. Traffic will be sent to the port specified in the PORT environment variable. Change its value to the port your app is listening to"
           }
         />
         <CardContent>
@@ -165,16 +245,41 @@ export default function CreateDeployment({ finished }) {
                       <b style={{ fontFamily: "monospace" }}>{env.value}</b>
                     </TableCell>
                     <TableCell align="right">
-                      <IconButton
-                        color="error"
-                        aria-label="delete env"
-                        component="label"
-                        onClick={() =>
-                          setEnvs(envs.filter((item) => item.name !== env.name))
-                        }
+                      <Stack
+                        direction="row"
+                        spacing={1}
+                        useFlexGap
+                        alignItems={"center"}
+                        justifyContent={"flex-end"}
                       >
-                        <Iconify icon="mdi:delete" />
-                      </IconButton>
+                        <IconButton
+                          color="primary"
+                          aria-label="edit env"
+                          component="label"
+                          onClick={() => {
+                            setNewEnvName(env.name);
+                            setNewEnvValue(env.value);
+                            setEnvs(
+                              envs.filter((item) => item.name !== env.name)
+                            );
+                          }}
+                        >
+                          <Iconify icon="mdi:pencil" />
+                        </IconButton>
+
+                        <IconButton
+                          color="error"
+                          aria-label="delete env"
+                          component="label"
+                          onClick={() =>
+                            setEnvs(
+                              envs.filter((item) => item.name !== env.name)
+                            )
+                          }
+                        >
+                          <Iconify icon="mdi:delete" />
+                        </IconButton>
+                      </Stack>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -289,20 +394,48 @@ export default function CreateDeployment({ finished }) {
                         </b>
                       </TableCell>
                       <TableCell align="right">
-                        <IconButton
-                          color="error"
-                          aria-label="delete env"
-                          component="label"
-                          onClick={() =>
-                            setPersistent(
-                              persistent.filter(
-                                (item) => item.name !== persistentRecord.name
-                              )
-                            )
-                          }
+                        <Stack
+                          direction="row"
+                          spacing={1}
+                          useFlexGap
+                          alignItems={"center"}
+                          justifyContent={"flex-end"}
                         >
-                          <Iconify icon="mdi:delete" />
-                        </IconButton>
+                          <IconButton
+                            color="primary"
+                            aria-label="edit persistent record"
+                            component="label"
+                            onClick={() => {
+                              setNewPersistentName(persistentRecord.name);
+                              setNewPersistentAppPath(persistentRecord.appPath);
+                              setNewPersistentServerPath(
+                                persistentRecord.serverPath
+                              );
+
+                              setPersistent(
+                                persistent.filter(
+                                  (item) => item.name !== persistentRecord.name
+                                )
+                              );
+                            }}
+                          >
+                            <Iconify icon="mdi:pencil" />
+                          </IconButton>
+                          <IconButton
+                            color="error"
+                            aria-label="delete env"
+                            component="label"
+                            onClick={() =>
+                              setPersistent(
+                                persistent.filter(
+                                  (item) => item.name !== persistentRecord.name
+                                )
+                              )
+                            }
+                          >
+                            <Iconify icon="mdi:delete" />
+                          </IconButton>
+                        </Stack>
                       </TableCell>
                     </TableRow>
                   ))}
