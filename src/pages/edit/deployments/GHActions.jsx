@@ -165,12 +165,10 @@ const GHActions = ({ resource }) => {
                 }}
                 boxShadow={10}
               >
-                <Typography variant="h6">
-                  Danger zone! These secrets are sensitive and should not be
-                  shared.
-                </Typography>
+                <Typography variant="h6">Danger zone</Typography>
                 <Typography variant="body2">
-                  Add these secrets to your GitHub repository:
+                  These secrets are sensitive and should not be public. Add
+                  them to your GitHub repository as secrets
                 </Typography>
                 {secrets.map((secret) => (
                   <Typography
