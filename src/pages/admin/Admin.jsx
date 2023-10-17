@@ -30,6 +30,7 @@ import Page from "src/components/Page";
 import useInterval from "src/hooks/useInterval";
 import useResource from "src/hooks/useResource";
 import { errorHandler } from "src/utils/errorHandler";
+import { hashGPUId } from "src/utils/helpers";
 
 export const Admin = () => {
   // ==================================================
@@ -293,11 +294,11 @@ export const Admin = () => {
                     "Loading..."
                   ) : (
                     <span>
-                      Last load:
+                      RTT:
                       <span style={{ fontFamily: "monospace" }}>
                         {" " + lastRefreshRtt + " "}
                       </span>
-                      RTT:
+                      Last load:
                       <span style={{ fontFamily: "monospace" }}>
                         {" " + timeDiffSinceLastRefresh}
                       </span>
@@ -519,7 +520,9 @@ export const Admin = () => {
                               {vm.gpu && (
                                 <Stack direction={"column"}>
                                   <Typography variant="caption">
-                                    {decode(vm.gpu.id)}
+                                    {`${decode(vm.gpu.id)} ${hashGPUId(
+                                      vm.gpu.id
+                                    )}`}
                                   </Typography>
                                   <Typography variant="caption">
                                     {vm.gpu.leaseEnd}
@@ -737,7 +740,9 @@ export const Admin = () => {
                       <TableBody>
                         {gpus.map((gpu) => (
                           <TableRow key={gpu.id}>
-                            <TableCell>{decode(gpu.id)}</TableCell>
+                            <TableCell>
+                              {`${decode(gpu.id)} ${hashGPUId(gpu.id)}`}
+                            </TableCell>
                             <TableCell>{gpu.name}</TableCell>
                             <TableCell>
                               {gpu.lease &&
