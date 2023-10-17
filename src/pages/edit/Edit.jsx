@@ -42,6 +42,7 @@ import { getReasonPhrase } from "http-status-codes";
 import StorageManager from "./deployments/StorageManager";
 import { ImageManager } from "./deployments/ImageManager";
 import { DomainManager } from "./deployments/DomainManager";
+import ProxyManager from "./vms/ProxyManager";
 
 export function Edit() {
   const { initialized } = useKeycloak();
@@ -173,6 +174,8 @@ export function Edit() {
               {resource.type === "vm" && <SnapshotManager vm={resource} />}
 
               {resource.type === "vm" && <PortManager vm={resource} />}
+
+              {resource.type === "vm" && <ProxyManager vm={resource} />}
 
               {resource.type === "vm" && <Specs vm={resource} />}
 
