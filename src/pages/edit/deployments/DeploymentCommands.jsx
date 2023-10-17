@@ -101,7 +101,7 @@ export const DeploymentCommands = ({ deployment }) => {
         deployment.storageUrl !== "" && (
           <Button
             component={Link}
-            href={deployment.storageUrl}
+            href={`https://${deployment.storageUrl}`}
             target="_blank"
             rel="noreferrer"
             underline="none"
