@@ -9,14 +9,26 @@ import ThemeProvider from "./theme";
 import ScrollToTop from "./components/ScrollToTop";
 import { BaseOptionChartStyle } from "./components/chart/BaseOptionChart";
 import { ResourceContextProvider } from "./contexts/ResourceContext";
-import { SnackbarProvider } from "notistack";
+import { SnackbarProvider, closeSnackbar } from "notistack";
+import { IconButton } from "@mui/material";
+import Iconify from "./components/Iconify";
 // ----------------------------------------------------------------------
 
 export default function App() {
   return (
     <ReactKeycloakProvider authClient={keycloak}>
       <ResourceContextProvider>
-        <SnackbarProvider maxSnack={10}>
+        <SnackbarProvider
+          maxSnack={5}
+          anchorOrigin={{ vertical: "top", horizontal: "left" }}
+          action={(snack) => (
+            <IconButton onClick={() => closeSnackbar(snack)} color="inherit">
+              <Iconify icon="material-symbols:close" />
+            </IconButton>
+          )}
+          dense
+          preventDuplicate
+        >
           <ThemeProvider>
             <ScrollToTop />
             <BaseOptionChartStyle />
