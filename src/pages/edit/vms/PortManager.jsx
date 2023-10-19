@@ -40,6 +40,7 @@ export default function PortManager({ vm }) {
   const { initialized, keycloak } = useKeycloak();
   const [loading, setLoading] = useState(false);
   const [publicIP, setPublicIP] = useState("");
+  const [deleting, setDeleting] = useState([]);
 
   const isSamePort = (p1, p2) => {
     if (p1.internal !== p2.internal) return false;
@@ -53,19 +54,14 @@ export default function PortManager({ vm }) {
     if (!vm.ports) return;
     if (loading) return;
 
-    let loadingPorts = ports.filter((p) => !p.externalPort);
-    loadingPorts = loadingPorts.filter(
-      (p) => !vm.ports.find((p2) => isSamePort(p, p2))
-    );
-
-    let newPorts = Array.from(vm.ports).concat(loadingPorts);
-
-    setPorts(newPorts);
-
-    loadPublicIP();
+    setPorts(vm.ports);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [vm]);
+
+  useEffect(() => {
+    loadPublicIP();
+  }, []);
 
   const loadPublicIP = async () => {
     const res = await fetch(
@@ -109,6 +105,8 @@ export default function PortManager({ vm }) {
         return item;
       })
     );
+
+    setDeleting([...deleting, port.name]);
 
     let newPorts = ports.filter((item) => !isSamePort(item, port));
 
