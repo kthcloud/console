@@ -1,4 +1,7 @@
 import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
   Button,
   Card,
   CardContent,
@@ -8,6 +11,7 @@ import {
   DialogContent,
   DialogTitle,
   IconButton,
+  Link,
   MenuItem,
   Select,
   Stack,
@@ -28,6 +32,7 @@ import Iconify from "src/components/Iconify";
 import RFC1035Input from "src/components/RFC1035Input";
 import useResource from "src/hooks/useResource";
 import { errorHandler } from "src/utils/errorHandler";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 const ProxyManager = ({ vm }) => {
   const { initialized, keycloak } = useKeycloak();
@@ -35,19 +40,34 @@ const ProxyManager = ({ vm }) => {
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [proxies, setProxies] = useState([]);
   const [loading, setLoading] = useState(false);
-  const { queueJob } = useResource();
-  const [selectedPort, setSelectedPort] = useState(
-    vm?.ports?.length > 0 ? vm?.ports[0]?.port : ""
-  );
+  const { queueJob, user } = useResource();
+  const [expanded, setExpanded] = useState(false);
+  const [ports, setPorts] = useState([]);
+  const [deleting, setDeleting] = useState([]);
+  const [editing, setEditing] = useState({});
+
+  const [selectedPort, setSelectedPort] = useState("");
 
   useEffect(() => {
+    let tcpPorts = vm.ports.filter((port) => port.protocol === "tcp");
+
     let proxies = [];
-    vm.ports.forEach((port) => {
+    tcpPorts.forEach((port) => {
       if (port.httpProxy) {
+        port.httpProxy.port = port.port;
         proxies.push(port.httpProxy);
       }
     });
     setProxies(proxies);
+    setPorts(tcpPorts);
+    if (selectedPort === "" && tcpPorts.length > 0)
+      setSelectedPort(tcpPorts[0].port);
+
+    setDeleting(
+      deleting.filter((p) => tcpPorts.find((port) => port.name === p.name))
+    );
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [vm]);
 
   const handleCreate = async () => {
@@ -69,7 +89,9 @@ const ProxyManager = ({ vm }) => {
       const res = await updateVM(vm.id, { ports: portsList }, keycloak.token);
       queueJob(res);
 
-      enqueueSnackbar(`Creating proxy ${newProxy.name}...`, { variant: "info" });
+      enqueueSnackbar(`Creating proxy ${newProxy.name}...`, {
+        variant: "info",
+      });
 
       setCreateDialogOpen(false);
       setNewProxy({ name: "", customDomain: "" });
@@ -84,6 +106,8 @@ const ProxyManager = ({ vm }) => {
 
   const handleDelete = async (proxy) => {
     if (!initialized) return;
+
+    setDeleting([...deleting, proxy.name]);
 
     let portsList = vm.ports;
 
@@ -117,59 +141,85 @@ const ProxyManager = ({ vm }) => {
         }
       />
       <CardContent>
-        {vm.ports && (
+        {ports && (
           <Dialog
             open={createDialogOpen}
             onClose={() => setCreateDialogOpen(false)}
           >
-            <DialogTitle>New proxy</DialogTitle>
+            <DialogTitle>
+              {!editing ? "New proxy" : `Editing ${editing.name}`}
+            </DialogTitle>
             <DialogContent>
               <Stack
                 direction="column"
-                spacing={3}
                 alignItems={"flex-start"}
                 useFlexGap
+                spacing={5}
               >
-                <Typography variant="body1">Select port to proxy to</Typography>
-                <Select
-                  value={selectedPort}
-                  onChange={(e) => setSelectedPort(e.target.value)}
-                >
-                  {vm.ports.map((port) => (
-                    <MenuItem value={port.port} key={port.port}>
-                      {port.name} ({port.protocol.toUpperCase()}:{port.port})
-                    </MenuItem>
-                  ))}
-                </Select>
+                <Stack spacing={1}>
+                  <Typography variant="body1">
+                    Select port to proxy to
+                  </Typography>
+                  <Select
+                    value={selectedPort}
+                    onChange={(e) => setSelectedPort(e.target.value)}
+                  >
+                    {ports.map((port) => (
+                      <MenuItem value={port.port} key={port.port}>
+                        {port.name} ({port.protocol.toUpperCase()}:{port.port})
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </Stack>
 
-                <br />
+                <Stack>
+                  {!editing && (
+                    <>
+                      <Typography variant="body1">Name</Typography>
+                      <RFC1035Input
+                        label="Name"
+                        variant="standard"
+                        callToAction="Proxy will have name: "
+                        cleaned={newProxy.name}
+                        setCleaned={(val) =>
+                          setNewProxy({ ...newProxy, name: val })
+                        }
+                      />
+                    </>
+                  )}
+                </Stack>
 
-                <Typography variant="body1">
-                  Name (will be used in URL unless custom domain is set)
-                </Typography>
-                <RFC1035Input
-                  label="Name"
-                  variant="standard"
-                  callToAction="Proxy will have name: "
-                  cleaned={newProxy.name}
-                  setCleaned={(val) => setNewProxy({ ...newProxy, name: val })}
-                />
-
-                <br />
-
-                <Typography variant="body1">
-                  Custom domain (must be pointed to app.cloud.cbh.kth.se with
-                  CNAME)
-                </Typography>
-                <TextField
-                  label="Custom domain (optional)"
-                  variant="standard"
-                  fullWidth
-                  value={newProxy.customDomain}
-                  onChange={(e) =>
-                    setNewProxy({ ...newProxy, customDomain: e.target.value })
-                  }
-                />
+                {user?.role?.permissions?.includes("useCustomDomains") && (
+                  <Accordion
+                    expanded={expanded}
+                    onChange={() => setExpanded(!expanded)}
+                  >
+                    <AccordionSummary
+                      expandIcon={<ExpandMoreIcon />}
+                      aria-controls="panel1bh-content"
+                      id="panel1bh-header"
+                    >
+                      <Typography>Custom domain</Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      <Typography variant="body1">
+                        You need a CNAME record to app.cloud.cbh.kth.se
+                      </Typography>
+                      <TextField
+                        label="Custom domain (optional)"
+                        variant="standard"
+                        fullWidth
+                        value={newProxy.customDomain ? newProxy.customDomain : ""}
+                        onChange={(e) => {
+                          setNewProxy({
+                            ...newProxy,
+                            customDomain: e.target.value,
+                          });
+                        }}
+                      />
+                    </AccordionDetails>
+                  </Accordion>
+                )}
               </Stack>
             </DialogContent>
             <DialogActions>
@@ -210,45 +260,64 @@ const ProxyManager = ({ vm }) => {
                 <TableBody>
                   {proxies.map((proxy, index) => (
                     <TableRow key={"proxy" + index}>
-                      <TableCell>{proxy.name}</TableCell>
-                      <TableCell>{proxy.port}</TableCell>
-                      <TableCell>
-                        {proxy.customDomain && proxy.customDomainUrl
-                          ? proxy.customDomainUrl
-                          : proxy.url}
-                      </TableCell>
-                      <TableCell align="right">
-                        <Stack
-                          direction="row"
-                          spacing={1}
-                          useFlexGap
-                          alignItems={"center"}
-                          justifyContent={"flex-end"}
-                        >
-                          <IconButton
-                            color="primary"
-                            aria-label="edit proxy"
-                            component="label"
-                            disabled={loading}
-                            onClick={() => {
-                              setNewProxy(proxy);
-                              setSelectedPort(proxy.port);
-                              setCreateDialogOpen(true);
-                            }}
-                          >
-                            <Iconify icon="mdi:pencil" />
-                          </IconButton>
-                          <IconButton
-                            color="error"
-                            aria-label="delete proxy"
-                            component="label"
-                            disabled={loading}
-                            onClick={() => handleDelete(proxy)}
-                          >
-                            <Iconify icon="mdi:delete" />
-                          </IconButton>
-                        </Stack>
-                      </TableCell>
+                      {!deleting.includes(proxy.name) ? (
+                        <>
+                          <TableCell>{proxy.name}</TableCell>
+                          <TableCell>{proxy.port}</TableCell>
+                          <TableCell>
+                            <Link
+                              href={
+                                proxy.customDomain && proxy.customDomainUrl
+                                  ? proxy.customDomainUrl
+                                  : proxy.url
+                              }
+                            >
+                              {proxy.customDomain && proxy.customDomainUrl
+                                ? proxy.customDomainUrl
+                                : proxy.url}
+                            </Link>
+                          </TableCell>
+                          <TableCell align="right">
+                            <Stack
+                              direction="row"
+                              spacing={1}
+                              useFlexGap
+                              alignItems={"center"}
+                              justifyContent={"flex-end"}
+                            >
+                              <IconButton
+                                color="primary"
+                                aria-label="edit proxy"
+                                component="label"
+                                disabled={loading}
+                                onClick={() => {
+                                  setNewProxy(proxy);
+                                  setEditing(proxy);
+                                  setSelectedPort(proxy.port);
+                                  setCreateDialogOpen(true);
+                                  setExpanded(Boolean(proxy.customDomain));
+                                }}
+                              >
+                                <Iconify icon="mdi:pencil" />
+                              </IconButton>
+                              <IconButton
+                                color="error"
+                                aria-label="delete proxy"
+                                component="label"
+                                disabled={loading}
+                                onClick={() => handleDelete(proxy)}
+                              >
+                                <Iconify icon="mdi:delete" />
+                              </IconButton>
+                            </Stack>
+                          </TableCell>
+                        </>
+                      ) : (
+                        <>
+                          <TableCell>{proxy.name}</TableCell>
+                          <TableCell>Deleting...</TableCell>
+                        </>
+                      )}
                     </TableRow>
                   ))}
                 </TableBody>
@@ -259,14 +328,19 @@ const ProxyManager = ({ vm }) => {
             <Button
               variant="contained"
               pl={3}
-              onClick={() => setCreateDialogOpen(true)}
+              onClick={() => {
+                setEditing(null);
+                setNewProxy({ name: "", customDomain: "" });
+                setExpanded(false);
+                setCreateDialogOpen(true);
+              }}
               disabled={vm?.ports?.length === 0}
             >
               Create proxy
             </Button>
             {vm?.ports?.length === 0 && (
               <Typography variant="body2">
-                Create a port forwarding rule first
+                Create a TCP port forwarding rule first
               </Typography>
             )}
           </Stack>
