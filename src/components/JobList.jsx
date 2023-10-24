@@ -5,7 +5,6 @@ import {
   CircularProgress,
   Stack,
   Toolbar,
-  alpha,
 } from "@mui/material";
 import { sentenceCase } from "change-case";
 import Iconify from "./Iconify";
