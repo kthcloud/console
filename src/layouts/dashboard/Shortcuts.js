@@ -3,6 +3,7 @@ import Iconify from "../../components/Iconify";
 import { useKeycloak } from "@react-keycloak/web";
 import { Link } from "react-router-dom";
 import HelpButton from "./HelpButton";
+import LocaleSwitcher from "./LocaleSwitcher";
 import useResource from "src/hooks/useResource";
 import { useEffect, useState } from "react";
 import { MD5 } from "crypto-js";
@@ -45,6 +46,7 @@ export default function Shortcuts() {
   return (
     <>
       <HelpButton />
+      <LocaleSwitcher />
 
       {initialized && keycloak.authenticated && (
         <>

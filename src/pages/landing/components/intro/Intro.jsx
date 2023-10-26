@@ -10,9 +10,11 @@ import {
 import "./intro.css";
 import { Cloud } from "./Cloud";
 import { useKeycloak } from "@react-keycloak/web";
+import { useTranslation } from "react-i18next";
 
 const Intro = () => {
   const { keycloak, initialized } = useKeycloak();
+  const { t } = useTranslation();
 
   return (
     <Box sx={{ overflow: "hidden" }}>
@@ -65,18 +67,15 @@ const Intro = () => {
                   textAlign: { xs: "center", md: "left" },
                 }}
               >
-                Welcome to <strong>kthcloud</strong>
+                {t("landing-intro-header")} <strong>kthcloud</strong>
               </Typography>
 
               <Typography variant="subtitle1" sx={{ marginBottom: "40px" }}>
-                We offer a cutting-edge private cloud infrastructure tailored to
-                meet the unique needs of KTH's bright minds. Seamlessly run
-                experiments, collaborate on groundbreaking research, and harness
-                the power of cloud technology to drive innovation.
+                {t("landing-intro-body")}
               </Typography>
               <Stack direction="row" spacing={2}>
                 <Typography variant="subtitle2" sx={{ marginBottom: "40px" }}>
-                  Register today free of charge - all you need is a KTH account.
+                  {t("landing-intro-footer")}
                 </Typography>
 
                 <Button
@@ -89,7 +88,7 @@ const Intro = () => {
                     });
                   }}
                 >
-                  Get started
+                  {t("button-get-started")}
                 </Button>
               </Stack>
             </Grid>
