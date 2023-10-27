@@ -2,6 +2,7 @@ import { Button, Stack } from "@mui/material";
 import { useKeycloak } from "@react-keycloak/web";
 import { sentenceCase } from "change-case";
 import { enqueueSnackbar } from "notistack";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { deleteVM, applyCommand } from "src/api/deploy/vms";
 import ConfirmButton from "src/components/ConfirmButton";
@@ -10,6 +11,8 @@ import useResource from "src/hooks/useResource";
 import { errorHandler } from "src/utils/errorHandler";
 
 export const VMCommands = ({ vm }) => {
+  const { t } = useTranslation();
+
   const { initialized, keycloak } = useKeycloak();
   const { queueJob } = useResource();
   const navigate = useNavigate();
@@ -22,12 +25,12 @@ export const VMCommands = ({ vm }) => {
 
       if (res) {
         queueJob(res);
-        enqueueSnackbar("VM deleting... ", { variant: "info" });
+        enqueueSnackbar(t("vm-deleting"), { variant: "info" });
         navigate("/deploy");
       }
     } catch (error) {
       errorHandler(error).forEach((e) =>
-        enqueueSnackbar("Could not delete vm: " + e, {
+        enqueueSnackbar(t("error-deleting-vm") + e, {
           variant: "error",
         })
       );
@@ -39,12 +42,12 @@ export const VMCommands = ({ vm }) => {
 
     try {
       await applyCommand(vm.id, command, keycloak.token);
-      enqueueSnackbar(sentenceCase(command) + " VM in progress... ", {
+      enqueueSnackbar(sentenceCase(command) + t("vm-in-progress"), {
         variant: "info",
       });
     } catch (error) {
       errorHandler(error).forEach((e) =>
-        enqueueSnackbar("Could execute command: " + e, {
+        enqueueSnackbar(t("could-not-execute-command") + e, {
           variant: "error",
         })
       );
@@ -63,22 +66,20 @@ export const VMCommands = ({ vm }) => {
         <Button
           onClick={() => executeCommand("stop")}
           variant="contained"
-          to="#"
           startIcon={<Iconify icon="mdi:shutdown" />}
           color="warning"
         >
-          Stop
+          {t("stop")}
         </Button>
       )}
       {vm.status === "resourceRunning" && (
         <Button
           onClick={() => executeCommand("reboot")}
           variant="contained"
-          to="#"
           startIcon={<Iconify icon="mdi:restart" />}
           color="warning"
         >
-          Reboot
+          {t("reboot")}
         </Button>
       )}
       {!(
@@ -87,17 +88,16 @@ export const VMCommands = ({ vm }) => {
         <Button
           onClick={() => executeCommand("start")}
           variant="contained"
-          to="#"
           startIcon={<Iconify icon="mdi:shutdown" />}
           color="warning"
         >
-          Start
+          {t("start")}
         </Button>
       )}
 
       <ConfirmButton
-        action="Delete"
-        actionText={"delete " + vm.name}
+        action={t("button-delete")}
+        actionText={t("button-delete").toLowerCase() + " " + vm.name}
         callback={doDelete}
         props={{
           color: "error",

@@ -12,6 +12,7 @@ import { ResourceContextProvider } from "./contexts/ResourceContext";
 import { SnackbarProvider, closeSnackbar } from "notistack";
 import { IconButton } from "@mui/material";
 import Iconify from "./components/Iconify";
+
 // ----------------------------------------------------------------------
 
 export default function App() {
@@ -20,7 +21,8 @@ export default function App() {
       <ResourceContextProvider>
         <SnackbarProvider
           maxSnack={5}
-          anchorOrigin={{ vertical: "top", horizontal: "left" }}
+          anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+          autoHideDuration={3000}
           action={(snack) => (
             <IconButton onClick={() => closeSnackbar(snack)} color="inherit">
               <Iconify icon="material-symbols:close" />

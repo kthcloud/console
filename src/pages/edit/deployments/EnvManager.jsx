@@ -23,8 +23,10 @@ import { enqueueSnackbar } from "notistack";
 import useResource from "src/hooks/useResource";
 import { useKeycloak } from "@react-keycloak/web";
 import { errorHandler } from "src/utils/errorHandler";
+import { useTranslation } from "react-i18next";
 
 export default function EnvManager({ deployment }) {
+  const { t } = useTranslation();
   const [envs, setEnvs] = useState([]);
   const [newEnvName, setNewEnvName] = useState("");
   const [newEnvValue, setNewEnvValue] = useState("");
@@ -53,12 +55,12 @@ export default function EnvManager({ deployment }) {
         keycloak.token
       );
       queueJob(res);
-      enqueueSnackbar("Environment variables saving...", {
+      enqueueSnackbar(t("environment-variables-saving"), {
         variant: "info",
       });
     } catch (error) {
       errorHandler(error).forEach((e) =>
-        enqueueSnackbar("Could not update environment variables: " + e, {
+        enqueueSnackbar(t("could-not-save-environment-variables") + e, {
           variant: "error",
         })
       );
@@ -70,10 +72,8 @@ export default function EnvManager({ deployment }) {
   return (
     <Card sx={{ boxShadow: 20 }}>
       <CardHeader
-        title={"Environment variables"}
-        subheader={
-          "These values will be accessible from inside your application"
-        }
+        title={t("create-deployment-env")}
+        subheader={t("create-deployment-env-subheader")}
       />
       <CardContent>
         {loading ? (
@@ -83,9 +83,9 @@ export default function EnvManager({ deployment }) {
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
                 <TableRow>
-                  <TableCell>Name</TableCell>
-                  <TableCell>Value</TableCell>
-                  <TableCell align="right">Actions</TableCell>
+                  <TableCell>{t("admin-name")}</TableCell>
+                  <TableCell>{t("create-deployment-env-value")}</TableCell>
+                  <TableCell align="right">{t("admin-actions")}</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -150,7 +150,7 @@ export default function EnvManager({ deployment }) {
                 >
                   <TableCell component="th" scope="row">
                     <TextField
-                      label="Name"
+                      label={t("admin-name")}
                       variant="standard"
                       value={newEnvName}
                       onChange={(e) => {
@@ -160,7 +160,7 @@ export default function EnvManager({ deployment }) {
                   </TableCell>
                   <TableCell>
                     <TextField
-                      label="Value"
+                      label={t("create-deployment-env-value")}
                       variant="standard"
                       value={newEnvValue}
                       onChange={(e) => {

@@ -4,8 +4,6 @@ import {
   Typography,
   Stack,
   Chip,
-  Breadcrumbs,
-  Link,
   Toolbar,
   Box,
   Button,
@@ -16,7 +14,7 @@ import {
 import { useState, useEffect } from "react";
 import { useKeycloak } from "@react-keycloak/web";
 import useResource from "src/hooks/useResource";
-import { useParams, useNavigate, Link as RouterLink } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 // utils
 import { sentenceCase } from "change-case";
@@ -43,8 +41,10 @@ import StorageManager from "./deployments/StorageManager";
 import { ImageManager } from "./deployments/ImageManager";
 import { DomainManager } from "./deployments/DomainManager";
 import ProxyManager from "./vms/ProxyManager";
+import { useTranslation } from "react-i18next";
 
 export function Edit() {
+  const { t } = useTranslation();
   const { initialized } = useKeycloak();
   const [resource, setResource] = useState(null);
   const [envs, setEnvs] = useState([]);
@@ -81,7 +81,7 @@ export function Edit() {
       {!(resource && initialLoad && initialized) ? (
         <LoadingPage />
       ) : (
-        <Page title={"Editing " + resource.name}>
+        <Page title={t("editing") + " " + resource.name}>
           {user.id !== resource.ownerId && (
             <AppBar
               position="fixed"
@@ -93,7 +93,7 @@ export function Edit() {
             >
               <Toolbar>
                 <Typography variant="h4">
-                  You are impersonating user {resource.ownerId}
+                  {t("you-are-impersonating-user") + " " + resource.ownerId}
                 </Typography>
                 <Box sx={{ flexGrow: 1 }} />
                 <Stack direction="row" alignItems={"center"} spacing={3}>
@@ -102,7 +102,7 @@ export function Edit() {
                     onClick={() => navigate("/admin")}
                     style={{ color: "white", borderColor: "white" }}
                   >
-                    Back to admin panel
+                    {t("back-to-admin-panel")}
                   </Button>
                 </Stack>
               </Toolbar>
@@ -111,26 +111,6 @@ export function Edit() {
 
           <Container>
             <Stack spacing={3}>
-              <Breadcrumbs aria-label="breadcrumb">
-                <Link
-                  component={RouterLink}
-                  underline="hover"
-                  color="inherit"
-                  to="/"
-                >
-                  cbhcloud
-                </Link>
-                <Link
-                  underline="hover"
-                  color="inherit"
-                  to="/deploy"
-                  component={RouterLink}
-                >
-                  Deploy
-                </Link>
-                <span>{resource.name}</span>
-              </Breadcrumbs>
-
               <Stack
                 direction="row"
                 flexWrap={"wrap"}
@@ -139,7 +119,10 @@ export function Edit() {
                 spacing={3}
                 useFlexGap={true}
               >
-                <Typography variant="h4">{resource.name}</Typography>
+                <Typography variant="h4">
+                  <span style={{ fontWeight: 200 }}>{t("editing") + " "}</span>{" "}
+                  {resource.name}
+                </Typography>
                 {resource.status && (
                   <Chip
                     label={sentenceCase(

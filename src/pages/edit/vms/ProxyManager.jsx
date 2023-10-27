@@ -33,8 +33,10 @@ import RFC1035Input from "src/components/RFC1035Input";
 import useResource from "src/hooks/useResource";
 import { errorHandler } from "src/utils/errorHandler";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { useTranslation } from "react-i18next";
 
 const ProxyManager = ({ vm }) => {
+  const { t } = useTranslation();
   const { initialized, keycloak } = useKeycloak();
   const [newProxy, setNewProxy] = useState({ name: "", customDomain: "" });
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
@@ -89,7 +91,7 @@ const ProxyManager = ({ vm }) => {
       const res = await updateVM(vm.id, { ports: portsList }, keycloak.token);
       queueJob(res);
 
-      enqueueSnackbar(`Creating proxy ${newProxy.name}...`, {
+      enqueueSnackbar(`${t("creating-proxy")} ${newProxy.name}...`, {
         variant: "info",
       });
 
@@ -120,7 +122,9 @@ const ProxyManager = ({ vm }) => {
     try {
       const res = await updateVM(vm.id, { ports: portsList }, keycloak.token);
       queueJob(res);
-      enqueueSnackbar(`Deleting proxy ${proxy.name}...`, { variant: "info" });
+      enqueueSnackbar(`${t("deleting-proxy")} ${proxy.name}...`, {
+        variant: "info",
+      });
     } catch (err) {
       errorHandler(err).forEach((e) =>
         enqueueSnackbar(e, { variant: "error" })
@@ -134,9 +138,9 @@ const ProxyManager = ({ vm }) => {
         title="Proxies"
         subheader={
           <span>
-            Deploy a proxy to a port forwarded from your VM. <br />
-            This makes them accessible with a nice URL at port 80 instead of the
-            assigned external port.
+            {t("proxies-subheader-1")}
+            <br />
+            {t("proxies-subheader-2")}
           </span>
         }
       />
@@ -147,7 +151,7 @@ const ProxyManager = ({ vm }) => {
             onClose={() => setCreateDialogOpen(false)}
           >
             <DialogTitle>
-              {!editing ? "New proxy" : `Editing ${editing.name}`}
+              {!editing ? t("new-proxy") : `${t("editing")} ${editing.name}`}
             </DialogTitle>
             <DialogContent>
               <Stack
@@ -157,9 +161,7 @@ const ProxyManager = ({ vm }) => {
                 spacing={5}
               >
                 <Stack spacing={1}>
-                  <Typography variant="body1">
-                    Select port to proxy to
-                  </Typography>
+                  <Typography variant="body1">{t("select-port")}</Typography>
                   <Select
                     value={selectedPort}
                     onChange={(e) => setSelectedPort(e.target.value)}
@@ -175,11 +177,11 @@ const ProxyManager = ({ vm }) => {
                 <Stack>
                   {!editing && (
                     <>
-                      <Typography variant="body1">Name</Typography>
+                      <Typography variant="body1">{t("admin-name")}</Typography>
                       <RFC1035Input
-                        label="Name"
+                        label={t("admin-name")}
                         variant="standard"
-                        callToAction="Proxy will have name: "
+                        callToAction={t("admin-name-call-to-action")}
                         cleaned={newProxy.name}
                         setCleaned={(val) =>
                           setNewProxy({ ...newProxy, name: val })
@@ -199,17 +201,21 @@ const ProxyManager = ({ vm }) => {
                       aria-controls="panel1bh-content"
                       id="panel1bh-header"
                     >
-                      <Typography>Custom domain</Typography>
+                      <Typography>
+                        {t("create-deployment-custom-domain")}
+                      </Typography>
                     </AccordionSummary>
                     <AccordionDetails>
                       <Typography variant="body1">
-                        You need a CNAME record to app.cloud.cbh.kth.se
+                        {t("cname-record")}
                       </Typography>
                       <TextField
-                        label="Custom domain (optional)"
+                        label={t("custom-domain-optional")}
                         variant="standard"
                         fullWidth
-                        value={newProxy.customDomain ? newProxy.customDomain : ""}
+                        value={
+                          newProxy.customDomain ? newProxy.customDomain : ""
+                        }
                         onChange={(e) => {
                           setNewProxy({
                             ...newProxy,
@@ -228,14 +234,14 @@ const ProxyManager = ({ vm }) => {
                 onClick={() => setCreateDialogOpen(false)}
                 disabled={loading}
               >
-                Cancel
+                {t("cancel")}
               </Button>
               <Button
                 variant="contained"
                 onClick={handleCreate}
                 disabled={loading}
               >
-                Create
+                {t("deploy-proxy")}
               </Button>
             </DialogActions>
           </Dialog>
@@ -251,10 +257,10 @@ const ProxyManager = ({ vm }) => {
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell>Name</TableCell>
-                    <TableCell>Port</TableCell>
-                    <TableCell>URL</TableCell>
-                    <TableCell align="right">Actions</TableCell>
+                    <TableCell>{t("admin-name")}</TableCell>
+                    <TableCell>{t("internal-port")}</TableCell>
+                    <TableCell>{t("url")}</TableCell>
+                    <TableCell align="right">{t("admin-actions")}</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -315,7 +321,7 @@ const ProxyManager = ({ vm }) => {
                       ) : (
                         <>
                           <TableCell>{proxy.name}</TableCell>
-                          <TableCell>Deleting...</TableCell>
+                          <TableCell>{t("deleting")}</TableCell>
                         </>
                       )}
                     </TableRow>
@@ -336,12 +342,10 @@ const ProxyManager = ({ vm }) => {
               }}
               disabled={vm?.ports?.length === 0}
             >
-              Create proxy
+              {t("deploy-proxy")}
             </Button>
             {vm?.ports?.length === 0 && (
-              <Typography variant="body2">
-                Create a TCP port forwarding rule first
-              </Typography>
+              <Typography variant="body2">{t("tcp-first")}</Typography>
             )}
           </Stack>
         </Stack>

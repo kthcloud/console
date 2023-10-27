@@ -12,12 +12,15 @@ import {
 import { useKeycloak } from "@react-keycloak/web";
 import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { updateVM } from "src/api/deploy/vms";
 import Iconify from "src/components/Iconify";
 import useResource from "src/hooks/useResource";
 import { errorHandler } from "src/utils/errorHandler";
 
 export default function Specs({ vm }) {
+  const { t } = useTranslation();
+
   const [specs, setSpecs] = useState(null);
   const [editing, setEditing] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -62,18 +65,18 @@ export default function Specs({ vm }) {
     const value = parseInt(raw);
     if (!value) {
       setSpecs({ ...specs, cpuCores: "" });
-      setCpuError("Input a number");
+      setCpuError(t("create-vm-input-number"));
       return;
     }
 
     if (value > availableCPU) {
-      setCpuError("Max CPU cores available: " + availableCPU);
+      setCpuError(t("create-vm-max-cpu") + ": " + availableCPU);
       setSpecs({ ...specs, cpuCores: value });
       return;
     }
 
     if (value < 1) {
-      setCpuError("Minimum CPU cores: 1");
+      setCpuError(t("create-vm-minimum-cpu") + ": 1");
       setSpecs({ ...specs, cpuCores: value });
       return;
     }
@@ -86,18 +89,18 @@ export default function Specs({ vm }) {
     const value = parseInt(raw);
     if (!value) {
       setSpecs({ ...specs, ram: "" });
-      setRamError("Input a number");
+      setRamError(t("create-vm-input-number"));
       return;
     }
 
     if (value > availableRAM) {
-      setRamError("Max RAM available: " + availableRAM);
+      setRamError(t("create-vm-max-ram") + ": " + availableRAM);
       setSpecs({ ...specs, ram: value });
       return;
     }
 
     if (value < 4) {
-      setRamError("Minimum RAM: 4 GB");
+      setRamError(t("create-vm-minimum-ram") + ": 4 GB");
       setSpecs({ ...specs, ram: value });
       return;
     }
@@ -118,10 +121,10 @@ export default function Specs({ vm }) {
         keycloak.token
       );
       queueJob(res);
-      enqueueSnackbar("Specs saving...", { variant: "info" });
+      enqueueSnackbar(t("specs-saving"), { variant: "info" });
     } catch (error) {
       errorHandler(error).forEach((e) =>
-        enqueueSnackbar("Could not update specs: " + e, {
+        enqueueSnackbar(t("could-not-save-specs") + e, {
           variant: "error",
         })
       );
@@ -133,7 +136,7 @@ export default function Specs({ vm }) {
   if (!specs || loading || !user)
     return (
       <Card sx={{ boxShadow: 20 }}>
-        <CardHeader title={"Specs"} />
+        <CardHeader title={t("admin-specs")} />
         <CardContent>
           <CircularProgress />
         </CardContent>
@@ -147,8 +150,8 @@ export default function Specs({ vm }) {
       ) : (
         <Card sx={{ boxShadow: 20 }}>
           <CardHeader
-            title={"Specs"}
-            subheader={"Grow or shrink your VM to match your use case"}
+            title={t("admin-specs")}
+            subheader={t("specs-subheader")}
           />
           <CardContent>
             <Stack
@@ -163,7 +166,7 @@ export default function Specs({ vm }) {
                   icon={<Iconify icon="uil:processor" width={24} height={24} />}
                   label={
                     <span>
-                      CPU Cores
+                      {t("landing-hero-cpu")}
                       <b
                         style={{
                           fontFamily: "monospace",
@@ -177,7 +180,7 @@ export default function Specs({ vm }) {
                 />
               ) : (
                 <TextField
-                  label="Cores"
+                  label={t("landing-hero-cpu")}
                   id="cores"
                   value={specs.cpuCores}
                   onChange={(e) => calculateCPU(e.target.value)}
@@ -185,7 +188,9 @@ export default function Specs({ vm }) {
                   helperText={
                     cpuError
                       ? cpuError
-                      : "Number of CPU cores, 2-" + availableCPU
+                      : t("create-vm-number-of-cpu-cores") +
+                        ", 2-" +
+                        availableCPU
                   }
                   inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
                   error={cpuError ? true : false}
@@ -198,7 +203,7 @@ export default function Specs({ vm }) {
                   icon={<Iconify icon="bi:memory" width={24} height={24} />}
                   label={
                     <span>
-                      Memory
+                      {t("memory")}
                       <b
                         style={{
                           fontFamily: "monospace",
@@ -212,7 +217,7 @@ export default function Specs({ vm }) {
                 />
               ) : (
                 <TextField
-                  label="RAM"
+                  label={t("memory")}
                   id="ram"
                   value={specs.ram}
                   onChange={(e) => calculateRAM(e.target.value)}
@@ -220,7 +225,10 @@ export default function Specs({ vm }) {
                   helperText={
                     ramError
                       ? ramError
-                      : "Amount of RAM, 4-" + availableRAM + " GB"
+                      : t("create-vm-amount-of-ram") +
+                        ", 4-" +
+                        availableRAM +
+                        " GB"
                   }
                   inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
                   error={ramError ? true : false}
@@ -232,7 +240,7 @@ export default function Specs({ vm }) {
                 icon={<Iconify icon="mdi:harddisk" width={24} height={24} />}
                 label={
                   <span>
-                    Disk
+                    {t("create-vm-disk-size")}
                     <b
                       style={{
                         fontFamily: "monospace",
@@ -255,7 +263,7 @@ export default function Specs({ vm }) {
                 }
                 label={
                   <span>
-                    Network Speed
+                    {t("network-speed")}
                     <b
                       style={{
                         fontFamily: "monospace",
@@ -271,7 +279,11 @@ export default function Specs({ vm }) {
           </CardContent>
 
           <CardActions>
-            {!editing && <Button onClick={() => setEditing(true)}>Edit</Button>}
+            {!editing && (
+              <Button onClick={() => setEditing(true)}>
+                {t("button-edit")}
+              </Button>
+            )}
             {editing && (
               <Button
                 onClick={() => {
@@ -282,7 +294,7 @@ export default function Specs({ vm }) {
                 }}
                 color={"error"}
               >
-                Cancel
+                {t("cancel")}
               </Button>
             )}
             {editing && (
@@ -290,12 +302,12 @@ export default function Specs({ vm }) {
                 disabled={cpuError || ramError}
                 onClick={() => applyChanges()}
               >
-                Save
+                {t("button-save")}
               </Button>
             )}
           </CardActions>
         </Card>
-      )}{" "}
+      )}
     </>
   );
 }

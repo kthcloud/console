@@ -28,14 +28,20 @@ import { GHSelect } from "./GHSelect";
 import { errorHandler } from "src/utils/errorHandler";
 import useResource from "src/hooks/useResource";
 import ZoneSelector from "./ZoneSelector";
+import { useTranslation } from "react-i18next";
 
 export default function CreateDeployment({ finished }) {
   const [cleaned, _setCleaned] = useState("");
+  const { t } = useTranslation();
+
   const setCleaned = (value) => {
     if (rows.find((row) => row.name === value)) {
-      enqueueSnackbar("Name " + value + " already taken", {
-        variant: "error",
-      });
+      enqueueSnackbar(
+        t("admin-name") + " " + value + " " + t("create-already-taken"),
+        {
+          variant: "error",
+        }
+      );
       return;
     }
 
@@ -130,7 +136,7 @@ export default function CreateDeployment({ finished }) {
       }
     } catch (error) {
       errorHandler(error).forEach((e) =>
-        enqueueSnackbar("Error creating deployment: " + e, {
+        enqueueSnackbar(t("error-creating-deployment") + ": " + e, {
           variant: "error",
         })
       );
@@ -141,17 +147,15 @@ export default function CreateDeployment({ finished }) {
     <>
       <Card sx={{ boxShadow: 20 }}>
         <CardHeader
-          title={"Create Deployment"}
-          subheader={
-            "Choose a nice name for your deployment, as it will also be its subdomain"
-          }
+          title={t("create-deployment")}
+          subheader={t("create-deployment-subheader")}
         />
         <CardContent>
           <RFC1035Input
-            label={"Name"}
-            placeholder="name"
-            callToAction="Your deployment will be created with the name"
-            type="Deployment name"
+            label={t("admin-name")}
+            placeholder={t("admin-name")}
+            callToAction={t("create-deployment-name-warning")}
+            type={t("create-deployment-name")}
             variant="standard"
             cleaned={cleaned}
             setCleaned={setCleaned}
@@ -168,12 +172,12 @@ export default function CreateDeployment({ finished }) {
 
       <Card sx={{ boxShadow: 20 }}>
         <CardHeader
-          title={"Image"}
-          subheader="If you would like to use a prebuilt image, enter its name below. For example mongo, mongo:4.4 or quay.io/keycloak/keycloak"
+          title={t("create-deployment-image")}
+          subheader={t("create-deployment-image-subheader")}
         />
         <CardContent>
           <TextField
-            label="Image"
+            label={t("create-deployment-image")}
             variant="outlined"
             placeholder="mongo:latest"
             value={image}
@@ -188,15 +192,15 @@ export default function CreateDeployment({ finished }) {
       {user?.role?.permissions.includes("useCustomDomains") && (
         <Card sx={{ boxShadow: 20 }}>
           <CardHeader
-            title={"Custom Domain"}
-            subheader="Specify a custom domain. Add a CNAME record for this domain pointing to app.cloud.cbh.kth.se. If you are using Cloudflare or some other proxy service, disable the proxy so our DNS lookup resolves correctly. You can reenable the proxy after the deployment is created."
+            title={t("create-deployment-custom-domain")}
+            subheader={t("create-deployment-custom-domain-subheader")}
           />
           <CardContent>
             <TextField
-              label="Domain"
+              label={t("create-deployment-domain")}
               variant="outlined"
               value={domain}
-              placeholder="example.com"
+              placeholder={t("create-deployment-domain-example")}
               onChange={(e) => {
                 setDomain(e.target.value.trim());
               }}
@@ -215,19 +219,17 @@ export default function CreateDeployment({ finished }) {
       )}
       <Card sx={{ boxShadow: 20 }}>
         <CardHeader
-          title={"Set environment variables"}
-          subheader={
-            "Environment variables are accessible from inside your deployment and can be used to configure your application, store secrets, and more. Traffic will be sent to the port specified in the PORT environment variable. Change its value to the port your app is listening to"
-          }
+          title={t("create-deployment-env")}
+          subheader={t("create-deployment-env-subheader")}
         />
         <CardContent>
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
                 <TableRow>
-                  <TableCell>Variable</TableCell>
-                  <TableCell>Value</TableCell>
-                  <TableCell align="right">Action</TableCell>
+                  <TableCell>{t("create-deployment-env-key")}</TableCell>
+                  <TableCell>{t("create-deployment-env-value")}</TableCell>
+                  <TableCell align="right">{t("admin-actions")}</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -291,7 +293,7 @@ export default function CreateDeployment({ finished }) {
                 >
                   <TableCell component="th" scope="row">
                     <TextField
-                      label="Name"
+                      label={t("admin-name")}
                       variant="standard"
                       value={newEnvName}
                       onChange={(e) => {
@@ -301,7 +303,7 @@ export default function CreateDeployment({ finished }) {
                   </TableCell>
                   <TableCell>
                     <TextField
-                      label="Value"
+                      label={t("create-deployment-env-value")}
                       variant="standard"
                       value={newEnvValue}
                       onChange={(e) => {
@@ -313,7 +315,6 @@ export default function CreateDeployment({ finished }) {
                   <TableCell align="right">
                     <IconButton
                       color="primary"
-                      aria-label="upload key"
                       component="label"
                       disabled={!(newEnvName && newEnvValue)}
                       onClick={() => {
@@ -343,10 +344,8 @@ export default function CreateDeployment({ finished }) {
 
       <Card sx={{ boxShadow: 20 }}>
         <CardHeader
-          title={"Persistent storage"}
-          subheader={
-            "Persistent storage allows data to be stored and accessed across multiple deployments"
-          }
+          title={t("create-deployment-persistent")}
+          subheader={t("create-deployment-persistent-subheader")}
         />
         <CardContent>
           <FormControlLabel
@@ -357,17 +356,17 @@ export default function CreateDeployment({ finished }) {
                 inputProps={{ "aria-label": "controlled" }}
               />
             }
-            label="Persistent storage"
+            label={t("create-deployment-persistent")}
           />
           {usePersistent && (
             <TableContainer component={Paper}>
               <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableHead>
                   <TableRow>
-                    <TableCell>Name</TableCell>
-                    <TableCell>App path</TableCell>
-                    <TableCell>Storage path</TableCell>
-                    <TableCell align="right">Action</TableCell>
+                    <TableCell>{t("admin-name")}</TableCell>
+                    <TableCell>{t("create-deployment-app-path")}</TableCell>
+                    <TableCell>{t("create-deployment-storage-path")}</TableCell>
+                    <TableCell align="right">{t("admin-actions")}</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -447,7 +446,7 @@ export default function CreateDeployment({ finished }) {
                   >
                     <TableCell component="th" scope="row">
                       <TextField
-                        label="Name"
+                        label={t("admin-name")}
                         variant="standard"
                         value={newPersistentName}
                         onChange={(e) => {
@@ -457,7 +456,7 @@ export default function CreateDeployment({ finished }) {
                     </TableCell>
                     <TableCell>
                       <TextField
-                        label="Path in your app"
+                        label={t("create-deployment-app-path-label")}
                         variant="standard"
                         value={newPersistentAppPath}
                         onChange={(e) => {
@@ -468,7 +467,7 @@ export default function CreateDeployment({ finished }) {
                     </TableCell>
                     <TableCell>
                       <TextField
-                        label="Path in your kthcloud storage"
+                        label={t("create-deployment-storage-path-label")}
                         variant="standard"
                         value={newPersistentServerPath}
                         onChange={(e) => {
@@ -480,7 +479,6 @@ export default function CreateDeployment({ finished }) {
                     <TableCell align="right">
                       <IconButton
                         color="primary"
-                        aria-label="upload key"
                         component="label"
                         disabled={
                           !(
@@ -526,11 +524,11 @@ export default function CreateDeployment({ finished }) {
 
       <Stack justifyContent="flex-end" direction="row" spacing={3}>
         <Button onClick={() => handleCreate(true)} variant="outlined">
-          Create and stay
+          {t("create-and-stay")}
         </Button>
 
         <Button onClick={() => handleCreate(false)} variant="contained">
-          Create
+          {t("create-and-go")}
         </Button>
       </Stack>
     </>

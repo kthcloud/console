@@ -8,8 +8,10 @@ import Iconify from "src/components/Iconify";
 import useResource from "src/hooks/useResource";
 import { errorHandler } from "src/utils/errorHandler";
 import { toUnicode } from "punycode";
+import { useTranslation } from "react-i18next";
 
 export const DomainManager = ({ deployment }) => {
+  const { t } = useTranslation();
   const [domain, setDomain] = useState("");
   const [loading, setLoading] = useState(false);
   const { keycloak } = useKeycloak();
@@ -39,12 +41,12 @@ export const DomainManager = ({ deployment }) => {
         keycloak.token
       );
       queueJob(res);
-      enqueueSnackbar("Saving domain update...", {
+      enqueueSnackbar(t("saving-domain-update"), {
         variant: "info",
       });
     } catch (error) {
       errorHandler(error).forEach((e) =>
-        enqueueSnackbar("Could not update domain: " + e, {
+        enqueueSnackbar(t("could-not-update-domain") + e, {
           variant: "error",
         })
       );
@@ -56,13 +58,19 @@ export const DomainManager = ({ deployment }) => {
   return (
     <Card sx={{ boxShadow: 20 }}>
       <CardHeader
-        title={"Domain"}
-        subheader="Edit or update your deployment's domain. Add a CNAME record for this domain pointing to app.cloud.cbh.kth.se. If you are using Cloudflare or some other proxy service, disable the proxy so our DNS lookup resolves correctly. You can reenable the proxy after the deployment is created."
+        title={t("create-deployment-domain")}
+        subheader={t("create-deployment-domain-subheader")}
       />
       <CardContent>
-        <Stack direction="row" spacing={3} useFlexGap>
+        <Stack
+          direction="row"
+          spacing={3}
+          alignItems={"center"}
+          flexWrap={"wrap"}
+          useFlexGap
+        >
           <TextField
-            label="Domain"
+            label={t("create-deployment-domain")}
             variant="outlined"
             placeholder={initialDomain}
             value={domain}
@@ -84,7 +92,7 @@ export const DomainManager = ({ deployment }) => {
             startIcon={<Iconify icon="material-symbols:save" />}
             loading={loading}
           >
-            Save
+            {t("button-save")}
           </LoadingButton>
         </Stack>
       </CardContent>

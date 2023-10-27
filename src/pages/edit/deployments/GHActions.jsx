@@ -17,8 +17,10 @@ import {
 } from "@mui/material";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import Iconify from "src/components/Iconify";
+import { useTranslation } from "react-i18next";
 
 const GHActions = ({ resource }) => {
+  const { t } = useTranslation();
   const { keycloak, initialized } = useKeycloak();
   const [actionsFile, setActionsFile] = useState(null);
   const [cliCommands, setCliCommands] = useState(null);
@@ -90,31 +92,31 @@ const GHActions = ({ resource }) => {
     <>
       <Card sx={{ boxShadow: 20 }}>
         <CardHeader
-          title="Deploy with Docker CLI"
-          subheader={"Run this in your terminal to publish your app"}
+          title={t("deploy-with-docker-cli")}
+          subheader={t("deploy-with-docker-cli-subheader")}
         />
         <CardContent>
           <TextareaAutosize
-            value={cliCommands ? cliCommands : "Loading..."}
+            value={cliCommands ? cliCommands : t("loading")}
             style={{ width: "100%", border: 0 }}
           />
         </CardContent>
         <CardActions>
           <CopyToClipboard text={cliCommands}>
-            <Button>Copy to clipboard</Button>
+            <Button> {t("copy-to-clipboard")}</Button>
           </CopyToClipboard>{" "}
         </CardActions>
       </Card>
 
       <Card sx={{ boxShadow: 20 }}>
         <CardHeader
-          title="Deploy with GitHub Actions"
-          subheader={"Run this workflow to publish your app"}
+          title={t("deploy-with-github-actions")}
+          subheader={t("deploy-with-github-actions-subheader")}
         />
         <CardContent>
           <Stack spacing={1} useFlexGap alignItems={"flex-start"}>
             <TextareaAutosize
-              value={actionsFile ? actionsFile : "Loading..."}
+              value={actionsFile ? actionsFile : t("loading")}
               style={{ width: "100%", border: 0 }}
             />
 
@@ -125,18 +127,18 @@ const GHActions = ({ resource }) => {
               alignItems={"center"}
             >
               <CopyToClipboard text={actionsFile}>
-                <Button>Copy to clipboard</Button>
+                <Button>{t("copy-to-clipboard")}</Button>
               </CopyToClipboard>
 
               <Typography variant="body2">
-                Unsure where to paste this?
+                {t("unsure-where-to-paste-this")}
                 <Link
                   href="https://docs.github.com/en/actions/quickstart"
                   target="_blank"
                   rel="noreferrer"
                   ml={1}
                 >
-                  GitHub Actions Quickstart
+                  {t("github-actions-quickstart")}
                 </Link>
               </Typography>
             </Stack>
@@ -144,10 +146,12 @@ const GHActions = ({ resource }) => {
             <Button
               variant={showSecrets ? "contained" : "outlined"}
               onClick={() => setShowSecrets(!showSecrets)}
-              startIcon={<Iconify icon="mdi:eye" />}
+              startIcon={
+                <Iconify icon={showSecrets ? "mdi:eye-off" : "mdi:eye"} />
+              }
               color={showSecrets ? "primary" : "error"}
             >
-              {showSecrets ? "Hide" : "Show"} Secrets
+              {`${showSecrets ? t("hide") : t("show")} ${t("secrets")}`}
             </Button>
 
             {showSecrets && (
@@ -165,10 +169,9 @@ const GHActions = ({ resource }) => {
                 }}
                 boxShadow={10}
               >
-                <Typography variant="h6">Danger zone</Typography>
+                <Typography variant="h6">{t("danger-zone")}</Typography>
                 <Typography variant="body2">
-                  These secrets are sensitive and should not be public. Add
-                  them to your GitHub repository as secrets
+                  {t("danger-zone-subheader")}
                 </Typography>
                 {secrets.map((secret) => (
                   <Typography
@@ -177,12 +180,12 @@ const GHActions = ({ resource }) => {
                     sx={{ cursor: "pointer" }}
                   >
                     <CopyToClipboard text={secret.name}>
-                      <Tooltip title="Copy to clipboard">
+                      <Tooltip title={t("copy-to-clipboard")}>
                         {`${secret.name}: `}
                       </Tooltip>
                     </CopyToClipboard>
                     <CopyToClipboard text={secret.value}>
-                      <Tooltip title="Copy to clipboard">
+                      <Tooltip title={t("copy-to-clipboard")}>
                         <b
                           style={{
                             fontFamily: "monospace",

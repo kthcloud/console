@@ -12,8 +12,10 @@ import { useEffect, useState } from "react";
 import CopyToClipboard from "react-copy-to-clipboard";
 import Iconify from "src/components/Iconify";
 import polyfilledEventSource from "@sanity/eventsource";
+import { useTranslation } from "react-i18next";
 
 export const LogsView = ({ deployment }) => {
+  const { t } = useTranslation();
   const { initialized, keycloak } = useKeycloak();
   const [logs, setLogs] = useState([]);
   const [lineWrap, setLineWrap] = useState(true);
@@ -46,7 +48,7 @@ export const LogsView = ({ deployment }) => {
 
   return (
     <Card sx={{ boxShadow: 20 }}>
-      <CardHeader title={"Logs"} subheader={"View logs from your deployment"} />
+      <CardHeader title={t("logs")} subheader={t("logs-subheader")} />
 
       <CardContent>
         <Stack direction="column" spacing={2}>
@@ -59,7 +61,7 @@ export const LogsView = ({ deployment }) => {
                   inputProps={{ "aria-label": "controlled" }}
                 />
               }
-              label="Line wrap"
+              label={t("line-wrap")}
             />
 
             <FormControlLabel
@@ -70,7 +72,7 @@ export const LogsView = ({ deployment }) => {
                   inputProps={{ "aria-label": "controlled" }}
                 />
               }
-              label="Compact view"
+              label={t("compact-view")}
             />
 
             <Button
@@ -78,7 +80,7 @@ export const LogsView = ({ deployment }) => {
               startIcon={<Iconify icon={"mdi:broom"} />}
               onClick={() => setLogs([])}
             >
-              Clear logs
+              {t("button-clear")}
             </Button>
 
             <CopyToClipboard text={logs.join("\n")}>
@@ -88,7 +90,7 @@ export const LogsView = ({ deployment }) => {
                   <Iconify icon={"material-symbols:content-copy-outline"} />
                 }
               >
-                Copy Logs
+                {t("copy")}
               </Button>
             </CopyToClipboard>
 
@@ -106,7 +108,7 @@ export const LogsView = ({ deployment }) => {
                 element.click();
               }}
             >
-              Download logs
+              {t("download")}
             </Button>
           </Stack>
 
@@ -145,7 +147,7 @@ export const LogsView = ({ deployment }) => {
                   flexGrow: 1,
                 }}
               >
-                No logs found! Cause some trouble and check back here.
+                {t("no-logs-found")}
               </pre>
             )}
           </Stack>

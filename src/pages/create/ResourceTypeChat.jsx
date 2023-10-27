@@ -7,6 +7,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import Iconify from "src/components/Iconify";
 
 const ResourceTypeChat = () => {
@@ -14,16 +15,18 @@ const ResourceTypeChat = () => {
   const [input, setInput] = useState("");
   const [lastInput, setLastInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     const exampleInputs = [
-      "mysql database",
-      "machine learning",
-      "react frontend",
+      t("llama-mysql"),
+      t("llama-machine-learning"),
+      t("llama-react-frontend"),
     ];
     setLastInput(
       exampleInputs[Math.floor(Math.random() * exampleInputs.length)]
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const askLlama = async (question) => {
@@ -74,19 +77,14 @@ const ResourceTypeChat = () => {
         <>
           {!response ? (
             <Typography variant="body2">
-              <b>Kubernetes Deployment</b>
+              <b>{t("resource-kubernetes-deployment")}</b>
               <br />
-              Used for stateless <u>frontend</u> and <u>backend</u> services.
-              Allows for CI/CD through GitHub Actions and other pipelines. Your
-              repo must have a Dockerfile.
+              {t("explain-deployment")}
               <br />
               <br />
-              <b>VM (Virtual Machine)</b>
+              <b>VM ({t("resource-vm")})</b>
               <br />
-              Provides the ability to run an operating system directly. More
-              versatile but deployment and maintenance will be more difficult.
-              Ideal for <u>GPU compute</u> and <u>databases</u>, anything that
-              requires <u>persistent storage</u>.
+              {t("explain-vm")}
             </Typography>
           ) : (
             <Typography variant="body2">
@@ -102,7 +100,7 @@ const ResourceTypeChat = () => {
 
       <Stack spacing={3} direction="row">
         <TextField
-          label="What do you want to make? Ask Llama 2:"
+          label={t("llama-label")}
           InputProps={{
             startAdornment: <InputAdornment position="start"></InputAdornment>,
           }}

@@ -7,12 +7,14 @@ import {
   ToggleButtonGroup,
 } from "@mui/material";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import useResource from "src/hooks/useResource";
 
 const ZoneSelector = ({ alignment, selectedZone, setSelectedZone }) => {
   const [filteredZones, setFilteredZones] = useState([]);
   const { user, zones } = useResource();
   const [initialLoad, setInitialLoad] = useState(false);
+  const { t } = useTranslation();
 
   useEffect(
     () => {
@@ -35,8 +37,10 @@ const ZoneSelector = ({ alignment, selectedZone, setSelectedZone }) => {
     return (
       <Card sx={{ boxShadow: 20 }}>
         <CardHeader
-          title={"Choose zone"}
-          subheader={`Your chosen zone determines where your ${alignment} will be hosted. Selecting the closest zone to your users will improve performance`}
+          title={t("choose-zone")}
+          subheader={`${t("choose-zone-subheader-1")} ${alignment} ${t(
+            "choose-zone-subheader-2"
+          )}`}
         />
         <CardContent>
           <ToggleButtonGroup

@@ -3,13 +3,16 @@ import Iconify from "../../components/Iconify";
 import { useKeycloak } from "@react-keycloak/web";
 import { Link } from "react-router-dom";
 import HelpButton from "./HelpButton";
+import LocaleSwitcher from "./LocaleSwitcher";
 import useResource from "src/hooks/useResource";
 import { useEffect, useState } from "react";
 import { MD5 } from "crypto-js";
+import { useTranslation } from "react-i18next";
 // ----------------------------------------------------------------------
 
 export default function Shortcuts() {
   const { keycloak, initialized } = useKeycloak();
+  const { t } = useTranslation();
   const { user } = useResource();
   const [userAvatar, setUserAvatar] = useState(null);
   const [hasFetched, setHasFetched] = useState(false);
@@ -45,10 +48,11 @@ export default function Shortcuts() {
   return (
     <>
       <HelpButton />
+      <LocaleSwitcher />
 
       {initialized && keycloak.authenticated && (
         <>
-          <Tooltip title="Dashboard">
+          <Tooltip title={t("menu-dashboard")}>
             <IconButton
               component={Link}
               to="/deploy"
@@ -66,7 +70,7 @@ export default function Shortcuts() {
             </IconButton>
           </Tooltip>
 
-          <Tooltip title="Create new">
+          <Tooltip title={t("menu-create-new")}>
             <IconButton
               component={Link}
               to="/create"
@@ -89,7 +93,7 @@ export default function Shortcuts() {
             </IconButton>
           </Tooltip>
 
-          <Tooltip title="Profile">
+          <Tooltip title={t("menu-profile")}>
             <IconButton
               component={Link}
               to="/profile"

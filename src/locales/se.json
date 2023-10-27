@@ -1,0 +1,13 @@
+{
+    "translation": {
+        "button-get-started": "Kom igång",
+        "button-login": "Logga in",
+        "button-change-language": "Change language",
+        "landing-hero-gpu": "Grafikkort",
+        "landing-hero-cpu": "CPU-kärnor",
+        "landing-hero-ram": "TB minne",
+        "landing-intro-header": "Välkommen till",
+        "landing-intro-body": "Vi erbjuder en toppmodern privat molninfrastruktur skräddarsydd för att möta de unika behoven hos KTH:s forskare och studenter. Kör experiment smidigt, samarbeta på banbrytande forskning och utnyttja kraften i molnet för att driva innovation.",
+        "landing-intro-footer": "Registrera dig idag kostnadsfritt - allt du behöver är ett KTH-konto."
+    }
+}

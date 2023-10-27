@@ -1,15 +1,13 @@
 import { Card, CardContent, CardHeader, Chip, Stack } from "@mui/material";
+import { useTranslation } from "react-i18next";
 import Iconify from "src/components/Iconify";
 
 export const UserQuotas = ({ user }) => {
+  const { t } = useTranslation();
+
   return (
     <Card sx={{ boxShadow: 20 }}>
-      <CardHeader
-        title={"Quotas"}
-        subheader={
-          "Use resources in any way that fits you, and sums up under these quotas"
-        }
-      />
+      <CardHeader title={t("quotas")} subheader={t("quotas-subheader")} />
       <CardContent>
         <Stack
           spacing={3}
@@ -22,7 +20,7 @@ export const UserQuotas = ({ user }) => {
             icon={<Iconify icon="uil:processor" width={24} height={24} />}
             label={
               <span>
-                CPU Cores
+                {t("landing-hero-cpu")}
                 <b
                   style={{
                     fontFamily: "monospace",
@@ -39,15 +37,17 @@ export const UserQuotas = ({ user }) => {
             icon={<Iconify icon="bi:memory" width={24} height={24} />}
             label={
               <span>
-                Memory GB
+                {t("memory")}
                 <b
                   style={{
                     fontFamily: "monospace",
                     marginLeft: ".75em",
+                    marginRight: ".75em",
                   }}
                 >
                   {user.usage.ram + "/" + user.quota.ram}
                 </b>
+                GB
               </span>
             }
           />
@@ -56,15 +56,17 @@ export const UserQuotas = ({ user }) => {
             icon={<Iconify icon="mdi:harddisk" width={24} height={24} />}
             label={
               <span>
-                Disk GB
+                {t("create-vm-disk-size")}
                 <b
                   style={{
                     fontFamily: "monospace",
                     marginLeft: ".75em",
+                    marginRight: ".75em",
                   }}
                 >
                   {user.usage.diskSize + "/" + user.quota.diskSize}
-                </b>
+                </b>{" "}
+                GB
               </span>
             }
           />
@@ -73,7 +75,7 @@ export const UserQuotas = ({ user }) => {
             icon={<Iconify icon="mdi:kubernetes" width={24} height={24} />}
             label={
               <span>
-                Kubernetes Deployments
+                {t("resource-kubernetes-deployment")}
                 <b
                   style={{
                     fontFamily: "monospace",
@@ -87,10 +89,12 @@ export const UserQuotas = ({ user }) => {
           />
           <Chip
             m={1}
-            icon={<Iconify icon="material-symbols:save" width={24} height={24} />}
+            icon={
+              <Iconify icon="material-symbols:save" width={24} height={24} />
+            }
             label={
               <span>
-                Snapshots
+                {t("snapshots")}
                 <b
                   style={{
                     fontFamily: "monospace",

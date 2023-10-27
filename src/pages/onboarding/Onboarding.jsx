@@ -27,9 +27,11 @@ import CreateDeployment from "../create/CreateDeployment";
 import CreateVm from "../create/CreateVm";
 import { useNavigate } from "react-router-dom";
 import useResource from "src/hooks/useResource";
+import { useTranslation } from "react-i18next";
 
 export const Onboarding = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   // user profile
   const { keycloak } = useKeycloak();
@@ -46,13 +48,13 @@ export const Onboarding = () => {
   ];
 
   const cardTitles = {
-    welcome: "Welcome to kthcloud!",
-    profile: "Your profile",
-    resources: "Resources on kthcloud",
-    deployments: "Resource type: Deployments",
-    vms: "Resource type: Virtual Machines",
-    gpu: "GPU",
-    finish: "Let's go!",
+    welcome: t("onboarding-welcome"),
+    profile: t("onboarding-profile"),
+    resources: t("onboarding-resources"),
+    deployments: t("onboarding-deployments"),
+    vms: t("onboarding-vms"),
+    gpu: t("onboarding-gpu"),
+    finish: t("onboarding-finish"),
   };
 
   // Selected card
@@ -75,7 +77,7 @@ export const Onboarding = () => {
       }
     } catch (error) {
       errorHandler(error).forEach((e) =>
-        enqueueSnackbar("Could not fetch profile: " + e, {
+        enqueueSnackbar(t("could-not-fetch-profile") + e, {
           variant: "error",
         })
       );
@@ -145,13 +147,13 @@ export const Onboarding = () => {
         <CardActions>
           {id !== "welcome" && (
             <Button variant="outlined" onClick={previousCard}>
-              Previous
+              {t("previous")}
             </Button>
           )}
           <div style={{ flexGrow: "1" }} />
 
           <Button variant="contained" onClick={nextCard}>
-            {selected === cards[cards.length - 1] ? "Finish" : "Next"}
+            {selected === cards[cards.length - 1] ? t("finish") : t("next")}
           </Button>
         </CardActions>
       </Card>
@@ -173,16 +175,16 @@ export const Onboarding = () => {
       {!(initialLoad && user) ? (
         <LoadingPage />
       ) : (
-        <Page title="Getting started">
+        <Page title={t("getting-started")}>
           <Fade in={!finished} mountOnEnter unmountOnExit>
             <Container maxWidth={"md"}>
               <Stack spacing={3}>
                 <Stack direction="row" justifyContent={"space-between"}>
-                  <Typography variant="h4">Getting started</Typography>
+                  <Typography variant="h4">{t("getting-started")}</Typography>
 
                   <div style={{ flexGrow: "1" }} />
                   <Button variant="text" onClick={() => finalize()}>
-                    Skip
+                    {t("skip")}
                   </Button>
                 </Stack>
 
@@ -217,7 +219,9 @@ export const Onboarding = () => {
                       completed={cards.indexOf(selected) >= index}
                     >
                       <StepLabel color="inherit">
-                        {cardTitles[label].replace("Resource type: ", "")}
+                        {cardTitles[label].includes(":")
+                          ? cardTitles[label].split(":")[1]
+                          : cardTitles[label]}
                       </StepLabel>
                     </Step>
                   ))}
@@ -246,17 +250,11 @@ export const Onboarding = () => {
                         <div>
                           <OnboardingCard id={"welcome"}>
                             <Typography variant="body1" gutterBottom mb={3}>
-                              We're thrilled you want to try out kthcloud! This
-                              is a quick guide to get you started.
+                              {t("onboarding-welcome-1")}
                             </Typography>
 
                             <Typography variant="body1" gutterBottom>
-                              We offer a cutting-edge private cloud
-                              infrastructure tailored to meet the unique needs
-                              of KTH's bright minds. Seamlessly run experiments,
-                              collaborate on groundbreaking research, and
-                              harness the power of cloud technology to drive
-                              innovation.
+                              {t("onboarding-welcome-2")}
                             </Typography>
                           </OnboardingCard>
                         </div>
@@ -286,13 +284,11 @@ export const Onboarding = () => {
                         <div>
                           <OnboardingCard id={"profile"}>
                             <Typography variant="body1" gutterBottom mb={3}>
-                              Your profile is where you can find your personal
-                              information and view your quotas.
+                              {t("onboarding-profile-1")}
                             </Typography>
 
                             <Typography variant="body1" gutterBottom mb={3}>
-                              You can also find your SSH keys here. These keys
-                              enable you to connect to your virtual machines.
+                              {t("onboarding-profile-2")}
                             </Typography>
                           </OnboardingCard>
                         </div>
@@ -324,21 +320,15 @@ export const Onboarding = () => {
                         <div>
                           <OnboardingCard id={"resources"}>
                             <Typography variant="body1" gutterBottom mb={3}>
-                              kthcloud resources are graciously provided by
-                              researchers, the KTH IT department, KTH PDC and
-                              new hardware is funded through the European
-                              Union's Erasmus project.
+                              {t("onboarding-resources-1")}
                             </Typography>
 
                             <Typography variant="body1" gutterBottom mb={3}>
-                              Keep in mind that kthcloud is a shared resource.
-                              Please be considerate of your fellow students and
-                              researchers and only use what you need.
+                              {t("onboarding-resources-2")}
                             </Typography>
 
                             <Typography variant="body1" gutterBottom mb={3}>
-                              If you need more resources, please contact us on
-                              Discord!
+                              {t("onboarding-resources-3")}
                             </Typography>
                           </OnboardingCard>
                         </div>
@@ -371,15 +361,11 @@ export const Onboarding = () => {
                         <div>
                           <OnboardingCard id={"deployments"}>
                             <Typography variant="body1" gutterBottom mb={3}>
-                              Deployments are the most common resource type on
-                              kthcloud. They are perfect for running
-                              experiments, or hosting websites.
+                              {t("onboarding-deployments-1")}
                             </Typography>
 
                             <Typography variant="body1" gutterBottom mb={3}>
-                              All you need is a Docker image or a repo with a
-                              Dockerfile, and a little bit of configuration.
-                              kthcloud will take care of the rest.
+                              {t("onboarding-deployments-2")}
                             </Typography>
                           </OnboardingCard>
                         </div>
@@ -409,15 +395,11 @@ export const Onboarding = () => {
                         <div>
                           <OnboardingCard id={"vms"}>
                             <Typography variant="body1" gutterBottom mb={3}>
-                              Virtual machines are the most flexible resource
-                              type on kthcloud. You can install any programs you
-                              want and have full control over the machine.
+                              {t("onboarding-vms-1")}
                             </Typography>
 
                             <Typography variant="body1" gutterBottom mb={3}>
-                              Virtual machines are perfect for running machine
-                              learning models, databases and other more complex
-                              applications.
+                              {t("onboarding-vms-2")}
                             </Typography>
 
                             {user &&
@@ -425,10 +407,7 @@ export const Onboarding = () => {
                               user.permissions &&
                               user.role.permissions.includes("useGpus") && (
                                 <Typography variant="body1" gutterBottom mb={3}>
-                                  You can also request a GPU for your virtual
-                                  machine. Please note that GPU resources are
-                                  limited, for extended use you may want to
-                                  provide your own GPU.
+                                  {t("onboarding-vms-3")}
                                 </Typography>
                               )}
                           </OnboardingCard>
@@ -459,14 +438,11 @@ export const Onboarding = () => {
                         <div>
                           <OnboardingCard id={"gpu"}>
                             <Typography variant="body1" gutterBottom mb={3}>
-                              kthcloud provides access to top of the line GPUs
-                              from NVIDIA. These GPUs are perfect for training
-                              machine learning models.
+                              {t("onboarding-gpu-1")}
                             </Typography>
 
                             <Typography variant="body1" gutterBottom mb={3}>
-                              GPU resources are limited, for extended use you
-                              may want to provide your own GPU.
+                              {t("onboarding-gpu-2")}
                             </Typography>
                           </OnboardingCard>
                         </div>
@@ -496,12 +472,15 @@ export const Onboarding = () => {
                         <div>
                           <OnboardingCard id={"finish"}>
                             <Typography variant="body1" gutterBottom mb={3}>
-                              That's it! You're ready to start using kthcloud.
+                              {t("onboarding-finish-1")}
                             </Typography>
 
                             <Typography variant="body1" gutterBottom mb={3}>
-                              If you have any questions, please contact us on
-                              Discord.
+                              {t("onboarding-finish-2")}
+                            </Typography>
+
+                            <Typography variant="caption" gutterBottom mb={3}>
+                              {t("onboarding-finish-3")}
                             </Typography>
                           </OnboardingCard>
                         </div>
@@ -588,12 +567,11 @@ export const Onboarding = () => {
                 <CardHeader title={"Finishing up..."} />
                 <CardContent>
                   <Typography variant="body1" gutterBottom mb={3}>
-                    Please wait as we finish setting up your account.
+                    {t("onboarding-wait-1")}
                   </Typography>
                   {takingTooLong && (
                     <Typography variant="body1" gutterBottom mb={3}>
-                      Hmm, it seems this is taking a while. Try refreshing the
-                      page or contact us on Discord.
+                      {t("onboarding-wait-2")}
                     </Typography>
                   )}
                   <LinearProgress />

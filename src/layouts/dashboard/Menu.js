@@ -14,11 +14,13 @@ import MenuPopover from "../../components/MenuPopover";
 import Iconify from "../../components/Iconify";
 import Link from "@mui/material/Link";
 import { Link as RouterLink } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 // ----------------------------------------------------------------------
 
 export default function Menu() {
   const anchorRef = useRef(null);
+  const { t } = useTranslation();
 
   const [open, setOpen] = useState(null);
 
@@ -47,7 +49,11 @@ export default function Menu() {
 
   return (
     <>
-      <IconButton ref={anchorRef} onClick={handleOpen} aria-label="Menu">
+      <IconButton
+        ref={anchorRef}
+        onClick={handleOpen}
+        aria-label={t("menu-label")}
+      >
         <Iconify icon="material-symbols:menu-rounded" width={20} height={20} />
       </IconButton>
 
@@ -75,7 +81,7 @@ export default function Menu() {
                     sx={{ color: "text.secondary" }}
                     noWrap
                   >
-                    Manage resources
+                    {t("menu-manage-resources")}
                   </Typography>
                 </Box>
 
@@ -85,14 +91,14 @@ export default function Menu() {
                     component={RouterLink}
                     onClick={handleClose}
                   >
-                    Dashboard
+                    {t("menu-dashboard")}
                   </MenuItem>
                   <MenuItem
                     to={"/create"}
                     component={RouterLink}
                     onClick={handleClose}
                   >
-                    Create new
+                    {t("menu-create-new")}
                   </MenuItem>
 
                   <MenuItem
@@ -100,7 +106,7 @@ export default function Menu() {
                     component={RouterLink}
                     onClick={handleClose}
                   >
-                    Profile
+                    {t("menu-profile")}
                   </MenuItem>
                 </Stack>
                 <Divider sx={{ borderStyle: "dashed" }} />
@@ -111,12 +117,12 @@ export default function Menu() {
 
         <Box sx={{ mt: 1.5, px: 2.5 }}>
           <Typography variant="body2" sx={{ color: "text.secondary" }} noWrap>
-            cbhcloud
+            {t("menu-cbhcloud")}
           </Typography>
         </Box>
         <Stack sx={{ p: 1 }}>
           <MenuItem to={"/status"} component={RouterLink} onClick={handleClose}>
-            Status
+            {t("menu-status")}
           </MenuItem>
           <MenuItem
             href={"https://wiki.cloud.cbh.kth.se/"}
@@ -125,7 +131,7 @@ export default function Menu() {
             target="_blank"
             rel="me"
           >
-            Wiki
+            {t("menu-wiki")}
           </MenuItem>
           <MenuItem
             href={"https://discord.gg/MuHQd6QEtM"}
@@ -134,7 +140,7 @@ export default function Menu() {
             target="_blank"
             rel="noopener noreferrer"
           >
-            Support
+            {t("menu-support")}
           </MenuItem>
           <MenuItem
             href={"https://mastodon.social/@kthcloud"}
@@ -143,7 +149,7 @@ export default function Menu() {
             target="_blank"
             rel="me"
           >
-            Mastodon
+            {t("menu-mastodon")}
           </MenuItem>
         </Stack>
 
@@ -157,41 +163,41 @@ export default function Menu() {
                 sx={{ color: "text.secondary" }}
                 noWrap
               >
-                Admin
+                {t("menu-admin")}
               </Typography>
             </Box>
 
             <Stack sx={{ p: 1 }}>
               <MenuItem href={"/admin"} component={Link} onClick={handleClose}>
-                Admin panel
+                {t("menu-admin-panel")}
               </MenuItem>
               <MenuItem
                 href={"https://dashboard.cloud.cbh.kth.se"}
                 component={Link}
                 onClick={handleClose}
               >
-                CloudStack
+                {t("menu-cloudstack")}
               </MenuItem>
               <MenuItem
                 href={"https://rancher.mgmt.cloud.cbh.kth.se/"}
                 component={Link}
                 onClick={handleClose}
               >
-                Rancher (K8s)
+                {t("menu-rancher")}
               </MenuItem>
               <MenuItem
                 href={"https://iam.cloud.cbh.kth.se"}
                 component={Link}
                 onClick={handleClose}
               >
-                Keycloak (IAM)
+                {t("menu-keycloak")}
               </MenuItem>
               <MenuItem
                 href={"https://dns.cloud.cbh.kth.se"}
                 component={Link}
                 onClick={handleClose}
               >
-                DNS
+                {t("menu-dns")}
               </MenuItem>
             </Stack>
           </>

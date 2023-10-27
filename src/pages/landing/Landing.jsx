@@ -1,5 +1,5 @@
 import Hero from "./components/hero/Hero";
-import Jeremy from "./components/intro/Intro";
+import Intro from "./components/intro/Intro";
 import Page from "../../components/Page";
 import { Box } from "@mui/material";
 import { useKeycloak } from "@react-keycloak/web";
@@ -22,7 +22,7 @@ export function Landing() {
       <Page>
         <Box mt={5}></Box>
         <Hero />
-        <Jeremy />
+        <Intro />
       </Page>
     );
   }
