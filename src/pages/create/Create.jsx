@@ -40,12 +40,14 @@ export const Create = () => {
   const [alignment, _setAlignment] = useState("");
   const setAlignment = (newAlignment) => {
     _setAlignment(newAlignment);
-    setSearchParams({ type: newAlignment });
+    let params = new URLSearchParams(searchParams);
+    params.set("type", newAlignment);
+    setSearchParams(params);
   };
 
   const navigate = useNavigate();
   // eslint-disable-next-line no-unused-vars
-  let [_, setSearchParams] = useSearchParams();
+  let [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
     setAlignment("deployment");
