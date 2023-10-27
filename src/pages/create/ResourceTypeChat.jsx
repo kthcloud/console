@@ -26,6 +26,7 @@ const ResourceTypeChat = () => {
     setLastInput(
       exampleInputs[Math.floor(Math.random() * exampleInputs.length)]
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const askLlama = async (question) => {
