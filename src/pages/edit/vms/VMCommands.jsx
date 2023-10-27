@@ -44,7 +44,7 @@ export const VMCommands = ({ vm }) => {
       });
     } catch (error) {
       errorHandler(error).forEach((e) =>
-        enqueueSnackbar("Could execute command: " + e, {
+        enqueueSnackbar("Could not execute command: " + e, {
           variant: "error",
         })
       );
