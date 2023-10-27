@@ -1,4 +1,5 @@
 import { IconButton, Link, Tooltip } from "@mui/material";
+import { useTranslation } from "react-i18next";
 import Iconify from "src/components/Iconify";
 
 const resolveURL = () => {
@@ -20,8 +21,10 @@ const resolveURL = () => {
 };
 
 const HelpButton = () => {
+  const { t } = useTranslation();
+
   return (
-    <Tooltip title="Help">
+    <Tooltip title={t("button-help")}>
       <IconButton
         component={Link}
         target="_blank"

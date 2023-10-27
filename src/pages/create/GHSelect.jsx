@@ -12,11 +12,13 @@ import {
 import { useKeycloak } from "@react-keycloak/web";
 import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { getRepositories } from "src/api/deploy/github";
 import Iconify from "src/components/Iconify";
 import { errorHandler } from "src/utils/errorHandler";
 
 export const GHSelect = ({ setAccessToken, repo, setRepo }) => {
+  const { t } = useTranslation();
   const [code, setCode] = useState("");
   const [repos, setRepos] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -68,8 +70,8 @@ export const GHSelect = ({ setAccessToken, repo, setRepo }) => {
   return (
     <Card sx={{ boxShadow: 20 }}>
       <CardHeader
-        title={"Connect GitHub repository"}
-        subheader="Link your GitHub repo for automatic Continuous Delivery. If not linked, instructions for pushing your container image will be provided later"
+        title={t("create-deployment-github-title")}
+        subheader={t("create-deployment-github-subheader")}
       />
       <CardContent>
         {loading ? (
@@ -78,13 +80,13 @@ export const GHSelect = ({ setAccessToken, repo, setRepo }) => {
           <>
             {repos.length > 0 ? (
               <FormControl fullWidth>
-                <InputLabel id="repo-picker-label">Repositories</InputLabel>
+                <InputLabel id="repo-picker-label">{t("create-deployment-github-repo")}</InputLabel>
                 <Select
                   labelId="repo-picker-label"
                   id="repo-picker"
                   value={repo}
                   onChange={(e) => setRepo(e.target.value)}
-                  label="Repositories"
+                  label={t("create-deployment-github-repo")}
                   fullWidth
                   defaultOpen
                 >
@@ -108,7 +110,7 @@ export const GHSelect = ({ setAccessToken, repo, setRepo }) => {
                 startIcon={<Iconify icon="mdi:github" />}
                 variant="contained"
               >
-                <span>Login with GitHub</span>
+                <span>{t("login-with-github")}</span>
               </Button>
             )}
           </>

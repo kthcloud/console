@@ -7,6 +7,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import Iconify from "src/components/Iconify";
 
 const ResourceTypeChat = () => {
@@ -14,12 +15,13 @@ const ResourceTypeChat = () => {
   const [input, setInput] = useState("");
   const [lastInput, setLastInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     const exampleInputs = [
-      "mysql database",
-      "machine learning",
-      "react frontend",
+      t("llama-mysql"),
+      t("llama-machine-learning"),
+      t("llama-react-frontend"),
     ];
     setLastInput(
       exampleInputs[Math.floor(Math.random() * exampleInputs.length)]
@@ -102,7 +104,7 @@ const ResourceTypeChat = () => {
 
       <Stack spacing={3} direction="row">
         <TextField
-          label="What do you want to make? Ask Llama 2:"
+          label={t("llama-label")}
           InputProps={{
             startAdornment: <InputAdornment position="start"></InputAdornment>,
           }}

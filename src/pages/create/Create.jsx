@@ -30,9 +30,11 @@ import CreateDeployment from "./CreateDeployment";
 import CreateVm from "./CreateVm";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import ResourceTypeChat from "./ResourceTypeChat";
+import { useTranslation } from "react-i18next";
 
 export const Create = () => {
   const { initialized } = useKeycloak();
+  const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
   const { queueJob } = useResource();
   const [alignment, _setAlignment] = useState("");
@@ -63,17 +65,17 @@ export const Create = () => {
       {!initialized ? (
         <LoadingPage />
       ) : (
-        <Page title="Create new resource">
+        <Page title={t("create-title")}>
           <Container>
             <Stack spacing={3}>
               <Typography variant="h4" gutterBottom>
-                Create new resource
+                {t("create-title")}
               </Typography>
 
               <JobList />
 
               <Card sx={{ boxShadow: 20 }}>
-                <CardHeader title={"Resource type"} />
+                <CardHeader title={t("resource-type")} />
                 <CardContent>
                   <Stack spacing={3}>
                     <ResourceTypeChat />
@@ -87,9 +89,11 @@ export const Create = () => {
                         aria-label="resource-type"
                       >
                         <ToggleButton value="deployment">
-                          Kubernetes Deployment
+                          {t("resource-kubernetes-deployment")}
                         </ToggleButton>
-                        <ToggleButton value="vm">Virtual machine</ToggleButton>
+                        <ToggleButton value="vm">
+                          {t("resource-vm")}
+                        </ToggleButton>
                       </ToggleButtonGroup>
                       <ResourceComparisonTable />
                     </Stack>

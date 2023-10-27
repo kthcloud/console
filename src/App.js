@@ -12,12 +12,11 @@ import { ResourceContextProvider } from "./contexts/ResourceContext";
 import { SnackbarProvider, closeSnackbar } from "notistack";
 import { IconButton } from "@mui/material";
 import Iconify from "./components/Iconify";
-import { initI18n } from "./i18next";
 
 // ----------------------------------------------------------------------
 
 export default function App() {
-  initI18n();
+
   return (
     <ReactKeycloakProvider authClient={keycloak}>
       <ResourceContextProvider>

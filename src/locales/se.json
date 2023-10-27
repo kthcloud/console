@@ -2,6 +2,7 @@
     "translation": {
         "button-get-started": "Kom igång",
         "button-login": "Logga in",
+        "button-change-language": "Change language",
         "landing-hero-gpu": "Grafikkort",
         "landing-hero-cpu": "CPU-kärnor",
         "landing-hero-ram": "TB minne",
