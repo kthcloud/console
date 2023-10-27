@@ -20,8 +20,11 @@ import useResource from "src/hooks/useResource";
 import { errorHandler } from "src/utils/errorHandler";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import { useTranslation } from "react-i18next";
 
 export default function Specs({ vm }) {
+  const { t } = useTranslation();
+
   const { initialized, keycloak } = useKeycloak();
   const { queueJob } = useResource();
 
@@ -56,7 +59,7 @@ export default function Specs({ vm }) {
 
       setExpanded(response.slice(0, 5).map((s) => s.id));
     } catch (error) {
-      console.error("Error fetching snapshots: " + error);
+      console.error(t("error-fetching-snapshot") + error);
     } finally {
       setInitialLoad(true);
     }
@@ -69,12 +72,12 @@ export default function Specs({ vm }) {
       setSnapshotName("");
       const response = await createSnapshot(vm.id, name, keycloak.token);
       queueJob(response);
-      enqueueSnackbar("Creating snapshot", {
+      enqueueSnackbar(t("creating-snapshot"), {
         variant: "info",
       });
     } catch (error) {
       errorHandler(error).forEach((e) =>
-        enqueueSnackbar("Error creating snapshot: " + e, {
+        enqueueSnackbar(t("error-creating-snapshot") + e, {
           variant: "error",
         })
       );
@@ -89,12 +92,12 @@ export default function Specs({ vm }) {
     try {
       const response = await updateVM(vm.id, update, keycloak.token);
       queueJob(response);
-      enqueueSnackbar("VM reverting to snapshot", {
+      enqueueSnackbar(t("reverting-to-snapshot"), {
         variant: "info",
       });
     } catch (error) {
       errorHandler(error).forEach((e) =>
-        enqueueSnackbar("Error reverting VM to snapshot: " + e, {
+        enqueueSnackbar(t("error-reverting-to-snapshot") + e, {
           variant: "error",
         })
       );
@@ -113,7 +116,7 @@ export default function Specs({ vm }) {
     return (
       <Stack direction={"row"} spacing={2} alignItems={"center"}>
         <Typography variant={"body1"}>{snapshot.displayname}</Typography>
-        {snapshot.current && <Chip label={"Latest"} />}
+        {snapshot.current && <Chip label={t("latest")} />}
       </Stack>
     );
   }
@@ -135,7 +138,7 @@ export default function Specs({ vm }) {
   if (!initialLoad)
     return (
       <Card sx={{ boxShadow: 20 }}>
-        <CardHeader title={"Snapshots"} />
+        <CardHeader title={t("snapshots")} />
         <CardContent>
           <CircularProgress />
         </CardContent>
@@ -144,18 +147,13 @@ export default function Specs({ vm }) {
 
   return (
     <Card sx={{ boxShadow: 20 }}>
-      <CardHeader
-        title={"Snapshots"}
-        subheader={
-          "Snapshots allow you to save the state of the virtual machine at a point in time. You can revert to that state at any time"
-        }
-      />
+      <CardHeader title={t("snapshots")} subheader={t("snapshots-subheader")} />
       <CardContent>
         <Stack spacing={2} direction={"column"} w={100}>
           {snapshots.length > 0 && (
             <>
               <Typography variant="body">
-                Your snapshots ({snapshots.length})
+                {t("your-snapshots")} ({snapshots.length})
               </Typography>
               <Stack
                 spacing={2}
@@ -203,16 +201,17 @@ export default function Specs({ vm }) {
                   useFlexGap
                   boxShadow={10}
                 >
-                  <Typography variant="body">Selected snapshot</Typography>
+                  <Typography variant="body">
+                    {t("selected-snapshot")}
+                  </Typography>
                   <Typography variant="body2">
                     {snapshots.find((s) => s.id === selectedSnapshot) &&
                       snapshots.find((s) => s.id === selectedSnapshot)
-                        .displayname
-                    }
+                        .displayname}
                   </Typography>
                   <ConfirmButton
-                    action="Revert"
-                    actionText="revert to this snapshot"
+                    action={t("revert")}
+                    actionText={t("revert-to-this-snapshot")}
                     callback={() => revertVMSnapshot(selectedSnapshot)}
                     props={{
                       color: "error",
@@ -226,7 +225,7 @@ export default function Specs({ vm }) {
             </>
           )}
 
-          <Typography variant="body">Create new snapshot</Typography>
+          <Typography variant="body">{t("create-new-snapshot")}</Typography>
 
           <Stack
             spacing={2}
@@ -236,12 +235,12 @@ export default function Specs({ vm }) {
             alignItems={"center"}
           >
             <RFC1035Input
-              label="Snapshot Name"
-              type="Snapshot Name"
+              label={t("admin-name")}
+              type={t("admin-name")}
               cleaned={snapshotName}
               setCleaned={setSnapshotName}
               initialValue={snapshotName}
-              callToAction="Your snapshot will be created as"
+              callToAction={t("your-snapshot-will-be-created-as")}
             />
 
             <Button
@@ -250,7 +249,7 @@ export default function Specs({ vm }) {
               onClick={() => createVMSnapshot(snapshotName)}
               startIcon={<Iconify icon="material-symbols:save" />}
             >
-              Create
+              {t("create-and-go")}
             </Button>
           </Stack>
         </Stack>

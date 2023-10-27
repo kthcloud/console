@@ -13,8 +13,10 @@ import { useKeycloak } from "@react-keycloak/web";
 import useResource from "src/hooks/useResource";
 import { updateDeployment } from "src/api/deploy/deployments";
 import { errorHandler } from "src/utils/errorHandler";
+import { useTranslation } from "react-i18next";
 
 export const PrivateMode = ({ deployment }) => {
+  const { t } = useTranslation();
   const [privateMode, setPrivateMode] = useState(null);
   const [loading, setLoading] = useState(false);
   const { initialized, keycloak } = useKeycloak();
@@ -33,10 +35,10 @@ export const PrivateMode = ({ deployment }) => {
       );
 
       queueJob(res);
-      enqueueSnackbar("Visibility saving...", { variant: "info" });
+      enqueueSnackbar(t("visibility-saving"), { variant: "info" });
     } catch (error) {
       errorHandler(error).forEach((e) =>
-        enqueueSnackbar("Failed to update visibility: " + e, {
+        enqueueSnackbar(t("could-not-save-visibility") + e, {
           variant: "error",
         })
       );
@@ -70,10 +72,8 @@ export const PrivateMode = ({ deployment }) => {
   return (
     <Card sx={{ boxShadow: 20 }}>
       <CardHeader
-        title={"Visibility"}
-        subheader={
-          "Choose whether to make this deployment hidden from the internet"
-        }
+        title={t("admin-visibility")}
+        subheader={t("visibility-subheader")}
       />
 
       <CardContent>
@@ -89,12 +89,12 @@ export const PrivateMode = ({ deployment }) => {
                     onChange={(e) => applyChanges(e.target.checked)}
                   />
                 }
-                label="Private"
+                label={t("admin-visibility-private")}
                 labelPlacement="end"
                 sx={{ ml: 1 }}
               />
             }
-            label="Public"
+            label={t("admin-visibility-public")}
             labelPlacement="start"
           />
         )}

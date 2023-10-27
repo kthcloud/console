@@ -29,8 +29,10 @@ import {
 } from "src/api/deploy/vms";
 import { errorHandler } from "src/utils/errorHandler";
 import { hashGPUId } from "src/utils/helpers";
+import { useTranslation } from "react-i18next";
 
 export const GPUManager = ({ vm }) => {
+  const { t } = useTranslation();
   const { keycloak } = useKeycloak();
   const { enqueueSnackbar } = useSnackbar();
   const { queueJob } = useResource();
@@ -80,11 +82,9 @@ export const GPUManager = ({ vm }) => {
     }
   };
 
-  
-
   const renderButtonText = () => {
-    if (!vm.gpu) return "Lease GPU";
-    return "Renew GPU Lease";
+    if (!vm.gpu) return t("lease-gpu");
+    return t("renew-gpu-lease");
   };
 
   return (
@@ -96,10 +96,8 @@ export const GPUManager = ({ vm }) => {
           {userCanUseGPUs() && (
             <Card sx={{ boxShadow: 20 }}>
               <CardHeader
-                title={"GPU Lease"}
-                subheader={
-                  "Leasing a GPU allows you to use it for a limited time"
-                }
+                title={t("gpu-lease")}
+                subheader={t("gpu-lease-subheader")}
               />
               <CardContent>
                 <Stack spacing={3} direction={"column"} useFlexGap={true}>
@@ -147,7 +145,7 @@ export const GPUManager = ({ vm }) => {
                         }
                         label={
                           <span>
-                            Leased until
+                            {t("leased-until")}
                             <b
                               style={{
                                 fontFamily: "monospace",
@@ -176,7 +174,7 @@ export const GPUManager = ({ vm }) => {
                         }
                         label={
                           <span>
-                            Leased expired
+                            {t("lease-expired")}
                             <b
                               style={{
                                 fontFamily: "monospace",
@@ -217,7 +215,7 @@ export const GPUManager = ({ vm }) => {
                               } catch (error) {
                                 errorHandler(error).forEach((e) =>
                                   enqueueSnackbar(
-                                    "Could not attach GPU: " + e,
+                                    t("could-not-attach-gpu") + e,
                                     {
                                       variant: "error",
                                     }
@@ -236,7 +234,7 @@ export const GPUManager = ({ vm }) => {
                             } catch (error) {
                               setGpuLoading(false);
                               errorHandler(error).forEach((e) =>
-                                enqueueSnackbar("Could not attach GPU: " + e, {
+                                enqueueSnackbar(t("could-not-attach-gpu") + e, {
                                   variant: "error",
                                 })
                               );
@@ -266,7 +264,7 @@ export const GPUManager = ({ vm }) => {
                             queueJob(res);
                           } catch (error) {
                             errorHandler(error).forEach((e) =>
-                              enqueueSnackbar("Could not detach GPU: " + e, {
+                              enqueueSnackbar(t("could-not-detach-gpu") + e, {
                                 variant: "error",
                               })
                             );
@@ -285,16 +283,15 @@ export const GPUManager = ({ vm }) => {
                           )
                         }
                       >
-                        Detach GPU
+                        {t("button-detach-gpu")}
                       </Button>
                     )}
 
                     {vm.gpu && vm.gpu.expired && (
                       <>
                         <Typography variant="body2">
-                          <b>Your lease has expired.</b> The GPU will remain
-                          attached until someone else leases it. If you want to
-                          use it again, you will need to lease it again.
+                          <b>{t("lease-expired-header")}</b>
+                          {t("lease-expired-subheader")}
                         </Typography>
                       </>
                     )}
@@ -305,13 +302,15 @@ export const GPUManager = ({ vm }) => {
                           <Skeleton height={"5rem"} />
                         ) : (
                           <FormControl fullWidth>
-                            <InputLabel id="gpu-picker-label">GPU</InputLabel>
+                            <InputLabel id="gpu-picker-label">
+                              {t("resource-gpu")}
+                            </InputLabel>
                             <Select
                               labelId="gpu-picker-label"
                               id="gpu-picker"
                               value={gpuChoice}
                               onChange={(e) => setGpuChoice(e.target.value)}
-                              label="GPU"
+                              label={t("resource-gpu")}
                               fullWidth
                               defaultOpen
                             >
@@ -346,7 +345,7 @@ export const GPUManager = ({ vm }) => {
                                         <Chip
                                           label={
                                             <span>
-                                              Leased until
+                                              {t("leased-until")}
                                               <b
                                                 style={{
                                                   fontFamily: "monospace",
@@ -389,7 +388,7 @@ export const GPUManager = ({ vm }) => {
                             onClick={() => setGpuPickerOpen(false)}
                             color="error"
                           >
-                            Cancel
+                            {t("cancel")}
                           </Button>
                           <Button
                             onClick={async () => {
@@ -403,7 +402,7 @@ export const GPUManager = ({ vm }) => {
                                 );
                                 queueJob(res);
                                 setGpuChoice("");
-                                enqueueSnackbar("GPU attached", {
+                                enqueueSnackbar(t("gpu-attached"), {
                                   variant: "success",
                                 });
                               } catch (error) {
@@ -411,7 +410,7 @@ export const GPUManager = ({ vm }) => {
 
                                 errorHandler(error).forEach((e) =>
                                   enqueueSnackbar(
-                                    "Could not attach GPU: " + e,
+                                    t("could-not-attach-gpu") + e,
                                     {
                                       variant: "error",
                                     }
@@ -421,7 +420,7 @@ export const GPUManager = ({ vm }) => {
                             }}
                             color="primary"
                           >
-                            Attach
+                            {t("lease-gpu")}
                           </Button>
                         </Stack>
                       </>
@@ -429,9 +428,9 @@ export const GPUManager = ({ vm }) => {
                   </Stack>
 
                   <Typography variant="body2">
-                    You will need to install the drivers and software yourself.
+                    {t("gpu-drivers-1")}
                     <br />
-                    On Ubuntu, run{" "}
+                    {t("gpu-drivers-2")}
                     <CopyToClipboard text="sudo ubuntu-drivers install --gpgpu">
                       <Tooltip title="Copy to clipboard">
                         <span
@@ -444,15 +443,16 @@ export const GPUManager = ({ vm }) => {
                           sudo ubuntu-drivers install --gpgpu
                         </span>
                       </Tooltip>
-                    </CopyToClipboard>{" "}
-                    to install the latest drivers.
+                    </CopyToClipboard>
+                    {t("gpu-drivers-3")}
+
                     <Link
                       href="https://help.ubuntu.com/community/NvidiaDriversInstallation"
                       target="_blank"
                       rel="noreferrer"
                       ml={1}
                     >
-                      Learn more
+                      {t("learn-more")}
                     </Link>
                   </Typography>
                 </Stack>

@@ -77,19 +77,14 @@ const ResourceTypeChat = () => {
         <>
           {!response ? (
             <Typography variant="body2">
-              <b>Kubernetes Deployment</b>
+              <b>{t("resource-kubernetes-deployment")}</b>
               <br />
-              Used for stateless <u>frontend</u> and <u>backend</u> services.
-              Allows for CI/CD through GitHub Actions and other pipelines. Your
-              repo must have a Dockerfile.
+              {t("explain-deployment")}
               <br />
               <br />
-              <b>VM (Virtual Machine)</b>
+              <b>VM ({t("resource-vm")})</b>
               <br />
-              Provides the ability to run an operating system directly. More
-              versatile but deployment and maintenance will be more difficult.
-              Ideal for <u>GPU compute</u> and <u>databases</u>, anything that
-              requires <u>persistent storage</u>.
+              {t("explain-vm")}
             </Typography>
           ) : (
             <Typography variant="body2">

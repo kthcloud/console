@@ -16,13 +16,13 @@ import Iconify from "./components/Iconify";
 // ----------------------------------------------------------------------
 
 export default function App() {
-
   return (
     <ReactKeycloakProvider authClient={keycloak}>
       <ResourceContextProvider>
         <SnackbarProvider
           maxSnack={5}
-          anchorOrigin={{ vertical: "top", horizontal: "left" }}
+          anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+          autoHideDuration={3000}
           action={(snack) => (
             <IconButton onClick={() => closeSnackbar(snack)} color="inherit">
               <Iconify icon="material-symbols:close" />
