@@ -64,7 +64,7 @@ export default function WidgetSummary({
       </IconWrapperStyle>
       {icon === "bi:memory" ? (
         <Typography variant="h3">
-          {(total / 1000).toString().substring(0, 5)}
+          {(total / 1000).toString().substring(0, 3)}
         </Typography>
       ) : (
         <Typography variant="h3">{fShortenNumber(total)}</Typography>
