@@ -135,7 +135,7 @@ const ProxyManager = ({ vm }) => {
   return (
     <Card sx={{ boxShadow: 20 }}>
       <CardHeader
-        title="Proxies"
+        title={t("proxies")}
         subheader={
           <span>
             {t("proxies-subheader-1")}
