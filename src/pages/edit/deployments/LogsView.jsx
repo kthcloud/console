@@ -6,23 +6,32 @@ import {
   FormControlLabel,
   Stack,
   Switch,
+  Typography,
 } from "@mui/material";
 import { useKeycloak } from "@react-keycloak/web";
 import { useEffect, useState } from "react";
 import CopyToClipboard from "react-copy-to-clipboard";
 import Iconify from "src/components/Iconify";
 import polyfilledEventSource from "@sanity/eventsource";
+import { useTranslation } from "react-i18next";
 
 export const LogsView = ({ deployment }) => {
+  const { t } = useTranslation();
   const { initialized, keycloak } = useKeycloak();
   const [logs, setLogs] = useState([]);
   const [lineWrap, setLineWrap] = useState(true);
   const [compactMode, setCompactMode] = useState(false);
+  const [connection, setConnection] = useState("Connecting");
+  const [sse, setSse] = useState(null);
 
-  useEffect(() => {
+  const initSse = () => {
     if (!(deployment && initialized)) return;
+    
+    if (sse) {
+      sse.close();
+    }
 
-    const sse = new polyfilledEventSource(
+    let eventSource = new polyfilledEventSource(
       `${process.env.REACT_APP_DEPLOY_API_URL}/deployments/${deployment.id}/logs-sse`,
       {
         headers: {
@@ -31,14 +40,29 @@ export const LogsView = ({ deployment }) => {
       }
     );
 
-    sse.onerror = () => {
-      sse.close();
+    setSse(eventSource);
+
+    eventSource.onerror = () => {
+      eventSource.close();
+      setConnection("Error");
+      setTimeout(() => {
+        setConnection("Retrying");
+        initSse();
+      }, 5000);
     };
 
-    sse.onmessage = (event) => {
+    eventSource.onmessage = (event) => {
       setLogs((logs) => [event.data, ...logs]);
+      setConnection("Connected");
     };
 
+    eventSource.onopen = () => {
+      setConnection("Connected");
+    };
+  };
+
+  useEffect(() => {
+    initSse();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialized]);
 
@@ -46,11 +70,17 @@ export const LogsView = ({ deployment }) => {
 
   return (
     <Card sx={{ boxShadow: 20 }}>
-      <CardHeader title={"Logs"} subheader={"View logs from your deployment"} />
+      <CardHeader title={t("logs")} subheader={t("logs-subheader")} />
 
       <CardContent>
         <Stack direction="column" spacing={2}>
-          <Stack direction="row" spacing={3} flexWrap={"wrap"} useFlexGap>
+          <Stack
+            direction="row"
+            spacing={3}
+            flexWrap={"wrap"}
+            alignItems={"center"}
+            useFlexGap
+          >
             <FormControlLabel
               control={
                 <Switch
@@ -59,7 +89,7 @@ export const LogsView = ({ deployment }) => {
                   inputProps={{ "aria-label": "controlled" }}
                 />
               }
-              label="Line wrap"
+              label={t("line-wrap")}
             />
 
             <FormControlLabel
@@ -70,7 +100,7 @@ export const LogsView = ({ deployment }) => {
                   inputProps={{ "aria-label": "controlled" }}
                 />
               }
-              label="Compact view"
+              label={t("compact-view")}
             />
 
             <Button
@@ -78,7 +108,7 @@ export const LogsView = ({ deployment }) => {
               startIcon={<Iconify icon={"mdi:broom"} />}
               onClick={() => setLogs([])}
             >
-              Clear logs
+              {t("button-clear")}
             </Button>
 
             <CopyToClipboard text={logs.join("\n")}>
@@ -88,7 +118,7 @@ export const LogsView = ({ deployment }) => {
                   <Iconify icon={"material-symbols:content-copy-outline"} />
                 }
               >
-                Copy Logs
+                {t("copy")}
               </Button>
             </CopyToClipboard>
 
@@ -106,8 +136,12 @@ export const LogsView = ({ deployment }) => {
                 element.click();
               }}
             >
-              Download logs
+              {t("download")}
             </Button>
+
+            <Typography variant="body2">
+              {t("connection-status")}: {connection}
+            </Typography>
           </Stack>
 
           <Stack
@@ -145,7 +179,7 @@ export const LogsView = ({ deployment }) => {
                   flexGrow: 1,
                 }}
               >
-                No logs found! Cause some trouble and check back here.
+                {t("no-logs-found")}
               </pre>
             )}
           </Stack>

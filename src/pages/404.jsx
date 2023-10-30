@@ -4,6 +4,7 @@ import { styled } from "@mui/material/styles";
 import { Button, Typography, Container, Box } from "@mui/material";
 // components
 import Page from "../components/Page";
+import { useTranslation } from "react-i18next";
 
 // ----------------------------------------------------------------------
 
@@ -20,17 +21,18 @@ const ContentStyle = styled("div")(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function Page404() {
+  const { t } = useTranslation();
+
   return (
-    <Page title="404 Page Not Found">
+    <Page title={t("404-title")}>
       <Container>
         <ContentStyle sx={{ textAlign: "center", alignItems: "center" }}>
           <Typography variant="h3" paragraph>
-            Sorry, page not found!
+            {t("page-not-found")}
           </Typography>
 
           <Typography sx={{ color: "text.secondary" }}>
-            Sorry, we couldn’t find the page you’re looking for. Perhaps you’ve
-            mistyped the URL? Be sure to check your spelling.
+            {t("page-not-found-subheader")}
           </Typography>
 
           <Box
@@ -45,7 +47,7 @@ export default function Page404() {
             variant="contained"
             component={RouterLink}
           >
-            Go back
+            {t("take-me-back")}
           </Button>
         </ContentStyle>
       </Container>

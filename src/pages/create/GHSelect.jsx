@@ -12,15 +12,21 @@ import {
 import { useKeycloak } from "@react-keycloak/web";
 import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useSearchParams } from "react-router-dom";
 import { getRepositories } from "src/api/deploy/github";
 import Iconify from "src/components/Iconify";
 import { errorHandler } from "src/utils/errorHandler";
 
 export const GHSelect = ({ setAccessToken, repo, setRepo }) => {
+  const { t } = useTranslation();
   const [code, setCode] = useState("");
   const [repos, setRepos] = useState([]);
   const [loading, setLoading] = useState(false);
   const { initialized, keycloak } = useKeycloak();
+  
+  // eslint-disable-next-line no-unused-vars
+  let [searchParams, _] = useSearchParams();
 
   // PROD
   let client_id = "6c3a489177c7833cc639";
@@ -41,7 +47,7 @@ export const GHSelect = ({ setAccessToken, repo, setRepo }) => {
       setLoading(false);
     } catch (error) {
       errorHandler(error).forEach((e) =>
-        enqueueSnackbar("Error getting repositories: " + e, {
+        enqueueSnackbar(t("error-getting-repos") + ": " + e, {
           variant: "error",
         })
       );
@@ -50,16 +56,13 @@ export const GHSelect = ({ setAccessToken, repo, setRepo }) => {
 
   useEffect(() => {
     // After requesting Github access, Github redirects back to your app with a code parameter
-    const url = window.location.href;
-    const hasCode = url.includes("?code=");
+    const hasCode = searchParams.has("code");
 
     // If Github API returns the code parameter
     if (hasCode) {
-      const newUrl = url.split("?code=");
-      window.history.pushState({}, null, newUrl[0]);
-      setCode(newUrl[1]);
-
-      getRepos(newUrl[1]);
+      const newUrl = searchParams.get("code");
+      setCode(newUrl);
+      getRepos(newUrl);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -68,8 +71,8 @@ export const GHSelect = ({ setAccessToken, repo, setRepo }) => {
   return (
     <Card sx={{ boxShadow: 20 }}>
       <CardHeader
-        title={"Connect GitHub repository"}
-        subheader="Link your GitHub repo for automatic Continuous Delivery. If not linked, instructions for pushing your container image will be provided later"
+        title={t("create-deployment-github-title")}
+        subheader={t("create-deployment-github-subheader")}
       />
       <CardContent>
         {loading ? (
@@ -78,13 +81,15 @@ export const GHSelect = ({ setAccessToken, repo, setRepo }) => {
           <>
             {repos.length > 0 ? (
               <FormControl fullWidth>
-                <InputLabel id="repo-picker-label">Repositories</InputLabel>
+                <InputLabel id="repo-picker-label">
+                  {t("create-deployment-github-repo")}
+                </InputLabel>
                 <Select
                   labelId="repo-picker-label"
                   id="repo-picker"
                   value={repo}
                   onChange={(e) => setRepo(e.target.value)}
-                  label="Repositories"
+                  label={t("create-deployment-github-repo")}
                   fullWidth
                   defaultOpen
                 >
@@ -108,7 +113,7 @@ export const GHSelect = ({ setAccessToken, repo, setRepo }) => {
                 startIcon={<Iconify icon="mdi:github" />}
                 variant="contained"
               >
-                <span>Login with GitHub</span>
+                <span>{t("login-with-github")}</span>
               </Button>
             )}
           </>

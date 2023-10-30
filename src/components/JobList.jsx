@@ -1,4 +1,11 @@
-import { Chip, CircularProgress, Stack } from "@mui/material";
+import {
+  AppBar,
+  Box,
+  Chip,
+  CircularProgress,
+  Stack,
+  Toolbar,
+} from "@mui/material";
 import { sentenceCase } from "change-case";
 import Iconify from "./Iconify";
 import useResource from "src/hooks/useResource";
@@ -52,37 +59,54 @@ export default function JobList() {
     );
   };
 
+  if (jobs.length === 0) {
+    return null;
+  }
+
   return (
-    <Stack direction={"row"} flexWrap={"wrap"} mb={2}>
-      {jobs.map(
-        (job) =>
-          Object.hasOwn(job, "type") &&
-          Object.hasOwn(job, "status") &&
-          Object.hasOwn(job, "name") && (
-            <Chip
-              key={job.jobId}
-              icon={
-                job.status === "finished" ? (
-                  <Iconify
-                    icon="carbon:checkmark-filled"
-                    width={20}
-                    height={20}
-                    mx={1}
-                  />
-                ) : (
-                  <CircularProgress size={20} mx={1} />
-                )
-              }
-              label={renderText(job)}
-              sx={{
-                mb: 2,
-                mr: 2,
-              }}
-              color={resolveColor(job.status)}
-              onDelete={() => handleDelete(job)}
-            />
-          )
-      )}
-    </Stack>
+    <AppBar
+      position="fixed"
+      color="default"
+      sx={{
+        top: "auto",
+        bottom: 0,
+        padding: 2,
+      }}
+    >
+      <Toolbar>
+        <Box sx={{ flexGrow: 1 }} />
+        <Stack direction={"row"} flexWrap={"wrap"}>
+          {jobs.map(
+            (job) =>
+              Object.hasOwn(job, "type") &&
+              Object.hasOwn(job, "status") &&
+              Object.hasOwn(job, "name") && (
+                <Chip
+                  key={job.jobId}
+                  icon={
+                    job.status === "finished" ? (
+                      <Iconify
+                        icon="carbon:checkmark-filled"
+                        width={20}
+                        height={20}
+                        mx={1}
+                      />
+                    ) : (
+                      <CircularProgress size={20} mx={1} />
+                    )
+                  }
+                  label={renderText(job)}
+                  sx={{
+                    mb: 2,
+                    mr: 2,
+                  }}
+                  color={resolveColor(job.status)}
+                  onDelete={() => handleDelete(job)}
+                />
+              )
+          )}
+        </Stack>
+      </Toolbar>
+    </AppBar>
   );
 }

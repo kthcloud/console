@@ -30,20 +30,24 @@ import CreateDeployment from "./CreateDeployment";
 import CreateVm from "./CreateVm";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import ResourceTypeChat from "./ResourceTypeChat";
+import { useTranslation } from "react-i18next";
 
 export const Create = () => {
   const { initialized } = useKeycloak();
+  const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
   const { queueJob } = useResource();
   const [alignment, _setAlignment] = useState("");
   const setAlignment = (newAlignment) => {
     _setAlignment(newAlignment);
-    setSearchParams({ type: newAlignment });
+    let params = new URLSearchParams(searchParams);
+    params.set("type", newAlignment);
+    setSearchParams(params);
   };
 
   const navigate = useNavigate();
   // eslint-disable-next-line no-unused-vars
-  let [_, setSearchParams] = useSearchParams();
+  let [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
     setAlignment("deployment");
@@ -63,17 +67,17 @@ export const Create = () => {
       {!initialized ? (
         <LoadingPage />
       ) : (
-        <Page title="Create new resource">
+        <Page title={t("create-title")}>
           <Container>
             <Stack spacing={3}>
               <Typography variant="h4" gutterBottom>
-                Create new resource
+                {t("create-title")}
               </Typography>
 
               <JobList />
 
               <Card sx={{ boxShadow: 20 }}>
-                <CardHeader title={"Resource type"} />
+                <CardHeader title={t("resource-type")} />
                 <CardContent>
                   <Stack spacing={3}>
                     <ResourceTypeChat />
@@ -87,9 +91,11 @@ export const Create = () => {
                         aria-label="resource-type"
                       >
                         <ToggleButton value="deployment">
-                          Kubernetes Deployment
+                          {t("resource-kubernetes-deployment")}
                         </ToggleButton>
-                        <ToggleButton value="vm">Virtual machine</ToggleButton>
+                        <ToggleButton value="vm">
+                          {t("resource-vm")}
+                        </ToggleButton>
                       </ToggleButtonGroup>
                       <ResourceComparisonTable />
                     </Stack>

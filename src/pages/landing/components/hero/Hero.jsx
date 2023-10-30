@@ -10,9 +10,11 @@ import "./hero.css";
 import { useEffect, useState } from "react";
 import { fShortenNumber } from "src/utils/formatNumber";
 import { useKeycloak } from "@react-keycloak/web";
+import { useTranslation } from "react-i18next";
 
 const Hero = () => {
   const { keycloak, initialized } = useKeycloak();
+  const { t } = useTranslation();
 
   // Capacities
   const [capacitiesLoading, setCapacitiesLoading] = useState(true);
@@ -129,7 +131,7 @@ const Hero = () => {
                 });
               }}
             >
-              Get started
+              {t("button-get-started")}
             </Button>
             <Button
               variant={"outlined"}
@@ -141,7 +143,7 @@ const Hero = () => {
                 });
               }}
             >
-              Sign in
+              {t("button-login")}
             </Button>
           </Stack>
         </Grid>
@@ -183,7 +185,7 @@ const Hero = () => {
               variant="body2"
               sx={{ textAlign: { md: "left", xs: "center" } }}
             >
-              GPUs
+              {t("landing-hero-gpu")}
             </Typography>
           </Grid>
           <Grid item xs={12} sm={4} md={12}>
@@ -197,7 +199,7 @@ const Hero = () => {
               variant="body2"
               sx={{ textAlign: { md: "left", xs: "center" } }}
             >
-              CPU Cores
+              {t("landing-hero-cpu")}
             </Typography>
           </Grid>
           <Grid item xs={12} sm={4} md={12}>
@@ -211,7 +213,7 @@ const Hero = () => {
               variant="body2"
               sx={{ textAlign: { md: "left", xs: "center" } }}
             >
-              Terabytes of memory
+              {t("landing-hero-ram")}
             </Typography>
           </Grid>
         </Grid>

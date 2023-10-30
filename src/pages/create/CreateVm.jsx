@@ -26,8 +26,10 @@ import { faker } from "@faker-js/faker";
 import { errorHandler } from "src/utils/errorHandler";
 import useResource from "src/hooks/useResource";
 import ZoneSelector from "./ZoneSelector";
+import { useTranslation } from "react-i18next";
 
 export default function CreateVm({ finished }) {
+  const { t } = useTranslation();
   const [cleaned, setCleaned] = useState("");
 
   const [selectedZone, setSelectedZone] = useState("");
@@ -70,18 +72,18 @@ export default function CreateVm({ finished }) {
     const value = parseInt(raw);
     if (!value) {
       setCpuCores("");
-      setCpuError("Input a number, 2-" + availableCPU);
+      setCpuError(t("create-vm-input-number") + ", 2-" + availableCPU);
       return;
     }
 
     if (value > availableCPU) {
-      setCpuError("Max CPU cores available: " + availableCPU);
+      setCpuError(t("create-vm-max-cpu") + ": " + availableCPU);
       setCpuCores(value);
       return;
     }
 
     if (value < 2) {
-      setCpuError("Minimum CPU cores: 2");
+      setCpuError(t("create-vm-minimum-cpu") + ": 2");
       setCpuCores(value);
 
       return;
@@ -95,18 +97,18 @@ export default function CreateVm({ finished }) {
     const value = parseInt(raw);
     if (!value) {
       setRam("");
-      setRamError("Input a number, 4-" + availableRAM);
+      setRamError(t("create-vm-input-number") + ", 4-" + availableRAM);
       return;
     }
 
     if (value > availableRAM) {
-      setRamError("Max RAM available: " + availableRAM);
+      setRamError(t("create-vm-max-ram") + ": " + availableRAM);
       setRam(value);
       return;
     }
 
     if (value < 4) {
-      setRamError("Minimum RAM: 4 GB");
+      setRamError(t("create-vm-minimum-ram") + ": 4 GB");
       setRam(value);
       return;
     }
@@ -119,18 +121,18 @@ export default function CreateVm({ finished }) {
     const value = parseInt(raw);
     if (!value) {
       setDiskSize("");
-      setDiskError("Input a number, 20-" + availableDisk);
+      setDiskError(t("create-vm-input-number") + ", 20-" + availableDisk);
       return;
     }
 
     if (value > availableDisk) {
-      setDiskError("Max disk available: " + availableDisk);
+      setDiskError(t("create-vm-max-disk-size") + ": " + availableDisk);
       setDiskSize(value);
       return;
     }
 
     if (value < 20) {
-      setDiskError("Minimum disk size: 20 GB");
+      setDiskError(t("create-vm-minimum-disk-size") + ": 20 GB");
       setDiskSize(value);
       return;
     }
@@ -152,7 +154,7 @@ export default function CreateVm({ finished }) {
     if (!initialized) return;
 
     if (!cleaned || !publicKey || !cpuCores || !diskSize || !ram) {
-      enqueueSnackbar("Please fill all fields", { variant: "error" });
+      enqueueSnackbar(t("error-all-fields"), { variant: "error" });
       return;
     }
 
@@ -180,7 +182,7 @@ export default function CreateVm({ finished }) {
       }
     } catch (error) {
       errorHandler(error).forEach((e) =>
-        enqueueSnackbar("Error creating vm: " + e, {
+        enqueueSnackbar(t("error-creating-vm") + ": " + e, {
           variant: "error",
         })
       );
@@ -190,12 +192,9 @@ export default function CreateVm({ finished }) {
   if (!verifyUserCanCreate())
     return (
       <Card sx={{ boxShadow: 20 }}>
-        <CardHeader title="Create VM" />
+        <CardHeader title={t("create-vm")} />
         <CardContent>
-          <Typography variant="body1">
-            You do not have enough resources to create a VM. Please delete some
-            other virtual machines or contact support.
-          </Typography>
+          <Typography variant="body1">{t("create-vm-no-resources")}</Typography>
         </CardContent>
       </Card>
     );
@@ -207,13 +206,13 @@ export default function CreateVm({ finished }) {
       ) : (
         <>
           <Card sx={{ boxShadow: 20 }}>
-            <CardHeader title="Create VM" />
+            <CardHeader title={t("create-vm")} />
             <CardContent>
               <RFC1035Input
-                label={"Name"}
-                placeholder="name"
-                callToAction="Your VM will be created with the name"
-                type="VM Name"
+                label={t("admin-name")}
+                placeholder={t("admin-name")}
+                callToAction={t("create-vm-warning")}
+                type={t("admin-name")}
                 variant="standard"
                 cleaned={cleaned}
                 setCleaned={setCleaned}
@@ -222,10 +221,12 @@ export default function CreateVm({ finished }) {
 
               {user && (
                 <FormControl fullWidth sx={{ mt: 3 }}>
-                  <InputLabel id="publickey-select-label">SSH Key</InputLabel>
+                  <InputLabel id="publickey-select-label">
+                    {t("create-vm-ssh-key")}
+                  </InputLabel>
                   <Select
                     id="publickey"
-                    label="SSH Key"
+                    label={t("create-vm-ssh-key")}
                     value={publicKey}
                     onChange={(e) => {
                       setPublicKey(e.target.value);
@@ -238,8 +239,11 @@ export default function CreateVm({ finished }) {
                     ))}
                   </Select>
                   <FormHelperText>
-                    Don't have a key yet? Add one to your{" "}
-                    <Link to="/profile">profile</Link>.
+                    {t("create-vm-ssh-key-subheader")}
+                    <Link to="/profile">
+                      {t("create-vm-ssh-key-subheader-link")}
+                    </Link>
+                    .
                   </FormHelperText>
                 </FormControl>
               )}
@@ -254,7 +258,7 @@ export default function CreateVm({ finished }) {
 
           {user && (
             <Card sx={{ boxShadow: 20 }}>
-              <CardHeader title="Select specs" />
+              <CardHeader title={t("create-vm-select-specs")} />
               <CardContent>
                 <Stack
                   spacing={3}
@@ -263,14 +267,16 @@ export default function CreateVm({ finished }) {
                   flexWrap={"wrap"}
                 >
                   <TextField
-                    label="CPU Cores"
+                    label={t("landing-hero-cpu")}
                     id="cores"
                     value={cpuCores}
                     onChange={(e) => calculateCPU(e.target.value)}
                     helperText={
                       cpuError
                         ? cpuError
-                        : "Number of CPU cores, 2-" + availableCPU
+                        : t("create-vm-number-of-cpu-cores") +
+                          ", 2-" +
+                          availableCPU
                     }
                     inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
                     error={cpuError ? true : false}
@@ -284,7 +290,7 @@ export default function CreateVm({ finished }) {
                     helperText={
                       ramError
                         ? ramError
-                        : "Amount of RAM in GB, 4-" + availableRAM
+                        : t("create-vm-amount-of-ram") + ", 4-" + availableRAM
                     }
                     InputProps={{
                       inputMode: "numeric",
@@ -297,14 +303,16 @@ export default function CreateVm({ finished }) {
                   />
 
                   <TextField
-                    label="Disk Size"
+                    label={t("create-vm-disk-size")}
                     id="disk"
                     value={diskSize}
                     onChange={(e) => calculateDisk(e.target.value)}
                     helperText={
                       diskError
                         ? diskError
-                        : "Disk size in GB, 20-" + availableDisk
+                        : t("create-vm-disk-size-helper") +
+                          ", 20-" +
+                          availableDisk
                     }
                     InputProps={{
                       inputMode: "numeric",
@@ -328,16 +336,16 @@ export default function CreateVm({ finished }) {
           >
             {user.role.permissions.includes("useGpus") && (
               <Typography variant="body2">
-                You can attach a GPU in the next step.
+                {t("create-vm-gpu-next-step")}
               </Typography>
             )}
 
             <Button onClick={() => handleCreate(true)} variant="outlined">
-              Create and stay
+              {t("create-and-stay")}
             </Button>
 
             <Button onClick={() => handleCreate(false)} variant="contained">
-              Create
+              {t("create-and-go")}
             </Button>
           </Stack>
         </>

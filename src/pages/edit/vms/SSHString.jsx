@@ -7,15 +7,17 @@ import {
   Typography,
 } from "@mui/material";
 import { CopyToClipboard } from "react-copy-to-clipboard";
+import { useTranslation } from "react-i18next";
 
 const SSHString = ({ resource }) => {
+  const { t } = useTranslation();
   const ssh = resource.connectionString;
 
   return (
     <Card sx={{ boxShadow: 20 }}>
       <CardHeader
-        title="SSH Connection string"
-        subheader={"Run this in your terminal to access the VM"}
+        title={t("ssh-string")}
+        subheader={t("ssh-string-subheader")}
       />
       <CardContent>
         {!ssh ? (
@@ -23,7 +25,7 @@ const SSHString = ({ resource }) => {
         ) : (
           <Typography variant="body1">
             <CopyToClipboard text={ssh}>
-              <Tooltip title="Copy to clipboard">
+              <Tooltip title={t("copy-to-clipboard")}>
                 <b
                   style={{
                     fontFamily: "monospace",

@@ -8,8 +8,10 @@ import useResource from "src/hooks/useResource";
 import { sentenceCase } from "change-case";
 import ConfirmButton from "src/components/ConfirmButton";
 import { errorHandler } from "src/utils/errorHandler";
+import { useTranslation } from "react-i18next";
 
 export const DeploymentCommands = ({ deployment }) => {
+  const { t } = useTranslation();
   const { queueJob } = useResource();
   const { initialized, keycloak } = useKeycloak();
   const navigate = useNavigate();
@@ -22,12 +24,12 @@ export const DeploymentCommands = ({ deployment }) => {
 
       if (res) {
         queueJob(res);
-        enqueueSnackbar("Resource deleting... ", { variant: "info" });
+        enqueueSnackbar(t("resource-deleting"), { variant: "info" });
         navigate("/deploy");
       }
     } catch (error) {
       errorHandler(error).forEach((e) =>
-        enqueueSnackbar("Error deleting resource: " + e, {
+        enqueueSnackbar(t("error-deleting-resource") + e, {
           variant: "error",
         })
       );
@@ -39,12 +41,12 @@ export const DeploymentCommands = ({ deployment }) => {
 
     try {
       await applyCommand(deployment.id, command, keycloak.token);
-      enqueueSnackbar(sentenceCase(command) + " deployment in progress... ", {
+      enqueueSnackbar(sentenceCase(command) + " " + t("deployment-in-progress"), {
         variant: "info",
       });
     } catch (error) {
       errorHandler(error).forEach((e) =>
-        enqueueSnackbar("Failed to update visibility: " + e, {
+        enqueueSnackbar(t("failed-update"), ": " + e, {
           variant: "error",
         })
       );
@@ -61,7 +63,7 @@ export const DeploymentCommands = ({ deployment }) => {
     >
       {deployment.integrations &&
         deployment.integrations.includes("github") && (
-          <Tooltip title={"Linked to GitHub"}>
+          <Tooltip title={t("deploy-github")}>
             <span style={{ display: "flex", alignItems: "center" }}>
               <Iconify icon="mdi:github" width={24} height={24} />
             </span>
@@ -76,7 +78,7 @@ export const DeploymentCommands = ({ deployment }) => {
           startIcon={<Iconify icon="mdi:restart" />}
           color="warning"
         >
-          Restart
+          {t("button-restart")}
         </Button>
       )}
       {deployment.type === "deployment" &&
@@ -85,36 +87,24 @@ export const DeploymentCommands = ({ deployment }) => {
         deployment.private === false && (
           <Button
             component={Link}
-            href={deployment.customDomainUrl ? deployment.customDomainUrl : deployment.url}
+            href={
+              deployment.customDomainUrl
+                ? deployment.customDomainUrl
+                : deployment.url
+            }
             target="_blank"
             rel="noreferrer"
             underline="none"
             startIcon={<Iconify icon="mdi:external-link" />}
             variant="contained"
           >
-            Go to page
-          </Button>
-        )}
-
-      {deployment.type === "deployment" &&
-        Object.hasOwn(deployment, "storageUrl") &&
-        deployment.storageUrl !== "" && (
-          <Button
-            component={Link}
-            href={`https://${deployment.storageUrl}`}
-            target="_blank"
-            rel="noreferrer"
-            underline="none"
-            startIcon={<Iconify icon="mdi:folder" />}
-            variant="contained"
-          >
-            Go to storage
+            {t("visit-page")}
           </Button>
         )}
 
       <ConfirmButton
-        action="Delete"
-        actionText={"delete " + deployment.name}
+        action={t("button-delete")}
+        actionText={`${t("button-delete")} `.toLowerCase() + deployment.name}
         callback={doDelete}
         props={{
           color: "error",

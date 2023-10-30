@@ -21,6 +21,7 @@ import { useKeycloak } from "@react-keycloak/web";
 import { decode } from "js-base64";
 import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { deleteDeployment, getDeployments } from "src/api/deploy/deployments";
 import { getAllUsers } from "src/api/deploy/users";
@@ -30,8 +31,11 @@ import Page from "src/components/Page";
 import useInterval from "src/hooks/useInterval";
 import useResource from "src/hooks/useResource";
 import { errorHandler } from "src/utils/errorHandler";
+import { hashGPUId } from "src/utils/helpers";
 
 export const Admin = () => {
+  const { t } = useTranslation();
+
   // ==================================================
   // Keycloak/user session
 
@@ -64,7 +68,7 @@ export const Admin = () => {
       setDbUsers(response);
     } catch (error) {
       errorHandler(error).forEach((e) =>
-        enqueueSnackbar("Could fetch users: " + e, {
+        enqueueSnackbar(t("error-could-not-fetch-users") + ": " + e, {
           variant: "error",
         })
       );
@@ -75,7 +79,7 @@ export const Admin = () => {
       setDbVMs(response);
     } catch (error) {
       errorHandler(error).forEach((e) =>
-        enqueueSnackbar("Could fetch vms: " + e, {
+        enqueueSnackbar(t("error-could-not-fetch-vms") + ": " + e, {
           variant: "error",
         })
       );
@@ -86,7 +90,7 @@ export const Admin = () => {
       setDbDeployments(response);
     } catch (error) {
       errorHandler(error).forEach((e) =>
-        enqueueSnackbar("Could fetch deployments: " + e, {
+        enqueueSnackbar(t("error-could-not-fetch-deployments") + ": " + e, {
           variant: "error",
         })
       );
@@ -97,7 +101,7 @@ export const Admin = () => {
       setDbGPUs(response);
     } catch (error) {
       errorHandler(error).forEach((e) =>
-        enqueueSnackbar("Could fetch GPUs: " + e, {
+        enqueueSnackbar(t("error-could-not-fetch-gpus") + ": " + e, {
           variant: "error",
         })
       );
@@ -238,20 +242,20 @@ export const Admin = () => {
     const hours = Math.floor(minutes / 60);
 
     if (hours > 0) {
-      setTimeDiffSinceLastRefresh(hours + " hours ago");
+      setTimeDiffSinceLastRefresh(hours + " " + t("time-hours-ago"));
       return;
     }
     if (minutes > 0) {
-      setTimeDiffSinceLastRefresh(minutes + " minutes ago");
+      setTimeDiffSinceLastRefresh(minutes + " " + t("time-minutes-ago"));
       return;
     }
 
     if (seconds > 0) {
-      setTimeDiffSinceLastRefresh(seconds + " seconds ago");
+      setTimeDiffSinceLastRefresh(seconds + " " + t("time-seconds-ago"));
       return;
     }
 
-    setTimeDiffSinceLastRefresh("0 seconds ago");
+    setTimeDiffSinceLastRefresh("0 " + t("time-seconds-ago"));
   }, 1000);
 
   const impersonate = (resourceType, id) => {
@@ -269,7 +273,7 @@ export const Admin = () => {
       {!user ? (
         <LoadingPage />
       ) : (
-        <Page title="Admin">
+        <Page title={t("admin-title")}>
           <AppBar
             position="fixed"
             color="inherit"
@@ -282,22 +286,22 @@ export const Admin = () => {
             }}
           >
             <Toolbar>
-              <Typography variant="h4">Admin</Typography>
+              <Typography variant="h4">{t("admin-title")}</Typography>
               <Box sx={{ flexGrow: 1 }} />
               <Stack direction="row" alignItems={"center"} spacing={3}>
                 <Button variant="contained" onClick={getResources}>
-                  Refresh resources
+                  {t("admin-refresh-resources")}
                 </Button>
                 <Typography variant="body1">
                   {loading ? (
-                    "Loading..."
+                    t("loading")
                   ) : (
                     <span>
-                      Last load:
+                      RTT:
                       <span style={{ fontFamily: "monospace" }}>
                         {" " + lastRefreshRtt + " "}
                       </span>
-                      RTT:
+                      {t("admin-last-load")}:
                       <span style={{ fontFamily: "monospace" }}>
                         {" " + timeDiffSinceLastRefresh}
                       </span>
@@ -311,7 +315,7 @@ export const Admin = () => {
           <Container maxWidth="xl">
             <Stack spacing={3}>
               <Card sx={{ boxShadow: 20 }}>
-                <CardHeader title="Deployments" />
+                <CardHeader title={t("resource-deployments")} />
 
                 <CardContent>
                   <Stack
@@ -323,7 +327,7 @@ export const Admin = () => {
                     useFlexGap
                   >
                     <TextField
-                      label="Filter"
+                      label={t("button-filter")}
                       variant="outlined"
                       value={deploymentsFilter}
                       onKeyDown={(e) => {
@@ -338,7 +342,7 @@ export const Admin = () => {
                       color="primary"
                       onClick={filterDeployments}
                     >
-                      Search
+                      {t("button-search")}
                     </Button>
                     <Button
                       variant="contained"
@@ -349,26 +353,28 @@ export const Admin = () => {
                       }}
                       disabled={!loadedDeployments}
                     >
-                      Clear
+                      {t("button-clear")}
                     </Button>
                     <Typography variant="body1" gutterBottom>
-                      {"Showing " +
+                      {t("admin-showing") +
+                        " " +
                         deployments.length +
                         "/" +
                         dbDeployments.length +
-                        " loaded deployments"}
+                        " " +
+                        t("admin-loaded-deployments")}
                     </Typography>
                   </Stack>
                   <TableContainer>
                     <Table>
                       <TableHead>
                         <TableRow>
-                          <TableCell>Name</TableCell>
-                          <TableCell>User</TableCell>
-                          <TableCell>Visibility</TableCell>
-                          <TableCell>Integrations</TableCell>
-                          <TableCell>Status</TableCell>
-                          <TableCell>Actions</TableCell>
+                          <TableCell>{t("admin-name")}</TableCell>
+                          <TableCell>{t("admin-user")}</TableCell>
+                          <TableCell>{t("admin-visibility")}</TableCell>
+                          <TableCell>{t("admin-integrations")}</TableCell>
+                          <TableCell>{t("admin-status")}</TableCell>
+                          <TableCell>{t("admin-actions")}</TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
@@ -388,7 +394,9 @@ export const Admin = () => {
                               {renderUsername(deployment.ownerId)}
                             </TableCell>
                             <TableCell>
-                              {deployment.private ? "Private" : "Public"}
+                              {deployment.private
+                                ? t("admin-visibility-private")
+                                : t("admin-visibility-public")}
                             </TableCell>
                             <TableCell>
                               {deployment.integrations &&
@@ -403,7 +411,7 @@ export const Admin = () => {
                                     impersonate("deployment", deployment.id)
                                   }
                                 >
-                                  Edit
+                                  {t("button-edit")}
                                 </Button>
                                 <Button
                                   color="error"
@@ -414,7 +422,7 @@ export const Admin = () => {
                                     )
                                   }
                                 >
-                                  Delete
+                                  {t("button-delete")}
                                 </Button>
                               </Stack>
                             </TableCell>
@@ -427,7 +435,7 @@ export const Admin = () => {
               </Card>
 
               <Card sx={{ boxShadow: 20 }}>
-                <CardHeader title="Virtual Machines" />
+                <CardHeader title={t("resource-vms")} />
 
                 <CardContent>
                   <Stack
@@ -439,7 +447,7 @@ export const Admin = () => {
                     useFlexGap
                   >
                     <TextField
-                      label="Filter"
+                      label={t("button-filter")}
                       variant="outlined"
                       value={vmFilter}
                       onKeyDown={(e) => {
@@ -454,7 +462,7 @@ export const Admin = () => {
                       color="primary"
                       onClick={filterVms}
                     >
-                      Search
+                      {t("button-search")}
                     </Button>
                     <Button
                       variant="contained"
@@ -465,26 +473,28 @@ export const Admin = () => {
                       }}
                       disabled={!loadedVms}
                     >
-                      Clear
+                      {t("button-clear")}
                     </Button>
                     <Typography variant="body1" gutterBottom>
-                      {"Showing " +
+                      {t("admin-showing") +
+                        " " +
                         vms.length +
                         "/" +
                         dbVMs.length +
-                        " loaded vms"}
+                        " " +
+                        t("admin-loaded-vms")}
                     </Typography>
                   </Stack>
                   <TableContainer>
                     <Table>
                       <TableHead>
                         <TableRow>
-                          <TableCell>Name</TableCell>
-                          <TableCell>User</TableCell>
-                          <TableCell>Specs</TableCell>
-                          <TableCell>GPU</TableCell>
-                          <TableCell>Status</TableCell>
-                          <TableCell>Actions</TableCell>
+                          <TableCell>{t("admin-name")}</TableCell>
+                          <TableCell>{t("admin-user")}</TableCell>
+                          <TableCell>{t("admin-specs")}</TableCell>
+                          <TableCell>{t("admin-gpu")}</TableCell>
+                          <TableCell>{t("admin-status")}</TableCell>
+                          <TableCell>{t("admin-actions")}</TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
@@ -519,13 +529,19 @@ export const Admin = () => {
                               {vm.gpu && (
                                 <Stack direction={"column"}>
                                   <Typography variant="caption">
-                                    {decode(vm.gpu.id)}
+                                    {`${decode(vm.gpu.id)} ${hashGPUId(
+                                      vm.gpu.id
+                                    )}`}
                                   </Typography>
                                   <Typography variant="caption">
                                     {vm.gpu.leaseEnd}
                                   </Typography>
                                   <Typography variant="caption">
-                                    {vm.gpu.expired ? <b>Expired</b> : "Active"}
+                                    {vm.gpu.expired ? (
+                                      <b>{t("admin-gpu-expired")}</b>
+                                    ) : (
+                                      t("admin-gpu-active")
+                                    )}
                                   </Typography>
                                 </Stack>
                               )}
@@ -537,7 +553,7 @@ export const Admin = () => {
                                   size="small"
                                   onClick={() => impersonate("vm", vm.id)}
                                 >
-                                  Edit
+                                  {t("button-edit")}
                                 </Button>
                                 {vm.gpu && (
                                   <Button
@@ -546,7 +562,7 @@ export const Admin = () => {
                                       detachGPU(vm, keycloak.token)
                                     }
                                   >
-                                    Detach GPU
+                                    {t("button-detach-gpu")}
                                   </Button>
                                 )}
 
@@ -556,7 +572,7 @@ export const Admin = () => {
                                     deleteVM(vm.id, keycloak.token)
                                   }
                                 >
-                                  Delete
+                                  {t("button-delete")}
                                 </Button>
                               </Stack>
                             </TableCell>
@@ -573,7 +589,7 @@ export const Admin = () => {
                   title="Users"
                   subheader={
                     <Typography variant="body2">
-                      Edit user roles and permissions in{" "}
+                      {t("admin-edit-permissions-in") + " "}
                       <a
                         href="https://iam.cloud.cbh.kth.se"
                         target="_blank"
@@ -595,7 +611,7 @@ export const Admin = () => {
                     useFlexGap
                   >
                     <TextField
-                      label="Filter"
+                      label={t("button-filter")}
                       variant="outlined"
                       value={usersFilter}
                       onChange={(e) => {
@@ -610,7 +626,7 @@ export const Admin = () => {
                       color="primary"
                       onClick={filterUsers}
                     >
-                      Search
+                      {t("button-search")}
                     </Button>
                     <Button
                       variant="contained"
@@ -621,26 +637,26 @@ export const Admin = () => {
                       }}
                       disabled={!loadedUsers}
                     >
-                      Clear
+                      {t("button-clear")}
                     </Button>
                     <Typography variant="body1" gutterBottom>
-                      {"Showing " +
+                      {t("admin-showing") + " " +
                         users.length +
                         "/" +
                         dbUsers.length +
-                        " loaded users"}
+                        " " + t("admin-loaded-users")}
                     </Typography>
                   </Stack>
                   <TableContainer>
                     <Table>
                       <TableHead>
                         <TableRow>
-                          <TableCell>ID</TableCell>
-                          <TableCell>Username</TableCell>
-                          <TableCell>Email</TableCell>
-                          <TableCell>Role</TableCell>
-                          <TableCell>Admin</TableCell>
-                          <TableCell>Usage</TableCell>
+                          <TableCell>{t("admin-id")}</TableCell>
+                          <TableCell>{t("admin-username")}</TableCell>
+                          <TableCell>{t("admin-email")}</TableCell>
+                          <TableCell>{t("admin-role")}</TableCell>
+                          <TableCell>{t("admin-is-admin")}</TableCell>
+                          <TableCell>{t("admin-usage")}</TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
@@ -650,7 +666,7 @@ export const Admin = () => {
                             <TableCell>{user.username}</TableCell>
                             <TableCell>{user.email}</TableCell>
                             <TableCell>{user.role.name}</TableCell>
-                            <TableCell>{user.admin && "Admin"}</TableCell>
+                            <TableCell>{user.admin && t("admin-is-admin")}</TableCell>
                             <TableCell>
                               <Stack direction={"column"}>
                                 {Object.keys(user.usage).map((key) => (
@@ -676,7 +692,7 @@ export const Admin = () => {
               </Card>
 
               <Card sx={{ boxShadow: 20 }}>
-                <CardHeader title="GPU" />
+                <CardHeader title={t("resource-gpu")} />
 
                 <CardContent>
                   <Stack
@@ -688,7 +704,7 @@ export const Admin = () => {
                     useFlexGap
                   >
                     <TextField
-                      label="Filter"
+                      label={t("button-filter")}
                       variant="outlined"
                       value={gpusFilter}
                       onChange={(e) => {
@@ -703,7 +719,7 @@ export const Admin = () => {
                       color="primary"
                       onClick={filterGPUs}
                     >
-                      Search
+                      {t("button-search")}
                     </Button>
                     <Button
                       variant="contained"
@@ -714,30 +730,32 @@ export const Admin = () => {
                       }}
                       disabled={!loadedGPUs}
                     >
-                      Clear
+                      {t("button-clear")}
                     </Button>
                     <Typography variant="body1" gutterBottom>
-                      {"Showing " +
+                      {t("admin-showing") + " " +
                         gpus.length +
                         "/" +
                         dbGPUs.length +
-                        " loaded GPUs"}
+                        " " + t("admin-loaded-gpus")}
                     </Typography>
                   </Stack>
                   <TableContainer>
                     <Table>
                       <TableHead>
                         <TableRow>
-                          <TableCell>ID</TableCell>
-                          <TableCell>Name</TableCell>
-                          <TableCell>Leased until</TableCell>
-                          <TableCell>Expired</TableCell>
+                          <TableCell>{t("admin-id")}</TableCell>
+                          <TableCell>{t("admin-name")}</TableCell>
+                          <TableCell>{t("admin-leased-until")}</TableCell>
+                          <TableCell>{t("admin-gpu-expired")}</TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
                         {gpus.map((gpu) => (
                           <TableRow key={gpu.id}>
-                            <TableCell>{decode(gpu.id)}</TableCell>
+                            <TableCell>
+                              {`${decode(gpu.id)} ${hashGPUId(gpu.id)}`}
+                            </TableCell>
                             <TableCell>{gpu.name}</TableCell>
                             <TableCell>
                               {gpu.lease &&
@@ -747,7 +765,7 @@ export const Admin = () => {
                                   .split(".")[0] + " UTC"}
                             </TableCell>
                             <TableCell>
-                              {gpu.lease && gpu.lease.expired ? "Expired" : ""}
+                              {gpu.lease && gpu.lease.expired ? t("admin-gpu-expired") : ""}
                             </TableCell>
                           </TableRow>
                         ))}

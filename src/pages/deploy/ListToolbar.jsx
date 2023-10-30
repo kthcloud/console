@@ -12,6 +12,7 @@ import {
 // component
 import Iconify from "../../components/Iconify";
 import ConfirmButton from "src/components/ConfirmButton";
+import { useTranslation } from "react-i18next";
 
 // ----------------------------------------------------------------------
 
@@ -50,6 +51,8 @@ export default function ListToolbar({
   loading,
   onDelete,
 }) {
+  const { t } = useTranslation();
+
   return (
     <RootStyle
       sx={{
@@ -61,13 +64,13 @@ export default function ListToolbar({
     >
       {numSelected > 0 ? (
         <Typography component="div" variant="subtitle1">
-          {numSelected} selected
+          {`${numSelected} ${t("selected")}`}
         </Typography>
       ) : (
         <SearchStyle
           value={filterName}
           onChange={onFilterName}
-          placeholder="Search deployments..."
+          placeholder={t("deploy-search")}
           startAdornment={
             <InputAdornment position="start">
               <Iconify
@@ -81,7 +84,7 @@ export default function ListToolbar({
 
       {numSelected > 0 ? (
         <ConfirmButton
-          action="Delete"
+          action={t("button-delete")}
           actionText={
             "delete " + numSelected + " resource" + (numSelected > 1 ? "s" : "")
           }
@@ -95,7 +98,7 @@ export default function ListToolbar({
       ) : (
         <>
           {loading ? (
-            <Tooltip title="Updating list...">
+            <Tooltip title={t("deploy-updating")}>
               <IconButton>
                 <Iconify icon="eos-icons:three-dots-loading" />
               </IconButton>

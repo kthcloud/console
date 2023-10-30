@@ -29,8 +29,11 @@ import { updateVM } from "src/api/deploy/vms";
 import { useKeycloak } from "@react-keycloak/web";
 import CopyToClipboard from "react-copy-to-clipboard";
 import { errorHandler } from "src/utils/errorHandler";
+import { useTranslation } from "react-i18next";
 
 export default function PortManager({ vm }) {
+  const { t } = useTranslation();
+
   const [ports, setPorts] = useState([]);
 
   const [newPort, setNewPort] = useState("");
@@ -40,6 +43,7 @@ export default function PortManager({ vm }) {
   const { initialized, keycloak } = useKeycloak();
   const [loading, setLoading] = useState(false);
   const [publicIP, setPublicIP] = useState("");
+  const [deleting, setDeleting] = useState([]);
 
   const isSamePort = (p1, p2) => {
     if (p1.internal !== p2.internal) return false;
@@ -53,19 +57,14 @@ export default function PortManager({ vm }) {
     if (!vm.ports) return;
     if (loading) return;
 
-    let loadingPorts = ports.filter((p) => !p.externalPort);
-    loadingPorts = loadingPorts.filter(
-      (p) => !vm.ports.find((p2) => isSamePort(p, p2))
-    );
-
-    let newPorts = Array.from(vm.ports).concat(loadingPorts);
-
-    setPorts(newPorts);
-
-    loadPublicIP();
+    setPorts(vm.ports);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [vm]);
+
+  useEffect(() => {
+    loadPublicIP();
+  }, []);
 
   const loadPublicIP = async () => {
     const res = await fetch(
@@ -85,10 +84,10 @@ export default function PortManager({ vm }) {
     try {
       const res = await updateVM(vm.id, { ports: newPorts }, keycloak.token);
       queueJob(res);
-      enqueueSnackbar("Port changes saving...", { variant: "info" });
+      enqueueSnackbar(t("port-changes-saving"), { variant: "info" });
     } catch (error) {
       errorHandler(error).forEach((e) =>
-        enqueueSnackbar("Could not change ports: " + e, {
+        enqueueSnackbar(t("could-not-change-ports") + e, {
           variant: "error",
         })
       );
@@ -110,15 +109,17 @@ export default function PortManager({ vm }) {
       })
     );
 
+    setDeleting([...deleting, port.name]);
+
     let newPorts = ports.filter((item) => !isSamePort(item, port));
 
     try {
       const res = await updateVM(vm.id, { ports: newPorts }, keycloak.token);
       queueJob(res);
-      enqueueSnackbar("Port changes saving...", { variant: "info" });
+      enqueueSnackbar(t("port-changes-saving"), { variant: "info" });
     } catch (error) {
       errorHandler(error).forEach((e) =>
-        enqueueSnackbar("Could not remove port: " + e, {
+        enqueueSnackbar(t("could-not-change-ports") + e, {
           variant: "error",
         })
       );
@@ -130,14 +131,16 @@ export default function PortManager({ vm }) {
   return (
     <Card sx={{ boxShadow: 20 }}>
       <CardHeader
-        title={"Port forwarding"}
+        title={t("port-forwarding")}
         subheader={
           <span>
-            Expose certain ports to the internet
+            {t("port-forwarding-subheader-1")}
             <br />
-            Access them at{" "}
+            {t("port-forwarding-subheader-2")}
+            <br />
+            {t("port-forwarding-subheader-3")}
             <CopyToClipboard text={"vm.cloud.cbh.kth.se"}>
-              <Tooltip title="Copy to clipboard">
+              <Tooltip title={t("copy-to-clipboard")}>
                 <b
                   style={{
                     fontFamily: "monospace",
@@ -155,11 +158,11 @@ export default function PortManager({ vm }) {
                 color: "#45515c",
               }}
             >
-              {":[external_port]"}
+              {t("external_port")}
             </span>
             {publicIP && (
               <>
-                {" or "}
+                {" " + t("or") + " "}
                 <CopyToClipboard text={publicIP}>
                   <Tooltip title="Copy to clipboard">
                     <b
@@ -179,7 +182,7 @@ export default function PortManager({ vm }) {
                     color: "#45515c",
                   }}
                 >
-                  {":[external_port]"}
+                  {t("external_port")}
                 </span>
               </>
             )}
@@ -191,11 +194,11 @@ export default function PortManager({ vm }) {
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell>Protocol</TableCell>
-                <TableCell>Internal</TableCell>
-                <TableCell>External</TableCell>
-                <TableCell align="right">Action</TableCell>
+                <TableCell>{t("admin-name")}</TableCell>
+                <TableCell>{t("protocol")}</TableCell>
+                <TableCell>{t("internal")}</TableCell>
+                <TableCell>{t("external")}</TableCell>
+                <TableCell align="right">{t("admin-actions")}</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -269,7 +272,7 @@ export default function PortManager({ vm }) {
               >
                 <TableCell component="th" scope="row">
                   <TextField
-                    label="Name"
+                    label={t("admin-name")}
                     variant="standard"
                     value={newPortName}
                     onChange={(e) => {
@@ -283,7 +286,7 @@ export default function PortManager({ vm }) {
                     <Select
                       value={newPortProtocol}
                       id="protocol-select"
-                      label="Protocol"
+                      label={t("protocol")}
                       onChange={(e) => {
                         setNewPortProtocol(e.target.value);
                       }}
@@ -295,7 +298,7 @@ export default function PortManager({ vm }) {
                 </TableCell>
                 <TableCell>
                   <TextField
-                    label="Internal port"
+                    label={t("internal-port")}
                     variant="standard"
                     value={newPort}
                     onChange={(e) => {

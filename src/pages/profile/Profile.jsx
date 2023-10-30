@@ -40,8 +40,10 @@ import { UserQuotas } from "./UserQuotas";
 import { errorHandler } from "src/utils/errorHandler";
 import JobList from "src/components/JobList";
 import { ResetOnboarding } from "./ResetOnboarding";
+import { useTranslation } from "react-i18next";
 
 export function Profile() {
+  const { t } = useTranslation();
   const { keycloak, initialized } = useKeycloak();
 
   const [user, setUser] = useState(null);
@@ -59,7 +61,7 @@ export function Profile() {
       setUser(response);
     } catch (error) {
       errorHandler(error).forEach((e) =>
-        enqueueSnackbar("Could fetch profile: " + e, {
+        enqueueSnackbar(t("could-not-fetch-profile") + e, {
           variant: "error",
         })
       );
@@ -76,7 +78,6 @@ export function Profile() {
     if (!user) return;
     if (!changeInKeys) return;
 
-    console.log("updating keys");
     setChangeInKeys(false);
     updateDetails("keys");
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -90,12 +91,12 @@ export function Profile() {
       const response = await updateUser(keycloak.subject, keycloak.token, data);
       console.log(response);
       setValidationError({});
-      enqueueSnackbar("Successfully updated " + mode, { variant: "success" });
+      enqueueSnackbar(t("successfully-updated") + " " + mode, { variant: "success" });
     } catch (error) {
       console.log(error);
       if (error.validationErrors) setValidationError(error.validationErrors);
 
-      enqueueSnackbar("Error updating " + mode, {
+      enqueueSnackbar(t("error-updating") + mode, {
         variant: "error",
       });
 
@@ -127,7 +128,7 @@ export function Profile() {
       >
         <>{"..." + rawKey.substring(rawKey.length - 20, rawKey.length - 1)}</>
         <CopyToClipboard text={key}>
-          <Tooltip title="Copy SSH key">
+          <Tooltip title={t("copy-key")}>
             <IconButton>
               <Iconify icon={"ic:round-content-copy"} width={24} height={24} />
             </IconButton>
@@ -156,22 +157,21 @@ export function Profile() {
           <Container>
             <Stack spacing={3}>
               <Typography variant="h4" gutterBottom>
-                Profile
+                {t("profile")}
               </Typography>
 
               <JobList />
 
               <Card sx={{ boxShadow: 20 }}>
                 <CardHeader
-                  title={"Details"}
+                  title={t("details")}
                   subheader={
                     <Typography variant="body2" sx={{ color: "#637381" }}>
-                      We use Gravatar for profile pictures. Change it at
+                      {t("gravatar")}
                       <Link
                         href="https://gravatar.com/connect/"
                         target="_blank"
                         rel="noopener noreferrer"
-                        sx={{ ml: 0.5 }}
                       >
                         gravatar.com
                       </Link>
@@ -179,10 +179,9 @@ export function Profile() {
                   }
                 />
                 <CardContent>
-                  {/* Form with user data pre filled */}
                   <Stack spacing={3}>
                     <TextField
-                      label="Username"
+                      label={t("admin-username")}
                       InputProps={{
                         startAdornment: (
                           <InputAdornment position="start">
@@ -248,7 +247,7 @@ export function Profile() {
                         to="#"
                         startIcon={<Iconify icon="material-symbols:save" />}
                       >
-                        Update
+                        {t("button-save")}
                       </Button>
                     </Stack>
                   </Stack>
@@ -259,13 +258,13 @@ export function Profile() {
 
               <Card sx={{ boxShadow: 20 }}>
                 <CardHeader
-                  title={"SSH public keys"}
+                  title={t("ssh-public-keys")}
                   subheader={
                     <span>
-                      Your public keys will be installed when creating a VM.
-                      Changes will not apply to existing resources
-                      <br /> Please ensure you are uploading your public SSH key
-                      (e.g.{" "}
+                      {t("ssh-public-keys-subheader-1")}
+                      <br /> 
+                      {t("ssh-public-keys-subheader-2")}
+                      ({t("e-g") + " "}
                       <span style={{ fontFamily: "monospace" }}>
                         id_rsa.pub
                       </span>
@@ -278,9 +277,9 @@ export function Profile() {
                     <Table sx={{ minWidth: 650 }} aria-label="simple table">
                       <TableHead>
                         <TableRow>
-                          <TableCell>Name</TableCell>
-                          <TableCell>Key</TableCell>
-                          <TableCell align="right">Action</TableCell>
+                          <TableCell>{t("admin-name")}</TableCell>
+                          <TableCell>{t("key")}</TableCell>
+                          <TableCell align="right">{t("admin-actions")}</TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
@@ -349,7 +348,7 @@ export function Profile() {
                         >
                           <TableCell component="th" scope="row">
                             <TextField
-                              label="Name"
+                              label={t("admin-name")}
                               variant="standard"
                               value={newKeyName}
                               onChange={(e) => {
@@ -366,7 +365,7 @@ export function Profile() {
                               alignItems={"center"}
                             >
                               <TextField
-                                label="Key"
+                                label={t("key")}
                                 variant="standard"
                                 value={newKey}
                                 onChange={(e) => {
@@ -376,14 +375,14 @@ export function Profile() {
                                 error={Boolean(validationError.key)}
                                 helperText={validationError.key}
                               />
-                              <span>or</span>
+                              <span>{t("or")}</span>
 
                               <Button
                                 variant="contained"
                                 component="label"
                                 sx={{ whiteSpace: "nowrap", px: 3 }}
                               >
-                                Select Key File
+                                {t("select-key-file")}
                                 <input
                                   type="file"
                                   hidden

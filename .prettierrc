@@ -18,6 +18,15 @@
     "trailingComma": "es5",
     "useTabs": false,
     "vueIndentScriptAndStyle": false,
-    "parser": "babel"
+    "parser": "babel",
+    "overrides": [
+      {
+        "files": ["*.json", "*.jsonc", "*.json5"],
+        "options": {
+          "parser": "json5"
+        }
+      }
+    ]
+  
   }
   

@@ -3,13 +3,12 @@ export const errorHandler = (error) => {
 
   if (Object.hasOwn(error, "validationErrors")) {
     let errorTypes = Object.keys(error.validationErrors);
+
     errorTypes.forEach((type) => {
       let errorTypeErrors = error.validationErrors[type];
 
       errorTypeErrors.forEach((msg) => {
-        if (type !== "name") {
-          errors.push(msg);
-        }
+        errors.push(msg + ": " + type);
       });
     });
   }

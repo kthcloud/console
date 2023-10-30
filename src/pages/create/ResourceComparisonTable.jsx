@@ -14,77 +14,80 @@ import {
 } from "@mui/material";
 
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import Iconify from "src/components/Iconify";
 
 const ResourceComparisonTable = () => {
+  const { t } = useTranslation();
+
   const useCases = [
     {
-      type: "Stateless frontend service: eg. React, AngularJS",
+      type: t("resouce-comparison-stateless-frontend"),
       use: ["deployment"],
     },
     {
-      type: "Stateless backend service: eg. Express.js, Flask",
+      type: t("resouce-comparison-stateless-backend"),
       use: ["deployment"],
     },
     {
-      type: "Machine learning GPU compute: eg. TensorFlow, JupyterLab",
+      type: t("resouce-comparison-machine-learning-gpu"),
       use: ["vm"],
     },
     {
-      type: "Game streaming server: eg. Steam Remote Play, Parsec",
+      type: t("resouce-comparison-game-streaming-server"),
       use: ["vm"],
     },
     {
-      type: "Databases: eg. MySQL, MongoDB",
+      type: t("resouce-comparison-databases"),
       use: ["vm"],
     },
     {
-      type: "Real-time analytics: eg. Apache Kafka, Elasticsearch",
+      type: t("resouce-comparison-real-time-analytics"),
       use: ["vm"],
     },
     {
-      type: "Cache services: eg. Redis, Memcached",
+      type: t("resouce-comparison-cache-services"),
       use: ["vm", "deployment"],
     },
     {
-      type: "Data processing pipelines: eg. Apache Hadoop, Spark",
+      type: t("resouce-comparison-data-processing-pipelines"),
       use: ["vm"],
     },
     {
-      type: "Image processing services: eg. Pillow, OpenCV",
+      type: t("resouce-comparison-image-processing-services"),
       use: ["vm"],
     },
     {
-      type: "Media streaming services: eg. Plex, Emby",
+      type: t("resouce-comparison-media-streaming-services"),
       use: ["vm"],
     },
     {
-      type: "Serverless computing services: eg. Cloudflare workerd",
+      type: t("resouce-comparison-serverless-computing-services"),
       use: ["deployment"],
     },
     {
-      type: "IoT data collection and processing: eg. MQTT, Node-RED",
+      type: t("resouce-comparison-iot-data-collection"),
       use: ["vm"],
     },
     {
-      type: "Microservice-based applications: eg. Spring Boot, Django",
+      type: t("resouce-comparison-microservice-based-applications"),
       use: ["deployment"],
     },
     {
-      type: "Continuous integration and delivery pipelines: eg. Jenkins, GitLab Runner",
+      type: t("resouce-comparison-ci-cd-pipelines"),
       use: ["vm"],
     },
     {
-      type: "Batch jobs for data transformation: eg. Talend, Informatica PowerCenter",
+      type: t("resouce-comparison-batch-jobs"),
       use: ["vm"],
     },
     {
-      type: "Web scraping services: eg. Scrapy, Beautiful Soup",
+      type: t("resouce-comparison-web-scraping-services"),
       use: ["vm"],
     },
     {
-      type: "Logging services: eg. Logstash, Sentry",
+      type: t("resouce-comparison-logging-services"),
       use: ["deployment"],
     },
   ];
@@ -105,7 +108,7 @@ const ResourceComparisonTable = () => {
             />
           }
         >
-          See example use cases
+          {t("example-use-cases")}
         </Button>
       </Stack>
 
@@ -120,9 +123,9 @@ const ResourceComparisonTable = () => {
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
                 <TableRow>
-                  <TableCell>Use case</TableCell>
-                  <TableCell>Kubernetes Deployment</TableCell>
-                  <TableCell>Virtual Machine</TableCell>
+                  <TableCell>{t("use-case")}</TableCell>
+                  <TableCell>{t("resource-kubernetes-deployment")}</TableCell>
+                  <TableCell>{t("resource-vm")}</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -139,8 +142,8 @@ const ResourceComparisonTable = () => {
                           height={24}
                         />
                       )}
-                    </TableCell>
-                    <TableCell>
+                      </TableCell>
+                      <TableCell>
                       {row.use.includes("vm") && (
                         <Iconify
                           icon="material-symbols:check-small-rounded"
@@ -156,7 +159,9 @@ const ResourceComparisonTable = () => {
           </TableContainer>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setDialogOpen(false)}>Close</Button>
+          <Button onClick={() => setDialogOpen(false)}>
+            {t("button-close")}
+          </Button>
         </DialogActions>
       </Dialog>
     </>

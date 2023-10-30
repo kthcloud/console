@@ -20,10 +20,13 @@ import TreeMap from "./TreeMap";
 import WidgetSummary from "./WidgetSummary";
 import ServerStats from "./ServerStats";
 import LineChart from "./LineChart";
+import { useTranslation } from "react-i18next";
 
 // ----------------------------------------------------------------------
 
 export function Status() {
+  const { t } = useTranslation();
+
   const [statusData, setStatusData] = useState([]);
   const [cpuCapacities, setCpuCapacities] = useState([]);
   const [ramCapacities, setRamCapacities] = useState([]);
@@ -90,19 +93,19 @@ export function Status() {
 
     _setOverviewData([
       {
-        name: "CPU Temp",
+        name: "CPU °C",
         data: cpuTemp,
       },
       {
-        name: "CPU Load",
+        name: "CPU %",
         data: cpuLoad,
       },
       {
-        name: "RAM Load",
+        name: "RAM %",
         data: ramLoad,
       },
       {
-        name: "GPU Temp",
+        name: "GPU °C",
         data: gpuTemp,
       },
     ]);
@@ -227,12 +230,12 @@ export function Status() {
     <Page title="Status">
       <Container maxWidth="xl">
         <Typography variant="h4" gutterBottom mb={5}>
-          Status
+          {t("menu-status")}
         </Typography>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={3}>
             <WidgetSummary
-              title="Running containers"
+              title={t("running-containers")}
               total={podCount}
               icon={"octicon:container-16"}
             />
@@ -240,7 +243,7 @@ export function Status() {
 
           <Grid item xs={12} sm={6} md={3}>
             <WidgetSummary
-              title="GPUs"
+              title={t("resource-gpus")}
               total={gpus}
               color="secondary"
               icon={"bi:gpu-card"}
@@ -249,7 +252,7 @@ export function Status() {
 
           <Grid item xs={12} sm={6} md={3}>
             <WidgetSummary
-              title="CPU cores"
+              title={t("landing-hero-cpu")}
               total={cpuCores}
               color="warning"
               icon={"uil:processor"}
@@ -258,7 +261,7 @@ export function Status() {
 
           <Grid item xs={12} sm={6} md={3}>
             <WidgetSummary
-              title="Terabytes of memory"
+              title={t("landing-hero-ram")}
               total={ram}
               color="success"
               icon={"bi:memory"}
@@ -267,7 +270,7 @@ export function Status() {
 
           <Grid item xs={12} md={6} lg={4}>
             <ServerStats
-              title="Server statistics"
+              title={t("server-statistics")}
               chartLabels={["CPU °C", "CPU %", "Memory %", "GPU °C"]}
               chartData={statusData}
               chartColors={[...Array(6)].map(
@@ -278,7 +281,7 @@ export function Status() {
 
           <Grid item xs={12} md={6} lg={8}>
             <LineChart
-              title="Overview"
+              title={t("overview")}
               chartData={overviewData}
               chartColors={[...Array(6)].map(
                 () => theme.palette.text.secondary
@@ -288,7 +291,7 @@ export function Status() {
 
           <Grid item xs={12} md={6} lg={4}>
             <TreeMap
-              title="CPU capacity"
+              title={t("cpu-capacity")}
               chartData={cpuCapacities}
               chartColors={[...Array(6)].map(
                 () => theme.palette.text.secondary
@@ -298,7 +301,7 @@ export function Status() {
 
           <Grid item xs={12} md={6} lg={4}>
             <TreeMap
-              title="RAM capacity"
+              title={t("ram-capacity")}
               chartData={ramCapacities}
               chartColors={[...Array(6)].map(
                 () => theme.palette.text.secondary
@@ -308,7 +311,7 @@ export function Status() {
 
           <Grid item xs={12} md={6} lg={4}>
             <TreeMap
-              title="GPU capacity"
+              title={t("gpu-capacity")}
               chartData={gpuCapacities}
               chartColors={[...Array(6)].map(
                 () => theme.palette.text.secondary
@@ -319,7 +322,7 @@ export function Status() {
           {posts.length > 0 && (
             <Grid item xs={12} md={12} lg={12}>
               <Card sx={{ boxShadow: 20 }}>
-                <CardHeader title="Latest posts on Mastodon" />
+                <CardHeader title={t("latest-posts-on-mastodon")} />
                 <CardContent>
                   <Stack
                     spacing={2}

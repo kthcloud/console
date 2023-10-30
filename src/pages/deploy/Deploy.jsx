@@ -41,15 +41,7 @@ import { deleteDeployment } from "src/api/deploy/deployments";
 import { deleteVM } from "src/api/deploy/vms";
 import { getReasonPhrase } from "http-status-codes";
 import { errorHandler } from "src/utils/errorHandler";
-
-// ----------------------------------------------------------------------
-
-const TABLE_HEAD = [
-  { id: "name", label: "Name", alignRight: false },
-  { id: "type", label: "Instance type", alignRight: false },
-  { id: "status", label: "Status", alignRight: false },
-  { id: "" },
-];
+import { useTranslation } from "react-i18next";
 
 // ----------------------------------------------------------------------
 
@@ -86,6 +78,8 @@ const applySortFilter = (array, comparator, query) => {
 };
 
 export function Deploy() {
+  const { t } = useTranslation();
+
   const [order, setOrder] = useState("asc");
 
   const [selected, setSelected] = useState([]);
@@ -96,12 +90,27 @@ export function Deploy() {
 
   const { userRows, user, initialLoad, queueJob } = useResource();
 
+  const [filteredRows, setFilteredRows] = useState(userRows);
+
   const [loading, setLoading] = useState(false);
 
   const { keycloak, initialized } = useKeycloak();
 
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setFilteredRows(
+      applySortFilter(userRows, getComparator(order, orderBy), filterName)
+    );
+  }, [userRows, order, orderBy, filterName]);
+
+  const TABLE_HEAD = [
+    { id: "name", label: t("admin-name"), alignRight: false },
+    { id: "type", label: t("resource-type"), alignRight: false },
+    { id: "status", label: t("admin-status"), alignRight: false },
+    { id: "" },
+  ];
 
   const bulkDelete = async () => {
     if (!initialized) return;
@@ -173,8 +182,6 @@ export function Deploy() {
   const handleFilterByName = (event) => {
     setFilterName(event.target.value);
   };
-
-  const noResultsFound = userRows.length === 0;
 
   const renderResourceButtons = (resource) => {
     if (
@@ -248,11 +255,7 @@ export function Deploy() {
         >
           {resource.type}
           {resource.private === true && (
-            <Tooltip
-              title={
-                "This deployment is private, it is not visible on the Internet"
-              }
-            >
+            <Tooltip title={t("deploy-hidden")}>
               <span style={{ display: "flex", alignItems: "center" }}>
                 <Iconify icon="mdi:eye-off" width={20} height={20} ml={1} />
               </span>
@@ -260,7 +263,7 @@ export function Deploy() {
           )}
           {resource.integrations &&
             resource.integrations.includes("github") && (
-              <Tooltip title={"Linked to GitHub"}>
+              <Tooltip title={t("deploy-github")}>
                 <span style={{ display: "flex", alignItems: "center" }}>
                   <Iconify icon="mdi:github" width={20} height={20} ml={1} />
                 </span>
@@ -328,7 +331,7 @@ export function Deploy() {
       {!initialLoad ? (
         <LoadingPage />
       ) : (
-        <Page title="Deploy dashboard">
+        <Page title={t("menu-dashboard")}>
           <Container>
             <Stack
               sx={{
@@ -341,7 +344,7 @@ export function Deploy() {
               direction="row"
             >
               <Typography variant="h4" gutterBottom>
-                Dashboard
+                {t("menu-dashboard")}
               </Typography>
 
               <Button
@@ -350,7 +353,7 @@ export function Deploy() {
                 to="/create"
                 startIcon={<Iconify icon={"mdi:plus"} />}
               >
-                Create
+                {t("menu-create-new")}
               </Button>
             </Stack>
 
@@ -379,11 +382,7 @@ export function Deploy() {
                       onSelectAllClick={handleSelectAllClick}
                     />
                     <TableBody>
-                      {applySortFilter(
-                        userRows,
-                        getComparator(order, orderBy),
-                        filterName
-                      ).map((row) => {
+                      {filteredRows.map((row) => {
                         const isItemSelected = selected.indexOf(row.id) !== -1;
 
                         return (
@@ -430,17 +429,14 @@ export function Deploy() {
                           </TableRow>
                         );
                       })}
+                      
                     </TableBody>
 
-                    {noResultsFound && (
-                      <TableBody>
-                        <TableRow>
-                          <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
-                            <SearchNotFound searchQuery={filterName} />
-                          </TableCell>
-                        </TableRow>
-                      </TableBody>
-                    )}
+                    {filteredRows.length <= 0 && <TableBody><TableRow>
+                        <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
+                          <SearchNotFound searchQuery={filterName} />
+                        </TableCell>
+                      </TableRow></TableBody>}
                   </Table>
                 </TableContainer>
               </Scrollbar>
