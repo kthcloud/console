@@ -6,6 +6,7 @@ import {
   FormControlLabel,
   Stack,
   Switch,
+  Typography,
 } from "@mui/material";
 import { useKeycloak } from "@react-keycloak/web";
 import { useEffect, useState } from "react";
@@ -20,11 +21,17 @@ export const LogsView = ({ deployment }) => {
   const [logs, setLogs] = useState([]);
   const [lineWrap, setLineWrap] = useState(true);
   const [compactMode, setCompactMode] = useState(false);
+  const [connection, setConnection] = useState("Connecting");
+  const [sse, setSse] = useState(null);
 
-  useEffect(() => {
+  const initSse = () => {
     if (!(deployment && initialized)) return;
+    
+    if (sse) {
+      sse.close();
+    }
 
-    const sse = new polyfilledEventSource(
+    let eventSource = new polyfilledEventSource(
       `${process.env.REACT_APP_DEPLOY_API_URL}/deployments/${deployment.id}/logs-sse`,
       {
         headers: {
@@ -33,14 +40,29 @@ export const LogsView = ({ deployment }) => {
       }
     );
 
-    sse.onerror = () => {
-      sse.close();
+    setSse(eventSource);
+
+    eventSource.onerror = () => {
+      eventSource.close();
+      setConnection("Error");
+      setTimeout(() => {
+        setConnection("Retrying");
+        initSse();
+      }, 5000);
     };
 
-    sse.onmessage = (event) => {
+    eventSource.onmessage = (event) => {
       setLogs((logs) => [event.data, ...logs]);
+      setConnection("Connected");
     };
 
+    eventSource.onopen = () => {
+      setConnection("Connected");
+    };
+  };
+
+  useEffect(() => {
+    initSse();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialized]);
 
@@ -52,7 +74,13 @@ export const LogsView = ({ deployment }) => {
 
       <CardContent>
         <Stack direction="column" spacing={2}>
-          <Stack direction="row" spacing={3} flexWrap={"wrap"} useFlexGap>
+          <Stack
+            direction="row"
+            spacing={3}
+            flexWrap={"wrap"}
+            alignItems={"center"}
+            useFlexGap
+          >
             <FormControlLabel
               control={
                 <Switch
@@ -110,6 +138,10 @@ export const LogsView = ({ deployment }) => {
             >
               {t("download")}
             </Button>
+
+            <Typography variant="body2">
+              {t("connection-status")}: {connection}
+            </Typography>
           </Stack>
 
           <Stack

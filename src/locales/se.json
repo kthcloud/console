@@ -334,6 +334,7 @@
         "page-not-found": "Hoppsan! Sidan hittades inte",
         "cname-record": "Du behöver peka domänen till app.cloud.cbh.kth.se med en CNAME record",
         "stop": "Stäng av",
-        "could-not-change-ports": "Kunde inte uppdatera portar: "
+        "could-not-change-ports": "Kunde inte uppdatera portar: ",
+        "connection-status": "Anslutningsstatus"
       }
 }
