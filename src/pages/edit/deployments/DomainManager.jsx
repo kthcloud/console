@@ -59,7 +59,7 @@ export const DomainManager = ({ deployment }) => {
     <Card sx={{ boxShadow: 20 }}>
       <CardHeader
         title={t("create-deployment-domain")}
-        subheader={t("create-deployment-domain-subheader")}
+        subheader={t("create-deployment-custom-domain-subheader")}
       />
       <CardContent>
         <Stack

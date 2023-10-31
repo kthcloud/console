@@ -21,7 +21,7 @@ export const LogsView = ({ deployment }) => {
   const [logs, setLogs] = useState([]);
   const [lineWrap, setLineWrap] = useState(true);
   const [compactMode, setCompactMode] = useState(false);
-  const [connection, setConnection] = useState("Connecting");
+  const [connection, setConnection] = useState("connecting");
   const [sse, setSse] = useState(null);
 
   const initSse = () => {
@@ -44,20 +44,20 @@ export const LogsView = ({ deployment }) => {
 
     eventSource.onerror = () => {
       eventSource.close();
-      setConnection("Error");
+      setConnection("error");
       setTimeout(() => {
-        setConnection("Retrying");
+        setConnection("retrying");
         initSse();
       }, 5000);
     };
 
     eventSource.onmessage = (event) => {
       setLogs((logs) => [event.data, ...logs]);
-      setConnection("Connected");
+      setConnection("connected");
     };
 
     eventSource.onopen = () => {
-      setConnection("Connected");
+      setConnection("connected");
     };
   };
 
@@ -140,7 +140,7 @@ export const LogsView = ({ deployment }) => {
             </Button>
 
             <Typography variant="body2">
-              {t("connection-status")}: {connection}
+              {t("connection-status")}: {t(connection)}
             </Typography>
           </Stack>
 

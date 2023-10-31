@@ -41,6 +41,7 @@ import StorageManager from "./deployments/StorageManager";
 import { ImageManager } from "./deployments/ImageManager";
 import { DomainManager } from "./deployments/DomainManager";
 import ProxyManager from "./vms/ProxyManager";
+import { HealthCheckRoute } from "./deployments/HealthCheckRoute";
 import { useTranslation } from "react-i18next";
 
 export function Edit() {
@@ -200,6 +201,10 @@ export function Edit() {
 
               {resource.type === "deployment" && (
                 <LogsView deployment={resource} />
+              )}
+
+              {resource.type === "deployment" && (
+                <HealthCheckRoute deployment={resource} />
               )}
             </Stack>
           </Container>
