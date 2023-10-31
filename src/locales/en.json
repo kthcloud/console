@@ -295,7 +295,7 @@
         "onboarding-finish-1": "That's it! You're ready to start using cbhcloud.",
         "onboarding-finish-2": "If you have any questions, please contact us on Discord.",
         "onboarding-finish-3": "Happy hacking! - cbhcloud team",
-        "onboarding-wait-1":"Please wait as we finish setting up your account.",
+        "onboarding-wait-1": "Please wait as we finish setting up your account.",
         "onboarding-wait-2": "Hmm, it seems this is taking a while. Try refreshing the page or contact us on Discord.",
         "profile": "Profile",
         "copy-key": "Copy key",
@@ -325,9 +325,6 @@
         "ram-capacity": "RAM capacity",
         "gpu-capacity": "GPU capacity",
         "latest-posts-on-mastodon": "Latest posts on Mastodon",
-        
-
-
         "error-updating": "Error updating ",
         "previous": "Previous",
         "next": "Next",
@@ -338,6 +335,14 @@
         "landing-intro-header": "Welcome to",
         "landing-intro-body": "We offer a cutting-edge private cloud infrastructure tailored to meet the unique needs of KTH's bright minds. Seamlessly run experiments, collaborate on groundbreaking research, and harness the power of cloud technology to drive innovation.",
         "landing-intro-footer": "Register today free of charge - all you need is a KTH account.",
-        "connection-status": "Connection status"
+        "connection-status": "Connection status",
+        "connected": "Connected",
+        "error": "Error",
+        "retrying": "Retrying",
+        "health-check": "Health check",
+        "health-check-subheader": "This path will be polled to check if the deployment is healthy. Return 200 OK to indicate up and running.",
+        "health-check-path": "Health check path",
+        "saving-route-update": "Saving route update...",
+        "could-not-save-route": "Could not save route: "
     }
 }
