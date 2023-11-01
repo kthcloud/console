@@ -343,6 +343,7 @@
         "health-check-subheader": "This path will be polled to check if the deployment is healthy. Return 200 OK to indicate up and running.",
         "health-check-path": "Health check path",
         "saving-route-update": "Saving route update...",
-        "could-not-save-route": "Could not save route: "
+        "could-not-save-route": "Could not save route: ",
+        "this-content-is-ai-generated": "This content is AI generated"
     }
 }

@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import { fShortenNumber } from "src/utils/formatNumber";
 import { useKeycloak } from "@react-keycloak/web";
 import { useTranslation } from "react-i18next";
+import { GenAITooltip } from "src/components/GenAITooltip";
 
 const Hero = () => {
   const { keycloak, initialized } = useKeycloak();
@@ -105,14 +106,14 @@ const Hero = () => {
             pr={5}
             opacity={headerLoading ? 0 : 1}
           >
-            {header}
+            <GenAITooltip>{header}</GenAITooltip>
           </Typography>
           <div className="hero-p">
             <Typography
               variant="body"
               sx={{ fontSize: "1.4rem", opacity: headerLoading ? 0 : 1 }}
             >
-              {subheader}
+              <GenAITooltip>{subheader}</GenAITooltip>
             </Typography>
           </div>
           <Stack

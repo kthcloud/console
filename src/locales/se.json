@@ -343,6 +343,7 @@
     "health-check-subheader": "Webbadressen kommer att anropas sporadiskt för att se om din app är uppe. Svara med 200 OK för att indikera att din app är igång",
     "health-check-path": "Adress för hälsokontroll",
     "saving-route-update": "Sparar uppdatering av adress för hälsokontroll...",
-    "could-not-save-route": "Kunde inte spara adress för hälsokontroll: "
+    "could-not-save-route": "Kunde inte spara adress för hälsokontroll: ",
+    "this-content-is-ai-generated": "Detta innehåll är AI-genererat"
   }
 }
