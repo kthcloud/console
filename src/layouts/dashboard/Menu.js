@@ -151,6 +151,15 @@ export default function Menu() {
           >
             {t("menu-mastodon")}
           </MenuItem>
+          <MenuItem
+            href={"https://github.com/kthcloud"}
+            component={Link}
+            onClick={handleClose}
+            target="_blank"
+            rel="me"
+          >
+            {t("menu-github")}
+          </MenuItem>
         </Stack>
 
         {shouldRenderAdmin() && (
