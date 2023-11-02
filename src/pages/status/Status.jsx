@@ -227,7 +227,7 @@ export function Status() {
   const theme = useTheme();
 
   return (
-    <Page title="Status">
+    <Page title={t("menu-status")}>
       <Container maxWidth="xl">
         <Typography variant="h4" gutterBottom mb={5}>
           {t("menu-status")}
