@@ -12,6 +12,7 @@ import { fShortenNumber } from "src/utils/formatNumber";
 import { useKeycloak } from "@react-keycloak/web";
 import { useTranslation } from "react-i18next";
 import { GenAITooltip } from "src/components/GenAITooltip";
+import { Link } from "react-router-dom";
 
 const Hero = () => {
   const { keycloak, initialized } = useKeycloak();
@@ -125,12 +126,8 @@ const Hero = () => {
             <Button
               variant={"contained"}
               size={"large"}
-              onClick={() => {
-                if (!initialized) return;
-                keycloak.login({
-                  redirectUri: window.location.origin + "/deploy",
-                });
-              }}
+              component={Link}
+              to="/tiers"
             >
               {t("button-get-started")}
             </Button>

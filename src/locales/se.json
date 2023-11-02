@@ -177,7 +177,7 @@
     "create-vm-no-resources": "Du har inte nog med resurser kvar för att skapa en virtuell maskin. Radera oanvända maskiner eller kontakta oss om du behöver mer resurser.",
     "deploy-hidden": "Denna deployment är privat, och går inte att nå från internet",
     "ssh-string": "SSH-kommando",
-    "landing-hero-cpu": "CPU-nycklar",
+    "landing-hero-cpu": "CPU-kärnor",
     "memory": "Minne",
     "vm-in-progress": " VM pågår...",
     "404-title": "404 - Sidan kunde inte hittas",
@@ -345,6 +345,16 @@
     "health-check-path": "Adress för hälsokontroll",
     "saving-route-update": "Sparar uppdatering av adress för hälsokontroll...",
     "could-not-save-route": "Kunde inte spara adress för hälsokontroll: ",
-    "this-content-is-ai-generated": "Detta innehåll är AI-genererat"
+    "this-content-is-ai-generated": "Detta innehåll är AI-genererat",
+    "menu-tiers": "Uppgradera ditt konto",
+    "menu-tiers-subheader": "Välj den kontotyp som passar dina behov, du kan ändra den när som helst.",
+    "contact-us": "Kontakta oss",
+    "current-plan": "Nuvarande kontotyp",
+    "use-custom-domains": "Använd egna domäner",
+    "default": "Standard",
+    "bronze": "Brons",
+    "silver": "Silver",
+    "gold": "Guld",
+    "platinum": "Max"
   }
 }

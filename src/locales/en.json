@@ -345,6 +345,16 @@
         "health-check-path": "Health check path",
         "saving-route-update": "Saving route update...",
         "could-not-save-route": "Could not save route: ",
-        "this-content-is-ai-generated": "This content is AI generated"
+        "this-content-is-ai-generated": "This content is AI generated",
+        "menu-tiers": "Tiers",
+        "menu-tiers-subheader": "Choose the plan that fits your needs, you can change it at any time.",
+        "contact-us": "Contact us",
+        "current-plan": "Current plan",
+        "use-custom-domains": "Use custom domains",
+        "default": "Default",
+        "bronze": "Bronze",
+        "silver": "Silver",
+        "gold": "Gold",
+        "platinum": "Platinum"
     }
 }

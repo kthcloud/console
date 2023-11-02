@@ -108,6 +108,13 @@ export default function Menu() {
                   >
                     {t("menu-profile")}
                   </MenuItem>
+                  <MenuItem
+                    to={"/tiers"}
+                    component={RouterLink}
+                    onClick={handleClose}
+                  >
+                    {t("menu-tiers")}
+                  </MenuItem>
                 </Stack>
                 <Divider sx={{ borderStyle: "dashed" }} />
               </>

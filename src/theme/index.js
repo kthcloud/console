@@ -27,6 +27,7 @@ export default function ThemeProvider({ children }) {
       typography,
       shadows,
       customShadows,
+      mode: "dark"
     }),
     []
   );
