@@ -9,6 +9,7 @@ import Profile from "./pages/profile";
 import Create from "./pages/create";
 import Landing from "./pages/landing";
 import Admin from "./pages/admin";
+import Tiers from "./pages/tiers/Tiers";
 
 import NotFound from "./pages/404";
 import Status from "./pages/status";
@@ -25,6 +26,7 @@ export default function Router() {
       children: [
         { path: "/", element: <Landing /> },
         { path: "/status", element: <Status /> },
+        { path: "tiers", element: <Tiers /> },
         {
           path: "deploy",
           element: (

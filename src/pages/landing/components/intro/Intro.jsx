@@ -9,11 +9,10 @@ import {
 } from "@mui/material";
 import "./intro.css";
 import { Cloud } from "./Cloud";
-import { useKeycloak } from "@react-keycloak/web";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 
 const Intro = () => {
-  const { keycloak, initialized } = useKeycloak();
   const { t } = useTranslation();
 
   return (
@@ -81,12 +80,8 @@ const Intro = () => {
                 <Button
                   variant="contained"
                   sx={{ whiteSpace: "nowrap", px: 4 }}
-                  onClick={() => {
-                    if (!initialized) return;
-                    keycloak.login({
-                      redirectUri: window.location.origin + "/deploy",
-                    });
-                  }}
+                  component={Link}
+                  to="/tiers"
                 >
                   {t("button-get-started")}
                 </Button>

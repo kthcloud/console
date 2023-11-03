@@ -8,6 +8,7 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { GenAITooltip } from "src/components/GenAITooltip";
 import Iconify from "src/components/Iconify";
 
 const ResourceTypeChat = () => {
@@ -90,7 +91,7 @@ const ResourceTypeChat = () => {
             <Typography variant="body2">
               <b>🦙 Llama:</b>
               <br />
-              {response}
+              <GenAITooltip>{response}</GenAITooltip>
             </Typography>
           )}
         </>

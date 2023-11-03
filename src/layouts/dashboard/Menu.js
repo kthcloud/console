@@ -108,6 +108,13 @@ export default function Menu() {
                   >
                     {t("menu-profile")}
                   </MenuItem>
+                  <MenuItem
+                    to={"/tiers"}
+                    component={RouterLink}
+                    onClick={handleClose}
+                  >
+                    {t("menu-tiers")}
+                  </MenuItem>
                 </Stack>
                 <Divider sx={{ borderStyle: "dashed" }} />
               </>
@@ -150,6 +157,15 @@ export default function Menu() {
             rel="me"
           >
             {t("menu-mastodon")}
+          </MenuItem>
+          <MenuItem
+            href={"https://github.com/kthcloud"}
+            component={Link}
+            onClick={handleClose}
+            target="_blank"
+            rel="me"
+          >
+            {t("menu-github")}
           </MenuItem>
         </Stack>
 

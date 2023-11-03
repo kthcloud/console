@@ -36,10 +36,11 @@
         "menu-create-new": "Create new",
         "menu-profile": "Profile",
         "menu-cbhcloud": "cbhcloud",
-        "menu-status": "Status",
+        "menu-status": "Server status",
         "menu-wiki": "Wiki",
-        "menu-support": "Support",
+        "menu-support": "Discord",
         "menu-mastodon": "Mastodon",
+        "menu-github": "Contribute on GitHub",
         "menu-admin": "Admin",
         "menu-admin-panel": "Admin panel",
         "menu-cloudstack": "CloudStack",
@@ -343,6 +344,17 @@
         "health-check-subheader": "This path will be polled to check if the deployment is healthy. Return 200 OK to indicate up and running.",
         "health-check-path": "Health check path",
         "saving-route-update": "Saving route update...",
-        "could-not-save-route": "Could not save route: "
+        "could-not-save-route": "Could not save route: ",
+        "this-content-is-ai-generated": "This content is AI generated",
+        "menu-tiers": "Tiers",
+        "menu-tiers-subheader": "Choose the plan that fits your needs, you can change it at any time.",
+        "contact-us": "Contact us",
+        "current-plan": "Current plan",
+        "use-custom-domains": "Use custom domains",
+        "default": "Default",
+        "bronze": "Bronze",
+        "silver": "Silver",
+        "gold": "Gold",
+        "platinum": "Platinum"
     }
 }
