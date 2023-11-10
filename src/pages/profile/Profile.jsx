@@ -19,7 +19,6 @@ import {
   CardContent,
   Container,
   TextField,
-  InputAdornment,
   Typography,
   Stack,
   CardHeader,
@@ -35,7 +34,6 @@ import Page from "../../components/Page";
 
 import { AccountCircle, Email } from "@mui/icons-material";
 import { getUser, updateUser } from "src/api/deploy/users";
-import { wasActivated } from "src/utils/eventHandler";
 import { UserQuotas } from "./UserQuotas";
 import { errorHandler } from "src/utils/errorHandler";
 import JobList from "src/components/JobList";
