@@ -91,7 +91,9 @@ export function Profile() {
       const response = await updateUser(keycloak.subject, keycloak.token, data);
       console.log(response);
       setValidationError({});
-      enqueueSnackbar(t("successfully-updated") + " " + mode, { variant: "success" });
+      enqueueSnackbar(t("successfully-updated") + " " + mode, {
+        variant: "success",
+      });
     } catch (error) {
       console.log(error);
       if (error.validationErrors) setValidationError(error.validationErrors);
@@ -180,24 +182,6 @@ export function Profile() {
                 />
                 <CardContent>
                   <Stack spacing={3}>
-                    <TextField
-                      label={t("admin-username")}
-                      InputProps={{
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            <AccountCircle />
-                          </InputAdornment>
-                        ),
-                      }}
-                      variant="standard"
-                      value={user.username}
-                      onChange={(e) => {
-                        setUser({ ...user, username: e.target.value });
-                      }}
-                      error={validationError.username}
-                      helperText={validationError.username}
-                    />
-
                     <Stack
                       spacing={3}
                       direction={"row"}
@@ -206,6 +190,12 @@ export function Profile() {
                       justifyContent={"space-between"}
                       alignItems={"center"}
                     >
+                      <Chip
+                        m={1}
+                        icon={<AccountCircle />}
+                        label={user.username}
+                      />
+
                       <Chip m={1} icon={<Email />} label={user.email} />
 
                       {user.role && (
@@ -238,17 +228,7 @@ export function Profile() {
 
                       <div style={{ flexGrow: "1" }} />
 
-                      <Button
-                        onClick={() => updateDetails("profile")}
-                        onKeyDown={(e) => {
-                          wasActivated(e) && updateDetails("profile");
-                        }}
-                        variant="contained"
-                        to="#"
-                        startIcon={<Iconify icon="material-symbols:save" />}
-                      >
-                        {t("button-save")}
-                      </Button>
+                     
                     </Stack>
                   </Stack>
                 </CardContent>
@@ -262,9 +242,8 @@ export function Profile() {
                   subheader={
                     <span>
                       {t("ssh-public-keys-subheader-1")}
-                      <br /> 
-                      {t("ssh-public-keys-subheader-2")}
-                      ({t("e-g") + " "}
+                      <br />
+                      {t("ssh-public-keys-subheader-2")}({t("e-g") + " "}
                       <span style={{ fontFamily: "monospace" }}>
                         id_rsa.pub
                       </span>
@@ -279,7 +258,9 @@ export function Profile() {
                         <TableRow>
                           <TableCell>{t("admin-name")}</TableCell>
                           <TableCell>{t("key")}</TableCell>
-                          <TableCell align="right">{t("admin-actions")}</TableCell>
+                          <TableCell align="right">
+                            {t("admin-actions")}
+                          </TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
