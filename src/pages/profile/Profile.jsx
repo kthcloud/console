@@ -153,7 +153,7 @@ export function Profile() {
       {!user ? (
         <LoadingPage />
       ) : (
-        <Page title="Profile">
+        <Page title={t("profile")}>
           <Container>
             <Stack spacing={3}>
               <Typography variant="h4" gutterBottom>
