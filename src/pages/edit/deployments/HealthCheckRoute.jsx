@@ -63,7 +63,7 @@ export const HealthCheckRoute = ({ deployment }) => {
         title={t("health-check")}
         subheader={t("health-check-subheader")}
         action={
-          <Tooltip title={editing ? t("cancel") : t("button-edit")}>
+          <Tooltip enterTouchDelay={10} title={editing ? t("cancel") : t("button-edit")}>
             <IconButton
               onClick={() => {
                 setNewPath(deployment.healthCheckPath);

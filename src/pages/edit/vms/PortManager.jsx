@@ -140,7 +140,7 @@ export default function PortManager({ vm }) {
             <br />
             {t("port-forwarding-subheader-3")}
             <CopyToClipboard text={"vm.cloud.cbh.kth.se"}>
-              <Tooltip title={t("copy-to-clipboard")}>
+              <Tooltip enterTouchDelay={10} title={t("copy-to-clipboard")}>
                 <b
                   style={{
                     fontFamily: "monospace",
@@ -164,7 +164,7 @@ export default function PortManager({ vm }) {
               <>
                 {" " + t("or") + " "}
                 <CopyToClipboard text={publicIP}>
-                  <Tooltip title="Copy to clipboard">
+                  <Tooltip enterTouchDelay={10} title="Copy to clipboard">
                     <b
                       style={{
                         fontFamily: "monospace",

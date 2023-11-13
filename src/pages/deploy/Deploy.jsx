@@ -238,7 +238,7 @@ export function Deploy() {
           alignItems="center"
         >
           {resource.type}
-          <Tooltip title={tooltip}>
+          <Tooltip enterTouchDelay={10} title={tooltip}>
             <span style={{ display: "flex", alignItems: "center" }}>
               <Iconify icon="mdi:gpu" width={20} height={20} ml={1} />
             </span>
@@ -255,7 +255,7 @@ export function Deploy() {
         >
           {resource.type}
           {resource.private === true && (
-            <Tooltip title={t("deploy-hidden")}>
+            <Tooltip enterTouchDelay={10} title={t("deploy-hidden")}>
               <span style={{ display: "flex", alignItems: "center" }}>
                 <Iconify icon="mdi:eye-off" width={20} height={20} ml={1} />
               </span>
@@ -263,7 +263,7 @@ export function Deploy() {
           )}
           {resource.integrations &&
             resource.integrations.includes("github") && (
-              <Tooltip title={t("deploy-github")}>
+              <Tooltip enterTouchDelay={10} title={t("deploy-github")}>
                 <span style={{ display: "flex", alignItems: "center" }}>
                   <Iconify icon="mdi:github" width={20} height={20} ml={1} />
                 </span>
@@ -290,7 +290,7 @@ export function Deploy() {
 
     if (!color) color = "info";
 
-    let statusMessage = row.status.replace("resource", "").trim();
+    let statusMessage = t(row.status);
 
     return (
       <Label variant="ghost" color={color}>
@@ -429,14 +429,17 @@ export function Deploy() {
                           </TableRow>
                         );
                       })}
-                      
                     </TableBody>
 
-                    {filteredRows.length <= 0 && <TableBody><TableRow>
-                        <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
-                          <SearchNotFound searchQuery={filterName} />
-                        </TableCell>
-                      </TableRow></TableBody>}
+                    {filteredRows.length <= 0 && (
+                      <TableBody>
+                        <TableRow>
+                          <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
+                            <SearchNotFound searchQuery={filterName} />
+                          </TableCell>
+                        </TableRow>
+                      </TableBody>
+                    )}
                   </Table>
                 </TableContainer>
               </Scrollbar>

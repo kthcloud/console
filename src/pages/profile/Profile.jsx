@@ -128,7 +128,7 @@ export function Profile() {
       >
         <>{"..." + rawKey.substring(rawKey.length - 20, rawKey.length - 1)}</>
         <CopyToClipboard text={key}>
-          <Tooltip title={t("copy-key")}>
+          <Tooltip enterTouchDelay={10} title={t("copy-key")}>
             <IconButton>
               <Iconify icon={"ic:round-content-copy"} width={24} height={24} />
             </IconButton>

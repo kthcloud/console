@@ -24,7 +24,7 @@ const HelpButton = () => {
   const { t } = useTranslation();
 
   return (
-    <Tooltip title={t("button-help")}>
+    <Tooltip enterTouchDelay={10} title={t("button-help")}>
       <IconButton
         component={Link}
         target="_blank"

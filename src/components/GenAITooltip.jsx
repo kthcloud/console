@@ -9,7 +9,7 @@ export const GenAITooltip = ({ children }) => {
   return (
     <Box>
       {children}
-      <Tooltip title={t("this-content-is-ai-generated")}>
+      <Tooltip enterTouchDelay={10} title={t("this-content-is-ai-generated")}>
         <Typography variant="caption" sx={{ m: 1 }}>
           <Iconify icon="twemoji:sparkles" />
         </Typography>

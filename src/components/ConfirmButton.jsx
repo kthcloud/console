@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const {
   Button,
@@ -10,6 +11,7 @@ const {
 } = require("@mui/material");
 
 const ConfirmButton = ({ action, actionText, callback, props }) => {
+  const {t} = useTranslation();
   const [open, _setOpen] = useState(false);
   const setOpen = (state) => {
     if (state) navigator.vibrate?.([0.1, 5, 0.1]);
@@ -21,12 +23,12 @@ const ConfirmButton = ({ action, actionText, callback, props }) => {
         <DialogTitle>Confirm {action}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Are you sure you want to {actionText}? This action cannot be undone.
+            {`${t("are-you-sure-you-want-to")} ${actionText}? ${t("this-action-cannot-be-undone")}`}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button autoFocus onClick={() => setOpen(false)}>
-            Cancel
+            {t("cancel")}
           </Button>
           <Button
             onClick={() => {
