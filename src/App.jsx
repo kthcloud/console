@@ -2,7 +2,7 @@
 import { ReactKeycloakProvider } from "@react-keycloak/web";
 import { keycloak } from "./keycloak";
 // routes
-import Router from "./routes";
+import Router from "./Router";
 // theme
 import ThemeProvider from "./theme";
 // components
