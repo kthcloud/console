@@ -378,6 +378,9 @@
     "resourceBeingDeleted": "Raderas",
     "resourceStarting": "Startar",
     "resourceStopping": "Stannar",
-    "resourceRunning": "OK"
+    "resourceRunning": "OK",
+    "connectionError": "Kunde inte ansluta till servern",
+    "retrying-in": "Försöker igen om",
+    "seconds": "sekunder"
   }
 }

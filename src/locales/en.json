@@ -378,6 +378,9 @@
         "resourceBeingDeleted": "Being Deleted",
         "resourceStarting": "Starting",
         "resourceStopping": "Stopping",
-        "resourceRunning": "Running"
+        "resourceRunning": "Running",
+        "connectionError": "Unable to connect to server",
+        "retrying-in": "Retrying in",
+        "seconds": "seconds"
     }
 }
