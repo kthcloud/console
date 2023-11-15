@@ -360,6 +360,7 @@
     "notifications": "Notiser",
     "notificationsSubheader": "Notiser är meddelanden from kthcloud eller från andra användare. Vissa notiser har val du kan göra, som att gå med i projekt.",
     "search-error": "Sökning misslyckades: ",
+    "update-error": "Uppdatering misslyckades: ",
     "successfully-transferred": "Överföringen lyckades",
     "back-to-dashboard": "Tillbaka till översikten",
     "transfer-ownership": "Byt ägare",

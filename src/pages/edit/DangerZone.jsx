@@ -110,7 +110,6 @@ const DangerZone = ({resource}) => {
           </>
         ) : (
           <>
-            {" "}
             <Typography gutterBottom>{t("transfer-ownership")}</Typography>
             <Autocomplete
               disableClearable

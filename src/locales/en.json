@@ -360,6 +360,7 @@
         "notifications": "Notifications",
         "notificationsSubheader": "Notifications are messages from kthcloud or from other users. Some have actions you can take, such as accepting a request to join a project.",
         "search-error": "Couldn't search: ",
+        "update-error": "Couldn't update: ",
         "successfully-transferred": "Successfully transferred",
         "back-to-dashboard": "Back to dashboard",
         "transfer-ownership": "Transfer ownership",
