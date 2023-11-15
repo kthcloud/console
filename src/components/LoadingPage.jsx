@@ -36,7 +36,7 @@ const LoadingPage = () => {
 
   const getLoadingMessage = () => {
     if (connectionError) return t("connectionError");
-    if(i18n.language !== "en") return t("loading");
+    if(i18n.language === "se") return t("loading");
     // Get useragent and current minute to ensure loading message is consistent through refreshes
     const agent = window.navigator.userAgent;
     const minutes = new Date().getMinutes().toString();
