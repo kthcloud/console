@@ -75,6 +75,13 @@ const ProfileButton = () => {
         invisible={notifications?.length === 0}
         badgeContent={notifications.length}
         color="primary"
+        sx={{
+          display: {
+            xs: "none",
+            sm: "none",
+            md: "inline-flex",
+          },
+        }}
       >
         <IconButton
           component={Link}
