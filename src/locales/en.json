@@ -381,6 +381,11 @@
         "resourceRunning": "Running",
         "connectionError": "Unable to connect to server",
         "retrying-in": "Retrying in",
-        "seconds": "seconds"
+        "seconds": "seconds",
+        "invited-you-to-join-their-team": "invited you to join their team",
+        "transferred-a-deployment-to-you": "transferred a deployment to you",
+        "transferred-a-vm-to-you": "transferred a VM to you",
+        "accept": "Accept",
+        "read": "Read"
     }
 }

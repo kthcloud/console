@@ -258,3 +258,20 @@ export const createSnapshot = async (id, name, token) => {
 
   return await res.json();
 };
+
+export const acceptVmTransfer = async (token, id, code) => {
+  const url = `${process.env.REACT_APP_DEPLOY_API_URL}/vms/${id}`;
+  const body = { transferCode: code };
+
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+
+  const result = await response.json();
+  return result;
+};

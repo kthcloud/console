@@ -381,6 +381,11 @@
     "resourceRunning": "OK",
     "connectionError": "Kunde inte ansluta till servern",
     "retrying-in": "Försöker igen om",
-    "seconds": "sekunder"
+    "seconds": "sekunder",
+    "invited-you-to-join-their-team": "bjöd in dig till deras team",
+    "transferred-a-deployment-to-you": "överförde en deployment till dig",
+    "transferred-a-vm-to-you": "överförde en virtuell maskin till dig",
+    "accept": "Acceptera",
+    "read": "Läst"
   }
 }
