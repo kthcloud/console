@@ -15,6 +15,7 @@ import Iconify from "../../components/Iconify";
 import Link from "@mui/material/Link";
 import { Link as RouterLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import useResource from "src/hooks/useResource";
 
 // ----------------------------------------------------------------------
 
@@ -23,6 +24,8 @@ export default function Menu() {
   const { t } = useTranslation();
 
   const [open, setOpen] = useState(null);
+
+  const { notifications } = useResource();
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
@@ -113,7 +116,7 @@ export default function Menu() {
                     component={RouterLink}
                     onClick={handleClose}
                   >
-                    {t("inbox")}
+                    {t("inbox") + " " + (notifications.length > 0 ? "(" + notifications.length + ")" : "")}
                   </MenuItem>
                   <MenuItem
                     to={"/tiers"}

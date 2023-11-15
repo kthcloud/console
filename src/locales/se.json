@@ -156,7 +156,7 @@
     "resouce-comparison-real-time-analytics": "Realtidsanalys: t.ex. Apache Kafka, Elasticsearch",
     "button-help": "Hjälp",
     "next": "Nästa",
-    "danger-zone": "OBS!",
+    "danger-zone": "Farliga knappar",
     "github-actions-quickstart": "GitHub Actions dokumentation",
     "onboarding-wait-2": "Hmm, det här verkar ta för lång tid. Du kan prova att ladda om sidan eller kontakta oss på Discord.",
     "ssh-public-keys-subheader-1": "Dina nycklar kommer att installeras när du skapar en virtuell maskin. Ändringar kommer inte att installeras på befintliga maskiner",
