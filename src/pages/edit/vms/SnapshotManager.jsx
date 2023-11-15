@@ -150,7 +150,7 @@ export default function Specs({ vm }) {
       <CardHeader title={t("snapshots")} subheader={t("snapshots-subheader")} />
       <CardContent>
         <Stack spacing={2} direction={"column"} w={100}>
-          {snapshots.length > 0 && (
+          {vm?.snapshots && snapshots.length > 0 && (
             <>
               <Typography variant="body">
                 {t("your-snapshots")} ({snapshots.length})
