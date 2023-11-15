@@ -63,7 +63,7 @@ export const DeploymentCommands = ({ deployment }) => {
     >
       {deployment.integrations &&
         deployment.integrations.includes("github") && (
-          <Tooltip title={t("deploy-github")}>
+          <Tooltip enterTouchDelay={10} title={t("deploy-github")}>
             <span style={{ display: "flex", alignItems: "center" }}>
               <Iconify icon="mdi:github" width={24} height={24} />
             </span>

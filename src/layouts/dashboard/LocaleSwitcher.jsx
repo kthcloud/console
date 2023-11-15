@@ -20,7 +20,7 @@ const HelpButton = () => {
   );
 
   return (
-    <Tooltip title={t("button-change-language")}>
+    <Tooltip enterTouchDelay={10} title={t("button-change-language")}>
       <IconButton
         onClick={() => {
           if (i18n.language === "se") {

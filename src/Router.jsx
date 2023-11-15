@@ -15,6 +15,7 @@ import NotFound from "./pages/404";
 import Status from "./pages/status";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Onboarding from "./pages/onboarding";
+import Inbox from "./pages/inbox/Inbox";
 
 // ----------------------------------------------------------------------
 
@@ -40,6 +41,14 @@ export default function Router() {
           element: (
             <ProtectedRoute>
               <Profile />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "inbox",
+          element: (
+            <ProtectedRoute>
+              <Inbox />
             </ProtectedRoute>
           ),
         },

@@ -432,7 +432,7 @@ export const GPUManager = ({ vm }) => {
                     <br />
                     {t("gpu-drivers-2")}
                     <CopyToClipboard text="sudo ubuntu-drivers install --gpgpu">
-                      <Tooltip title="Copy to clipboard">
+                      <Tooltip enterTouchDelay={10} title="Copy to clipboard">
                         <span
                           style={{
                             fontFamily: "monospace",

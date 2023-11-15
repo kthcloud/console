@@ -109,6 +109,13 @@ export default function Menu() {
                     {t("menu-profile")}
                   </MenuItem>
                   <MenuItem
+                    to={"/inbox"}
+                    component={RouterLink}
+                    onClick={handleClose}
+                  >
+                    {t("inbox")}
+                  </MenuItem>
+                  <MenuItem
                     to={"/tiers"}
                     component={RouterLink}
                     onClick={handleClose}

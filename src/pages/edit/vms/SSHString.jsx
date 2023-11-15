@@ -25,7 +25,7 @@ const SSHString = ({ resource }) => {
         ) : (
           <Typography variant="body1">
             <CopyToClipboard text={ssh}>
-              <Tooltip title={t("copy-to-clipboard")}>
+              <Tooltip enterTouchDelay={10} title={t("copy-to-clipboard")}>
                 <b
                   style={{
                     fontFamily: "monospace",

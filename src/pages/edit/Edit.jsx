@@ -43,6 +43,7 @@ import { DomainManager } from "./deployments/DomainManager";
 import ProxyManager from "./vms/ProxyManager";
 import { HealthCheckRoute } from "./deployments/HealthCheckRoute";
 import { useTranslation } from "react-i18next";
+import DangerZone from "./DangerZone";
 
 export function Edit() {
   const { t } = useTranslation();
@@ -206,6 +207,8 @@ export function Edit() {
               {resource.type === "deployment" && (
                 <HealthCheckRoute deployment={resource} />
               )}
+
+              <DangerZone resource={resource} />
             </Stack>
           </Container>
         </Page>

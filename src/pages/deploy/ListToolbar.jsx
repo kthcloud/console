@@ -98,7 +98,7 @@ export default function ListToolbar({
       ) : (
         <>
           {loading ? (
-            <Tooltip title={t("deploy-updating")}>
+            <Tooltip enterTouchDelay={10} title={t("deploy-updating")}>
               <IconButton>
                 <Iconify icon="eos-icons:three-dots-loading" />
               </IconButton>

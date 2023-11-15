@@ -11,6 +11,7 @@ import { getDeployment, getDeployments } from "src/api/deploy/deployments";
 import { errorHandler } from "src/utils/errorHandler";
 import { getUser } from "src/api/deploy/users";
 import { getZones } from "src/api/deploy/zones";
+import { getNotifications } from "src/api/deploy/notifications";
 
 const initialState = {
   rows: [],
@@ -32,6 +33,7 @@ export const ResourceContextProvider = ({ children }) => {
   const [userRows, setUserRows] = useState([]);
   const [jobs, setJobs] = useState([]);
   const [user, setUser] = useState(null);
+  const [notifications, setNotifications] = useState([]);
   const [zones, setZones] = useState([]);
   const [initialLoad, setInitialLoad] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
@@ -101,12 +103,6 @@ export const ResourceContextProvider = ({ children }) => {
     setUserRows(array.filter((row) => row.ownerId === user.id));
   };
 
-  const loadUser = async () => {
-    if (!(initialized && keycloak.authenticated)) return;
-    const user = await getUser(keycloak.subject, keycloak.token);
-    setUser(user);
-  };
-
   const loadZones = async () => {
     if (!(initialized && keycloak.authenticated)) return;
     try {
@@ -119,6 +115,28 @@ export const ResourceContextProvider = ({ children }) => {
         })
       );
     }
+  };
+
+  const loadNotifications = async () => {
+    if (!(initialized && keycloak.authenticated)) return;
+    try {
+      const notifications = await getNotifications(keycloak.token);
+      setNotifications(notifications);
+    } catch (error) {
+      errorHandler(error).forEach((e) =>
+        enqueueSnackbar("Error fetching notifications: " + e, {
+          variant: "error",
+        })
+      );
+    }
+  };
+
+  const loadUser = async () => {
+    if (!(initialized && keycloak.authenticated)) return;
+    const user = await getUser(keycloak.subject, keycloak.token);
+    setUser(user);
+
+    loadNotifications();
   };
 
   const loadResources = async () => {
@@ -187,6 +205,8 @@ export const ResourceContextProvider = ({ children }) => {
         setJobs,
         user,
         setUser,
+        notifications,
+        setNotifications,
         zones,
         setZones,
         queueJob,

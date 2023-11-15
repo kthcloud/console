@@ -180,12 +180,12 @@ const GHActions = ({ resource }) => {
                     sx={{ cursor: "pointer" }}
                   >
                     <CopyToClipboard text={secret.name}>
-                      <Tooltip title={t("copy-to-clipboard")}>
+                      <Tooltip enterTouchDelay={10} title={t("copy-to-clipboard")}>
                         {`${secret.name}: `}
                       </Tooltip>
                     </CopyToClipboard>
                     <CopyToClipboard text={secret.value}>
-                      <Tooltip title={t("copy-to-clipboard")}>
+                      <Tooltip enterTouchDelay={10} title={t("copy-to-clipboard")}>
                         <b
                           style={{
                             fontFamily: "monospace",
