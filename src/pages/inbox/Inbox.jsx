@@ -1,6 +1,6 @@
 import {
-  Box,
   Button,
+  ButtonGroup,
   Card,
   CardContent,
   CardHeader,
@@ -131,6 +131,15 @@ const Inbox = () => {
                           spacing={3}
                           useFlexGap
                           alignItems="center"
+                          justifyContent={"space-between"}
+                        >
+                        <Stack
+                          direction="row"
+                          alignItems="center"
+                          spacing={3}
+                          flexWrap={"wrap"}
+                          justifyContent={"space-between"}
+                          useFlexGap
                         >
                           <Typography variant="body">
                             <span>
@@ -145,38 +154,41 @@ const Inbox = () => {
                                 notification?.content?.name}
                             </span>
                           </Typography>
-                          <Typography variant="caption">
-                            {
-                              notification?.createdAt
-                                ?.replace("T", " ")
-                                ?.replace("Z", "")
-                                ?.split(".")[0]
-                            }
-                          </Typography>
-                          <Box flexGrow={1} />
-                          <Button
-                            variant="contained"
-                            startIcon={<Iconify icon="mdi:check" />}
-                            onClick={() => accept(notification)}
-                          >
-                            {t("accept")}                            
-                          </Button>
-                          <Button
-                            variant="outlined"
-                            startIcon={<Iconify icon="mdi:email-open" />}
-                            onClick={() => markAsRead(notification)}
-                            disabled={notification.readAt}
-                          >
-                            {t("read")}
-                          </Button>
-                          <Button
-                            variant="outlined"
-                            color="error"
-                            startIcon={<Iconify icon="mdi:delete" />}
-                            onClick={() => handleDelete(notification)}
-                          >
-                            {t("button-clear")}
-                          </Button>
+                            <Typography
+                              variant="caption"
+                              fontFamily={"monospace"}
+                            >
+                              {
+                                notification?.createdAt
+                                  ?.replace("T", " ")
+                                  ?.replace("Z", "")
+                                  ?.split(".")[0]
+                              }
+                            </Typography>
+                          </Stack>
+                            <ButtonGroup variant="outlined" sx={{py: 3}}         orientation="vertical"
+>
+                              <Button
+                                startIcon={<Iconify icon="mdi:check" />}
+                                onClick={() => accept(notification)}
+                              >
+                                {t("accept")}
+                              </Button>
+                              <Button
+                                startIcon={<Iconify icon="mdi:email-open" />}
+                                onClick={() => markAsRead(notification)}
+                                disabled={notification.readAt}
+                              >
+                                {t("read")}
+                              </Button>
+                              <Button
+                                color="error"
+                                startIcon={<Iconify icon="mdi:delete" />}
+                                onClick={() => handleDelete(notification)}
+                              >
+                                {t("button-clear")}
+                              </Button>
+                            </ButtonGroup>
                         </Stack>
                       </>
                     ))}
