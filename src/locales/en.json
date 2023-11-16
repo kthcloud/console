@@ -386,6 +386,10 @@
         "transferred-a-deployment-to-you": "transferred a deployment to you",
         "transferred-a-vm-to-you": "transferred a VM to you",
         "accept": "Accept",
-        "read": "Read"
+        "read": "Read",
+        "menu-manage-account": "Manage account",
+        "teams": "Teams",
+        "current-teams": "Current teams",
+        "teams-subheader": "Teams are a way to organize your resources and collaborate with others. You can create a team and invite others to join."
     }
 }

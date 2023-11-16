@@ -386,6 +386,10 @@
     "transferred-a-deployment-to-you": "överförde en deployment till dig",
     "transferred-a-vm-to-you": "överförde en virtuell maskin till dig",
     "accept": "Acceptera",
-    "read": "Läst"
+    "read": "Läst",
+    "menu-manage-account": "Hantera konto",
+    "teams": "Grupper",
+    "current-teams": "Dina grupper",
+    "teams-subheader": "Grupper är ett sätt att organisera dina resurser och samarbeta med andra. Du kan skapa en grupp och bjuda in andra."
   }
 }

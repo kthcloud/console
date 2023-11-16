@@ -16,6 +16,7 @@ import Status from "./pages/status";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Onboarding from "./pages/onboarding";
 import Inbox from "./pages/inbox/Inbox";
+import Teams from "./pages/teams/Teams";
 
 // ----------------------------------------------------------------------
 
@@ -49,6 +50,14 @@ export default function Router() {
           element: (
             <ProtectedRoute>
               <Inbox />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "teams",
+          element: (
+            <ProtectedRoute>
+              <Teams />
             </ProtectedRoute>
           ),
         },
