@@ -104,7 +104,7 @@ const DangerZone = ({resource}) => {
         {success ? (
           <>
             <Typography gutterBottom>{t("successfully-transferred")}</Typography>
-            <Button component={Link} to="/" variant="contained">
+            <Button component={Link} to="/deploy" variant="contained">
             {t("back-to-dashboard")}
             </Button>
           </>
