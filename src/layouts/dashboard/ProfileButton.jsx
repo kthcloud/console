@@ -1,13 +1,20 @@
 import { useEffect, useState } from "react";
 import useResource from "src/hooks/useResource";
 import { MD5 } from "crypto-js";
-import { Avatar, Button, IconButton, Stack, Tooltip } from "@mui/material";
+import {
+  Avatar,
+  Badge,
+  Button,
+  IconButton,
+  Stack,
+  Tooltip,
+} from "@mui/material";
 import Iconify from "src/components/Iconify";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 const ProfileButton = () => {
-  const { user } = useResource();
+  const { user, notifications } = useResource();
   const [userAvatar, setUserAvatar] = useState(null);
   const [hasFetched, setHasFetched] = useState(false);
   const { t } = useTranslation();
@@ -52,24 +59,23 @@ const ProfileButton = () => {
             to="/profile"
           >
             {t("menu-profile")}
-          </Button>{" "}
+          </Button>
           <Button
             startIcon={<Iconify icon="material-symbols:inbox" />}
             color="inherit"
             component={Link}
             to="/inbox"
           >
-            {t("inbox")}
+            {`${t("inbox")} (${notifications?.length})`}
           </Button>
         </Stack>
       }
     >
-      <IconButton
-        component={Link}
-        to="/profile"
+      <Badge
+        invisible={notifications?.length === 0}
+        badgeContent={notifications.length}
+        color="primary"
         sx={{
-          width: 40,
-          height: 40,
           display: {
             xs: "none",
             sm: "none",
@@ -77,12 +83,26 @@ const ProfileButton = () => {
           },
         }}
       >
-        {user && userAvatar ? (
-          <Avatar sx={{ width: 20, height: 20 }} src={userAvatar} />
-        ) : (
-          <Iconify icon="mdi:user-circle" title="Profile" />
-        )}
-      </IconButton>
+        <IconButton
+          component={Link}
+          to="/profile"
+          sx={{
+            width: 40,
+            height: 40,
+            display: {
+              xs: "none",
+              sm: "none",
+              md: "inline-flex",
+            },
+          }}
+        >
+          {user && userAvatar ? (
+            <Avatar sx={{ width: 20, height: 20 }} src={userAvatar} />
+          ) : (
+            <Iconify icon="mdi:user-circle" title="Profile" />
+          )}
+        </IconButton>
+      </Badge>
     </Tooltip>
   );
 };

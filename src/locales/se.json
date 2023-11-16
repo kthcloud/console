@@ -156,7 +156,7 @@
     "resouce-comparison-real-time-analytics": "Realtidsanalys: t.ex. Apache Kafka, Elasticsearch",
     "button-help": "Hjälp",
     "next": "Nästa",
-    "danger-zone": "OBS!",
+    "danger-zone": "Farliga knappar",
     "github-actions-quickstart": "GitHub Actions dokumentation",
     "onboarding-wait-2": "Hmm, det här verkar ta för lång tid. Du kan prova att ladda om sidan eller kontakta oss på Discord.",
     "ssh-public-keys-subheader-1": "Dina nycklar kommer att installeras när du skapar en virtuell maskin. Ändringar kommer inte att installeras på befintliga maskiner",
@@ -360,7 +360,8 @@
     "notifications": "Notiser",
     "notificationsSubheader": "Notiser är meddelanden from kthcloud eller från andra användare. Vissa notiser har val du kan göra, som att gå med i projekt.",
     "search-error": "Sökning misslyckades: ",
-    "successfully-transferred": "Överföringen lyckades",
+    "update-error": "Uppdatering misslyckades: ",
+    "successfully-transferred": "Överföringsförfrågan skickad",
     "back-to-dashboard": "Tillbaka till översikten",
     "transfer-ownership": "Byt ägare",
     "transfer-ownership-action": "byt ägare",
@@ -377,6 +378,14 @@
     "resourceBeingDeleted": "Raderas",
     "resourceStarting": "Startar",
     "resourceStopping": "Stannar",
-    "resourceRunning": "OK"
+    "resourceRunning": "OK",
+    "connectionError": "Kunde inte ansluta till servern",
+    "retrying-in": "Försöker igen om",
+    "seconds": "sekunder",
+    "invited-you-to-join-their-team": "bjöd in dig till deras team",
+    "transferred-a-deployment-to-you": "överförde en deployment till dig",
+    "transferred-a-vm-to-you": "överförde en virtuell maskin till dig",
+    "accept": "Acceptera",
+    "read": "Läst"
   }
 }

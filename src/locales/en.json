@@ -360,7 +360,8 @@
         "notifications": "Notifications",
         "notificationsSubheader": "Notifications are messages from kthcloud or from other users. Some have actions you can take, such as accepting a request to join a project.",
         "search-error": "Couldn't search: ",
-        "successfully-transferred": "Successfully transferred",
+        "update-error": "Couldn't update: ",
+        "successfully-transferred": "Transfer request sent",
         "back-to-dashboard": "Back to dashboard",
         "transfer-ownership": "Transfer ownership",
         "transfer-ownership-action": "transfer ownership",
@@ -377,6 +378,14 @@
         "resourceBeingDeleted": "Being Deleted",
         "resourceStarting": "Starting",
         "resourceStopping": "Stopping",
-        "resourceRunning": "Running"
+        "resourceRunning": "Running",
+        "connectionError": "Unable to connect to server",
+        "retrying-in": "Retrying in",
+        "seconds": "seconds",
+        "invited-you-to-join-their-team": "invited you to join their team",
+        "transferred-a-deployment-to-you": "transferred a deployment to you",
+        "transferred-a-vm-to-you": "transferred a VM to you",
+        "accept": "Accept",
+        "read": "Read"
     }
 }

@@ -36,6 +36,9 @@ export const ResourceContextProvider = ({ children }) => {
   const [notifications, setNotifications] = useState([]);
   const [zones, setZones] = useState([]);
   const [initialLoad, setInitialLoad] = useState(false);
+  const [nextLoad, setNextLoad] = useState(0);
+  const [loadInterval, setLoadInterval] = useState(5000);
+  const [connectionError, setConnectionError] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
 
   const refreshJob = async (jobId) => {
@@ -132,11 +135,25 @@ export const ResourceContextProvider = ({ children }) => {
   };
 
   const loadUser = async () => {
-    if (!(initialized && keycloak.authenticated)) return;
-    const user = await getUser(keycloak.subject, keycloak.token);
-    setUser(user);
+    try {
+      if (!(initialized && keycloak.authenticated)) return;
+      const user = await getUser(keycloak.subject, keycloak.token);
+      setUser(user);
+      setConnectionError(false);
 
-    loadNotifications();
+      loadNotifications();
+    } catch (error) {
+      errorHandler(error).forEach((e) =>
+        enqueueSnackbar("Error fetching user: " + e, {
+          variant: "error",
+        })
+      );
+
+      setConnectionError(true);
+      console.log(loadInterval);
+      if (new Date().getTime() > nextLoad)
+        setLoadInterval(Math.min(loadInterval * 2, 60000));
+    }
   };
 
   const loadResources = async () => {
@@ -184,7 +201,9 @@ export const ResourceContextProvider = ({ children }) => {
 
   useInterval(() => {
     loadUser();
-  }, 5000);
+
+    setNextLoad(Date.now() + loadInterval);
+  }, loadInterval);
 
   useInterval(async () => {
     for (let i = 0; i < jobs.length; i++) {
@@ -203,6 +222,8 @@ export const ResourceContextProvider = ({ children }) => {
         setUserRows,
         jobs,
         setJobs,
+        nextLoad,
+        connectionError,
         user,
         setUser,
         notifications,
