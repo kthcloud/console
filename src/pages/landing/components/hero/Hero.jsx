@@ -16,7 +16,7 @@ import { Link } from "react-router-dom";
 
 const Hero = () => {
   const { keycloak, initialized } = useKeycloak();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   // Capacities
   const [capacitiesLoading, setCapacitiesLoading] = useState(true);
@@ -107,14 +107,22 @@ const Hero = () => {
             pr={5}
             opacity={headerLoading ? 0 : 1}
           >
-            <GenAITooltip>{header}</GenAITooltip>
+            {i18n.language !== "en" ? (
+              t("onboarding-welcome")
+            ) : (
+              <GenAITooltip>{header}</GenAITooltip>
+            )}
           </Typography>
           <div className="hero-p">
             <Typography
               variant="body"
               sx={{ fontSize: "1.4rem", opacity: headerLoading ? 0 : 1 }}
             >
-              <GenAITooltip>{subheader}</GenAITooltip>
+              {i18n.language !== "en" ? (
+                t("landing-intro-subheader")
+              ) : (
+                <GenAITooltip>{subheader}</GenAITooltip>
+              )}
             </Typography>
           </div>
           <Stack

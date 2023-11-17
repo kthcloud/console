@@ -334,6 +334,7 @@
         "landing-hero-cpu": "CPU cores",
         "landing-hero-ram": "Terabytes of memory",
         "landing-intro-header": "Welcome to",
+        "landing-intro-subheader": "Start deploying your projects today",
         "landing-intro-body": "We offer a cutting-edge private cloud infrastructure tailored to meet the unique needs of KTH's bright minds. Seamlessly run experiments, collaborate on groundbreaking research, and harness the power of cloud technology to drive innovation.",
         "landing-intro-footer": "Register today free of charge - all you need is a KTH account.",
         "connection-status": "Connection status",

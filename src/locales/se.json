@@ -178,6 +178,7 @@
     "deploy-hidden": "Denna deployment är privat, och går inte att nå från internet",
     "ssh-string": "SSH-kommando",
     "landing-hero-cpu": "CPU-kärnor",
+    "landing-intro-subheader": "Driftssätt dina projekt idag",
     "memory": "Minne",
     "vm-in-progress": " VM pågår...",
     "404-title": "404 - Sidan kunde inte hittas",
