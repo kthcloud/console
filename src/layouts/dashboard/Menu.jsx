@@ -103,7 +103,20 @@ export default function Menu() {
                   >
                     {t("menu-create-new")}
                   </MenuItem>
+                </Stack>
 
+                <Divider sx={{ borderStyle: "dashed" }} />
+
+                <Box sx={{ mt: 1.5, px: 2.5 }}>
+                  <Typography
+                    variant="body2"
+                    sx={{ color: "text.secondary" }}
+                    noWrap
+                  >
+                    {t("menu-manage-account")}
+                  </Typography>
+                </Box>
+                <Stack sx={{ p: 1 }}>
                   <MenuItem
                     to={"/profile"}
                     component={RouterLink}
@@ -116,7 +129,18 @@ export default function Menu() {
                     component={RouterLink}
                     onClick={handleClose}
                   >
-                    {t("inbox") + " " + (notifications.length > 0 ? "(" + notifications.length + ")" : "")}
+                    {t("inbox") +
+                      " " +
+                      (notifications.length > 0
+                        ? "(" + notifications.length + ")"
+                        : "")}
+                  </MenuItem>
+                  <MenuItem
+                    to={"/teams"}
+                    component={RouterLink}
+                    onClick={handleClose}
+                  >
+                    {t("teams")}
                   </MenuItem>
                   <MenuItem
                     to={"/tiers"}

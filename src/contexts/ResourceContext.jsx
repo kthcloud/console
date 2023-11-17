@@ -12,6 +12,7 @@ import { errorHandler } from "src/utils/errorHandler";
 import { getUser } from "src/api/deploy/users";
 import { getZones } from "src/api/deploy/zones";
 import { getNotifications } from "src/api/deploy/notifications";
+import { getTeams } from "src/api/deploy/teams";
 
 const initialState = {
   rows: [],
@@ -34,6 +35,7 @@ export const ResourceContextProvider = ({ children }) => {
   const [jobs, setJobs] = useState([]);
   const [user, setUser] = useState(null);
   const [notifications, setNotifications] = useState([]);
+  const [teams, setTeams] = useState([]);
   const [zones, setZones] = useState([]);
   const [initialLoad, setInitialLoad] = useState(false);
   const [nextLoad, setNextLoad] = useState(0);
@@ -134,6 +136,20 @@ export const ResourceContextProvider = ({ children }) => {
     }
   };
 
+  const loadTeams = async () => {
+    if (!(initialized && keycloak.authenticated)) return;
+    try {
+      const teams = await getTeams(keycloak.token);
+      setTeams(teams);
+    } catch (error) {
+      errorHandler(error).forEach((e) =>
+        enqueueSnackbar("Error fetching teams: " + e, {
+          variant: "error",
+        })
+      );
+    }
+  };
+
   const loadUser = async () => {
     try {
       if (!(initialized && keycloak.authenticated)) return;
@@ -142,6 +158,7 @@ export const ResourceContextProvider = ({ children }) => {
       setConnectionError(false);
 
       loadNotifications();
+      loadTeams();
     } catch (error) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar("Error fetching user: " + e, {
@@ -228,6 +245,8 @@ export const ResourceContextProvider = ({ children }) => {
         setUser,
         notifications,
         setNotifications,
+        teams,
+        setTeams,
         zones,
         setZones,
         queueJob,

@@ -178,6 +178,7 @@
     "deploy-hidden": "Denna deployment är privat, och går inte att nå från internet",
     "ssh-string": "SSH-kommando",
     "landing-hero-cpu": "CPU-kärnor",
+    "landing-intro-subheader": "Driftssätt dina projekt idag",
     "memory": "Minne",
     "vm-in-progress": " VM pågår...",
     "404-title": "404 - Sidan kunde inte hittas",
@@ -386,6 +387,13 @@
     "transferred-a-deployment-to-you": "överförde en deployment till dig",
     "transferred-a-vm-to-you": "överförde en virtuell maskin till dig",
     "accept": "Acceptera",
-    "read": "Läst"
+    "read": "Läst",
+    "menu-manage-account": "Hantera konto",
+    "teams": "Grupper",
+    "current-teams": "Dina grupper",
+    "teams-subheader": "Grupper är ett sätt att organisera dina resurser och samarbeta med andra. Du kan skapa en grupp och bjuda in andra.",
+    "create-team": "Skapa grupp",
+    "description": "Beskrivning",
+    "invite": "Bjud in"
   }
 }

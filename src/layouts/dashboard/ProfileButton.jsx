@@ -68,6 +68,14 @@ const ProfileButton = () => {
           >
             {`${t("inbox")} (${notifications?.length})`}
           </Button>
+          <Button
+            startIcon={<Iconify icon="mdi:account-group" />}
+            color="inherit"
+            component={Link}
+            to="/teams"
+          >
+            {t("teams")}
+          </Button>
         </Stack>
       }
     >

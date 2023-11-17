@@ -9,7 +9,7 @@ import { useTranslation } from "react-i18next";
 
 export function Landing() {
   const { keycloak, initialized } = useKeycloak();
-  const {t} = useTranslation();
+  const { t } = useTranslation();
 
   if (!initialized) {
     return (
@@ -26,7 +26,10 @@ export function Landing() {
         <Box mt={5}></Box>
         <Hero />
         <Intro />
-        <Typography variant="body2" align="center" mt={5} sx={{ display: { sm: "none" }}}><Iconify icon="twemoji:sparkles" /> {t("this-content-is-ai-generated")}</Typography>
+        <Typography variant="body2" align="center" mt={5}>
+          <Iconify icon="twemoji:sparkles" />{" "}
+          {t("this-content-is-ai-generated")}
+        </Typography>
       </Page>
     );
   }
