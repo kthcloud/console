@@ -391,6 +391,9 @@
         "menu-manage-account": "Manage account",
         "teams": "Teams",
         "current-teams": "Current teams",
-        "teams-subheader": "Teams are a way to organize your resources and collaborate with others. You can create a team and invite others to join."
+        "teams-subheader": "Teams are a way to organize your resources and collaborate with others. You can create a team and invite others to join.",
+        "create-team": "Create team",
+        "description": "Description",
+        "invite": "Invite"
     }
 }

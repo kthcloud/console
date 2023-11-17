@@ -391,6 +391,9 @@
     "menu-manage-account": "Hantera konto",
     "teams": "Grupper",
     "current-teams": "Dina grupper",
-    "teams-subheader": "Grupper är ett sätt att organisera dina resurser och samarbeta med andra. Du kan skapa en grupp och bjuda in andra."
+    "teams-subheader": "Grupper är ett sätt att organisera dina resurser och samarbeta med andra. Du kan skapa en grupp och bjuda in andra.",
+    "create-team": "Skapa grupp",
+    "description": "Beskrivning",
+    "invite": "Bjud in"
   }
 }
