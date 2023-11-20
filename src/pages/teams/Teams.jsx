@@ -254,7 +254,7 @@ const Teams = () => {
                     alignItems={"flex-start"}
                   >
                     <TextField
-                      label={t("create-deployment-name")}
+                      label={t("admin-name")}
                       value={teamName}
                       onChange={(e) => setTeamName(e.target.value)}
                       fullWidth
