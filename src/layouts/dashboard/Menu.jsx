@@ -25,7 +25,7 @@ export default function Menu() {
 
   const [open, setOpen] = useState(null);
 
-  const { notifications } = useResource();
+  const { unread } = useResource();
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
@@ -129,11 +129,7 @@ export default function Menu() {
                     component={RouterLink}
                     onClick={handleClose}
                   >
-                    {t("inbox") +
-                      " " +
-                      (notifications.length > 0
-                        ? "(" + notifications.length + ")"
-                        : "")}
+                    {t("inbox") + " " + (unread > 0 ? "(" + unread + ")" : "")}
                   </MenuItem>
                   <MenuItem
                     to={"/teams"}

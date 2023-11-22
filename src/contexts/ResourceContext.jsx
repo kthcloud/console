@@ -35,6 +35,7 @@ export const ResourceContextProvider = ({ children }) => {
   const [jobs, setJobs] = useState([]);
   const [user, setUser] = useState(null);
   const [notifications, setNotifications] = useState([]);
+  const [unread, setUnread] = useState(0);
   const [teams, setTeams] = useState([]);
   const [zones, setZones] = useState([]);
   const [initialLoad, setInitialLoad] = useState(false);
@@ -127,6 +128,15 @@ export const ResourceContextProvider = ({ children }) => {
     try {
       const notifications = await getNotifications(keycloak.token);
       setNotifications(notifications);
+
+      let u = 0;
+      notifications.forEach((n) => {
+        if (!n.readAt) {
+          u++;
+        }
+      });
+
+      setUnread(u);
     } catch (error) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar("Error fetching notifications: " + e, {
@@ -245,6 +255,8 @@ export const ResourceContextProvider = ({ children }) => {
         setUser,
         notifications,
         setNotifications,
+        unread,
+        setUnread,
         teams,
         setTeams,
         zones,

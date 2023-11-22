@@ -14,7 +14,7 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 const ProfileButton = () => {
-  const { user, notifications } = useResource();
+  const { user, unread } = useResource();
   const [userAvatar, setUserAvatar] = useState(null);
   const [hasFetched, setHasFetched] = useState(false);
   const { t } = useTranslation();
@@ -66,7 +66,7 @@ const ProfileButton = () => {
             component={Link}
             to="/inbox"
           >
-            {`${t("inbox")} (${notifications?.length})`}
+            {`${t("inbox")} (${unread})`}
           </Button>
           <Button
             startIcon={<Iconify icon="mdi:account-group" />}
@@ -80,8 +80,8 @@ const ProfileButton = () => {
       }
     >
       <Badge
-        invisible={notifications?.length === 0}
-        badgeContent={notifications.length}
+        invisible={unread === 0}
+        badgeContent={unread}
         color="primary"
         sx={{
           display: {
