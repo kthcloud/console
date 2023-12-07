@@ -44,6 +44,7 @@ import ProxyManager from "./vms/ProxyManager";
 import { HealthCheckRoute } from "./deployments/HealthCheckRoute";
 import { useTranslation } from "react-i18next";
 import DangerZone from "./DangerZone";
+import { ReplicaManager } from "./deployments/ReplicaManager";
 
 export function Edit() {
   const { t } = useTranslation();
@@ -200,6 +201,9 @@ export function Edit() {
                   <GHActions resource={resource} />
                 )}
 
+              {resource.type === "deployment" && (
+                <ReplicaManager deployment={resource} />
+              )}
               {resource.type === "deployment" && (
                 <LogsView deployment={resource} />
               )}

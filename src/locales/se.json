@@ -394,6 +394,13 @@
     "teams-subheader": "Grupper är ett sätt att organisera dina resurser och samarbeta med andra. Du kan skapa en grupp och bjuda in andra.",
     "create-team": "Skapa grupp",
     "description": "Beskrivning",
-    "invite": "Bjud in"
+    "invite": "Bjud in",
+    "replicas": "Kopior",
+    "replicas-subheader": "Kopior är en enkel form av skalning. Du kan skapa flera kopior av din app för att hantera mer trafik.",
+    "replicas-shutdown": "Tips från coachen: Genom att välja 0 kopior stängs appen av, men finns kvar i ditt konto.",
+    "apply": "Verkställ",
+    "replicas-saving": "Sparar antal kopior...",
+    "could-not-save-replicas": "Kunde inte uppdatera antal kopior: ",
+    "replicas-shutdown-warning": "Varning: Om du väljer 0 kopior kommer appen att stängas av."
   }
 }

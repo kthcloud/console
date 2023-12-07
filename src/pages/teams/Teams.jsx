@@ -160,6 +160,7 @@ const Teams = () => {
                               spacing={2}
                               alignItems={"center"}
                               useFlexGap
+                              key={team.id+" "+member.username}
                             >
                               <Typography variant="body1">
                                 {member.email || member.username}
