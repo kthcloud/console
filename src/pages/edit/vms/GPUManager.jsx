@@ -431,7 +431,7 @@ export const GPUManager = ({ vm }) => {
                     {t("gpu-drivers-1")}
                     <br />
                     {t("gpu-drivers-2")}
-                    <CopyToClipboard text="sudo ubuntu-drivers install --gpgpu">
+                    <CopyToClipboard text="apt install nvidia-driver-535-server nvidia-utils-535-server -y">
                       <Tooltip enterTouchDelay={10} title="Copy to clipboard">
                         <span
                           style={{
@@ -440,7 +440,7 @@ export const GPUManager = ({ vm }) => {
                             cursor: "pointer",
                           }}
                         >
-                          sudo ubuntu-drivers install --gpgpu
+                          apt install nvidia-driver-535-server nvidia-utils-535-server -y 
                         </span>
                       </Tooltip>
                     </CopyToClipboard>
