@@ -144,7 +144,7 @@ const GHActions = ({ resource }) => {
             </Stack>
 
             <Button
-              variant={showSecrets ? "contained" : "outlined"}
+              variant={"contained"}
               onClick={() => setShowSecrets(!showSecrets)}
               startIcon={
                 <Iconify icon={showSecrets ? "mdi:eye-off" : "mdi:eye"} />
