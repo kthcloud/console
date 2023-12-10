@@ -394,6 +394,13 @@
         "teams-subheader": "Teams are a way to organize your resources and collaborate with others. You can create a team and invite others to join.",
         "create-team": "Create team",
         "description": "Description",
-        "invite": "Invite"
+        "invite": "Invite",
+        "replicas": "Replicas",
+        "replicas-subheader": "Replicas are multiple instances of the same deployment. They are useful for load balancing and scaling.",
+        "replicas-shutdown": "Protip: By choosing 0 replicas, you can shut down this deployment without deleting it.",
+        "apply": "Apply",
+        "replicas-saving": "Saving replicas...",
+        "could-not-save-replicas": "Could not save replicas: ",
+        "replicas-shutdown-warning": "This will shut down your deployment. Are you sure?"
     }
 }

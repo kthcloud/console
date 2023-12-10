@@ -16,6 +16,8 @@ const resolveURL = () => {
     return base_url + "Using_Virtual_Machines";
 
   if (path.startsWith("/profile")) return base_url + "Profile";
+  if (path.startsWith("/teams")) return base_url + "Teams";
+  if (path.startsWith("/inbox")) return base_url + "Inbox";
 
   return "https://wiki.cloud.cbh.kth.se";
 };
