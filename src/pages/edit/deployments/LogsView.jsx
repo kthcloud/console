@@ -26,7 +26,7 @@ export const LogsView = ({ deployment }) => {
 
   const initSse = () => {
     if (!(deployment && initialized)) return;
-    
+
     if (sse) {
       sse.close();
     }
@@ -40,6 +40,8 @@ export const LogsView = ({ deployment }) => {
       }
     );
 
+    console.log(eventSource);
+
     setSse(eventSource);
 
     eventSource.onerror = () => {
@@ -50,13 +52,21 @@ export const LogsView = ({ deployment }) => {
         initSse();
       }, 5000);
     };
+    
+    eventSource.addEventListener("deployment", (e) => {
+      setLogs((logs) => [e.data, ...logs]);
+    });
+    
+    eventSource.addEventListener("pod", (e) => {
+      setLogs((logs) => [e.data, ...logs]);
+    });
+    
+    eventSource.addEventListener("build", (e) => {
+      setLogs((logs) => [e.data, ...logs]);
+    });
 
-    eventSource.onmessage = (event) => {
-      setLogs((logs) => [event.data, ...logs]);
-      setConnection("connected");
-    };
-
-    eventSource.onopen = () => {
+    eventSource.onopen = (e) => {
+      console.log(e)
       setConnection("connected");
     };
   };
