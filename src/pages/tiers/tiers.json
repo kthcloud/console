@@ -11,7 +11,7 @@
         "gpuLeaseDuration": ""
       },
       "quotas": {
-        "deployments": 5,
+        "deployments": 10,
         "cpuCores": 2,
         "ram": 4,
         "diskSize": 20,
@@ -30,7 +30,7 @@
         "gpuLeaseDuration": 5
       },
       "quotas": {
-        "deployments": 5,
+        "deployments": 10,
         "cpuCores": 4,
         "ram": 16,
         "diskSize": 50,
