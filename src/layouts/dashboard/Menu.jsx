@@ -72,6 +72,7 @@ export default function Menu() {
             typography: "body2",
             borderRadius: 0.75,
           },
+          overflowY: "auto"
         }}
       >
         {initialized && (
