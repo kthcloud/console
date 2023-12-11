@@ -1,22 +1,32 @@
 import {
   Autocomplete,
+  Avatar,
+  AvatarGroup,
+  Box,
   Button,
-  ButtonGroup,
   Card,
   CardContent,
   CardHeader,
   Container,
-  Divider,
+  Paper,
+  Skeleton,
   Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow,
   TextField,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { useKeycloak } from "@react-keycloak/web";
 import { enqueueSnackbar } from "notistack";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { addMembers, createTeam, deleteTeam } from "src/api/deploy/teams";
 import { searchUsers } from "src/api/deploy/users";
+import Gravatar from "src/components/Gravatar";
 import Iconify from "src/components/Iconify";
 import JobList from "src/components/JobList";
 import LoadingPage from "src/components/LoadingPage";
@@ -30,12 +40,17 @@ const Teams = () => {
   const { initialized, keycloak } = useKeycloak();
 
   const [loading, setLoading] = useState(false);
+  const [stale, setStale] = useState(null);
   const [teamName, setTeamName] = useState("");
   const [teamDescription, setTeamDescription] = useState("");
   const [expandedTeam, setExpandedTeam] = useState(null);
   const [results, setResults] = useState([]);
   const [selected, setSelected] = useState("");
   const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    setStale(null);
+  }, [teams]);
 
   const create = async () => {
     if (!initialized) return;
@@ -45,7 +60,9 @@ const Teams = () => {
       await createTeam(keycloak.token, teamName, teamDescription);
       setTeamName("");
       setTeamDescription("");
+      setStale("created");
     } catch (error) {
+      console.log(error);
       errorHandler(error).forEach((e) =>
         enqueueSnackbar(t("update-error") + e, {
           variant: "error",
@@ -59,6 +76,7 @@ const Teams = () => {
   const handleDelete = async (team) => {
     if (!initialized) return;
 
+    setStale("delete " + team.id);
     try {
       await deleteTeam(keycloak.token, team.id);
     } catch (error) {
@@ -136,113 +154,205 @@ const Teams = () => {
                   subheader={t("teams-subheader")}
                 />
                 <CardContent>
-                  <Stack spacing={2} direction={"column"}>
-                    {teams.map((team) => (
-                      <Stack
-                        key={team.id}
-                        direction="row"
-                        spacing={2}
-                        justifyContent={"space-between"}
-                        useFlexGap
-                        alignItems={"flex-start"}
-                        flexWrap={"wrap"}
-                      >
-                        <Stack
-                          direction="column"
-                          spacing={2}
-                          alignItems={"flex-start"}
-                        >
-                          <Divider sx={{ borderStyle: "dashed" }} />
-                          <Typography variant="h6">{team.name}</Typography>
-                          {team.members.map((member) => (
-                            <Stack
-                              direction="row"
-                              spacing={2}
-                              alignItems={"center"}
-                              useFlexGap
-                              key={team.id+" "+member.username}
-                            >
-                              <Typography variant="body1">
-                                {member.email || member.username}
-                              </Typography>
-                              <Typography variant="caption">
-                                {member.teamRole}
-                              </Typography>
-                              <Typography
-                                variant="caption"
-                                sx={{ color: "text.secondary" }}
-                              >
-                                {
-                                  member?.addedAt
-                                    ?.replace("T", " ")
-                                    ?.split(".")[0]
-                                }
-                              </Typography>
-                            </Stack>
-                          ))}
+                  <TableContainer component={Paper}>
+                    <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                      <TableBody>
+                        {teams.map((team, index) => (
+                          <>
+                            {stale !== "delete " + team.id ? (
+                              <>
+                                <TableRow
+                                  key={"teamrow" + team.id}
+                                  sx={{
+                                    "&:last-child td, &:last-child th": {
+                                      border: 0,
+                                    },
+                                    cursor: "pointer",
+                                    background:
+                                      expandedTeam === team.id
+                                        ? "#f9fafb"
+                                        : "white",
+                                  }}
+                                  onClick={() =>
+                                    expandedTeam === team.id
+                                      ? setExpandedTeam(null)
+                                      : setExpandedTeam(team.id)
+                                  }
+                                >
+                                  <TableCell component="th" scope="row">
+                                    <Stack direction="column" spacing={1}>
+                                      <Typography variant="body1">
+                                        {team.name}
+                                      </Typography>
+                                      <Typography variant="caption">
+                                        {team.description}
+                                      </Typography>
+                                    </Stack>
+                                  </TableCell>
+                                  <TableCell>
+                                    <Stack
+                                      direction="row"
+                                      spacing={1}
+                                      alignItems={"center"}
+                                      useFlexGap
+                                    >
+                                      <AvatarGroup max={4}>
+                                        {team.members.map((member) => (
+                                          <Tooltip
+                                            title={
+                                              member.username || member.email
+                                            }
+                                            key={member.id}
+                                          >
+                                            <Gravatar
+                                              user={member}
+                                              alt={member.username}
+                                              sx={{ width: 24, height: 24 }}
+                                            />
+                                          </Tooltip>
+                                        ))}
+                                        {team.members.length === 0 && (
+                                          <Tooltip title={"Boo!"}>
+                                            <Avatar
+                                              sx={{ width: 24, height: 24 }}
+                                            >
+                                              <Iconify icon="mdi:ghost" />
+                                            </Avatar>
+                                          </Tooltip>
+                                        )}
+                                      </AvatarGroup>
+                                      {`${team.members.length} ${t("members")}`}
+                                    </Stack>
+                                  </TableCell>
+                                  <TableCell align="right">
+                                    <Iconify
+                                      icon={
+                                        expandedTeam === team.id
+                                          ? "mdi:expand-less"
+                                          : "mdi:expand-more"
+                                      }
+                                    />
+                                  </TableCell>
+                                </TableRow>
+                                {expandedTeam === team.id && (
+                                  <TableRow
+                                    key={"teamrow" + team.id + "expanded"}
+                                  >
+                                    <TableCell colSpan={3}>
+                                      <TableContainer>
+                                        <Table>
+                                          {team.members.map((member) => (
+                                            <TableRow
+                                              key={
+                                                team.id + " " + member.username
+                                              }
+                                            >
+                                              <TableCell>
+                                                {member.email ||
+                                                  member.username}
+                                              </TableCell>
+                                              <TableCell>
+                                                {member.teamRole}
+                                              </TableCell>
+                                              <TableCell
+                                                align="right"
+                                                sx={{
+                                                  color: "text.secondary",
+                                                }}
+                                              >
+                                                {
+                                                  member?.addedAt
+                                                    ?.replace("T", " ")
+                                                    ?.split(".")[0]
+                                                }
+                                              </TableCell>
+                                            </TableRow>
+                                          ))}
 
-                          {expandedTeam === team.id && (
-                            <>
-                              <Autocomplete
-                                disableClearable
-                                options={results}
-                                inputValue={selected}
-                                fullWidth
-                                sx={{minWidth: 300}}
-                                onInputChange={(_, value) => {
-                                  setSelected(value);
-                                  search(value);
-                                }}
-                                renderInput={(params) => (
-                                  <TextField
-                                    {...params}
-                                    label={t("search-for-users")}
-                                    InputProps={{
-                                      ...params.InputProps,
-                                      type: "search",
-                                    }}
-                                  />
+                                          <TableRow>
+                                            <TableCell colSpan={3}>
+                                              <Stack
+                                                direction="row"
+                                                spacing={3}
+                                                alignItems={"center"}
+                                                justifyContent={"space-between"}
+                                                useFlexGap
+                                                pt={1}
+                                                pb={2}
+                                              >
+                                                <Autocomplete
+                                                  disableClearable
+                                                  options={results}
+                                                  inputValue={selected}
+                                                  sx={{ minWidth: 300 }}
+                                                  onInputChange={(_, value) => {
+                                                    setSelected(value);
+                                                    search(value);
+                                                  }}
+                                                  renderInput={(params) => (
+                                                    <TextField
+                                                      {...params}
+                                                      label={t(
+                                                        "search-for-users"
+                                                      )}
+                                                      InputProps={{
+                                                        ...params.InputProps,
+                                                        type: "search",
+                                                      }}
+                                                      variant="standard"
+                                                    />
+                                                  )}
+                                                />
+                                                <Button
+                                                  onClick={() => invite(team)}
+                                                  variant="contained"
+                                                  startIcon={
+                                                    <Iconify icon="mdi:invite" />
+                                                  }
+                                                >
+                                                  {t("invite")}
+                                                </Button>
+                                                <Box sx={{ flexGrow: 1 }} />
+                                                <Button
+                                                  onClick={() =>
+                                                    handleDelete(team)
+                                                  }
+                                                  color="error"
+                                                  startIcon={
+                                                    <Iconify icon="mdi:delete" />
+                                                  }
+                                                >
+                                                  {t("button-delete")}
+                                                </Button>
+                                              </Stack>
+                                            </TableCell>
+                                          </TableRow>
+                                        </Table>
+                                      </TableContainer>
+                                    </TableCell>
+                                  </TableRow>
                                 )}
-                              />
-                              <Button onClick={() => invite(team)}>
-                                {t("invite")}
-                              </Button>
-                            </>
-                          )}
-                        </Stack>
-                        <ButtonGroup>
-                          <Button
-                            variant="outlined"
-                            onClick={() =>
-                              expandedTeam !== team.id
-                                ? setExpandedTeam(team.id)
-                                : setExpandedTeam(null)
-                            }
-                            startIcon={
-                              expandedTeam === team.id ? (
-                                <Iconify icon="mdi:minus" />
-                              ) : (
-                                <Iconify icon="mdi:plus" />
-                              )
-                            }
-                          >
-                            {expandedTeam === team.id
-                              ? t("button-close")
-                              : t("invite")}
-                          </Button>
+                              </>
+                            ) : (
+                              <TableRow>
+                                <TableCell colSpan={3}>
+                                  <Skeleton animation="wave" height={64} />
+                                </TableCell>
+                              </TableRow>
+                            )}
+                          </>
+                        ))}
 
-                          <Button
-                            variant="outlined"
-                            onClick={() => handleDelete(team)}
-                            color="error"
-                            startIcon={<Iconify icon="mdi:delete" />}
-                          >
-                            {t("button-delete")}
-                          </Button>
-                        </ButtonGroup>
-                      </Stack>
-                    ))}
-                  </Stack>
+                        {stale === "created" && (
+                          <TableRow>
+                            <TableCell colSpan={3}>
+                              <Skeleton animation="wave" height={64} />
+                            </TableCell>
+                          </TableRow>
+                        )}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
                 </CardContent>
               </Card>
 

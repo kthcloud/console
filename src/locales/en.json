@@ -401,6 +401,7 @@
         "apply": "Apply",
         "replicas-saving": "Saving replicas...",
         "could-not-save-replicas": "Could not save replicas: ",
-        "replicas-shutdown-warning": "This will shut down your deployment. Are you sure?"
+        "replicas-shutdown-warning": "This will shut down your deployment. Are you sure?",
+        "members": "Members"
     }
 }

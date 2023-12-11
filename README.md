@@ -4,13 +4,13 @@ Welcome to the kthcloud/landing-frontend repository! This project is the React f
 
 ## Table of Contents
 
-- [Services](#services)
+- [External dependencies](#services)
 - [Setup](#setup)
 - [Contributing](#contributing)
 - [Formatting](#formatting)
 - [License](#license)
 
-## External dependencies
+## <a name="services"></a>External dependencies
 - [sys-api](https://github.com/kthcloud/sys-api): Provides stats and capacities
 - [go-deploy](https://github.com/kthcloud/go-deploy): Backend for creation, and management of resources
 - [llama](https://llama.app.cloud.cbh.kth.se/): Enables genAI features
@@ -35,7 +35,7 @@ The `npm start` command will start the development server. You can access the ap
 
 We are thrilled you are considering contributing to the kthcloud project! We welcome contributions from everyone, and we are here to help you if you need it.
 
-The `main` branch is the main development branch, so all pull requests should be created against `main`.
+The `beta` branch is the main development branch, so all pull requests should be created against `beta`.
 
 Before you start coding:
 

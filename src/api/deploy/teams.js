@@ -30,12 +30,11 @@ export const getTeams = async (token) => {
     return new Date(b.createdAt) - new Date(a.createdAt);
   });
 
-
   for (let i = 0; i < result.length; i++) {
     result[i].members &&
-    result[i].members.sort((a, b) => {
-      return new Date(a.addedAt) - new Date(b.addedAt);
-    });
+      result[i].members.sort((a, b) => {
+        return new Date(a.addedAt) - new Date(b.addedAt);
+      });
   }
   return result;
 };
@@ -43,13 +42,21 @@ export const getTeams = async (token) => {
 export const createTeam = async (token, name, description) => {
   const url = `${process.env.REACT_APP_DEPLOY_API_URL}/teams`;
 
-  await fetch(url, {
+  let res = await fetch(url, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({ name, description }),
   });
+
+  if (!res.ok) {
+    const body = await res.json();
+    if (body) {
+      throw body;
+    }
+    throw res;
+  }
 };
 
 export const deleteTeam = async (token, teamId) => {

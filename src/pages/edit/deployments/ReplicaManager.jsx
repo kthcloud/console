@@ -63,6 +63,8 @@ export const ReplicaManager = ({ deployment }) => {
   };
 
   const setCount = (v) => {
+    navigator?.vibrate([0.1, 5, 0.1]);
+
     if (v > max) {
       enqueueSnackbar(t("max-replicas") + max, { variant: "warning" });
       return;

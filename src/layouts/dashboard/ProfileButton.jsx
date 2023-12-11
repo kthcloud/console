@@ -1,51 +1,13 @@
-import { useEffect, useState } from "react";
 import useResource from "src/hooks/useResource";
-import { MD5 } from "crypto-js";
-import {
-  Avatar,
-  Badge,
-  Button,
-  IconButton,
-  Stack,
-  Tooltip,
-} from "@mui/material";
+import { Badge, Button, IconButton, Stack, Tooltip } from "@mui/material";
 import Iconify from "src/components/Iconify";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import Gravatar from "src/components/Gravatar";
 
 const ProfileButton = () => {
   const { user, unread } = useResource();
-  const [userAvatar, setUserAvatar] = useState(null);
-  const [hasFetched, setHasFetched] = useState(false);
   const { t } = useTranslation();
-
-  const gravatar = async () => {
-    const cleaned = user.email.trim().toLowerCase();
-    const hash = MD5(cleaned, { encoding: "binary" }).toString();
-
-    const uri = encodeURI(`https://www.gravatar.com/avatar/${hash}?d=404`);
-
-    const response = await fetch(uri);
-    if (response.status === 200) {
-      return uri;
-    }
-    return null;
-  };
-
-  const fetchProfilePic = async () => {
-    const gravatarUri = await gravatar();
-    setHasFetched(true);
-    if (gravatarUri) {
-      setUserAvatar(gravatarUri);
-      return;
-    }
-  };
-
-  useEffect(() => {
-    if (!(user && user.email && !hasFetched)) return;
-    fetchProfilePic();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
 
   return (
     <Tooltip
@@ -104,11 +66,16 @@ const ProfileButton = () => {
             },
           }}
         >
-          {user && userAvatar ? (
-            <Avatar sx={{ width: 20, height: 20 }} src={userAvatar} />
-          ) : (
-            <Iconify icon="mdi:user-circle" title="Profile" />
-          )}
+          <Gravatar
+            user={user}
+            fallback={
+              <Iconify
+                icon="mdi:account"
+                sx={{ width: 16, height: 16 }}
+                title="Profile"
+              />
+            }
+          />
         </IconButton>
       </Badge>
     </Tooltip>

@@ -401,6 +401,7 @@
     "apply": "Verkställ",
     "replicas-saving": "Sparar antal kopior...",
     "could-not-save-replicas": "Kunde inte uppdatera antal kopior: ",
-    "replicas-shutdown-warning": "Varning: Om du väljer 0 kopior kommer appen att stängas av."
+    "replicas-shutdown-warning": "Varning: Om du väljer 0 kopior kommer appen att stängas av.",
+    "members": "Medlemmar"
   }
 }
