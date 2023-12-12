@@ -166,7 +166,7 @@ const Tiers = () => {
             <Stack direction="row" spacing={5}>
               <Box sx={{ minWidth: 20 }}></Box>
               {tiers.map((tier) => (
-                <TierCard tier={tier} key={tier.name}/>
+                <TierCard tier={tier} key={tier.name} />
               ))}
               <Box sx={{ minWidth: 20 }}></Box>
             </Stack>
