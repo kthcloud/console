@@ -417,6 +417,8 @@
     "from-team": "från grupp",
     "resource-not-found": "Resursen hittades inte",
     "shared": "Delad",
-    "shared-in-group": "Resursen är tillgänglig genom en av grupperna du är medlem i"
+    "shared-in-group": "Resursen är tillgänglig genom en av grupperna du är medlem i",
+    "auto-scroll": "Auto scroll",
+    "logs-truncated": "Över 1000 loggar: Loggar avkortade. Ladda ner hela loggen för att se tidigare loggar."
   }
 }
