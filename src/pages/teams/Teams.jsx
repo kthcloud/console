@@ -165,6 +165,25 @@ const Teams = () => {
     }
   };
 
+  const handleRemoveUser = async (team, user) => {
+    if (!initialized) return;
+
+    let body = {
+      members: team.members.filter((member) => member.id !== user.id),
+    };
+
+    try {
+      await updateTeam(keycloak.token, team.id, body);
+      setStale("removeUser " + user.id + team.id);
+    } catch (error) {
+      errorHandler(error).forEach((e) =>
+        enqueueSnackbar(t("update-error") + e, {
+          variant: "error",
+        })
+      );
+    }
+  };
+
   return (
     <>
       {!user ? (
@@ -291,7 +310,7 @@ const Teams = () => {
                                         <Table>
                                           <TableHead>
                                             <TableRow>
-                                              <TableCell colSpan={4}>
+                                              <TableCell colSpan={5}>
                                                 {t("members")}
                                               </TableCell>
                                             </TableRow>
@@ -305,37 +324,73 @@ const Teams = () => {
                                                   member.username
                                                 }
                                               >
-                                                <TableCell>
-                                                  {member.email ||
-                                                    member.username}
-                                                </TableCell>
-                                                <TableCell>
-                                                  {sentenceCase(
-                                                    member.teamRole
-                                                  )}
-                                                </TableCell>
-                                                <TableCell>
-                                                  {sentenceCase(
-                                                    member.memberStatus
-                                                  )}
-                                                </TableCell>
-                                                <TableCell
-                                                  align="right"
-                                                  sx={{
-                                                    color: "text.secondary",
-                                                  }}
-                                                >
-                                                  {
-                                                    member?.addedAt
-                                                      ?.replace("T", " ")
-                                                      ?.split(".")[0]
-                                                  }
-                                                </TableCell>
+                                                {stale ===
+                                                "removeUser " +
+                                                  member.id +
+                                                  team.id ? (
+                                                  <TableCell colSpan={5}>
+                                                    <Skeleton
+                                                      animation="wave"
+                                                      height={64}
+                                                    />
+                                                  </TableCell>
+                                                ) : (
+                                                  <>
+                                                    <TableCell>
+                                                      {member.email ||
+                                                        member.username}
+                                                    </TableCell>
+                                                    <TableCell>
+                                                      {sentenceCase(
+                                                        member.teamRole
+                                                      )}
+                                                    </TableCell>
+                                                    <TableCell>
+                                                      {sentenceCase(
+                                                        member.memberStatus
+                                                      )}
+                                                    </TableCell>
+                                                    <TableCell
+                                                      sx={{
+                                                        color: "text.secondary",
+                                                      }}
+                                                    >
+                                                      {
+                                                        member?.addedAt
+                                                          ?.replace("T", " ")
+                                                          ?.split(".")[0]
+                                                      }
+                                                    </TableCell>
+                                                    <TableCell align="right">
+                                                      <ConfirmButton
+                                                        action={t("remove")}
+                                                        actionText={
+                                                          t(
+                                                            "remove"
+                                                          ).toLowerCase() +
+                                                          " " +
+                                                          (member.email || member.username) +
+                                                          " " +
+                                                          t("from-team")
+                                                        }
+                                                        callback={() =>
+                                                          handleRemoveUser(team, member)
+                                                        }
+                                                        props={{
+                                                          color: "error",
+                                                          startIcon: (
+                                                            <Iconify icon="mdi:account-multiple-remove" />
+                                                          ),
+                                                        }}
+                                                      />
+                                                    </TableCell>
+                                                  </>
+                                                )}
                                               </TableRow>
                                             ))}
 
                                             <TableRow>
-                                              <TableCell colSpan={4}>
+                                              <TableCell colSpan={5}>
                                                 <Stack
                                                   direction="row"
                                                   spacing={3}
@@ -442,12 +497,18 @@ const Teams = () => {
                                                         </TableCell>
                                                         <TableCell align="right">
                                                           <ConfirmButton
-                                                            action={t(
-                                                              "remove-from-team"
-                                                            )}
-                                                            actionText={t(
-                                                              "remove-from-team"
-                                                            )}
+                                                            action={t("remove")}
+                                                            actionText={
+                                                              t(
+                                                                "remove"
+                                                              ).toLowerCase() +
+                                                              " " +
+                                                              r.name +
+                                                              " " +
+                                                              t(
+                                                                "from-team"
+                                                              ).toLowerCase()
+                                                            }
                                                             callback={() =>
                                                               handleRemoveResource(
                                                                 team,
@@ -457,7 +518,7 @@ const Teams = () => {
                                                             props={{
                                                               color: "error",
                                                               startIcon: (
-                                                                <Iconify icon="eva:trash-2-fill" />
+                                                                <Iconify icon="mdi:account-multiple-remove" />
                                                               ),
                                                             }}
                                                           />

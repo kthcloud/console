@@ -413,7 +413,8 @@
         "successfully-added-to-team": "Successfully added to team",
         "resources": "Resources",
         "resource": "Resource",
-        "remove-from-team": "Remove from team",
+        "remove": "Remove",
+        "from-team": "from team",
         "resource-not-found": "Resource not found",
         "shared": "Shared",
         "shared-in-group": "Resource is available through a group you are a member of"

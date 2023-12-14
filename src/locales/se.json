@@ -413,7 +413,8 @@
     "successfully-added-to-team": "Delad med grupp",
     "resources": "Resurser",
     "resource": "Resurs",
-    "remove-from-team": "Ta bort från grupp",
+    "remove": "Ta bort",
+    "from-team": "från grupp",
     "resource-not-found": "Resursen hittades inte",
     "shared": "Delad",
     "shared-in-group": "Resursen är tillgänglig genom en av grupperna du är medlem i"
