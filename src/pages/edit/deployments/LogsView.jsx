@@ -116,7 +116,7 @@ export const LogsView = ({ deployment }) => {
     () => {
       if (logs.length > 1000) {
         setViewableLogs(logs.slice(logs.length - 1000, logs.length));
-      }else{
+      } else {
         setViewableLogs(logs);
       }
 
@@ -133,7 +133,26 @@ export const LogsView = ({ deployment }) => {
 
   return (
     <Card sx={{ boxShadow: 20 }}>
-      <CardHeader title={t("logs")} subheader={t("logs-subheader") + logs.length} />
+      <CardHeader
+        title={t("logs")}
+        subheader={
+          <>
+            {t("logs-subheader") +
+              " " +
+              t("admin-showing") +
+              " " +
+              viewableLogs.length +
+              "/" +
+              logs.length}{" "}
+            {logs.length > 1000 && (
+              <>
+                <br />
+                {t("logs-truncated")}
+              </>
+            )}
+          </>
+        }
+      />
 
       <CardContent>
         <Stack direction="column" spacing={2}>
