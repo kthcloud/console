@@ -46,6 +46,7 @@
     "@mui/icons-material": "^5.14.19",
     "@mui/lab": "^5.0.0-alpha.155",
     "@mui/material": "^5.14.20",
+    "@mui/material-next": "^6.0.0-alpha.113",
     "@mui/x-tree-view": "^6.17.0",
     "@react-keycloak/web": "^3.4.0",
     "@react-three/drei": "^9.90.0",

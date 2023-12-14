@@ -88,7 +88,7 @@ export function Deploy() {
 
   const [filterName, setFilterName] = useState("");
 
-  const { userRows, user, initialLoad, queueJob } = useResource();
+  const { userRows, user, initialLoad, queueJob, zones } = useResource();
 
   const [filteredRows, setFilteredRows] = useState(userRows);
 
@@ -293,7 +293,11 @@ export function Deploy() {
     let statusMessage = t(row.status);
 
     return (
-      <Label variant="ghost" color={color}>
+      <Label
+        variant="ghost"
+        color={color}
+        startIcon={<Iconify icon="tabler:heartbeat" sx={{ opacity: 0.65 }} />}
+      >
         {sentenceCase(statusMessage)}
       </Label>
     );
@@ -312,8 +316,38 @@ export function Deploy() {
     }
 
     return (
-      <Label variant="ghost" color={color} style={{ fontFamily: "monospace" }}>
+      <Label
+        variant="ghost"
+        color={color}
+        style={{ fontFamily: "monospace" }}
+        startIcon={
+          <Iconify
+            icon="mdi:transit-connection-variant"
+            sx={{ opacity: 0.65 }}
+          />
+        }
+      >
         {row.pingResult + " " + getReasonPhrase(row.pingResult)}
+      </Label>
+    );
+  };
+
+  const renderZone = (row) => {
+    if (!row.zone || !zones) {
+      return <></>;
+    }
+
+    const zone = zones.find(
+      (zone) => zone.name === row.zone && zone.type === row.type
+    );
+
+    return (
+      <Label
+        variant="ghost"
+        style={{ fontFamily: "monospace" }}
+        startIcon={<Iconify icon="mdi:earth" sx={{ opacity: 0.65 }} />}
+      >
+        {zone.description}
       </Label>
     );
   };
@@ -420,6 +454,7 @@ export function Deploy() {
                               >
                                 {renderResourceStatus(row)}
                                 {renderStatusCode(row)}
+                                {renderZone(row)}
                               </Stack>
                             </TableCell>
 
