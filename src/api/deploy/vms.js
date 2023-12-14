@@ -14,8 +14,8 @@ export const getVM = async (token, id) => {
 };
 
 export const getVMs = async (token, all = false) => {
-  const allQuery = all ? "?all=true" : "";
-  const url = `${process.env.REACT_APP_DEPLOY_API_URL}/vms${allQuery}`;
+  const allQuery = all ? "&all=true" : "";
+  const url = `${process.env.REACT_APP_DEPLOY_API_URL}/vms?shared=true${allQuery}`;
   const response = await fetch(url, {
     method: "GET",
     headers: {

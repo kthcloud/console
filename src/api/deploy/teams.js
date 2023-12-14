@@ -57,6 +57,8 @@ export const createTeam = async (token, name, description) => {
     }
     throw res;
   }
+
+  return await res.json();
 };
 
 export const deleteTeam = async (token, teamId) => {
@@ -74,11 +76,43 @@ export const addMembers = async (token, teamId, members) => {
   const url = `${process.env.REACT_APP_DEPLOY_API_URL}/teams/${teamId}`;
   const body = { members: members };
 
-  await fetch(url, {
+  let res = await fetch(url, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify(body),
   });
+
+  if (!res.ok) {
+    const body = await res.json();
+    if (body) {
+      throw body;
+    }
+    throw res;
+  }
+
+  return await res.json();
+};
+
+export const updateTeam = async (token, teamId, body) => {
+  const url = `${process.env.REACT_APP_DEPLOY_API_URL}/teams/${teamId}`;
+
+  let res = await fetch(url, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(body),
+  });
+
+  if (!res.ok) {
+    const body = await res.json();
+    if (body) {
+      throw body;
+    }
+    throw res;
+  }
+
+  return await res.json();
 };

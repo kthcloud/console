@@ -391,7 +391,8 @@
         "menu-manage-account": "Manage account",
         "teams": "Teams",
         "current-teams": "Current teams",
-        "teams-subheader": "Teams are a way to organize your resources and collaborate with others. You can create a team and invite others to join.",
+        "teams-subheader-1": "Teams are a way to organize your resources and collaborate with others. You can create a team and invite others to join.",
+        "teams-subheader-2": "Share resources by going to the resource's page and clicking share with team.",
         "create-team": "Create team",
         "description": "Description",
         "invite": "Invite",
@@ -402,6 +403,19 @@
         "replicas-saving": "Saving replicas...",
         "could-not-save-replicas": "Could not save replicas: ",
         "replicas-shutdown-warning": "This will shut down your deployment. Are you sure?",
-        "members": "Members"
+        "members": "Members",
+        "share-with-team-description": "Share with team",
+        "share-with-team-action": "share with team",
+        "search-for-teams": "Search for teams",
+        "share": "share",
+        "with": "with",
+        "transferred-successfully": "Successfully transferred",
+        "successfully-added-to-team": "Successfully added to team",
+        "resources": "Resources",
+        "resource": "Resource",
+        "remove-from-team": "Remove from team",
+        "resource-not-found": "Resource not found",
+        "shared": "Shared",
+        "shared-in-group": "Resource is available through a group you are a member of"
     }
 }

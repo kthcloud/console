@@ -15,6 +15,7 @@ import {
   TableBody,
   TableCell,
   TableContainer,
+  TableHead,
   TableRow,
   TextField,
   Tooltip,
@@ -23,10 +24,16 @@ import {
 import { useKeycloak } from "@react-keycloak/web";
 import { sentenceCase } from "change-case";
 import { enqueueSnackbar } from "notistack";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { addMembers, createTeam, deleteTeam } from "src/api/deploy/teams";
+import {
+  addMembers,
+  createTeam,
+  deleteTeam,
+  updateTeam,
+} from "src/api/deploy/teams";
 import { searchUsers } from "src/api/deploy/users";
+import ConfirmButton from "src/components/ConfirmButton";
 import Gravatar from "src/components/Gravatar";
 import Iconify from "src/components/Iconify";
 import JobList from "src/components/JobList";
@@ -135,6 +142,29 @@ const Teams = () => {
     }
   };
 
+  const handleRemoveResource = async (team, resource) => {
+    if (!initialized) return;
+
+    let currentIds = team.resources
+      .map((r) => r.id)
+      .filter((id) => id !== resource.id);
+
+    let body = {
+      resources: currentIds,
+    };
+
+    try {
+      await updateTeam(keycloak.token, team.id, body);
+      setStale("removeResource " + resource.id + team.id);
+    } catch (error) {
+      errorHandler(error).forEach((e) =>
+        enqueueSnackbar(t("update-error") + e, {
+          variant: "error",
+        })
+      );
+    }
+  };
+
   return (
     <>
       {!user ? (
@@ -152,200 +182,307 @@ const Teams = () => {
               <Card sx={{ boxShadow: 20 }}>
                 <CardHeader
                   title={t("current-teams")}
-                  subheader={t("teams-subheader")}
+                  subheader={
+                    <>
+                      {t("teams-subheader-1")}
+                      <br />
+                      {t("teams-subheader-2")}
+                    </>
+                  }
                 />
                 <CardContent>
                   <TableContainer component={Paper}>
                     <Table sx={{ minWidth: 650 }} aria-label="simple table">
                       <TableBody>
-                        {teams.map((team, index) => (
-                          <>
-                            {stale !== "delete " + team.id ? (
-                              <>
-                                <TableRow
-                                  key={"teamrow" + team.id}
-                                  sx={{
-                                    "&:last-child td, &:last-child th": {
-                                      border: 0,
-                                    },
-                                    cursor: "pointer",
-                                    background:
-                                      expandedTeam === team.id
-                                        ? "#f9fafb"
-                                        : "white",
-                                  }}
-                                  onClick={() =>
+                        {teams.map((team, index) =>
+                          stale !== "delete " + team.id ? (
+                            <Fragment key={team.id + "08ysedfioshu"}>
+                              <TableRow
+                                key={"teamrow" + team.id}
+                                sx={{
+                                  "&:last-child td, &:last-child th": {
+                                    border: 0,
+                                  },
+                                  cursor: "pointer",
+                                  background:
                                     expandedTeam === team.id
-                                      ? setExpandedTeam(null)
-                                      : setExpandedTeam(team.id)
-                                  }
-                                >
-                                  <TableCell component="th" scope="row">
-                                    <Stack direction="column" spacing={1}>
-                                      <Typography variant="body1">
-                                        {team.name}
-                                      </Typography>
-                                      <Typography variant="caption">
-                                        {team.description}
-                                      </Typography>
-                                    </Stack>
-                                  </TableCell>
-                                  <TableCell>
-                                    <Stack
-                                      direction="row"
-                                      spacing={1}
-                                      alignItems={"center"}
-                                      useFlexGap
-                                    >
-                                      <AvatarGroup max={4}>
-                                        {team.members.map((member) => (
-                                          <Tooltip
-                                            title={
-                                              member.username || member.email
-                                            }
-                                            key={member.id}
-                                          >
-                                            <Gravatar
-                                              user={member}
-                                              alt={member.username}
-                                              sx={{ width: 24, height: 24 }}
-                                            />
-                                          </Tooltip>
-                                        ))}
-                                        {team.members.length === 0 && (
-                                          <Tooltip title={"Boo!"}>
-                                            <Avatar
-                                              sx={{ width: 24, height: 24 }}
-                                            >
-                                              <Iconify icon="mdi:ghost" />
-                                            </Avatar>
-                                          </Tooltip>
-                                        )}
-                                      </AvatarGroup>
-                                      {`${team.members.length} ${t("members")}`}
-                                    </Stack>
-                                  </TableCell>
-                                  <TableCell align="right">
-                                    <Iconify
-                                      icon={
-                                        expandedTeam === team.id
-                                          ? "mdi:expand-less"
-                                          : "mdi:expand-more"
-                                      }
-                                    />
-                                  </TableCell>
-                                </TableRow>
-                                {expandedTeam === team.id && (
-                                  <TableRow
-                                    key={"teamrow" + team.id + "expanded"}
+                                      ? "#f9fafb"
+                                      : "white",
+                                }}
+                                onClick={() =>
+                                  expandedTeam === team.id
+                                    ? setExpandedTeam(null)
+                                    : setExpandedTeam(team.id)
+                                }
+                              >
+                                <TableCell component="th" scope="row">
+                                  <Stack direction="column" spacing={1}>
+                                    <Typography variant="body1">
+                                      {team.name}
+                                    </Typography>
+                                    <Typography variant="caption">
+                                      {team.description}
+                                    </Typography>
+                                  </Stack>
+                                </TableCell>
+                                <TableCell>
+                                  <Stack
+                                    direction="row"
+                                    spacing={1}
+                                    alignItems={"center"}
+                                    useFlexGap
                                   >
-                                    <TableCell colSpan={3}>
-                                      <TableContainer>
-                                        <Table>
-                                          {team.members.map((member) => (
-                                            <TableRow
-                                              key={
-                                                team.id + " " + member.username
-                                              }
-                                            >
-                                              <TableCell>
-                                                {member.email ||
-                                                  member.username}
-                                              </TableCell>
-                                              <TableCell>
-                                                {sentenceCase(member.teamRole)}
-                                              </TableCell>
-                                              <TableCell>
-                                                {sentenceCase(member.memberStatus)}
-                                              </TableCell>
-                                              <TableCell
-                                                align="right"
-                                                sx={{
-                                                  color: "text.secondary",
-                                                }}
-                                              >
-                                                {
-                                                  member?.addedAt
-                                                    ?.replace("T", " ")
-                                                    ?.split(".")[0]
-                                                }
-                                              </TableCell>
-                                            </TableRow>
-                                          ))}
-
-                                          <TableRow>
-                                            <TableCell colSpan={3}>
-                                              <Stack
-                                                direction="row"
-                                                spacing={3}
-                                                alignItems={"center"}
-                                                justifyContent={"space-between"}
-                                                useFlexGap
-                                                pt={1}
-                                                pb={2}
-                                              >
-                                                <Autocomplete
-                                                  disableClearable
-                                                  options={results}
-                                                  inputValue={selected}
-                                                  sx={{ minWidth: 300 }}
-                                                  onInputChange={(_, value) => {
-                                                    setSelected(value);
-                                                    search(value);
-                                                  }}
-                                                  renderInput={(params) => (
-                                                    <TextField
-                                                      {...params}
-                                                      label={t(
-                                                        "search-for-users"
-                                                      )}
-                                                      InputProps={{
-                                                        ...params.InputProps,
-                                                        type: "search",
-                                                      }}
-                                                      variant="standard"
-                                                    />
-                                                  )}
-                                                />
-                                                <Button
-                                                  onClick={() => invite(team)}
-                                                  variant="contained"
-                                                  startIcon={
-                                                    <Iconify icon="mdi:invite" />
-                                                  }
-                                                >
-                                                  {t("invite")}
-                                                </Button>
-                                                <Box sx={{ flexGrow: 1 }} />
-                                                <Button
-                                                  onClick={() =>
-                                                    handleDelete(team)
-                                                  }
-                                                  color="error"
-                                                  startIcon={
-                                                    <Iconify icon="mdi:delete" />
-                                                  }
-                                                >
-                                                  {t("button-delete")}
-                                                </Button>
-                                              </Stack>
-                                            </TableCell>
-                                          </TableRow>
-                                        </Table>
-                                      </TableContainer>
-                                    </TableCell>
-                                  </TableRow>
-                                )}
-                              </>
-                            ) : (
-                              <TableRow>
-                                <TableCell colSpan={3}>
-                                  <Skeleton animation="wave" height={64} />
+                                    <AvatarGroup max={4}>
+                                      {team.members.map((member) => (
+                                        <Gravatar
+                                          user={member}
+                                          alt={member.username}
+                                          sx={{ width: 24, height: 24 }}
+                                          key={"avatar" + member.id}
+                                        />
+                                      ))}
+                                      {team.members.length === 0 && (
+                                        <Tooltip title={"Boo!"}>
+                                          <Avatar
+                                            sx={{ width: 24, height: 24 }}
+                                          >
+                                            <Iconify icon="mdi:ghost" />
+                                          </Avatar>
+                                        </Tooltip>
+                                      )}
+                                    </AvatarGroup>
+                                    {`${team.members.length} ${t("members")}`}
+                                  </Stack>
+                                </TableCell>
+                                <TableCell>
+                                  <Stack
+                                    direction="row"
+                                    spacing={1}
+                                    alignItems={"center"}
+                                    useFlexGap
+                                  >
+                                    <Iconify icon="mdi:account-group" />
+                                    {team.resources &&
+                                      team.resources.length +
+                                        " " +
+                                        (team.resources.length > 1 ||
+                                        team.resources.length === 0
+                                          ? t("resources")
+                                          : t("resource"))}
+                                  </Stack>
+                                </TableCell>
+                                <TableCell align="right">
+                                  <Iconify
+                                    icon={
+                                      expandedTeam === team.id
+                                        ? "mdi:expand-less"
+                                        : "mdi:expand-more"
+                                    }
+                                  />
                                 </TableCell>
                               </TableRow>
-                            )}
-                          </>
-                        ))}
+                              {expandedTeam === team.id && (
+                                <TableRow
+                                  key={"teamrow" + team.id + "expanded"}
+                                >
+                                  <TableCell colSpan={3}>
+                                    <Stack direction="column" spacing={1}>
+                                      <TableContainer>
+                                        <Table>
+                                          <TableHead>
+                                            <TableRow>
+                                              <TableCell colSpan={4}>
+                                                {t("members")}
+                                              </TableCell>
+                                            </TableRow>
+                                          </TableHead>
+                                          <TableBody>
+                                            {team.members.map((member) => (
+                                              <TableRow
+                                                key={
+                                                  team.id +
+                                                  " " +
+                                                  member.username
+                                                }
+                                              >
+                                                <TableCell>
+                                                  {member.email ||
+                                                    member.username}
+                                                </TableCell>
+                                                <TableCell>
+                                                  {sentenceCase(
+                                                    member.teamRole
+                                                  )}
+                                                </TableCell>
+                                                <TableCell>
+                                                  {sentenceCase(
+                                                    member.memberStatus
+                                                  )}
+                                                </TableCell>
+                                                <TableCell
+                                                  align="right"
+                                                  sx={{
+                                                    color: "text.secondary",
+                                                  }}
+                                                >
+                                                  {
+                                                    member?.addedAt
+                                                      ?.replace("T", " ")
+                                                      ?.split(".")[0]
+                                                  }
+                                                </TableCell>
+                                              </TableRow>
+                                            ))}
+
+                                            <TableRow>
+                                              <TableCell colSpan={4}>
+                                                <Stack
+                                                  direction="row"
+                                                  spacing={3}
+                                                  alignItems={"center"}
+                                                  justifyContent={
+                                                    "space-between"
+                                                  }
+                                                  useFlexGap
+                                                  pt={1}
+                                                  pb={2}
+                                                >
+                                                  <Autocomplete
+                                                    disableClearable
+                                                    options={results}
+                                                    inputValue={selected}
+                                                    sx={{ minWidth: 300 }}
+                                                    onInputChange={(
+                                                      _,
+                                                      value
+                                                    ) => {
+                                                      setSelected(value);
+                                                      search(value);
+                                                    }}
+                                                    renderInput={(params) => (
+                                                      <TextField
+                                                        {...params}
+                                                        label={t(
+                                                          "search-for-users"
+                                                        )}
+                                                        InputProps={{
+                                                          ...params.InputProps,
+                                                          type: "search",
+                                                        }}
+                                                        variant="standard"
+                                                      />
+                                                    )}
+                                                  />
+                                                  <Button
+                                                    onClick={() => invite(team)}
+                                                    variant="contained"
+                                                    startIcon={
+                                                      <Iconify icon="mdi:invite" />
+                                                    }
+                                                  >
+                                                    {t("invite")}
+                                                  </Button>
+                                                  <Box sx={{ flexGrow: 1 }} />
+                                                  <ConfirmButton
+                                                    action={t("delete")}
+                                                    actionText={
+                                                      t("delete") +
+                                                      " " +
+                                                      team.name
+                                                    }
+                                                    callback={() =>
+                                                      handleDelete(team)
+                                                    }
+                                                    props={{
+                                                      color: "error",
+                                                      startIcon: (
+                                                        <Iconify icon="mdi:delete" />
+                                                      ),
+                                                    }}
+                                                  />
+                                                </Stack>
+                                              </TableCell>
+                                            </TableRow>
+                                          </TableBody>
+                                        </Table>
+                                      </TableContainer>
+                                      {team.resources &&
+                                        team.resources.length > 0 && (
+                                          <TableContainer>
+                                            <Table>
+                                              <TableHead>
+                                                <TableRow>
+                                                  <TableCell colSpan={3}>
+                                                    {t("resources")}
+                                                  </TableCell>
+                                                </TableRow>
+                                              </TableHead>
+                                              <TableBody>
+                                                {team.resources.map((r) => (
+                                                  <TableRow
+                                                    key={r.id + team.id}
+                                                  >
+                                                    {stale ===
+                                                    "removeResource " +
+                                                      r.id +
+                                                      team.id ? (
+                                                      <TableCell colSpan={3}>
+                                                        <Skeleton
+                                                          animation="wave"
+                                                          height={64}
+                                                        />
+                                                      </TableCell>
+                                                    ) : (
+                                                      <>
+                                                        <TableCell>
+                                                          {r.name}
+                                                        </TableCell>
+                                                        <TableCell>
+                                                          {r.type}
+                                                        </TableCell>
+                                                        <TableCell align="right">
+                                                          <ConfirmButton
+                                                            action={t(
+                                                              "remove-from-team"
+                                                            )}
+                                                            actionText={t(
+                                                              "remove-from-team"
+                                                            )}
+                                                            callback={() =>
+                                                              handleRemoveResource(
+                                                                team,
+                                                                r
+                                                              )
+                                                            }
+                                                            props={{
+                                                              color: "error",
+                                                              startIcon: (
+                                                                <Iconify icon="eva:trash-2-fill" />
+                                                              ),
+                                                            }}
+                                                          />
+                                                        </TableCell>
+                                                      </>
+                                                    )}
+                                                  </TableRow>
+                                                ))}
+                                              </TableBody>
+                                            </Table>
+                                          </TableContainer>
+                                        )}
+                                    </Stack>
+                                  </TableCell>
+                                </TableRow>
+                              )}
+                            </Fragment>
+                          ) : (
+                            <TableRow>
+                              <TableCell colSpan={3}>
+                                <Skeleton animation="wave" height={64} />
+                              </TableCell>
+                            </TableRow>
+                          )
+                        )}
 
                         {stale === "created" && (
                           <TableRow>

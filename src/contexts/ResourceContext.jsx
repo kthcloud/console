@@ -89,6 +89,24 @@ export const ResourceContextProvider = ({ children }) => {
     }
   };
 
+  const getTeamResourceIds = () => {
+    if (!teams) return;
+
+    let resourceIds = [];
+
+    teams.forEach((t) => {
+      if (t.resources) {
+        t.resources.forEach((r) => {
+          if (!resourceIds.includes(r.id)) {
+            resourceIds.push(r.id);
+          }
+        });
+      }
+    });
+
+    return resourceIds;
+  };
+
   const queueJob = (job) => {
     console.log("Queuing job", JSON.stringify(job));
     if (!job) return;
@@ -106,7 +124,20 @@ export const ResourceContextProvider = ({ children }) => {
 
     setRows(array);
 
-    setUserRows(array.filter((row) => row.ownerId === user.id));
+    let userOwned = array.filter((row) => row.ownerId === user.id);
+
+    let teamResourceIds = getTeamResourceIds();
+    teamResourceIds.forEach((resourceId) => {
+      let sharedRow = array.find((row) => row.id === resourceId);
+
+      sharedRow.shared = true;
+
+      if (sharedRow && !userOwned.includes(sharedRow)) {
+        userOwned.push(sharedRow);
+      }
+    });
+
+    setUserRows(userOwned);
   };
 
   const loadZones = async () => {

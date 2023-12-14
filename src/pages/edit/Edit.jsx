@@ -46,6 +46,7 @@ import { useTranslation } from "react-i18next";
 import DangerZone from "./DangerZone";
 import { ReplicaManager } from "./deployments/ReplicaManager";
 import Iconify from "src/components/Iconify";
+import { enqueueSnackbar } from "notistack";
 
 export function Edit() {
   const { t } = useTranslation();
@@ -55,6 +56,7 @@ export function Edit() {
   const [persistent, setPersistent] = useState([]);
   const { user, rows, initialLoad, zones } = useResource();
   const [loaded, setLoaded] = useState(false);
+  const [reloads, setReloads] = useState(0);
 
   const allowedTypes = ["vm", "deployment"];
   let { type, id } = useParams();
@@ -66,7 +68,14 @@ export function Edit() {
 
   const loadResource = () => {
     const row = rows.find((row) => row.id === id);
-    if (!row) return;
+    if (!row) {
+      setReloads(reloads + 1);
+      if (reloads > 3) {
+        enqueueSnackbar(t("resource-not-found"), { variant: "error" });
+        navigate("/deploy");
+      }
+      return;
+    }
 
     setResource(row);
     if (type === "deployment" && !loaded) {
