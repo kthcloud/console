@@ -391,7 +391,8 @@
     "menu-manage-account": "Hantera konto",
     "teams": "Grupper",
     "current-teams": "Dina grupper",
-    "teams-subheader": "Grupper är ett sätt att organisera dina resurser och samarbeta med andra. Du kan skapa en grupp och bjuda in andra.",
+    "teams-subheader-1": "Grupper är ett sätt att organisera dina resurser och samarbeta med andra. Du kan skapa en grupp och bjuda in andra.",
+    "teams-subheader-2": "Dela resurser med gruppen genom att besöka resursens sida och klicka på dela med grupp",
     "create-team": "Skapa grupp",
     "description": "Beskrivning",
     "invite": "Bjud in",
@@ -402,6 +403,22 @@
     "replicas-saving": "Sparar antal kopior...",
     "could-not-save-replicas": "Kunde inte uppdatera antal kopior: ",
     "replicas-shutdown-warning": "Varning: Om du väljer 0 kopior kommer appen att stängas av.",
-    "members": "Medlemmar"
+    "members": "Medlemmar",
+    "share-with-team-description": "Dela med grupp",
+    "share-with-team-action": "dela med grupp",
+    "search-for-teams": "Sök grupper",
+    "share": "dela",
+    "with": "med",
+    "transferred-successfully": "Överföringen lyckades",
+    "successfully-added-to-team": "Delad med grupp",
+    "resources": "Resurser",
+    "resource": "Resurs",
+    "remove": "Ta bort",
+    "from-team": "från grupp",
+    "resource-not-found": "Resursen hittades inte",
+    "shared": "Delad",
+    "shared-in-group": "Resursen är tillgänglig genom en av grupperna du är medlem i",
+    "auto-scroll": "Auto scroll",
+    "logs-truncated": "Över 1000 loggar: Loggar avkortade. Ladda ner hela loggen för att se tidigare loggar."
   }
 }

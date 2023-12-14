@@ -9,7 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useKeycloak } from "@react-keycloak/web";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import CopyToClipboard from "react-copy-to-clipboard";
 import Iconify from "src/components/Iconify";
 import polyfilledEventSource from "@sanity/eventsource";
@@ -19,10 +19,14 @@ export const LogsView = ({ deployment }) => {
   const { t } = useTranslation();
   const { initialized, keycloak } = useKeycloak();
   const [logs, setLogs] = useState([]);
+  const [viewableLogs, setViewableLogs] = useState([]);
   const [lineWrap, setLineWrap] = useState(true);
   const [compactMode, setCompactMode] = useState(false);
+  const [autoScroll, setAutoScroll] = useState(true);
   const [connection, setConnection] = useState("connecting");
   const [sse, setSse] = useState(null);
+
+  const last = useRef(null);
 
   const initSse = () => {
     if (!(deployment && initialized)) return;
@@ -52,21 +56,21 @@ export const LogsView = ({ deployment }) => {
         initSse();
       }, 5000);
     };
-    
+
     eventSource.addEventListener("deployment", (e) => {
-      setLogs((logs) => [e.data, ...logs]);
+      setLogs((logs) => [...logs, e.data]);
     });
-    
+
     eventSource.addEventListener("pod", (e) => {
-      setLogs((logs) => [e.data, ...logs]);
+      setLogs((logs) => [...logs, e.data]);
     });
-    
+
     eventSource.addEventListener("build", (e) => {
-      setLogs((logs) => [e.data, ...logs]);
+      setLogs((logs) => [...logs, e.data]);
     });
 
     eventSource.onopen = (e) => {
-      console.log(e)
+      console.log(e);
       setConnection("connected");
     };
   };
@@ -76,14 +80,136 @@ export const LogsView = ({ deployment }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialized]);
 
+  const scrollParentToChild = (parent, child) => {
+    // borrowed from https://stackoverflow.com/a/45411081
+    // Where is the parent on page
+    var parentRect = parent.getBoundingClientRect();
+    // What can you see?
+    var parentViewableArea = {
+      height: parent.clientHeight,
+      width: parent.clientWidth,
+    };
+
+    // Where is the child
+    var childRect = child.getBoundingClientRect();
+    // Is the child viewable?
+    var isViewable =
+      childRect.top >= parentRect.top &&
+      childRect.bottom <= parentRect.top + parentViewableArea.height;
+
+    // if you can't see the child try to scroll parent
+    if (!isViewable) {
+      // Should we scroll using top or bottom? Find the smaller ABS adjustment
+      const scrollTop = childRect.top - parentRect.top;
+      const scrollBot = childRect.bottom - parentRect.bottom;
+      if (Math.abs(scrollTop) < Math.abs(scrollBot)) {
+        // we're near the top of the list
+        parent.scrollTop += scrollTop;
+      } else {
+        // we're near the bottom of the list
+        parent.scrollTop += scrollBot;
+      }
+    }
+  };
+
+  useEffect(
+    () => {
+      if (logs.length > 1000) {
+        setViewableLogs(logs.slice(logs.length - 1000, logs.length));
+      } else {
+        setViewableLogs(logs);
+      }
+
+      if (autoScroll && last && last.current) {
+        // last.current.scroll.scrollIntoView();
+        scrollParentToChild(last.current.parentNode, last.current);
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [logs]
+  );
+
   if (!(deployment && logs && initialized)) return null;
 
   return (
     <Card sx={{ boxShadow: 20 }}>
-      <CardHeader title={t("logs")} subheader={t("logs-subheader")} />
+      <CardHeader
+        title={t("logs")}
+        subheader={
+          <>
+            {t("logs-subheader") +
+              " " +
+              t("admin-showing") +
+              " " +
+              viewableLogs.length +
+              "/" +
+              logs.length}{" "}
+            {logs.length > 1000 && (
+              <>
+                <br />
+                {t("logs-truncated")}
+              </>
+            )}
+          </>
+        }
+      />
 
       <CardContent>
         <Stack direction="column" spacing={2}>
+          <Stack
+            direction="column"
+            sx={{
+              maxHeight: 800,
+              overflow: "auto",
+              minWidth: "100%",
+              backgroundColor: "#000",
+              color: "#fff",
+              fontSize: "0.8rem",
+              padding: "0.5rem",
+            }}
+          >
+            {logs.length > 1000 && (
+              <pre
+                style={{
+                  whiteSpace: lineWrap ? "normal" : "nowrap",
+                  backgroundColor: "#000",
+                  padding: compactMode ? "0" : "0.5rem",
+                  flexGrow: 1,
+                }}
+              >
+                {t("logs-truncated")}
+              </pre>
+            )}
+
+            {viewableLogs.map((log, i) => (
+              <pre
+                key={"logs" + i}
+                style={{
+                  whiteSpace: lineWrap ? "normal" : "nowrap",
+                  backgroundColor: i % 2 === 0 ? "#222" : "#000",
+                  padding: compactMode ? "0" : "0.5rem",
+                  flexGrow: 1,
+                }}
+                ref={i === viewableLogs.length - 1 ? last : null}
+              >
+                {log}
+              </pre>
+            ))}
+
+            {logs.length === 0 && (
+              <pre
+                style={{
+                  whiteSpace: lineWrap ? "normal" : "nowrap",
+                  backgroundColor: "#000",
+                  padding: compactMode ? "0" : "0.5rem",
+                  flexGrow: 1,
+                }}
+              >
+                {t("no-logs-found")}
+              </pre>
+            )}
+          </Stack>
+
           <Stack
             direction="row"
             spacing={3}
@@ -111,6 +237,17 @@ export const LogsView = ({ deployment }) => {
                 />
               }
               label={t("compact-view")}
+            />
+
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={autoScroll}
+                  onChange={(e) => setAutoScroll(e.target.checked)}
+                  inputProps={{ "aria-label": "controlled" }}
+                />
+              }
+              label={t("auto-scroll")}
             />
 
             <Button
@@ -152,46 +289,6 @@ export const LogsView = ({ deployment }) => {
             <Typography variant="body2">
               {t("connection-status")}: {t(connection)}
             </Typography>
-          </Stack>
-
-          <Stack
-            direction="column"
-            sx={{
-              maxHeight: 800,
-              overflow: "auto",
-              minWidth: "100%",
-              backgroundColor: "#000",
-              color: "#fff",
-              fontSize: "0.8rem",
-              padding: "0.5rem",
-            }}
-          >
-            {logs.map((log, i) => (
-              <pre
-                key={"logs" + i}
-                style={{
-                  whiteSpace: lineWrap ? "normal" : "nowrap",
-                  backgroundColor: i % 2 === 0 ? "#222" : "#000",
-                  padding: compactMode ? "0" : "0.5rem",
-                  flexGrow: 1,
-                }}
-              >
-                {log}
-              </pre>
-            ))}
-
-            {logs.length === 0 && (
-              <pre
-                style={{
-                  whiteSpace: lineWrap ? "normal" : "nowrap",
-                  backgroundColor: "#000",
-                  padding: compactMode ? "0" : "0.5rem",
-                  flexGrow: 1,
-                }}
-              >
-                {t("no-logs-found")}
-              </pre>
-            )}
           </Stack>
         </Stack>
       </CardContent>

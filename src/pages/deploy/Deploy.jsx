@@ -352,6 +352,22 @@ export function Deploy() {
     );
   };
 
+  const renderShared = (row) => {
+    if (!row.shared) return <></>;
+
+    return (
+      <Label
+        variant="ghost"
+        style={{ fontFamily: "monospace" }}
+        startIcon={<Iconify icon="mdi:account-group" sx={{ opacity: 0.65 }} />}
+      >
+        <Tooltip title={t("shared-in-group")}>
+          <span>{t("shared")}</span>
+        </Tooltip>
+      </Label>
+    );
+  };
+
   useEffect(() => {
     if (user && !user.onboarded) {
       navigate("/onboarding");
@@ -455,6 +471,7 @@ export function Deploy() {
                                 {renderResourceStatus(row)}
                                 {renderStatusCode(row)}
                                 {renderZone(row)}
+                                {renderShared(row)}
                               </Stack>
                             </TableCell>
 

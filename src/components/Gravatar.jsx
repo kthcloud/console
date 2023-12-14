@@ -16,7 +16,6 @@ const Gravatar = ({ user, fallback, ...props }) => {
     const uri = encodeURI(`https://www.gravatar.com/avatar/${hash}?d=404`);
 
     const response = await fetch(uri);
-    console.log(response);
     if (response.ok) {
       return uri;
     }
@@ -27,11 +26,9 @@ const Gravatar = ({ user, fallback, ...props }) => {
     const gravatarUri = await gravatar();
     setHasFetched(true);
     if (gravatarUri) {
-      console.log("found gravatar: " + gravatarUri + " for user " + user.email);
       setUserAvatar(gravatarUri);
       return;
     }
-    console.log("no gravatar found for user " + user.email);
   };
 
   useEffect(() => {
@@ -42,7 +39,9 @@ const Gravatar = ({ user, fallback, ...props }) => {
 
   return (
     <Avatar sx={{ width: 20, height: 20 }} src={userAvatar} {...props}>
-      {!userAvatar && fallback ? fallback : (user.email || user.username)[0].toUpperCase()}
+      {!userAvatar && fallback
+        ? fallback
+        : (user.email || user.username)[0].toUpperCase()}
     </Avatar>
   );
 };
