@@ -337,7 +337,9 @@ export function Deploy() {
       return <></>;
     }
 
-    const zone = zones.find((zone) => zone.name === row.zone);
+    const zone = zones.find(
+      (zone) => zone.name === row.zone && zone.type === row.type
+    );
 
     return (
       <Label

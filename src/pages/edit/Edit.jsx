@@ -166,8 +166,11 @@ export function Edit() {
                   {resource.zone && zones && (
                     <Chip
                       label={
-                        zones.find((zone) => zone.name === resource.zone)
-                          .description
+                        zones.find(
+                          (zone) =>
+                            zone.name === resource.zone &&
+                            zone.type === resource.type
+                        ).description
                       }
                       icon={<Iconify icon="mdi:earth" sx={{ opacity: 0.75 }} />}
                     />
