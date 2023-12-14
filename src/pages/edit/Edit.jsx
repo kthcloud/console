@@ -45,6 +45,7 @@ import { HealthCheckRoute } from "./deployments/HealthCheckRoute";
 import { useTranslation } from "react-i18next";
 import DangerZone from "./DangerZone";
 import { ReplicaManager } from "./deployments/ReplicaManager";
+import Iconify from "src/components/Iconify";
 
 export function Edit() {
   const { t } = useTranslation();
@@ -52,7 +53,7 @@ export function Edit() {
   const [resource, setResource] = useState(null);
   const [envs, setEnvs] = useState([]);
   const [persistent, setPersistent] = useState([]);
-  const { user, rows, initialLoad } = useResource();
+  const { user, rows, initialLoad, zones } = useResource();
   const [loaded, setLoaded] = useState(false);
 
   const allowedTypes = ["vm", "deployment"];
@@ -126,22 +127,52 @@ export function Edit() {
                   <span style={{ fontWeight: 200 }}>{t("editing") + " "}</span>{" "}
                   {resource.name}
                 </Typography>
-                {resource.status && (
-                  <Chip
-                    label={sentenceCase(
-                      resource.status.replace("resource", "").trim()
-                    )}
-                  />
-                )}
-                {resource.pingResult && (
-                  <Chip
-                    label={
-                      sentenceCase(resource.pingResult.toString()) +
-                      " " +
-                      getReasonPhrase(resource.pingResult)
-                    }
-                  />
-                )}
+
+                <Stack
+                  direction="row"
+                  flexWrap={"wrap"}
+                  alignItems={"center"}
+                  spacing={3}
+                  useFlexGap={true}
+                >
+                  {resource.status && (
+                    <Chip
+                      label={sentenceCase(
+                        resource.status.replace("resource", "").trim()
+                      )}
+                      icon={
+                        <Iconify
+                          icon="tabler:heartbeat"
+                          sx={{ opacity: 0.75 }}
+                        />
+                      }
+                    />
+                  )}
+                  {resource.pingResult && (
+                    <Chip
+                      label={
+                        sentenceCase(resource.pingResult.toString()) +
+                        " " +
+                        getReasonPhrase(resource.pingResult)
+                      }
+                      icon={
+                        <Iconify
+                          icon="mdi:transit-connection-variant"
+                          sx={{ opacity: 0.75 }}
+                        />
+                      }
+                    />
+                  )}
+                  {resource.zone && zones && (
+                    <Chip
+                      label={
+                        zones.find((zone) => zone.name === resource.zone)
+                          .description
+                      }
+                      icon={<Iconify icon="mdi:earth" sx={{ opacity: 0.75 }} />}
+                    />
+                  )}
+                </Stack>
                 <div style={{ flexGrow: "1" }} />
 
                 {resource.type === "deployment" && (
