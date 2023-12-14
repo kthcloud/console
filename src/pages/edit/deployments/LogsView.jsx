@@ -116,6 +116,8 @@ export const LogsView = ({ deployment }) => {
     () => {
       if (logs.length > 1000) {
         setViewableLogs(logs.slice(logs.length - 1000, logs.length));
+      }else{
+        setViewableLogs(logs);
       }
 
       if (autoScroll && last && last.current) {
@@ -131,7 +133,7 @@ export const LogsView = ({ deployment }) => {
 
   return (
     <Card sx={{ boxShadow: 20 }}>
-      <CardHeader title={t("logs")} subheader={t("logs-subheader")} />
+      <CardHeader title={t("logs")} subheader={t("logs-subheader") + logs.length} />
 
       <CardContent>
         <Stack direction="column" spacing={2}>
