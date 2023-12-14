@@ -21,6 +21,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useKeycloak } from "@react-keycloak/web";
+import { sentenceCase } from "change-case";
 import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -252,7 +253,10 @@ const Teams = () => {
                                                   member.username}
                                               </TableCell>
                                               <TableCell>
-                                                {member.teamRole}
+                                                {sentenceCase(member.teamRole)}
+                                              </TableCell>
+                                              <TableCell>
+                                                {sentenceCase(member.memberStatus)}
                                               </TableCell>
                                               <TableCell
                                                 align="right"
