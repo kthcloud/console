@@ -124,19 +124,17 @@ export const ResourceContextProvider = ({ children }) => {
 
     setRows(array);
 
-    let userOwned = array.filter((row) => row.ownerId === user.id);
 
     let teamResourceIds = getTeamResourceIds();
 
-    let sharedResources = array.filter((row) =>
-      teamResourceIds.includes(row.id)
-    );
+    let userOwned = array.filter((row) => row.ownerId === user.id || teamResourceIds.includes(row.id));
+    
 
-    sharedResources = sharedResources.map((row) => {
-      return { ...row, shared: true };
+    userOwned.forEach((row) => {
+      row.shared = teamResourceIds.includes(row.id)
     });
 
-    setUserRows(userOwned.concat(sharedResources));
+    setUserRows(userOwned);
   };
 
   const loadZones = async () => {
