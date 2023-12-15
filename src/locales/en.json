@@ -152,6 +152,7 @@
         "explain-deployment": "Ideal for web apps. Provides the ability to easily run a single container. Allows for CI/CD through GitHub Actions and other pipelines. Your repo must have a Dockerfile.",
         "explain-vm": "Provides the ability to run an operating system directly. More versatile but deployment and maintenance will be more difficult. Ideal for GPU compute.",
         "choose-zone": "Choose zone",
+        "zone": "Zone",
         "choose-zone-subheader-1": "Your chosen zone determines where your",
         "choose-zone-subheader-2": "will be hosted. Selecting the closest zone to your users will improve performance",
         "deploy-hidden": "This deployment is private, it is not visible on the Internet",

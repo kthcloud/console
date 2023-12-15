@@ -90,7 +90,7 @@ export const ResourceContextProvider = ({ children }) => {
   };
 
   const getTeamResourceIds = () => {
-    if (!teams) return;
+    if (!teams) return [];
 
     let resourceIds = [];
 
@@ -127,17 +127,16 @@ export const ResourceContextProvider = ({ children }) => {
     let userOwned = array.filter((row) => row.ownerId === user.id);
 
     let teamResourceIds = getTeamResourceIds();
-    teamResourceIds.forEach((resourceId) => {
-      let sharedRow = array.find((row) => row.id === resourceId);
 
-      sharedRow.shared = true;
+    let sharedResources = array.filter((row) =>
+      teamResourceIds.includes(row.id)
+    );
 
-      if (sharedRow && !userOwned.includes(sharedRow)) {
-        userOwned.push(sharedRow);
-      }
+    sharedResources = sharedResources.map((row) => {
+      return { ...row, shared: true };
     });
 
-    setUserRows(userOwned);
+    setUserRows(userOwned.concat(sharedResources));
   };
 
   const loadZones = async () => {

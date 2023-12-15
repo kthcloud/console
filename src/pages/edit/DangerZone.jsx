@@ -79,7 +79,6 @@ const DangerZone = ({ resource }) => {
     options = [...new Set(options)];
     options.sort((a, b) => a.localeCompare(b));
     setResultsTeam(options);
-    console.log(options);
   };
 
   const updateOwner = async () => {

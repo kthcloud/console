@@ -70,7 +70,6 @@ const Teams = () => {
       setTeamDescription("");
       setStale("created");
     } catch (error) {
-      console.log(error);
       errorHandler(error).forEach((e) =>
         enqueueSnackbar(t("update-error") + e, {
           variant: "error",

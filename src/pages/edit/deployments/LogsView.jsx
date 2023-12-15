@@ -44,8 +44,6 @@ export const LogsView = ({ deployment }) => {
       }
     );
 
-    console.log(eventSource);
-
     setSse(eventSource);
 
     eventSource.onerror = () => {
@@ -70,7 +68,6 @@ export const LogsView = ({ deployment }) => {
     });
 
     eventSource.onopen = (e) => {
-      console.log(e);
       setConnection("connected");
     };
   };
