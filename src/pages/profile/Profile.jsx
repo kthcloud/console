@@ -86,14 +86,12 @@ export function Profile() {
 
     try {
       const data = mode === "keys" ? { publicKeys: user.publicKeys } : user;
-      const response = await updateUser(keycloak.subject, keycloak.token, data);
-      console.log(response);
+      await updateUser(keycloak.subject, keycloak.token, data);
       setValidationError({});
       enqueueSnackbar(t("successfully-updated") + " " + mode, {
         variant: "success",
       });
     } catch (error) {
-      console.log(error);
       if (error.validationErrors) setValidationError(error.validationErrors);
 
       enqueueSnackbar(t("error-updating") + mode, {
@@ -225,8 +223,6 @@ export function Profile() {
                       )}
 
                       <div style={{ flexGrow: "1" }} />
-
-                     
                     </Stack>
                   </Stack>
                 </CardContent>

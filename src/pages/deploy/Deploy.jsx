@@ -109,7 +109,8 @@ export function Deploy() {
     { id: "name", label: t("admin-name"), alignRight: false },
     { id: "type", label: t("resource-type"), alignRight: false },
     { id: "status", label: t("admin-status"), alignRight: false },
-    { id: "" },
+    { id: "zone", label: t("zone"), alignRight: false },
+    { id: "", label: "", alignRight: true },
   ];
 
   const bulkDelete = async () => {
@@ -119,13 +120,11 @@ export function Deploy() {
     try {
       const promises = selected.map(async (id) => {
         if (userRows.find((row) => row.id === id).type === "vm") {
-          console.log("deleting vm");
           const res = await deleteVM(id, keycloak.token);
           queueJob(res);
           return;
         }
         if (userRows.find((row) => row.id === id).type === "deployment") {
-          console.log("deleting k8s");
           const res = await deleteDeployment(id, keycloak.token);
           queueJob(res);
           return;
@@ -470,8 +469,16 @@ export function Deploy() {
                               >
                                 {renderResourceStatus(row)}
                                 {renderStatusCode(row)}
-                                {renderZone(row)}
                                 {renderShared(row)}
+                              </Stack>
+                            </TableCell>
+                            <TableCell align="left">
+                              <Stack
+                                direction="row"
+                                alignItems="center"
+                                spacing={1}
+                              >
+                                {renderZone(row)}
                               </Stack>
                             </TableCell>
 
