@@ -132,10 +132,7 @@ export function Edit() {
                 spacing={3}
                 useFlexGap={true}
               >
-                <Typography variant="h4">
-                  <span style={{ fontWeight: 200 }}>{t("editing") + " "}</span>{" "}
-                  {resource.name}
-                </Typography>
+                <Typography variant="h4">{resource.name}</Typography>
 
                 <Stack
                   direction="row"
