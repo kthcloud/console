@@ -176,7 +176,7 @@ export function Edit() {
                           (zone) =>
                             zone.name === resource.zone &&
                             zone.type === resource.type
-                        ).description
+                        )?.description
                       }
                       icon={<Iconify icon="mdi:earth" sx={{ opacity: 0.75 }} />}
                     />

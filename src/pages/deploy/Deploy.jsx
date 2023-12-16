@@ -346,7 +346,7 @@ export function Deploy() {
         style={{ fontFamily: "monospace" }}
         startIcon={<Iconify icon="mdi:earth" sx={{ opacity: 0.65 }} />}
       >
-        {zone.description}
+        {JSON.stringify(zone)}
       </Label>
     );
   };
@@ -478,7 +478,7 @@ export function Deploy() {
                                 alignItems="center"
                                 spacing={1}
                               >
-                                {renderZone(row)}
+                                {row.zone && zones && renderZone(row)}
                               </Stack>
                             </TableCell>
 
