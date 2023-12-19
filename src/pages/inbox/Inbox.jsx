@@ -5,11 +5,20 @@ import {
   CardContent,
   CardHeader,
   Container,
+  Paper,
+  Skeleton,
   Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
   Typography,
 } from "@mui/material";
 import { useKeycloak } from "@react-keycloak/web";
 import { enqueueSnackbar } from "notistack";
+import { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { acceptDeploymentTransfer } from "src/api/deploy/deployments";
 import {
@@ -26,9 +35,15 @@ import useResource from "src/hooks/useResource";
 import { errorHandler } from "src/utils/errorHandler";
 
 const Inbox = () => {
-  const { user, notifications } = useResource();
+  const { user, notifications, unread } = useResource();
   const { t } = useTranslation();
   const { initialized, keycloak } = useKeycloak();
+  const [expandedRead, setExpandedRead] = useState(false);
+  const [stale, setStale] = useState(null);
+
+  useEffect(() => {
+    setStale(null);
+  }, [notifications]);
 
   const accept = async (notification) => {
     if (!initialized) return;
@@ -66,6 +81,7 @@ const Inbox = () => {
     if (!initialized) return;
 
     try {
+      setStale(notification.id);
       await markNotificationAsRead(keycloak.token, notification.id);
     } catch (error) {
       errorHandler(error).forEach((e) =>
@@ -80,6 +96,7 @@ const Inbox = () => {
     if (!initialized) return;
 
     try {
+      setStale(notification.id);
       await deleteNotification(keycloak.token, notification.id);
     } catch (error) {
       errorHandler(error).forEach((e) =>
@@ -124,77 +141,250 @@ const Inbox = () => {
                 />
                 <CardContent>
                   <Stack spacing={2}>
-                    {notifications.map((notification) => (
-                      <>
-                        <Stack
-                          direction="row"
-                          spacing={3}
-                          useFlexGap
-                          alignItems="center"
-                          justifyContent={"space-between"}
-                        >
-                          <Stack
-                            direction="row"
-                            alignItems="center"
-                            spacing={3}
-                            flexWrap={"wrap"}
-                            justifyContent={"space-between"}
-                            useFlexGap
-                          >
-                            <Typography variant="body">
-                              <span>
-                                {notification?.content?.email ||
-                                  notification?.content?.name}
-                              </span>{" "}
-                              <span style={{ fontWeight: "lighter" }}>
-                                {notificationAction(notification?.type)}
-                              </span>{" "}
-                              <span>
-                                {notification?.content?.email &&
-                                  notification?.content?.name}
-                              </span>
-                            </Typography>
-                            <Typography
-                              variant="caption"
-                              fontFamily={"monospace"}
+                    <TableContainer component={Paper}>
+                      <Table
+                        sx={{ minWidth: 650 }}
+                        aria-label="notifications table"
+                      >
+                        <TableHead>
+                          <TableRow>
+                            <TableCell>Notification</TableCell>
+                            <TableCell align="right">
+                              {t("admin-actions")}
+                            </TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {notifications.map((notification) => (
+                            <Fragment key={notification.id}>
+                              {!notification.readAt &&
+                                stale !== notification.id && (
+                                  <TableRow>
+                                    <TableCell>
+                                      <Stack
+                                        direction="row"
+                                        alignItems="center"
+                                        spacing={3}
+                                        flexWrap={"wrap"}
+                                        justifyContent={"space-between"}
+                                        useFlexGap
+                                      >
+                                        <Typography variant="body">
+                                          <span>
+                                            {notification?.content?.email ||
+                                              notification?.content?.name}
+                                          </span>{" "}
+                                          <span
+                                            style={{ fontWeight: "lighter" }}
+                                          >
+                                            {notificationAction(
+                                              notification?.type
+                                            )}
+                                          </span>{" "}
+                                          <span>
+                                            {notification?.content?.email &&
+                                              notification?.content?.name}
+                                          </span>
+                                        </Typography>
+                                        <Typography
+                                          variant="caption"
+                                          fontFamily={"monospace"}
+                                        >
+                                          {
+                                            notification?.createdAt
+                                              ?.replace("T", " ")
+                                              ?.replace("Z", "")
+                                              ?.split(".")[0]
+                                          }
+                                        </Typography>
+                                      </Stack>
+                                    </TableCell>
+                                    <TableCell align="right">
+                                      <ButtonGroup
+                                        variant="outlined"
+                                        sx={{ py: 3 }}
+                                      >
+                                        <Button
+                                          startIcon={
+                                            <Iconify icon="mdi:check" />
+                                          }
+                                          onClick={() => accept(notification)}
+                                        >
+                                          {t("accept")}
+                                        </Button>
+                                        <Button
+                                          startIcon={
+                                            <Iconify icon="mdi:email-open" />
+                                          }
+                                          onClick={() =>
+                                            markAsRead(notification)
+                                          }
+                                          disabled={notification.readAt}
+                                        >
+                                          {t("read")}
+                                        </Button>
+                                        <Button
+                                          color="error"
+                                          startIcon={
+                                            <Iconify icon="mdi:delete" />
+                                          }
+                                          onClick={() =>
+                                            handleDelete(notification)
+                                          }
+                                        >
+                                          {t("button-clear")}
+                                        </Button>
+                                      </ButtonGroup>
+                                    </TableCell>
+                                  </TableRow>
+                                )}
+
+                              {stale === notification.id &&
+                                !notification.readAt && (
+                                  <TableRow>
+                                    <TableCell colSpan={2}>
+                                      <Skeleton animation="wave" height={64} />
+                                    </TableCell>
+                                  </TableRow>
+                                )}
+                            </Fragment>
+                          ))}
+                          {notifications.length - unread > 0 && (
+                            <TableRow
+                              sx={{ background: "#f9fafb", cursor: "pointer" }}
+                              onClick={() => setExpandedRead(!expandedRead)}
                             >
-                              {
-                                notification?.createdAt
-                                  ?.replace("T", " ")
-                                  ?.replace("Z", "")
-                                  ?.split(".")[0]
-                              }
-                            </Typography>
-                          </Stack>
-                          <ButtonGroup
-                            variant="outlined"
-                            sx={{ py: 3 }}
-                            orientation="vertical"
-                          >
-                            <Button
-                              startIcon={<Iconify icon="mdi:check" />}
-                              onClick={() => accept(notification)}
-                            >
-                              {t("accept")}
-                            </Button>
-                            <Button
-                              startIcon={<Iconify icon="mdi:email-open" />}
-                              onClick={() => markAsRead(notification)}
-                              disabled={notification.readAt}
-                            >
-                              {t("read")}
-                            </Button>
-                            <Button
-                              color="error"
-                              startIcon={<Iconify icon="mdi:delete" />}
-                              onClick={() => handleDelete(notification)}
-                            >
-                              {t("button-clear")}
-                            </Button>
-                          </ButtonGroup>
-                        </Stack>
-                      </>
-                    ))}
+                              <TableCell>{`${t("read-notifications")} (${
+                                notifications.length - unread
+                              })`}</TableCell>
+
+                              <TableCell align="right">
+                                <Iconify
+                                  icon={
+                                    expandedRead
+                                      ? "mdi:expand-less"
+                                      : "mdi:expand-more"
+                                  }
+                                />
+                              </TableCell>
+                            </TableRow>
+                          )}
+                          {expandedRead && (
+                            <TableRow>
+                              <TableCell colSpan={2}>
+                                <TableContainer component={Paper}>
+                                  <Table
+                                    sx={{ minWidth: 650 }}
+                                    aria-label="archived notifications table"
+                                  >
+                                    <TableBody>
+                                      {notifications.map((notification) => (
+                                        <Fragment key={notification.id}>
+                                          {notification.readAt &&
+                                            stale !== notification.id && (
+                                              <TableRow>
+                                                <TableCell>
+                                                  <Stack
+                                                    direction="row"
+                                                    alignItems="center"
+                                                    spacing={3}
+                                                    flexWrap={"wrap"}
+                                                    justifyContent={
+                                                      "space-between"
+                                                    }
+                                                    useFlexGap
+                                                  >
+                                                    <Typography variant="body">
+                                                      <span>
+                                                        {notification?.content
+                                                          ?.email ||
+                                                          notification?.content
+                                                            ?.name}
+                                                      </span>{" "}
+                                                      <span
+                                                        style={{
+                                                          fontWeight: "lighter",
+                                                        }}
+                                                      >
+                                                        {notificationAction(
+                                                          notification?.type
+                                                        )}
+                                                      </span>{" "}
+                                                      <span>
+                                                        {notification?.content
+                                                          ?.email &&
+                                                          notification?.content
+                                                            ?.name}
+                                                      </span>
+                                                    </Typography>
+                                                    <Typography
+                                                      variant="caption"
+                                                      fontFamily={"monospace"}
+                                                    >
+                                                      {
+                                                        notification?.createdAt
+                                                          ?.replace("T", " ")
+                                                          ?.replace("Z", "")
+                                                          ?.split(".")[0]
+                                                      }
+                                                    </Typography>
+                                                  </Stack>
+                                                </TableCell>
+                                                <TableCell align="right">
+                                                  <ButtonGroup
+                                                    variant="outlined"
+                                                    sx={{ py: 3 }}
+                                                  >
+                                                    <Button
+                                                      startIcon={
+                                                        <Iconify icon="mdi:check" />
+                                                      }
+                                                      onClick={() =>
+                                                        accept(notification)
+                                                      }
+                                                    >
+                                                      {t("accept")}
+                                                    </Button>
+                                                    <Button
+                                                      color="error"
+                                                      startIcon={
+                                                        <Iconify icon="mdi:delete" />
+                                                      }
+                                                      onClick={() =>
+                                                        handleDelete(
+                                                          notification
+                                                        )
+                                                      }
+                                                    >
+                                                      {t("button-clear")}
+                                                    </Button>
+                                                  </ButtonGroup>
+                                                </TableCell>
+                                              </TableRow>
+                                            )}
+                                          {notification.readAt &&
+                                            stale === notification.id && (
+                                              <TableRow>
+                                                <TableCell colSpan={2}>
+                                                  <Skeleton
+                                                    animation="wave"
+                                                    height={64}
+                                                  />
+                                                </TableCell>
+                                              </TableRow>
+                                            )}
+                                        </Fragment>
+                                      ))}
+                                    </TableBody>
+                                  </Table>
+                                </TableContainer>
+                              </TableCell>
+                            </TableRow>
+                          )}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+
                     {notifications.length === 0 && (
                       <Stack
                         direction="column"

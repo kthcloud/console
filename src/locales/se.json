@@ -359,8 +359,10 @@
         "gold": "Guld",
         "platinum": "Max",
         "inbox": "Inkorg",
+        "notification": "Notis",
         "notifications": "Notiser",
         "notificationsSubheader": "Notiser är meddelanden from kthcloud eller från andra användare. Vissa notiser har val du kan göra, som att gå med i projekt.",
+        "read-notifications": "Arkiverade notiser",
         "search-error": "Sökning misslyckades: ",
         "update-error": "Uppdatering misslyckades: ",
         "successfully-transferred": "Överföringsförfrågan skickad",
@@ -388,7 +390,7 @@
         "transferred-a-deployment-to-you": "överförde en deployment till dig",
         "transferred-a-vm-to-you": "överförde en virtuell maskin till dig",
         "accept": "Acceptera",
-        "read": "Läst",
+        "read": "Arkivera",
         "menu-manage-account": "Hantera konto",
         "teams": "Grupper",
         "current-teams": "Dina grupper",
@@ -420,6 +422,7 @@
         "shared": "Delad",
         "shared-in-group": "Resursen är tillgänglig genom en av grupperna du är medlem i",
         "auto-scroll": "Auto scroll",
-        "logs-truncated": "Över 1000 loggar: Loggar avkortade. Ladda ner hela loggen för att se tidigare loggar."
+        "logs-truncated": "Över 1000 loggar: Loggar avkortade. Ladda ner hela loggen för att se tidigare loggar.",
+        "no-teams": "Inga grupper hittades, skapa en eller gå med i en väns grupp!"
     }
 }

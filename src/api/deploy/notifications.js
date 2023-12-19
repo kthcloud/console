@@ -10,6 +10,11 @@ export const getNotifications = async (token) => {
   if (!Array.isArray(result)) {
     throw new Error("Error getting notifications, response was not an array");
   }
+
+  result.sort((a, b) => {
+    return new Date(b.createdAt) - new Date(a.createdAt);
+  });
+
   return result;
 };
 
