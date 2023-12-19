@@ -74,6 +74,8 @@ const Inbox = () => {
           variant: "error",
         })
       );
+    } finally {
+      markAsRead(notification);
     }
   };
 
