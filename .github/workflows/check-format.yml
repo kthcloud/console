@@ -1,0 +1,31 @@
+name: Prettier Code Format Check
+
+on: [push, pull_request, workflow_dispatch]
+
+jobs:
+  check-format:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
+    - name: Install Prettier
+      run: npm install --save-dev prettier
+
+    - name: Run Prettier
+      run: npx prettier --write .
+
+    - name: Check for diffs
+      run: |
+        git diff
+        if [[ `git status --porcelain` ]]; then
+          echo "Code style issues found."
+          exit 1
+        else
+          echo "No code style issues found."
