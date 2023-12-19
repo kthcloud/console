@@ -1,0 +1,10 @@
+*.gltf
+*.svg
+*.webp
+*.png
+*.ico
+*.xml
+Dockerfile
+.*
+LICENSE
+public/_redirects
