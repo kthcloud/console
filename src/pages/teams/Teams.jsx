@@ -8,6 +8,7 @@ import {
   CardContent,
   CardHeader,
   Container,
+  Link,
   Paper,
   Skeleton,
   Stack,
@@ -41,6 +42,7 @@ import LoadingPage from "src/components/LoadingPage";
 import Page from "src/components/Page";
 import useResource from "src/hooks/useResource";
 import { errorHandler } from "src/utils/errorHandler";
+import { Link as RouterLink } from "react-router-dom";
 
 const Teams = () => {
   const { user, teams } = useResource();
@@ -210,11 +212,11 @@ const Teams = () => {
                 />
                 <CardContent>
                   <TableContainer component={Paper}>
-                    <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                    <Table sx={{ minWidth: 650 }} aria-label="teams table">
                       <TableBody>
                         {teams.map((team, index) =>
                           stale !== "delete " + team.id ? (
-                            <Fragment key={team.id + "08ysedfioshu"}>
+                            <Fragment key={team.id + "teams-table"}>
                               <TableRow
                                 key={"teamrow" + team.id}
                                 sx={{
@@ -493,7 +495,18 @@ const Teams = () => {
                                                     ) : (
                                                       <>
                                                         <TableCell>
-                                                          {r.name}
+                                                          <Link
+                                                            component={
+                                                              RouterLink
+                                                            }
+                                                            to={`/edit/${r.type}/${r.id}`}
+                                                            sx={{
+                                                              textDecoration:
+                                                                "none",
+                                                            }}
+                                                          >
+                                                            {r.name}
+                                                          </Link>
                                                         </TableCell>
                                                         <TableCell>
                                                           {r.type}
@@ -552,6 +565,16 @@ const Teams = () => {
                           <TableRow>
                             <TableCell colSpan={3}>
                               <Skeleton animation="wave" height={64} />
+                            </TableCell>
+                          </TableRow>
+                        )}
+
+                        {teams.length === 0 && (
+                          <TableRow>
+                            <TableCell colSpan={3}>
+                              <Typography variant="body1">
+                                {t("no-teams")}
+                              </Typography>
                             </TableCell>
                           </TableRow>
                         )}
