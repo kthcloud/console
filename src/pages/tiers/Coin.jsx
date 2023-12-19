@@ -24,7 +24,8 @@ const CoinMesh = ({ radius, material, spin }) => {
 
       if (
         meshRef.current.rotation.z < 0.01 &&
-        meshRef.current.rotation.z > -0.01 && !spin
+        meshRef.current.rotation.z > -0.01 &&
+        !spin
       ) {
         meshRef.current.rotation.z = 0;
         setGoBack(false);

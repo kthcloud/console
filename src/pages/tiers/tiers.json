@@ -1,98 +1,97 @@
 [
     {
-      "name": "default",
-      "description": "Default",
-      "permissions": {
-        "chooseZone": false,
-        "chooseGpu": false,
-        "useGpus": false,
-        "usePrivilegedGpus": false,
-        "useCustomDomains": false,
-        "gpuLeaseDuration": ""
-      },
-      "quotas": {
-        "deployments": 10,
-        "cpuCores": 2,
-        "ram": 4,
-        "diskSize": 20,
-        "snapshots": 1
-      }
+        "name": "default",
+        "description": "Default",
+        "permissions": {
+            "chooseZone": false,
+            "chooseGpu": false,
+            "useGpus": false,
+            "usePrivilegedGpus": false,
+            "useCustomDomains": false,
+            "gpuLeaseDuration": ""
+        },
+        "quotas": {
+            "deployments": 10,
+            "cpuCores": 2,
+            "ram": 4,
+            "diskSize": 20,
+            "snapshots": 1
+        }
     },
     {
-      "name": "bronze",
-      "description": "Bronze",
-      "permissions": {
-        "chooseZone": false,
-        "chooseGpu": false,
-        "useGpus": true,
-        "usePrivilegedGpus": false,
-        "useCustomDomains": true,
-        "gpuLeaseDuration": 5
-      },
-      "quotas": {
-        "deployments": 10,
-        "cpuCores": 4,
-        "ram": 16,
-        "diskSize": 50,
-        "snapshots": 5
-      }
+        "name": "bronze",
+        "description": "Bronze",
+        "permissions": {
+            "chooseZone": false,
+            "chooseGpu": false,
+            "useGpus": true,
+            "usePrivilegedGpus": false,
+            "useCustomDomains": true,
+            "gpuLeaseDuration": 5
+        },
+        "quotas": {
+            "deployments": 10,
+            "cpuCores": 4,
+            "ram": 16,
+            "diskSize": 50,
+            "snapshots": 5
+        }
     },
     {
-      "name": "silver",
-      "description": "Silver",
-      "permissions": {
-        "chooseZone": true,
-        "chooseGpu": true,
-        "useGpus": true,
-        "usePrivilegedGpus": false,
-        "useCustomDomains": true,
-        "gpuLeaseDuration": 24
-      },
-      "quotas": {
-        "deployments": 10,
-        "cpuCores": 8,
-        "ram": 60,
-        "diskSize": 500,
-        "snapshots": 10
-      }
+        "name": "silver",
+        "description": "Silver",
+        "permissions": {
+            "chooseZone": true,
+            "chooseGpu": true,
+            "useGpus": true,
+            "usePrivilegedGpus": false,
+            "useCustomDomains": true,
+            "gpuLeaseDuration": 24
+        },
+        "quotas": {
+            "deployments": 10,
+            "cpuCores": 8,
+            "ram": 60,
+            "diskSize": 500,
+            "snapshots": 10
+        }
     },
     {
-      "name": "gold",
-      "description": "Gold",
-      "permissions": {
-        "chooseZone": true,
-        "chooseGpu": true,
-        "useGpus": true,
-        "usePrivilegedGpus": true,
-        "useCustomDomains": true,
-        "gpuLeaseDuration": 24
-      },
-      "quotas": {
-        "deployments": 10,
-        "cpuCores": 12,
-        "ram": 80,
-        "diskSize": 1000,
-        "snapshots": 10
-      }
+        "name": "gold",
+        "description": "Gold",
+        "permissions": {
+            "chooseZone": true,
+            "chooseGpu": true,
+            "useGpus": true,
+            "usePrivilegedGpus": true,
+            "useCustomDomains": true,
+            "gpuLeaseDuration": 24
+        },
+        "quotas": {
+            "deployments": 10,
+            "cpuCores": 12,
+            "ram": 80,
+            "diskSize": 1000,
+            "snapshots": 10
+        }
     },
     {
-      "name": "platinum",
-      "description": "Platinum",
-      "permissions": {
-        "chooseZone": true,
-        "chooseGpu": true,
-        "useGpus": true,
-        "usePrivilegedGpus": true,
-        "useCustomDomains": true,
-        "gpuLeaseDuration": 168
-      },
-      "quotas": {
-        "deployments": 15,
-        "cpuCores": 40,
-        "ram": 160,
-        "diskSize": 2000,
-        "snapshots": 10
-      }
+        "name": "platinum",
+        "description": "Platinum",
+        "permissions": {
+            "chooseZone": true,
+            "chooseGpu": true,
+            "useGpus": true,
+            "usePrivilegedGpus": true,
+            "useCustomDomains": true,
+            "gpuLeaseDuration": 168
+        },
+        "quotas": {
+            "deployments": 15,
+            "cpuCores": 40,
+            "ram": 160,
+            "diskSize": 2000,
+            "snapshots": 10
+        }
     }
-  ]
-  
+]

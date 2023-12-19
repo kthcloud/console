@@ -368,12 +368,16 @@ const Teams = () => {
                                                             "remove"
                                                           ).toLowerCase() +
                                                           " " +
-                                                          (member.email || member.username) +
+                                                          (member.email ||
+                                                            member.username) +
                                                           " " +
                                                           t("from-team")
                                                         }
                                                         callback={() =>
-                                                          handleRemoveUser(team, member)
+                                                          handleRemoveUser(
+                                                            team,
+                                                            member
+                                                          )
                                                         }
                                                         props={{
                                                           color: "error",

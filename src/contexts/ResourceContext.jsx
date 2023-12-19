@@ -124,14 +124,14 @@ export const ResourceContextProvider = ({ children }) => {
 
     setRows(array);
 
-
     let teamResourceIds = getTeamResourceIds();
 
-    let userOwned = array.filter((row) => row.ownerId === user.id || teamResourceIds.includes(row.id));
-    
+    let userOwned = array.filter(
+      (row) => row.ownerId === user.id || teamResourceIds.includes(row.id)
+    );
 
     userOwned.forEach((row) => {
-      row.shared = teamResourceIds.includes(row.id)
+      row.shared = teamResourceIds.includes(row.id);
     });
 
     setUserRows(userOwned);

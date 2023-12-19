@@ -4,20 +4,22 @@ Welcome to the kthcloud/landing-frontend repository! This project is the React f
 
 ## Table of Contents
 
-- [☁️ kthcloud/landing-frontend](#️-kthcloudlanding-frontend)
-  - [Table of Contents](#table-of-contents)
-  - [External dependencies](#external-dependencies)
-  - [Setup](#setup)
-  - [Contributing](#contributing)
-  - [Formatting](#formatting)
-  - [License](#license)
+-   [☁️ kthcloud/landing-frontend](#️-kthcloudlanding-frontend)
+    -   [Table of Contents](#table-of-contents)
+    -   [External dependencies](#external-dependencies)
+    -   [Setup](#setup)
+    -   [Contributing](#contributing)
+    -   [Formatting](#formatting)
+    -   [License](#license)
 
 ## External dependencies
+
 landing-frontend uses these services for its functionality:
-- [sys-api](https://github.com/kthcloud/sys-api): Provides stats and capacities
-- [go-deploy](https://github.com/kthcloud/go-deploy): Backend for creation, and management of resources
-- [llama](https://llama.app.cloud.cbh.kth.se/): Enables genAI features
-- [llama-prefetch](https://github.com/kthcloud/llama-prefetch/): Reduces genAI features latency by prefetching queries
+
+-   [sys-api](https://github.com/kthcloud/sys-api): Provides stats and capacities
+-   [go-deploy](https://github.com/kthcloud/go-deploy): Backend for creation, and management of resources
+-   [llama](https://llama.app.cloud.cbh.kth.se/): Enables genAI features
+-   [llama-prefetch](https://github.com/kthcloud/llama-prefetch/): Reduces genAI features latency by prefetching queries
 
 ## Setup
 

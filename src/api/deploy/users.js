@@ -63,9 +63,10 @@ export const updateUser = async (userId, token, data) => {
 };
 
 export const searchUsers = async (token, query) => {
-
   const res = await fetch(
-    process.env.REACT_APP_DEPLOY_API_URL + "/users?all=true&discover=true&search=" + encodeURIComponent(query),
+    process.env.REACT_APP_DEPLOY_API_URL +
+      "/users?all=true&discover=true&search=" +
+      encodeURIComponent(query),
     {
       method: "GET",
       headers: {
@@ -82,4 +83,4 @@ export const searchUsers = async (token, query) => {
     throw res;
   }
   return await res.json();
-}
+};

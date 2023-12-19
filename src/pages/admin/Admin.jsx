@@ -640,11 +640,13 @@ export const Admin = () => {
                       {t("button-clear")}
                     </Button>
                     <Typography variant="body1" gutterBottom>
-                      {t("admin-showing") + " " +
+                      {t("admin-showing") +
+                        " " +
                         users.length +
                         "/" +
                         dbUsers.length +
-                        " " + t("admin-loaded-users")}
+                        " " +
+                        t("admin-loaded-users")}
                     </Typography>
                   </Stack>
                   <TableContainer>
@@ -666,7 +668,9 @@ export const Admin = () => {
                             <TableCell>{user.username}</TableCell>
                             <TableCell>{user.email}</TableCell>
                             <TableCell>{user.role.name}</TableCell>
-                            <TableCell>{user.admin && t("admin-is-admin")}</TableCell>
+                            <TableCell>
+                              {user.admin && t("admin-is-admin")}
+                            </TableCell>
                             <TableCell>
                               <Stack direction={"column"}>
                                 {Object.keys(user.usage).map((key) => (
@@ -733,11 +737,13 @@ export const Admin = () => {
                       {t("button-clear")}
                     </Button>
                     <Typography variant="body1" gutterBottom>
-                      {t("admin-showing") + " " +
+                      {t("admin-showing") +
+                        " " +
                         gpus.length +
                         "/" +
                         dbGPUs.length +
-                        " " + t("admin-loaded-gpus")}
+                        " " +
+                        t("admin-loaded-gpus")}
                     </Typography>
                   </Stack>
                   <TableContainer>
@@ -765,7 +771,9 @@ export const Admin = () => {
                                   .split(".")[0] + " UTC"}
                             </TableCell>
                             <TableCell>
-                              {gpu.lease && gpu.lease.expired ? t("admin-gpu-expired") : ""}
+                              {gpu.lease && gpu.lease.expired
+                                ? t("admin-gpu-expired")
+                                : ""}
                             </TableCell>
                           </TableRow>
                         ))}

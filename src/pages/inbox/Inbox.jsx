@@ -133,27 +133,27 @@ const Inbox = () => {
                           alignItems="center"
                           justifyContent={"space-between"}
                         >
-                        <Stack
-                          direction="row"
-                          alignItems="center"
-                          spacing={3}
-                          flexWrap={"wrap"}
-                          justifyContent={"space-between"}
-                          useFlexGap
-                        >
-                          <Typography variant="body">
-                            <span>
-                              {notification?.content?.email ||
-                                notification?.content?.name}
-                            </span>{" "}
-                            <span style={{ fontWeight: "lighter" }}>
-                              {notificationAction(notification?.type)}
-                            </span>{" "}
-                            <span>
-                              {notification?.content?.email &&
-                                notification?.content?.name}
-                            </span>
-                          </Typography>
+                          <Stack
+                            direction="row"
+                            alignItems="center"
+                            spacing={3}
+                            flexWrap={"wrap"}
+                            justifyContent={"space-between"}
+                            useFlexGap
+                          >
+                            <Typography variant="body">
+                              <span>
+                                {notification?.content?.email ||
+                                  notification?.content?.name}
+                              </span>{" "}
+                              <span style={{ fontWeight: "lighter" }}>
+                                {notificationAction(notification?.type)}
+                              </span>{" "}
+                              <span>
+                                {notification?.content?.email &&
+                                  notification?.content?.name}
+                              </span>
+                            </Typography>
                             <Typography
                               variant="caption"
                               fontFamily={"monospace"}
@@ -166,29 +166,32 @@ const Inbox = () => {
                               }
                             </Typography>
                           </Stack>
-                            <ButtonGroup variant="outlined" sx={{py: 3}}         orientation="vertical"
->
-                              <Button
-                                startIcon={<Iconify icon="mdi:check" />}
-                                onClick={() => accept(notification)}
-                              >
-                                {t("accept")}
-                              </Button>
-                              <Button
-                                startIcon={<Iconify icon="mdi:email-open" />}
-                                onClick={() => markAsRead(notification)}
-                                disabled={notification.readAt}
-                              >
-                                {t("read")}
-                              </Button>
-                              <Button
-                                color="error"
-                                startIcon={<Iconify icon="mdi:delete" />}
-                                onClick={() => handleDelete(notification)}
-                              >
-                                {t("button-clear")}
-                              </Button>
-                            </ButtonGroup>
+                          <ButtonGroup
+                            variant="outlined"
+                            sx={{ py: 3 }}
+                            orientation="vertical"
+                          >
+                            <Button
+                              startIcon={<Iconify icon="mdi:check" />}
+                              onClick={() => accept(notification)}
+                            >
+                              {t("accept")}
+                            </Button>
+                            <Button
+                              startIcon={<Iconify icon="mdi:email-open" />}
+                              onClick={() => markAsRead(notification)}
+                              disabled={notification.readAt}
+                            >
+                              {t("read")}
+                            </Button>
+                            <Button
+                              color="error"
+                              startIcon={<Iconify icon="mdi:delete" />}
+                              onClick={() => handleDelete(notification)}
+                            >
+                              {t("button-clear")}
+                            </Button>
+                          </ButtonGroup>
                         </Stack>
                       </>
                     ))}

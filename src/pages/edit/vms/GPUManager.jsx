@@ -440,7 +440,8 @@ export const GPUManager = ({ vm }) => {
                             cursor: "pointer",
                           }}
                         >
-                          apt install nvidia-driver-535-server nvidia-utils-535-server -y 
+                          apt install nvidia-driver-535-server
+                          nvidia-utils-535-server -y
                         </span>
                       </Tooltip>
                     </CopyToClipboard>
