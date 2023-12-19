@@ -41,9 +41,12 @@ export const DeploymentCommands = ({ deployment }) => {
 
     try {
       await applyCommand(deployment.id, command, keycloak.token);
-      enqueueSnackbar(sentenceCase(command) + " " + t("deployment-in-progress"), {
-        variant: "info",
-      });
+      enqueueSnackbar(
+        sentenceCase(command) + " " + t("deployment-in-progress"),
+        {
+          variant: "info",
+        }
+      );
     } catch (error) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar(t("failed-update"), ": " + e, {

@@ -24,7 +24,7 @@ export const GHSelect = ({ setAccessToken, repo, setRepo }) => {
   const [repos, setRepos] = useState([]);
   const [loading, setLoading] = useState(false);
   const { initialized, keycloak } = useKeycloak();
-  
+
   // eslint-disable-next-line no-unused-vars
   let [searchParams, _] = useSearchParams();
 

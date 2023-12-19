@@ -359,8 +359,10 @@
         "gold": "Gold",
         "platinum": "Platinum",
         "inbox": "Inbox",
+        "notification": "Notification",
         "notifications": "Notifications",
         "notificationsSubheader": "Notifications are messages from kthcloud or from other users. Some have actions you can take, such as accepting a request to join a project.",
+        "read-notifications": "Archived notifications",
         "search-error": "Couldn't search: ",
         "update-error": "Couldn't update: ",
         "successfully-transferred": "Transfer request sent",
@@ -388,7 +390,7 @@
         "transferred-a-deployment-to-you": "transferred a deployment to you",
         "transferred-a-vm-to-you": "transferred a VM to you",
         "accept": "Accept",
-        "read": "Read",
+        "read": "Archive",
         "menu-manage-account": "Manage account",
         "teams": "Teams",
         "current-teams": "Current teams",
@@ -420,6 +422,7 @@
         "shared": "Shared",
         "shared-in-group": "Resource is available through a group you are a member of",
         "auto-scroll": "Auto scroll",
-        "logs-truncated": "Over 1000 logs: Logs truncated. Please download the full log file to view earlier logs."
+        "logs-truncated": "Over 1000 logs: Logs truncated. Please download the full log file to view earlier logs.",
+        "no-teams": "No teams found, create one or join a friend's team!"
     }
 }

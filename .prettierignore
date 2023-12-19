@@ -1,0 +1,12 @@
+*.gltf
+*.svg
+*.webp
+*.png
+*.ico
+*.xml
+Dockerfile
+.*
+LICENSE
+public/_redirects
+package.json
+package-lock.json

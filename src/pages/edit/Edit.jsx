@@ -181,6 +181,17 @@ export function Edit() {
                       icon={<Iconify icon="mdi:earth" sx={{ opacity: 0.75 }} />}
                     />
                   )}
+                  {resource.shared && (
+                    <Chip
+                      label={t("shared")}
+                      icon={
+                        <Iconify
+                          icon="mdi:account-multiple"
+                          sx={{ opacity: 0.75 }}
+                        />
+                      }
+                    />
+                  )}
                 </Stack>
                 <div style={{ flexGrow: "1" }} />
 

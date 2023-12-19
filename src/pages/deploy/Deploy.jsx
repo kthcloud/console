@@ -346,7 +346,7 @@ export function Deploy() {
         style={{ fontFamily: "monospace" }}
         startIcon={<Iconify icon="mdi:earth" sx={{ opacity: 0.65 }} />}
       >
-        {JSON.stringify(zone)}
+        {zone?.description}
       </Label>
     );
   };

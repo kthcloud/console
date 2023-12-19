@@ -33,7 +33,12 @@ export const getTeams = async (token) => {
   for (let i = 0; i < result.length; i++) {
     result[i].members &&
       result[i].members.sort((a, b) => {
-        return new Date(a.addedAt) - new Date(b.addedAt);
+        return a.id < b.id ? -1 : 1;
+      });
+
+    result[i].resources &&
+      result[i].resources.sort((a, b) => {
+        return a.id < b.id ? -1 : 1;
       });
   }
   return result;

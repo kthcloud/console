@@ -142,8 +142,8 @@ const ResourceComparisonTable = () => {
                           height={24}
                         />
                       )}
-                      </TableCell>
-                      <TableCell>
+                    </TableCell>
+                    <TableCell>
                       {row.use.includes("vm") && (
                         <Iconify
                           icon="material-symbols:check-small-rounded"
