@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 // keycloak
 import { useKeycloak } from "@react-keycloak/web";
 // @mui
@@ -16,12 +16,15 @@ import Link from "@mui/material/Link";
 import { Link as RouterLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import useResource from "src/hooks/useResource";
+import { ThemeModeContext } from "src/contexts/ThemeModeContext";
 
 // ----------------------------------------------------------------------
 
 export default function Menu() {
   const anchorRef = useRef(null);
   const { t } = useTranslation();
+
+  const { mode, toggleMode } = useContext(ThemeModeContext);
 
   const [open, setOpen] = useState(null);
 
@@ -199,7 +202,23 @@ export default function Menu() {
             {t("menu-github")}
           </MenuItem>
         </Stack>
+        <Divider sx={{ borderStyle: "dashed" }} />
 
+        <Box sx={{ mt: 1.5, px: 2.5 }}>
+          <Typography variant="body2" sx={{ color: "text.secondary" }} noWrap>
+            Beta
+          </Typography>
+        </Box>
+        <Stack sx={{ p: 1 }}>
+          <MenuItem
+            onClick={() => {
+              toggleMode();
+              handleClose();
+            }}
+          >
+            {t(mode !== "dark" ? "dark-mode" : "light-mode")}
+          </MenuItem>
+        </Stack>
         {shouldRenderAdmin() && (
           <>
             <Divider sx={{ borderStyle: "dashed" }} />

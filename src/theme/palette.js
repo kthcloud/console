@@ -98,7 +98,7 @@ const CHART_COLORS = {
   red: ["#FF6C40", "#FF8F6D", "#FFBD98", "#FFF2D4"],
 };
 
-const palette = {
+export const lightPalette = {
   common: { black: "#000", white: "#fff" },
   primary: { ...PRIMARY },
   secondary: { ...SECONDARY },
@@ -124,4 +124,58 @@ const palette = {
   },
 };
 
-export default palette;
+const DARK_GREY = {
+  0: "#161C24",
+  100: "#212B36",
+  200: "#454F5B",
+  300: "#637381",
+  400: "#919EAB",
+  500: "#C4CDD5",
+  600: "#DFE3E8",
+  700: "#F4F6F8",
+  800: "#F9FAFB",
+  900: "#FFFFFF",
+  500_8: alpha("#919EAB", 0.08),
+  500_12: alpha("#919EAB", 0.12),
+  500_16: alpha("#919EAB", 0.16),
+  500_24: alpha("#919EAB", 0.24),
+  500_32: alpha("#919EAB", 0.32),
+  500_48: alpha("#919EAB", 0.48),
+  500_56: alpha("#919EAB", 0.56),
+  500_80: alpha("#919EAB", 0.8),
+};
+
+export const palette = {
+  common: { black: "#000", white: "#fff" },
+  primary: { ...PRIMARY },
+  secondary: { ...SECONDARY },
+  info: { ...INFO },
+  success: { ...SUCCESS },
+  warning: { ...WARNING },
+  error: { ...ERROR },
+  grey: DARK_GREY,
+  gradients: GRADIENTS,
+  chart: CHART_COLORS,
+  divider: DARK_GREY[500_24],
+  text: {
+    primary: DARK_GREY[800],
+    secondary: DARK_GREY[600],
+    disabled: DARK_GREY[500],
+  },
+  background: {
+    paper: DARK_GREY[100],
+    default: DARK_GREY[0],
+    neutral: DARK_GREY[200],
+  },
+  action: {
+    active: DARK_GREY[600],
+    hover: DARK_GREY[500_8],
+    selected: DARK_GREY[500_16],
+    disabled: DARK_GREY[500_80],
+    disabledBackground: DARK_GREY[500_24],
+    focus: DARK_GREY[500_24],
+    hoverOpacity: 0.08,
+    disabledOpacity: 0.48,
+  },
+  mode: "dark",
+};

@@ -423,6 +423,8 @@
         "shared-in-group": "Resource is available through a group you are a member of",
         "auto-scroll": "Auto scroll",
         "logs-truncated": "Over 1000 logs: Logs truncated. Please download the full log file to view earlier logs.",
-        "no-teams": "No teams found, create one or join a friend's team!"
+        "no-teams": "No teams found, create one or join a friend's team!",
+        "dark-mode": "Dark mode",
+        "light-mode": "Light mode"
     }
 }
