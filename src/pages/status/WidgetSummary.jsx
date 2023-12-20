@@ -1,6 +1,6 @@
 // @mui
 import PropTypes from "prop-types";
-import { alpha, styled } from "@mui/material/styles";
+import { alpha, styled, useTheme } from "@mui/material/styles";
 import { Card, Typography } from "@mui/material";
 // utils
 import { fShortenNumber } from "../../utils/formatNumber";
@@ -38,26 +38,41 @@ export default function WidgetSummary({
   sx,
   ...other
 }) {
+  const theme = useTheme();
+
+  let textColor =
+    theme.palette.mode === "light"
+      ? theme.palette[color].darker
+      : theme.palette[color].lighter;
+  let backgroundColor =
+    theme.palette.mode === "light"
+      ? theme.palette[color].lighter
+      : theme.palette[color].darker;
+  let iconColor =
+    theme.palette.mode === "light"
+      ? theme.palette[color].darker
+      : theme.palette[color].lighter;
+
   return (
     <Card
       sx={{
         py: 5,
         boxShadow: 20,
         textAlign: "center",
-        color: (theme) => theme.palette[color].darker,
-        bgcolor: (theme) => theme.palette[color].lighter,
+        color: (theme) => textColor,
+        bgcolor: (theme) => backgroundColor,
         ...sx,
       }}
       {...other}
     >
       <IconWrapperStyle
         sx={{
-          color: (theme) => theme.palette[color].dark,
+          color: (theme) => iconColor,
           backgroundImage: (theme) =>
-            `linear-gradient(135deg, ${alpha(
-              theme.palette[color].dark,
-              0
-            )} 0%, ${alpha(theme.palette[color].dark, 0.24)} 100%)`,
+            `linear-gradient(135deg, ${alpha(iconColor, 0)} 0%, ${alpha(
+              iconColor,
+              0.24
+            )} 100%)`,
         }}
       >
         <Iconify icon={icon} width={24} height={24} />
