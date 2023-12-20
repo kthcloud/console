@@ -34,7 +34,11 @@ export default function ThemeProvider({ children }) {
     customShadows,
   });
 
-  const theme = useMemo(() => createTheme(getDesignTokens(mode)), [mode]);
+  const theme = useMemo(
+    () => createTheme(getDesignTokens(mode)),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [mode]
+  );
 
   theme.components = componentsOverride(theme);
 
