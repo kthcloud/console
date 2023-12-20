@@ -164,7 +164,7 @@ export function Profile() {
                 <CardHeader
                   title={t("details")}
                   subheader={
-                    <Typography variant="body2" sx={{ color: "#637381" }}>
+                    <Typography variant="body2">
                       {t("gravatar")}
                       <Link
                         href="https://gravatar.com/connect/"
