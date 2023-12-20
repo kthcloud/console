@@ -425,6 +425,7 @@
         "logs-truncated": "Over 1000 logs: Logs truncated. Please download the full log file to view earlier logs.",
         "no-teams": "No teams found, create one or join a friend's team!",
         "dark-mode": "Dark mode",
-        "light-mode": "Light mode"
+        "light-mode": "Light mode",
+        "theme": "Theme"
     }
 }

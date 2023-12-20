@@ -43,6 +43,7 @@ import Page from "src/components/Page";
 import useResource from "src/hooks/useResource";
 import { errorHandler } from "src/utils/errorHandler";
 import { Link as RouterLink } from "react-router-dom";
+import { useTheme } from "@mui/material/styles";
 
 const Teams = () => {
   const { user, teams } = useResource();
@@ -57,6 +58,7 @@ const Teams = () => {
   const [results, setResults] = useState([]);
   const [selected, setSelected] = useState("");
   const [users, setUsers] = useState([]);
+  const theme = useTheme();
 
   useEffect(() => {
     setStale(null);
@@ -225,9 +227,8 @@ const Teams = () => {
                                   },
                                   cursor: "pointer",
                                   background:
-                                    expandedTeam === team.id
-                                      ? "#f9fafb"
-                                      : "white",
+                                    expandedTeam === team.id &&
+                                    theme.palette.grey[300],
                                 }}
                                 onClick={() =>
                                   expandedTeam === team.id

@@ -425,6 +425,7 @@
         "logs-truncated": "Över 1000 loggar: Loggar avkortade. Ladda ner hela loggen för att se tidigare loggar.",
         "no-teams": "Inga grupper hittades, skapa en eller gå med i en väns grupp!",
         "dark-mode": "Mörkt läge",
-        "light-mode": "Ljust läge"
+        "light-mode": "Ljust läge",
+        "theme": "Tema"
     }
 }

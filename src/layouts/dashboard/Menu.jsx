@@ -206,7 +206,7 @@ export default function Menu() {
 
         <Box sx={{ mt: 1.5, px: 2.5 }}>
           <Typography variant="body2" sx={{ color: "text.secondary" }} noWrap>
-            Beta
+            {t("theme")}
           </Typography>
         </Box>
         <Stack sx={{ p: 1 }}>

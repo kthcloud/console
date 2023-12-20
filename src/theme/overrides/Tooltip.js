@@ -6,8 +6,6 @@ export default function Tooltip(theme) {
     color = theme.palette.grey[800];
   }
 
-  console.log(theme.palette.mode);
-
   return {
     MuiTooltip: {
       styleOverrides: {

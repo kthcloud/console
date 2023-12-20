@@ -11,7 +11,7 @@ import {
 import { palette, lightPalette } from "./palette";
 import typography from "./typography";
 import componentsOverride from "./overrides";
-import shadows, { customShadows } from "./shadows";
+import { makeCustomShadows, makeShadows } from "./shadows";
 import { ThemeModeContext } from "src/contexts/ThemeModeContext";
 
 // ----------------------------------------------------------------------
@@ -22,6 +22,9 @@ ThemeProvider.propTypes = {
 
 export default function ThemeProvider({ children }) {
   const { mode } = useContext(ThemeModeContext);
+
+  let shadows = makeShadows(mode);
+  let customShadows = makeCustomShadows(mode);
 
   const getDesignTokens = (mode) => ({
     palette: mode === "light" ? lightPalette : palette,

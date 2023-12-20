@@ -33,6 +33,7 @@ import LoadingPage from "src/components/LoadingPage";
 import Page from "src/components/Page";
 import useResource from "src/hooks/useResource";
 import { errorHandler } from "src/utils/errorHandler";
+import { useTheme } from "@mui/material/styles";
 
 const Inbox = () => {
   const { user, notifications, unread } = useResource();
@@ -40,6 +41,7 @@ const Inbox = () => {
   const { initialized, keycloak } = useKeycloak();
   const [expandedRead, setExpandedRead] = useState(false);
   const [stale, setStale] = useState(null);
+  const theme = useTheme();
 
   useEffect(() => {
     setStale(null);
@@ -253,7 +255,11 @@ const Inbox = () => {
                           ))}
                           {notifications.length - unread > 0 && (
                             <TableRow
-                              sx={{ background: "#f9fafb", cursor: "pointer" }}
+                              sx={{
+                                background:
+                                  expandedRead && theme.palette.grey[300],
+                                cursor: "pointer",
+                              }}
                               onClick={() => setExpandedRead(!expandedRead)}
                             >
                               <TableCell>{`${t("read-notifications")} (${
