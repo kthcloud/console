@@ -104,7 +104,10 @@ const GHActions = ({ resource }) => {
               width: "100%",
               border: 0,
               color: theme.palette.grey[900],
-              background: theme.palette.mode === "light" ? theme.palette.grey[0] : theme.palette.grey[100],
+              background:
+                theme.palette.mode === "light"
+                  ? theme.palette.grey[0]
+                  : theme.palette.grey[100],
             }}
           />
         </CardContent>
@@ -128,7 +131,10 @@ const GHActions = ({ resource }) => {
                 width: "100%",
                 border: 0,
                 color: theme.palette.grey[800],
-                background: theme.palette.mode === "light" ? theme.palette.grey[0] : theme.palette.grey[100],
+                background:
+                  theme.palette.mode === "light"
+                    ? theme.palette.grey[0]
+                    : theme.palette.grey[100],
               }}
             />
 

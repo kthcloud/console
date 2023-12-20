@@ -6,6 +6,7 @@ import {
   CardContent,
   CardHeader,
   Container,
+  Link,
   Stack,
   Table,
   TableBody,
@@ -590,13 +591,13 @@ export const Admin = () => {
                   subheader={
                     <Typography variant="body2">
                       {t("admin-edit-permissions-in") + " "}
-                      <a
+                      <Link
                         href="https://iam.cloud.cbh.kth.se"
                         target="_blank"
                         rel="noopener noreferrer"
                       >
                         Keycloak
-                      </a>
+                      </Link>
                     </Typography>
                   }
                 />
