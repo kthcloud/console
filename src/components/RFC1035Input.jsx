@@ -1,4 +1,4 @@
-import { Stack, TextField, Typography } from "@mui/material";
+import { Link, Stack, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 
 export default function RFC1035Input({
@@ -47,17 +47,17 @@ export default function RFC1035Input({
         variant={variant}
         value={cleaned && value}
         helperText={
-          <span>
+          <Typography variant="caption">
             {type} must follow{" "}
-            <a
+            <Link
               href="https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#rfc-1035-label-names"
               target="_blank"
               rel="noreferrer"
             >
               RFC 1035
-            </a>{" "}
+            </Link>{" "}
             and must not include dots.
-          </span>
+          </Typography>
         }
         onChange={(e) => {
           setValue(e.target.value);

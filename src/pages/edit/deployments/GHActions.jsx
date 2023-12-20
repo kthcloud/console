@@ -14,6 +14,7 @@ import {
   TextareaAutosize,
   Tooltip,
   Typography,
+  useTheme,
 } from "@mui/material";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import Iconify from "src/components/Iconify";
@@ -26,6 +27,7 @@ const GHActions = ({ resource }) => {
   const [cliCommands, setCliCommands] = useState(null);
   const [secrets, setSecrets] = useState([]);
   const [showSecrets, setShowSecrets] = useState(false);
+  const theme = useTheme();
 
   const loadYaml = async () => {
     try {
@@ -98,7 +100,15 @@ const GHActions = ({ resource }) => {
         <CardContent>
           <TextareaAutosize
             value={cliCommands ? cliCommands : t("loading")}
-            style={{ width: "100%", border: 0 }}
+            style={{
+              width: "100%",
+              border: 0,
+              color: theme.palette.grey[900],
+              background:
+                theme.palette.mode === "light"
+                  ? theme.palette.grey[0]
+                  : theme.palette.grey[100],
+            }}
           />
         </CardContent>
         <CardActions>
@@ -117,7 +127,15 @@ const GHActions = ({ resource }) => {
           <Stack spacing={1} useFlexGap alignItems={"flex-start"}>
             <TextareaAutosize
               value={actionsFile ? actionsFile : t("loading")}
-              style={{ width: "100%", border: 0 }}
+              style={{
+                width: "100%",
+                border: 0,
+                color: theme.palette.grey[800],
+                background:
+                  theme.palette.mode === "light"
+                    ? theme.palette.grey[0]
+                    : theme.palette.grey[100],
+              }}
             />
 
             <Stack

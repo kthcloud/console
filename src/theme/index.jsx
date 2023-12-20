@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { useMemo } from "react";
+import { useContext, useMemo } from "react";
 // material
 import { CssBaseline } from "@mui/material";
 import {
@@ -8,10 +8,11 @@ import {
   StyledEngineProvider,
 } from "@mui/material/styles";
 //
-import palette from "./palette";
+import { palette, lightPalette } from "./palette";
 import typography from "./typography";
 import componentsOverride from "./overrides";
-import shadows, { customShadows } from "./shadows";
+import { makeCustomShadows, makeShadows } from "./shadows";
+import { ThemeModeContext } from "src/contexts/ThemeModeContext";
 
 // ----------------------------------------------------------------------
 
@@ -20,19 +21,25 @@ ThemeProvider.propTypes = {
 };
 
 export default function ThemeProvider({ children }) {
-  const themeOptions = useMemo(
-    () => ({
-      palette,
-      shape: { borderRadius: 8 },
-      typography,
-      shadows,
-      customShadows,
-      mode: "dark",
-    }),
-    []
+  const { mode } = useContext(ThemeModeContext);
+
+  let shadows = makeShadows(mode);
+  let customShadows = makeCustomShadows(mode);
+
+  const getDesignTokens = (mode) => ({
+    palette: mode === "light" ? lightPalette : palette,
+    shape: { borderRadius: 8 },
+    typography,
+    shadows,
+    customShadows,
+  });
+
+  const theme = useMemo(
+    () => createTheme(getDesignTokens(mode)),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [mode]
   );
 
-  const theme = createTheme(themeOptions);
   theme.components = componentsOverride(theme);
 
   return (

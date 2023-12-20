@@ -250,7 +250,7 @@ export const ResourceContextProvider = ({ children }) => {
   }, [user]);
 
   useEffect(() => {
-    user && user?.role?.permissions?.includes("chooseZone") && loadZones();
+    user && loadZones();
     // eslint-disable-next-line
   }, [user]);
 

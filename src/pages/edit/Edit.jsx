@@ -54,7 +54,14 @@ export function Edit() {
   const [resource, setResource] = useState(null);
   const [envs, setEnvs] = useState([]);
   const [persistent, setPersistent] = useState([]);
-  const { user, rows, initialLoad, zones } = useResource();
+  const {
+    user,
+    rows,
+    initialLoad,
+    zones,
+    impersonatingVm,
+    impersonatingDeployment,
+  } = useResource();
   const [loaded, setLoaded] = useState(false);
   const [reloads, setReloads] = useState(0);
 
@@ -95,7 +102,8 @@ export function Edit() {
         <LoadingPage />
       ) : (
         <Page title={t("editing") + " " + resource.name}>
-          {user.id !== resource.ownerId && (
+          {(resource.id === impersonatingVm ||
+            resource.id === impersonatingDeployment) && (
             <AppBar
               position="fixed"
               color="error"

@@ -21,6 +21,7 @@ import {
   CircularProgress,
   Tooltip,
   Stack,
+  useTheme,
 } from "@mui/material";
 import Iconify from "../../../components/Iconify";
 import { enqueueSnackbar } from "notistack";
@@ -34,6 +35,7 @@ import { useTranslation } from "react-i18next";
 export default function PortManager({ vm }) {
   const { t } = useTranslation();
 
+  const theme = useTheme();
   const [ports, setPorts] = useState([]);
 
   const [newPort, setNewPort] = useState("");
@@ -145,7 +147,7 @@ export default function PortManager({ vm }) {
                   style={{
                     fontFamily: "monospace",
                     cursor: "pointer",
-                    color: "#45515c",
+                    color: theme.palette.grey[700],
                   }}
                 >
                   vm.cloud.cbh.kth.se
@@ -155,7 +157,7 @@ export default function PortManager({ vm }) {
             <span
               style={{
                 fontFamily: "monospace",
-                color: "#45515c",
+                color: theme.palette.grey[700],
               }}
             >
               {t("external_port")}
@@ -169,7 +171,7 @@ export default function PortManager({ vm }) {
                       style={{
                         fontFamily: "monospace",
                         cursor: "pointer",
-                        color: "#45515c",
+                        color: theme.palette.grey[700],
                       }}
                     >
                       {publicIP}
@@ -179,7 +181,7 @@ export default function PortManager({ vm }) {
                 <span
                   style={{
                     fontFamily: "monospace",
-                    color: "#45515c",
+                    color: theme.palette.grey[700],
                   }}
                 >
                   {t("external_port")}

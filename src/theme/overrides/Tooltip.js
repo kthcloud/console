@@ -1,14 +1,19 @@
 // ----------------------------------------------------------------------
 
 export default function Tooltip(theme) {
+  let color = theme.palette.grey[200];
+  if (theme.palette.mode === "light") {
+    color = theme.palette.grey[800];
+  }
+
   return {
     MuiTooltip: {
       styleOverrides: {
         tooltip: {
-          backgroundColor: theme.palette.grey[800],
+          backgroundColor: color,
         },
         arrow: {
-          color: theme.palette.grey[800],
+          color: color,
         },
       },
     },

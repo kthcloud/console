@@ -423,6 +423,9 @@
         "shared-in-group": "Resursen är tillgänglig genom en av grupperna du är medlem i",
         "auto-scroll": "Auto scroll",
         "logs-truncated": "Över 1000 loggar: Loggar avkortade. Ladda ner hela loggen för att se tidigare loggar.",
-        "no-teams": "Inga grupper hittades, skapa en eller gå med i en väns grupp!"
+        "no-teams": "Inga grupper hittades, skapa en eller gå med i en väns grupp!",
+        "dark-mode": "Mörkt läge",
+        "light-mode": "Ljust läge",
+        "theme": "Tema"
     }
 }
