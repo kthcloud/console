@@ -130,7 +130,7 @@ export default function DashboardLayout() {
                         color: "inherit",
                         whiteSpace: "nowrap",
                       }}
-                      href="https://mastodon.social/@kthcloud"
+                      href="https://bsky.app/profile/cloud.cbh.kth.se"
                     >
                       Bluesky
                     </a>

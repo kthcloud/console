@@ -13,8 +13,8 @@ export const getDeployment = async (token, id) => {
 };
 
 export const getDeployments = async (token, all = false) => {
-  const allQuery = all ? "&all=true" : "";
-  const url = `${process.env.REACT_APP_DEPLOY_API_URL}/deployments?shared=true${allQuery}`;
+  const allQuery = all ? "?all=true" : "";
+  const url = `${process.env.REACT_APP_DEPLOY_API_URL}/deployments${allQuery}`;
   const res = await fetch(url, {
     method: "GET",
     headers: {

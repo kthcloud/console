@@ -189,7 +189,7 @@ export function Edit() {
                       icon={<Iconify icon="mdi:earth" sx={{ opacity: 0.75 }} />}
                     />
                   )}
-                  {resource.shared && (
+                  {resource?.teams?.length > 0 && (
                     <Chip
                       label={t("shared")}
                       icon={

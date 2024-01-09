@@ -374,7 +374,7 @@ export function Deploy() {
   };
 
   const renderShared = (row) => {
-    if (!row.shared) return <></>;
+    if (row?.teams?.length === 0) return <></>;
 
     return (
       <Label
