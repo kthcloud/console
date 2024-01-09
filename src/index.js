@@ -6,7 +6,7 @@ import { HelmetProvider } from "react-helmet-async";
 import { initI18n } from "./i18next";
 //
 import App from "./App";
-
+import "./theme/customStyle.css"
 // ----------------------------------------------------------------------
 
 const root = ReactDOM.createRoot(document.getElementById("root"));

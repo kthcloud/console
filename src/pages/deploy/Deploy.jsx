@@ -318,6 +318,16 @@ export function Deploy() {
         variant="ghost"
         color={color}
         startIcon={<Iconify icon="tabler:heartbeat" sx={{ opacity: 0.65 }} />}
+        sx={
+          row.status === "resourceStopping" ||
+          row.status === "resourceStarting" ||
+          row.status === "resourceRestarting"
+            ? {
+                animation:
+                  "pulse 2s cubic-bezier(.4,0,.6,1) infinite",
+              }
+            : null
+        }
       >
         {sentenceCase(statusMessage)}
       </Label>
