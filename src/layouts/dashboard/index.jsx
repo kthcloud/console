@@ -57,7 +57,6 @@ export default function DashboardLayout() {
                 useFlexGap
               >
                 <Stack spacing={1} alignItems={"flex-start"}>
-                  <p>Project</p>
                   <p>
                     <a
                       style={{

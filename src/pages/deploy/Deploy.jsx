@@ -323,8 +323,7 @@ export function Deploy() {
           row.status === "resourceStarting" ||
           row.status === "resourceRestarting"
             ? {
-                animation:
-                  "pulse 2s cubic-bezier(.4,0,.6,1) infinite",
+                animation: "pulse 2s cubic-bezier(.4,0,.6,1) infinite",
               }
             : null
         }
