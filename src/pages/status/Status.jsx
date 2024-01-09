@@ -122,7 +122,7 @@ export function Status() {
         let statusData = result[0].status.hosts.map((host) => {
           const gpuTemp = host.gpu ? host.gpu.temp[0].main : null;
           return {
-            name: host.name,
+            name: host.displayName,
             data: [
               host.cpu.temp.main,
               host.cpu.load.main,
@@ -136,7 +136,7 @@ export function Status() {
         setCpuCapacities(
           result[0].status.hosts.map((host) => {
             return {
-              x: host.name,
+              x: host.displayName,
               y: host.cpu.load.cores.length,
             };
           })
@@ -184,7 +184,7 @@ export function Status() {
         setRamCapacities(
           result[0].capacities.hosts.map((host) => {
             return {
-              x: host.name,
+              x: host.displayName,
               y: host.ram.total,
             };
           })
@@ -193,7 +193,7 @@ export function Status() {
         setGpuCapacities(
           result[0].capacities.hosts.map((host) => {
             return {
-              x: host.name,
+              x: host.displayName,
               y: host.gpu ? host.gpu.count : 0,
             };
           })

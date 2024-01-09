@@ -66,6 +66,8 @@ export default function DashboardLayout() {
                         marginBottom: "1rem",
                       }}
                       href="https://github.com/kthcloud/landing-frontend/issues/new/choose"
+                      target="_blank"
+                      rel="noreferrer"
                     >
                       Report a bug
                     </a>
@@ -77,6 +79,8 @@ export default function DashboardLayout() {
                         whiteSpace: "nowrap",
                       }}
                       href="https://github.com/kthcloud/landing-frontend"
+                      target="_blank"
+                      rel="noreferrer"
                     >
                       kthcloud/landing-frontend
                     </a>
@@ -95,6 +99,8 @@ export default function DashboardLayout() {
                         whiteSpace: "nowrap",
                       }}
                       href="https://discord.gg/MuHQd6QEtM"
+                      target="_blank"
+                      rel="noreferrer"
                     >
                       Discord
                     </a>
@@ -106,6 +112,8 @@ export default function DashboardLayout() {
                         whiteSpace: "nowrap",
                       }}
                       href="https://wiki.cloud.cbh.kth.se"
+                      target="_blank"
+                      rel="noreferrer"
                     >
                       Wiki
                     </a>
@@ -120,6 +128,8 @@ export default function DashboardLayout() {
                         whiteSpace: "nowrap",
                       }}
                       href="https://mastodon.social/@kthcloud"
+                      target="_blank"
+                      rel="noreferrer"
                     >
                       Mastodon
                     </a>
@@ -131,6 +141,8 @@ export default function DashboardLayout() {
                         whiteSpace: "nowrap",
                       }}
                       href="https://bsky.app/profile/cloud.cbh.kth.se"
+                      target="_blank"
+                      rel="noreferrer"
                     >
                       Bluesky
                     </a>
