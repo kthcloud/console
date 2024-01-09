@@ -228,41 +228,40 @@ export default function PortManager({ vm }) {
                     )}
                   </TableCell>
                   <TableCell align="right">
-                    {port.externalPort && (
-                      <Stack
-                        direction="row"
-                        spacing={1}
-                        useFlexGap
-                        alignItems={"center"}
-                        justifyContent={"flex-end"}
+                    <Stack
+                      direction="row"
+                      spacing={1}
+                      useFlexGap
+                      alignItems={"center"}
+                      justifyContent={"flex-end"}
+                    >
+                      <IconButton
+                        color="primary"
+                        aria-label="edit port"
+                        component="label"
+                        onClick={() => {
+                          setNewPort(port.port);
+                          setNewPortName(port.name);
+                          setNewPortProtocol(port.protocol);
+                          setPorts(
+                            ports.filter((item) => !isSamePort(item, port))
+                          );
+                        }}
+                        disabled={loading}
                       >
-                        <IconButton
-                          color="primary"
-                          aria-label="edit port"
-                          component="label"
-                          onClick={() => {
-                            setNewPort(port.port);
-                            setNewPortName(port.name);
-                            setNewPortProtocol(port.protocol);
-                            setPorts(
-                              ports.filter((item) => !isSamePort(item, port))
-                            );
-                          }}
-                          disabled={loading}
-                        >
-                          <Iconify icon="mdi:pencil" />
-                        </IconButton>
-                        <IconButton
-                          color="error"
-                          aria-label="delete port mapping"
-                          component="label"
-                          disabled={loading}
-                          onClick={() => deletePort(port)}
-                        >
-                          <Iconify icon="mdi:delete" />
-                        </IconButton>
-                      </Stack>
-                    )}
+                        <Iconify icon="mdi:pencil" />
+                      </IconButton>
+
+                      <IconButton
+                        color="error"
+                        aria-label="delete port mapping"
+                        component="label"
+                        disabled={loading}
+                        onClick={() => deletePort(port)}
+                      >
+                        <Iconify icon="mdi:delete" />
+                      </IconButton>
+                    </Stack>
                   </TableCell>
                 </TableRow>
               ))}
