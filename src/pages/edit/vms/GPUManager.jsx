@@ -14,6 +14,7 @@ import {
   Select,
   Skeleton,
   CircularProgress,
+  useTheme,
 } from "@mui/material";
 import { useKeycloak } from "@react-keycloak/web";
 import { useSnackbar } from "notistack";
@@ -42,6 +43,7 @@ export const GPUManager = ({ vm }) => {
   const [gpuChoice, setGpuChoice] = useState("");
   const [gpuLoading, setGpuLoading] = useState(false);
   const { initialLoad, user } = useResource();
+  const theme = useTheme();
 
   const userCanListGPUs = () => {
     if (!user) return false;
@@ -318,9 +320,10 @@ export const GPUManager = ({ vm }) => {
                                 <MenuItem
                                   key={gpu.id}
                                   value={gpu.id}
-                                  sx={() => {
-                                    if (index % 2 === 0)
-                                      return { backgroundColor: "#eee" };
+                                  sx={{
+                                    background:
+                                      index % 2 === 0 &&
+                                      theme.palette.grey[200],
                                   }}
                                   disabled={Boolean(
                                     gpu.lease && !gpu.lease.expired
