@@ -75,9 +75,7 @@ export default function PortManager({ vm }) {
     const domain = vm.connectionString.split("@")[1].split(" ")[0];
     setPublicDomain(domain);
 
-    const res = await fetch(
-      `https://dns.google/resolve?name=${domain}&type=A`
-    );
+    const res = await fetch(`https://dns.google/resolve?name=${domain}&type=A`);
     const json = await res.json();
     if (json.Answer) {
       setPublicIP(json.Answer[0].data);
