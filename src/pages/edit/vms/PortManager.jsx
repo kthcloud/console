@@ -67,6 +67,8 @@ export default function PortManager({ vm }) {
 
   useEffect(() => {
     loadPublicIP();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const loadPublicIP = async () => {
