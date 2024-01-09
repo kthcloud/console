@@ -46,6 +46,7 @@ export default function PortManager({ vm }) {
   const [loading, setLoading] = useState(false);
   const [publicIP, setPublicIP] = useState("");
   const [deleting, setDeleting] = useState([]);
+  const [publicDomain, setPublicDomain] = useState("");
 
   const isSamePort = (p1, p2) => {
     if (p1.internal !== p2.internal) return false;
@@ -69,8 +70,13 @@ export default function PortManager({ vm }) {
   }, []);
 
   const loadPublicIP = async () => {
+    if (!vm?.connectionString) return;
+
+    const domain = vm.connectionString.split("@")[1].split(" ")[0];
+    setPublicDomain(domain);
+
     const res = await fetch(
-      "https://dns.google/resolve?name=vm.cloud.cbh.kth.se&type=A"
+      `https://dns.google/resolve?name=${domain}&type=A`
     );
     const json = await res.json();
     if (json.Answer) {
@@ -141,7 +147,7 @@ export default function PortManager({ vm }) {
             {t("port-forwarding-subheader-2")}
             <br />
             {t("port-forwarding-subheader-3")}
-            <CopyToClipboard text={"vm.cloud.cbh.kth.se"}>
+            <CopyToClipboard text={publicDomain}>
               <Tooltip enterTouchDelay={10} title={t("copy-to-clipboard")}>
                 <b
                   style={{
@@ -150,7 +156,7 @@ export default function PortManager({ vm }) {
                     color: theme.palette.grey[700],
                   }}
                 >
-                  vm.cloud.cbh.kth.se
+                  {publicDomain}
                 </b>
               </Tooltip>
             </CopyToClipboard>

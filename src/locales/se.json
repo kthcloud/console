@@ -87,7 +87,7 @@
         "deploy-with-github-actions-subheader": "Lägg till GitHub Actions-filen i ditt projekt för att publicera din app automatiskt.",
         "no-deployments-found": "Inga resurser hittades",
         "admin-loaded-gpus": "hämtade GPUer",
-        "menu-dashboard": "Start",
+        "menu-dashboard": "Översikt",
         "gravatar": "Vi använder Gravatar för profilbilder. Byt på ",
         "admin-visibility": "Synlighet",
         "create-vm-max-disk-size": "Max tillgänglig diskutrymme",
