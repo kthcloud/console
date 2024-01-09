@@ -230,29 +230,51 @@ export function Deploy() {
       const tooltip = "NVIDIA " + resource.gpu.name;
 
       return (
-        <Typography
-          variant="body2"
-          color="text.primary"
-          display="flex"
-          alignItems="center"
-        >
-          {resource.type}
+        <Stack direction="row" alignItems="center">
+          <Label
+            variant="ghost"
+            startIcon={
+              <Iconify icon="carbon:virtual-machine" sx={{ opacity: 0.65 }} />
+            }
+          >
+            VM
+          </Label>
           <Tooltip enterTouchDelay={10} title={tooltip}>
             <span style={{ display: "flex", alignItems: "center" }}>
               <Iconify icon="mdi:gpu" width={20} height={20} ml={1} />
             </span>
           </Tooltip>
-        </Typography>
+        </Stack>
       );
-    } else if (resource.type === "deployment") {
+    }
+
+    if (resource.type === "vm") {
       return (
-        <Typography
-          variant="body2"
-          color="text.primary"
-          display="flex"
-          alignItems="center"
-        >
-          {resource.type}
+        <Stack direction="row" alignItems="center">
+          <Label
+            variant="ghost"
+            startIcon={
+              <Iconify icon="carbon:virtual-machine" sx={{ opacity: 0.65 }} />
+            }
+          >
+            Virtual Machine
+          </Label>
+        </Stack>
+      );
+    }
+
+    if (resource.type === "deployment") {
+      return (
+        <Stack direction="row" alignItems="center">
+          <Label
+            variant="ghost"
+            color="info"
+            startIcon={
+              <Iconify icon="lucide:container" sx={{ opacity: 0.65 }} />
+            }
+          >
+            Deployment
+          </Label>
           {resource.private === true && (
             <Tooltip enterTouchDelay={10} title={t("deploy-hidden")}>
               <span style={{ display: "flex", alignItems: "center" }}>
@@ -268,11 +290,11 @@ export function Deploy() {
                 </span>
               </Tooltip>
             )}
-        </Typography>
+        </Stack>
       );
-    } else {
-      return resource.type;
     }
+
+    return resource.type;
   };
 
   const renderResourceStatus = (row) => {
