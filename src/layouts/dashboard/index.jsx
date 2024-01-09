@@ -3,7 +3,7 @@ import { Outlet } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 //
 import Navbar from "./Navbar";
-import { Container } from "@mui/material";
+import { Box, Container, Stack } from "@mui/material";
 
 // ----------------------------------------------------------------------
 
@@ -44,36 +44,99 @@ export default function DashboardLayout() {
       <Navbar />
       <MainStyle>
         <Outlet />
-        {window.location.pathname !== "/onboarding" &&
+        {!window.location.pathname.startsWith("/onboarding") &&
           window.location.pathname !== "/" && (
             <Container
-              sx={{ opacity: 0.5, textAlign: "center", padding: "2rem" }}
+              sx={{ opacity: 0.4, textAlign: "center", padding: "2rem" }}
             >
-              <p>
-                <a
-                  style={{
-                    opacity: 0.75,
-                    color: "inherit",
-                    whiteSpace: "nowrap",
-                    marginBottom: "1rem",
-                  }}
-                  href="https://github.com/kthcloud/landing-frontend/issues/new/choose"
-                >
-                  Report a bug
-                </a>
-                <br />
-                <a
-                  style={{
-                    opacity: 0.75,
-                    color: "inherit",
-                    whiteSpace: "nowrap",
-                  }}
-                  href="https://github.com/kthcloud/landing-frontend"
-                >
-                  kthcloud/landing-frontend
-                </a>{" "}
-                <span style={{ whiteSpace: "nowrap" }}>{name}</span>
-              </p>
+              <Stack
+                direction="row"
+                spacing={3}
+                alignItems="flex-start"
+                flexWrap="wrap"
+                useFlexGap
+              >
+                <Stack spacing={1} alignItems={"flex-start"}>
+                  <p>Project</p>
+                  <p>
+                    <a
+                      style={{
+                        color: "inherit",
+                        whiteSpace: "nowrap",
+                        marginBottom: "1rem",
+                      }}
+                      href="https://github.com/kthcloud/landing-frontend/issues/new/choose"
+                    >
+                      Report a bug
+                    </a>
+                  </p>
+                  <p>
+                    <a
+                      style={{
+                        color: "inherit",
+                        whiteSpace: "nowrap",
+                      }}
+                      href="https://github.com/kthcloud/landing-frontend"
+                    >
+                      kthcloud/landing-frontend
+                    </a>
+                  </p>
+                  <p>
+                    <span style={{ whiteSpace: "nowrap" }}>{name}</span>
+                  </p>
+                </Stack>
+                <Box sx={{ flexGrow: 1 }} />
+                <Stack spacing={1} alignItems={"flex-start"}>
+                  <p>Help</p>
+                  <p>
+                    <a
+                      style={{
+                        color: "inherit",
+                        whiteSpace: "nowrap",
+                      }}
+                      href="https://discord.gg/MuHQd6QEtM"
+                    >
+                      Discord
+                    </a>
+                  </p>
+                  <p>
+                    <a
+                      style={{
+                        color: "inherit",
+                        whiteSpace: "nowrap",
+                      }}
+                      href="https://wiki.cloud.cbh.kth.se"
+                    >
+                      Wiki
+                    </a>
+                  </p>
+                </Stack>
+                <Stack spacing={1} alignItems={"flex-start"}>
+                  <p>Follow kthcloud</p>
+                  <p>
+                    <a
+                      style={{
+                        color: "inherit",
+                        whiteSpace: "nowrap",
+                      }}
+                      href="https://mastodon.social/@kthcloud"
+                    >
+                      Mastodon
+                    </a>
+                  </p>
+                  <p>
+                    <a
+                      style={{
+                        color: "inherit",
+                        whiteSpace: "nowrap",
+                      }}
+                      href="https://mastodon.social/@kthcloud"
+                    >
+                      Bluesky
+                    </a>
+                  </p>
+                </Stack>
+              </Stack>
             </Container>
           )}
       </MainStyle>

@@ -96,7 +96,9 @@ export const Onboarding = () => {
 
     setTimeout(() => {
       // navigate to deploy page anyway
-      navigate("/deploy", { replace: true });
+      // if the page pathname still starts with /onboarding
+      if (window.location.pathname.startsWith("/onboarding"))
+        navigate("/deploy", { replace: true });
     }, 7000);
   };
 
