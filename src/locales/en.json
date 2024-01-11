@@ -428,6 +428,21 @@
         "light-mode": "Light mode",
         "theme": "Theme",
         "report-a-bug": "Report a bug",
-        "follow-kthcloud": "Follow kthcloud"
+        "follow-kthcloud": "Follow kthcloud",
+        "setup-custom-domain": "Setup custom domain",
+        "setup-custom-domain-subheader": "Specify a custom domain to use for your deployment.",
+        "setup-custom-domain-steps": "Point CNAME record|Verify domain ownership|Done",
+        "no-custom-domain": "No custom domain set up yet",
+        "setup-domain": "Setup domain",
+        "edit-domain": "Edit domain",
+        "clear-domain": "Clear domain",
+        "setup-custom-domain-0": "Point a CNAME record to app.cloud.cbh.kth.se and enter your domain below.",
+        "setup-custom-domain-0-warning": "NB! If you are using Cloudflare or some other proxy service, disable the proxy so our DNS lookup resolves correctly. You can reenable the proxy after the verification if completed.",
+        "setup-custom-domain-1": "Verify domain ownership by adding a TXT record with the value below to your domain.",
+        "setup-custom-domain-1-table": "Your DNS records should look something like this",
+        "setup-custom-domain-2": "Done! Your deployment should soon be accessible using your domain. You can check the status on the domain section.",
+        "setup-custom-domain-2-warning": "It may take up to 24 hours for the changes to take effect.",
+        "type": "Type",
+        "content": "Content"
     }
 }
