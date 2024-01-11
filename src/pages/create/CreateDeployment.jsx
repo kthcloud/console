@@ -50,11 +50,10 @@ export default function CreateDeployment({ finished }) {
 
   const { initialized, keycloak } = useKeycloak();
 
-  const { rows, user } = useResource();
+  const { rows } = useResource();
 
   const [selectedZone, setSelectedZone] = useState("");
   const [image, setImage] = useState("");
-  const [domain, setDomain] = useState("");
 
   const [envs, setEnvs] = useState([{ name: "PORT", value: "8080" }]);
   const [newEnvName, setNewEnvName] = useState("");
@@ -116,7 +115,6 @@ export default function CreateDeployment({ finished }) {
         cleaned,
         selectedZone,
         image,
-        domain,
         newEnvs,
         repo,
         newPersistent,
@@ -188,27 +186,6 @@ export default function CreateDeployment({ finished }) {
           />
         </CardContent>
       </Card>
-
-      {user?.role?.permissions.includes("useCustomDomains") && (
-        <Card sx={{ boxShadow: 20 }}>
-          <CardHeader
-            title={t("create-deployment-custom-domain")}
-            subheader={t("create-deployment-custom-domain-subheader")}
-          />
-          <CardContent>
-            <TextField
-              label={t("create-deployment-domain")}
-              variant="outlined"
-              value={domain}
-              placeholder={t("create-deployment-domain-example")}
-              onChange={(e) => {
-                setDomain(e.target.value.trim());
-              }}
-              fullWidth
-            />
-          </CardContent>
-        </Card>
-      )}
 
       {image === "" && (
         <GHSelect
