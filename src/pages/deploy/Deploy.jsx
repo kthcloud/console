@@ -304,7 +304,6 @@ export function Deploy() {
       (row.status === "resourceStopped" && "warning") ||
       (row.status === "resourceBeingCreated" && "info") ||
       (row.status === "resourceBeingDeleted" && "info") ||
-      (row.status === "resourceBeingDeleted" && "info") ||
       (row.status === "resourceStarting" && "info") ||
       (row.status === "resourceStopping" && "info") ||
       (row.status === "resourceRunning" && "success");
@@ -321,6 +320,8 @@ export function Deploy() {
         sx={
           row.status === "resourceStopping" ||
           row.status === "resourceStarting" ||
+          row.status === "resourceBeingCreated" ||
+          row.status === "resourceBeingDeleted" ||
           row.status === "resourceRestarting"
             ? {
                 animation: "pulse 2s cubic-bezier(.4,0,.6,1) infinite",
