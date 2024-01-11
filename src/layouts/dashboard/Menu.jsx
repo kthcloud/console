@@ -166,13 +166,13 @@ export default function Menu() {
             {t("menu-status")}
           </MenuItem>
           <MenuItem
-            href={"https://wiki.cloud.cbh.kth.se/"}
+            href={"https://docs.cloud.cbh.kth.se/"}
             component={Link}
             onClick={handleClose}
             target="_blank"
             rel="me"
           >
-            {t("menu-wiki")}
+            {t("menu-docs")}
           </MenuItem>
           <MenuItem
             href={"https://discord.gg/MuHQd6QEtM"}

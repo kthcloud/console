@@ -37,7 +37,7 @@
         "menu-profile": "Profile",
         "menu-cbhcloud": "cbhcloud",
         "menu-status": "Server status",
-        "menu-wiki": "Wiki",
+        "menu-docs": "Docs",
         "menu-support": "Discord",
         "menu-mastodon": "Mastodon",
         "menu-github": "Contribute on GitHub",
@@ -426,6 +426,8 @@
         "no-teams": "No teams found, create one or join a friend's team!",
         "dark-mode": "Dark mode",
         "light-mode": "Light mode",
-        "theme": "Theme"
+        "theme": "Theme",
+        "report-a-bug": "Report a bug",
+        "follow-kthcloud": "Follow kthcloud"
     }
 }

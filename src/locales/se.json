@@ -331,7 +331,7 @@
         "create-vm-minimum-ram": "Minst RAM",
         "create-deployment-github-repo": "Kodförråd",
         "menu-support": "Discord",
-        "menu-wiki": "Wiki",
+        "menu-docs": "Kunskapsbas",
         "resouce-comparison-image-processing-services": "Bildbehandlingstjänster: t.ex. Pillow, OpenCV",
         "button-change-language": "Change language",
         "page-not-found": "Hoppsan! Sidan hittades inte",
@@ -426,6 +426,8 @@
         "no-teams": "Inga grupper hittades, skapa en eller gå med i en väns grupp!",
         "dark-mode": "Mörkt läge",
         "light-mode": "Ljust läge",
-        "theme": "Tema"
+        "theme": "Tema",
+        "report-a-bug": "Rapportera ett fel",
+        "follow-kthcloud": "Följ kthcloud"
     }
 }

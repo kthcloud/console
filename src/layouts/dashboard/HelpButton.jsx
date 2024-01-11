@@ -5,21 +5,20 @@ import Iconify from "src/components/Iconify";
 const resolveURL = () => {
   const path = window.location.href.replace(window.location.origin, "");
 
-  const base_url = "https://wiki.cloud.cbh.kth.se/index.php/";
-  if (path.startsWith("/deploy")) return base_url + "Main_Page";
+  const base_url = "https://docs.cloud.cbh.kth.se";
   if (
     path.startsWith("/create?type=deployment") ||
     path.startsWith("/edit/deployment/")
   )
-    return base_url + "Usage:Host_a_webapp_with_Deploy";
+    return base_url + "/usage/deployments";
   if (path.startsWith("/create?type=vm") || path.startsWith("/edit/vm/"))
-    return base_url + "Using_Virtual_Machines";
+    return base_url + "/usage/virtualMachines";
 
-  if (path.startsWith("/profile")) return base_url + "Profile";
-  if (path.startsWith("/teams")) return base_url + "Teams";
-  if (path.startsWith("/inbox")) return base_url + "Inbox";
+  if (path.startsWith("/profile")) return base_url + "/usage/profile";
+  if (path.startsWith("/teams")) return base_url + "/usage/teams";
+  if (path.startsWith("/inbox")) return base_url + "/usage/inbox";
 
-  return "https://wiki.cloud.cbh.kth.se";
+  return base_url;
 };
 
 const HelpButton = () => {

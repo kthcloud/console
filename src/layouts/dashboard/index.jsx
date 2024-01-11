@@ -4,6 +4,7 @@ import { styled } from "@mui/material/styles";
 //
 import Navbar from "./Navbar";
 import { Box, Container, Stack } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 // ----------------------------------------------------------------------
 
@@ -39,6 +40,8 @@ const name =
   releaseBranch + "-" + releaseDate + "-" + releaseCommit.slice(0, 7);
 
 export default function DashboardLayout() {
+  const { t } = useTranslation();
+
   return (
     <RootStyle>
       <Navbar />
@@ -68,7 +71,7 @@ export default function DashboardLayout() {
                       target="_blank"
                       rel="noreferrer"
                     >
-                      Report a bug
+                      {t("report-a-bug")}
                     </a>
                   </p>
                   <p>
@@ -90,7 +93,7 @@ export default function DashboardLayout() {
                 </Stack>
                 <Box sx={{ flexGrow: 1 }} />
                 <Stack spacing={1} alignItems={"flex-start"}>
-                  <p>Help</p>
+                  <p>{t("button-help")}</p>
                   <p>
                     <a
                       style={{
@@ -110,16 +113,16 @@ export default function DashboardLayout() {
                         color: "inherit",
                         whiteSpace: "nowrap",
                       }}
-                      href="https://wiki.cloud.cbh.kth.se"
+                      href="https://docs.cloud.cbh.kth.se"
                       target="_blank"
                       rel="noreferrer"
                     >
-                      Wiki
+                      {t("menu-docs")}
                     </a>
                   </p>
                 </Stack>
                 <Stack spacing={1} alignItems={"flex-start"}>
-                  <p>Follow kthcloud</p>
+                  <p>{t("follow-kthcloud")}</p>
                   <p>
                     <a
                       style={{
