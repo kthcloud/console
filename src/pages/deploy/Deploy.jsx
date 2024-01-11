@@ -450,7 +450,7 @@ export function Deploy() {
               />
 
               <Scrollbar>
-                <TableContainer sx={{ minWidth: 600, overflowX:"visible" }}>
+                <TableContainer sx={{ minWidth: 600, overflowX: "visible" }}>
                   <Table>
                     <ListHead
                       order={order}
