@@ -227,10 +227,8 @@ export function Deploy() {
 
   const renderResourceType = (resource) => {
     if (resource.type === "vm" && resource.gpu) {
-      const tooltip = "NVIDIA " + resource.gpu.name;
-
       return (
-        <Stack direction="row" alignItems="center">
+        <Stack direction="row" alignItems="center" spacing={1}>
           <Label
             variant="ghost"
             startIcon={
@@ -239,11 +237,13 @@ export function Deploy() {
           >
             VM
           </Label>
-          <Tooltip enterTouchDelay={10} title={tooltip}>
-            <span style={{ display: "flex", alignItems: "center" }}>
-              <Iconify icon="mdi:gpu" width={20} height={20} ml={1} />
-            </span>
-          </Tooltip>
+
+          <Label
+            variant="ghost"
+            startIcon={<Iconify icon="mdi:gpu" sx={{ opacity: 0.65 }} />}
+          >
+            {"NVIDIA " + resource.gpu.name}
+          </Label>
         </Stack>
       );
     }
@@ -257,7 +257,7 @@ export function Deploy() {
               <Iconify icon="carbon:virtual-machine" sx={{ opacity: 0.65 }} />
             }
           >
-            Virtual Machine
+            VM
           </Label>
         </Stack>
       );
@@ -265,7 +265,7 @@ export function Deploy() {
 
     if (resource.type === "deployment") {
       return (
-        <Stack direction="row" alignItems="center">
+        <Stack direction="row" alignItems="center" spacing={1}>
           <Label
             variant="ghost"
             color="info"
@@ -276,11 +276,12 @@ export function Deploy() {
             Deployment
           </Label>
           {resource.private === true && (
-            <Tooltip enterTouchDelay={10} title={t("deploy-hidden")}>
-              <span style={{ display: "flex", alignItems: "center" }}>
-                <Iconify icon="mdi:eye-off" width={20} height={20} ml={1} />
-              </span>
-            </Tooltip>
+            <Label
+              variant="ghost"
+              startIcon={<Iconify icon="mdi:eye-off" sx={{ opacity: 0.65 }} />}
+            >
+              {t("admin-visibility-private")}
+            </Label>
           )}
           {resource.integrations &&
             resource.integrations.includes("github") && (
