@@ -145,9 +145,7 @@ const ResourceComparisonTable = () => {
             <Typography variant="h3" sx={{ p: 2 }}>
               {t("example-use-cases")}
             </Typography>
-            <IconButton
-              onClick={() => setDialogOpen(false)}
-            >
+            <IconButton onClick={() => setDialogOpen(false)}>
               <Iconify icon="mdi:close" />
             </IconButton>
           </Stack>
