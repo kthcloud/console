@@ -213,10 +213,11 @@ export default function CreateVm({ finished }) {
                 placeholder={t("admin-name")}
                 callToAction={t("create-vm-warning")}
                 type={t("admin-name")}
-                variant="standard"
+                variant="outlined"
                 cleaned={cleaned}
                 setCleaned={setCleaned}
                 initialValue={initialName}
+                autofocus={true}
               />
 
               {user && (
@@ -280,6 +281,7 @@ export default function CreateVm({ finished }) {
                     }
                     inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
                     error={cpuError ? true : false}
+                    variant="outlined"
                   />
 
                   <TextField
@@ -300,6 +302,7 @@ export default function CreateVm({ finished }) {
                       ),
                     }}
                     error={ramError ? true : false}
+                    variant="outlined"
                   />
 
                   <TextField
@@ -322,6 +325,7 @@ export default function CreateVm({ finished }) {
                       ),
                     }}
                     error={diskError ? true : false}
+                    variant="outlined"
                   />
                 </Stack>
               </CardContent>

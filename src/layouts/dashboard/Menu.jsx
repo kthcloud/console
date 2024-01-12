@@ -1,6 +1,4 @@
 import { useContext, useRef, useState } from "react";
-// keycloak
-import { useKeycloak } from "@react-keycloak/web";
 // @mui
 import {
   Box,
@@ -28,7 +26,7 @@ export default function Menu() {
 
   const [open, setOpen] = useState(null);
 
-  const { unread } = useResource();
+  const { unread, user } = useResource();
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
@@ -38,19 +36,11 @@ export default function Menu() {
     setOpen(null);
   };
 
-  const { keycloak, initialized } = useKeycloak();
-
   const shouldRenderAdmin = () => {
-    if (!initialized) return false;
-    if (!keycloak) return false;
-    if (!keycloak.authenticated) return false;
+    if (!user) return false;
+    if (!user.admin) return false;
 
-    keycloak.loadUserInfo();
-
-    if (!keycloak.userInfo) return false;
-
-    if (!Object.hasOwn(keycloak.userInfo, "groups")) return false;
-    return keycloak.userInfo.groups.includes("admin");
+    return true;
   };
 
   return (
@@ -78,81 +68,77 @@ export default function Menu() {
           overflowY: "auto",
         }}
       >
-        {initialized && (
+        {user && (
           <>
-            {keycloak.authenticated && (
-              <>
-                <Box sx={{ mt: 1.5, px: 2.5 }}>
-                  <Typography
-                    variant="body2"
-                    sx={{ color: "text.secondary" }}
-                    noWrap
-                  >
-                    {t("menu-manage-resources")}
-                  </Typography>
-                </Box>
+            <Box sx={{ mt: 1.5, px: 2.5 }}>
+              <Typography
+                variant="body2"
+                sx={{ color: "text.secondary" }}
+                noWrap
+              >
+                {t("menu-manage-resources")}
+              </Typography>
+            </Box>
 
-                <Stack sx={{ p: 1 }}>
-                  <MenuItem
-                    to={"/deploy"}
-                    component={RouterLink}
-                    onClick={handleClose}
-                  >
-                    {t("menu-dashboard")}
-                  </MenuItem>
-                  <MenuItem
-                    to={"/create"}
-                    component={RouterLink}
-                    onClick={handleClose}
-                  >
-                    {t("menu-create-new")}
-                  </MenuItem>
-                </Stack>
+            <Stack sx={{ p: 1 }}>
+              <MenuItem
+                to={"/deploy"}
+                component={RouterLink}
+                onClick={handleClose}
+              >
+                {t("menu-dashboard")}
+              </MenuItem>
+              <MenuItem
+                to={"/create"}
+                component={RouterLink}
+                onClick={handleClose}
+              >
+                {t("menu-create-new")}
+              </MenuItem>
+            </Stack>
 
-                <Divider sx={{ borderStyle: "dashed" }} />
+            <Divider sx={{ borderStyle: "dashed" }} />
 
-                <Box sx={{ mt: 1.5, px: 2.5 }}>
-                  <Typography
-                    variant="body2"
-                    sx={{ color: "text.secondary" }}
-                    noWrap
-                  >
-                    {t("menu-manage-account")}
-                  </Typography>
-                </Box>
-                <Stack sx={{ p: 1 }}>
-                  <MenuItem
-                    to={"/profile"}
-                    component={RouterLink}
-                    onClick={handleClose}
-                  >
-                    {t("menu-profile")}
-                  </MenuItem>
-                  <MenuItem
-                    to={"/inbox"}
-                    component={RouterLink}
-                    onClick={handleClose}
-                  >
-                    {t("inbox") + " " + (unread > 0 ? "(" + unread + ")" : "")}
-                  </MenuItem>
-                  <MenuItem
-                    to={"/teams"}
-                    component={RouterLink}
-                    onClick={handleClose}
-                  >
-                    {t("teams")}
-                  </MenuItem>
-                  <MenuItem
-                    to={"/tiers"}
-                    component={RouterLink}
-                    onClick={handleClose}
-                  >
-                    {t("menu-tiers")}
-                  </MenuItem>
-                </Stack>
-                <Divider sx={{ borderStyle: "dashed" }} />
-              </>
-            )}
+            <Box sx={{ mt: 1.5, px: 2.5 }}>
+              <Typography
+                variant="body2"
+                sx={{ color: "text.secondary" }}
+                noWrap
+              >
+                {t("menu-manage-account")}
+              </Typography>
+            </Box>
+            <Stack sx={{ p: 1 }}>
+              <MenuItem
+                to={"/profile"}
+                component={RouterLink}
+                onClick={handleClose}
+              >
+                {t("menu-profile")}
+              </MenuItem>
+              <MenuItem
+                to={"/inbox"}
+                component={RouterLink}
+                onClick={handleClose}
+              >
+                {t("inbox") + " " + (unread > 0 ? "(" + unread + ")" : "")}
+              </MenuItem>
+              <MenuItem
+                to={"/teams"}
+                component={RouterLink}
+                onClick={handleClose}
+              >
+                {t("teams")}
+              </MenuItem>
+              <MenuItem
+                to={"/tiers"}
+                component={RouterLink}
+                onClick={handleClose}
+              >
+                {t("menu-tiers")}
+              </MenuItem>
+            </Stack>
+            <Divider sx={{ borderStyle: "dashed" }} />
           </>
         )}
 
@@ -166,13 +152,13 @@ export default function Menu() {
             {t("menu-status")}
           </MenuItem>
           <MenuItem
-            href={"https://wiki.cloud.cbh.kth.se/"}
+            href={"https://docs.cloud.cbh.kth.se/"}
             component={Link}
             onClick={handleClose}
             target="_blank"
             rel="me"
           >
-            {t("menu-wiki")}
+            {t("menu-docs")}
           </MenuItem>
           <MenuItem
             href={"https://discord.gg/MuHQd6QEtM"}

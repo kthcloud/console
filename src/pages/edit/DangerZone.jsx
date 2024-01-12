@@ -211,6 +211,7 @@ const DangerZone = ({ resource }) => {
                       type: "search",
                     }}
                     sx={{ minWidth: 300 }}
+                    variant="outlined"
                   />
                 )}
               />
@@ -251,6 +252,7 @@ const DangerZone = ({ resource }) => {
                       type: "search",
                     }}
                     sx={{ minWidth: 300 }}
+                    variant="outlined"
                   />
                 )}
               />

@@ -41,7 +41,7 @@ const Gravatar = ({ user, fallback, ...props }) => {
     <Avatar sx={{ width: 20, height: 20 }} src={userAvatar} {...props}>
       {!userAvatar && fallback
         ? fallback
-        : (user.email || user.username)[0].toUpperCase()}
+        : (user.email || user.username)?.[0].toUpperCase()}
     </Avatar>
   );
 };

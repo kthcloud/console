@@ -151,7 +151,7 @@ export default function EnvManager({ deployment }) {
                   <TableCell component="th" scope="row">
                     <TextField
                       label={t("admin-name")}
-                      variant="standard"
+                      variant="outlined"
                       value={newEnvName}
                       onChange={(e) => {
                         setNewEnvName(e.target.value);
@@ -161,7 +161,7 @@ export default function EnvManager({ deployment }) {
                   <TableCell>
                     <TextField
                       label={t("create-deployment-env-value")}
-                      variant="standard"
+                      variant="outlined"
                       value={newEnvValue}
                       onChange={(e) => {
                         setNewEnvValue(e.target.value);

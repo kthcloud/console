@@ -13,8 +13,8 @@ export const getDeployment = async (token, id) => {
 };
 
 export const getDeployments = async (token, all = false) => {
-  const allQuery = all ? "&all=true" : "";
-  const url = `${process.env.REACT_APP_DEPLOY_API_URL}/deployments?shared=true${allQuery}`;
+  const allQuery = all ? "?all=true" : "";
+  const url = `${process.env.REACT_APP_DEPLOY_API_URL}/deployments${allQuery}`;
   const res = await fetch(url, {
     method: "GET",
     headers: {
@@ -81,7 +81,6 @@ export const createDeployment = async (
   name,
   zone,
   image,
-  domain,
   envs,
   repo,
   volumes,
@@ -94,7 +93,6 @@ export const createDeployment = async (
 
   if (zone) body = { ...body, zone };
   if (image) body = { ...body, image };
-  if (domain) body = { ...body, customDomain: domain };
   if (envs) body = { ...body, envs };
   if (volumes) body = { ...body, volumes };
 

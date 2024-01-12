@@ -160,6 +160,16 @@ export function Edit() {
                           sx={{ opacity: 0.75 }}
                         />
                       }
+                      sx={
+                        resource.status === "resourceStopping" ||
+                        resource.status === "resourceStarting" ||
+                        resource.status === "resourceRestarting"
+                          ? {
+                              animation:
+                                "pulse 2s cubic-bezier(.4,0,.6,1) infinite",
+                            }
+                          : null
+                      }
                     />
                   )}
                   {resource.pingResult && (
@@ -189,7 +199,7 @@ export function Edit() {
                       icon={<Iconify icon="mdi:earth" sx={{ opacity: 0.75 }} />}
                     />
                   )}
-                  {resource.shared && (
+                  {resource?.teams?.length > 0 && (
                     <Chip
                       label={t("shared")}
                       icon={

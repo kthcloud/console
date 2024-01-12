@@ -8,6 +8,7 @@ const {
   DialogContent,
   DialogContentText,
   DialogActions,
+  Backdrop,
 } = require("@mui/material");
 
 const ConfirmButton = ({ action, actionText, callback, props }) => {
@@ -19,7 +20,19 @@ const ConfirmButton = ({ action, actionText, callback, props }) => {
   };
   return (
     <>
-      <Dialog open={open} onClose={() => setOpen(false)}>
+      <Dialog
+        open={open}
+        onClose={() => setOpen(false)}
+        slots={{ backdrop: Backdrop }}
+        slotProps={{
+          backdrop: {
+            sx: {
+              background: "rgba(0, 0, 0, 0.4)",
+              backdropFilter: "blur(3px)",
+            },
+          },
+        }}
+      >
         <DialogTitle>Confirm {action}</DialogTitle>
         <DialogContent>
           <DialogContentText>

@@ -324,7 +324,7 @@ export function Profile() {
                           <TableCell component="th" scope="row">
                             <TextField
                               label={t("admin-name")}
-                              variant="standard"
+                              variant="outlined"
                               value={newKeyName}
                               onChange={(e) => {
                                 setNewKeyName(e.target.value);
@@ -341,7 +341,7 @@ export function Profile() {
                             >
                               <TextField
                                 label={t("key")}
-                                variant="standard"
+                                variant="outlined"
                                 value={newKey}
                                 onChange={(e) => {
                                   setNewKey(e.target.value);

@@ -25,12 +25,12 @@ import LoadingPage from "../../components/LoadingPage";
 import JobList from "../../components/JobList";
 
 // api
-import ResourceComparisonTable from "./ResourceComparisonTable";
 import CreateDeployment from "./CreateDeployment";
 import CreateVm from "./CreateVm";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import ResourceTypeChat from "./ResourceTypeChat";
 import { useTranslation } from "react-i18next";
+import Iconify from "src/components/Iconify";
 
 export const Create = () => {
   const { initialized } = useKeycloak();
@@ -79,26 +79,51 @@ export const Create = () => {
               <Card sx={{ boxShadow: 20 }}>
                 <CardHeader title={t("resource-type")} />
                 <CardContent>
-                  <Stack spacing={3}>
+                  <Stack spacing={3} direction="column" useFlexGap>
                     <ResourceTypeChat />
 
-                    <Stack spacing={3} direction="row">
-                      <ToggleButtonGroup
-                        color="primary"
-                        value={alignment}
-                        exclusive
-                        onChange={(e) => setAlignment(e.target.value)}
-                        aria-label="resource-type"
-                      >
-                        <ToggleButton value="deployment">
-                          {t("resource-kubernetes-deployment")}
-                        </ToggleButton>
-                        <ToggleButton value="vm">
-                          {t("resource-vm")}
-                        </ToggleButton>
-                      </ToggleButtonGroup>
-                      <ResourceComparisonTable />
-                    </Stack>
+                    <ToggleButtonGroup
+                      color="primary"
+                      value={alignment}
+                      exclusive
+                      onChange={(e) => setAlignment(e.target.value)}
+                      aria-label="resource-type"
+                    >
+                      <ToggleButton value="deployment">
+                        <Stack
+                          direction="row"
+                          spacing={1}
+                          alignItems="center"
+                          onClick={() => {
+                            setTimeout(() => {
+                              setAlignment("deployment");
+                            }, 10);
+                          }}
+                        >
+                          <Iconify icon="lucide:container" />
+                          <Typography variant="body2" fontWeight="bold">
+                            {t("resource-kubernetes-deployment")}
+                          </Typography>
+                        </Stack>
+                      </ToggleButton>
+                      <ToggleButton value="vm">
+                        <Stack
+                          direction="row"
+                          spacing={1}
+                          alignItems="center"
+                          onClick={() => {
+                            setTimeout(() => {
+                              setAlignment("vm");
+                            }, 10);
+                          }}
+                        >
+                          <Iconify icon="carbon:virtual-machine" />
+                          <Typography variant="body2" fontWeight="bold">
+                            {t("resource-vm")}
+                          </Typography>
+                        </Stack>
+                      </ToggleButton>
+                    </ToggleButtonGroup>
                   </Stack>
                 </CardContent>
               </Card>

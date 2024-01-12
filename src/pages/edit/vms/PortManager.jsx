@@ -46,6 +46,7 @@ export default function PortManager({ vm }) {
   const [loading, setLoading] = useState(false);
   const [publicIP, setPublicIP] = useState("");
   const [deleting, setDeleting] = useState([]);
+  const [publicDomain, setPublicDomain] = useState("");
 
   const isSamePort = (p1, p2) => {
     if (p1.internal !== p2.internal) return false;
@@ -66,12 +67,17 @@ export default function PortManager({ vm }) {
 
   useEffect(() => {
     loadPublicIP();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const loadPublicIP = async () => {
-    const res = await fetch(
-      "https://dns.google/resolve?name=vm.cloud.cbh.kth.se&type=A"
-    );
+    if (!vm?.connectionString) return;
+
+    const domain = vm.connectionString.split("@")[1].split(" ")[0];
+    setPublicDomain(domain);
+
+    const res = await fetch(`https://dns.google/resolve?name=${domain}&type=A`);
     const json = await res.json();
     if (json.Answer) {
       setPublicIP(json.Answer[0].data);
@@ -141,7 +147,7 @@ export default function PortManager({ vm }) {
             {t("port-forwarding-subheader-2")}
             <br />
             {t("port-forwarding-subheader-3")}
-            <CopyToClipboard text={"vm.cloud.cbh.kth.se"}>
+            <CopyToClipboard text={publicDomain}>
               <Tooltip enterTouchDelay={10} title={t("copy-to-clipboard")}>
                 <b
                   style={{
@@ -150,7 +156,7 @@ export default function PortManager({ vm }) {
                     color: theme.palette.grey[700],
                   }}
                 >
-                  vm.cloud.cbh.kth.se
+                  {publicDomain}
                 </b>
               </Tooltip>
             </CopyToClipboard>
@@ -228,41 +234,40 @@ export default function PortManager({ vm }) {
                     )}
                   </TableCell>
                   <TableCell align="right">
-                    {port.externalPort && (
-                      <Stack
-                        direction="row"
-                        spacing={1}
-                        useFlexGap
-                        alignItems={"center"}
-                        justifyContent={"flex-end"}
+                    <Stack
+                      direction="row"
+                      spacing={1}
+                      useFlexGap
+                      alignItems={"center"}
+                      justifyContent={"flex-end"}
+                    >
+                      <IconButton
+                        color="primary"
+                        aria-label="edit port"
+                        component="label"
+                        onClick={() => {
+                          setNewPort(port.port);
+                          setNewPortName(port.name);
+                          setNewPortProtocol(port.protocol);
+                          setPorts(
+                            ports.filter((item) => !isSamePort(item, port))
+                          );
+                        }}
+                        disabled={loading}
                       >
-                        <IconButton
-                          color="primary"
-                          aria-label="edit port"
-                          component="label"
-                          onClick={() => {
-                            setNewPort(port.port);
-                            setNewPortName(port.name);
-                            setNewPortProtocol(port.protocol);
-                            setPorts(
-                              ports.filter((item) => !isSamePort(item, port))
-                            );
-                          }}
-                          disabled={loading}
-                        >
-                          <Iconify icon="mdi:pencil" />
-                        </IconButton>
-                        <IconButton
-                          color="error"
-                          aria-label="delete port mapping"
-                          component="label"
-                          disabled={loading}
-                          onClick={() => deletePort(port)}
-                        >
-                          <Iconify icon="mdi:delete" />
-                        </IconButton>
-                      </Stack>
-                    )}
+                        <Iconify icon="mdi:pencil" />
+                      </IconButton>
+
+                      <IconButton
+                        color="error"
+                        aria-label="delete port mapping"
+                        component="label"
+                        disabled={loading}
+                        onClick={() => deletePort(port)}
+                      >
+                        <Iconify icon="mdi:delete" />
+                      </IconButton>
+                    </Stack>
                   </TableCell>
                 </TableRow>
               ))}
@@ -275,7 +280,7 @@ export default function PortManager({ vm }) {
                 <TableCell component="th" scope="row">
                   <TextField
                     label={t("admin-name")}
-                    variant="standard"
+                    variant="outlined"
                     value={newPortName}
                     onChange={(e) => {
                       setNewPortName(e.target.value);
@@ -301,7 +306,7 @@ export default function PortManager({ vm }) {
                 <TableCell>
                   <TextField
                     label={t("internal-port")}
-                    variant="standard"
+                    variant="outlined"
                     value={newPort}
                     onChange={(e) => {
                       setNewPort(e.target.value);

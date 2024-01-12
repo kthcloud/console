@@ -227,38 +227,61 @@ export function Deploy() {
 
   const renderResourceType = (resource) => {
     if (resource.type === "vm" && resource.gpu) {
-      const tooltip = "NVIDIA " + resource.gpu.name;
+      return (
+        <Stack direction="row" alignItems="center" spacing={1}>
+          <Label
+            variant="ghost"
+            startIcon={
+              <Iconify icon="carbon:virtual-machine" sx={{ opacity: 0.65 }} />
+            }
+          >
+            VM
+          </Label>
 
-      return (
-        <Typography
-          variant="body2"
-          color="text.primary"
-          display="flex"
-          alignItems="center"
-        >
-          {resource.type}
-          <Tooltip enterTouchDelay={10} title={tooltip}>
-            <span style={{ display: "flex", alignItems: "center" }}>
-              <Iconify icon="mdi:gpu" width={20} height={20} ml={1} />
-            </span>
-          </Tooltip>
-        </Typography>
+          <Label
+            variant="ghost"
+            startIcon={<Iconify icon="mdi:gpu" sx={{ opacity: 0.65 }} />}
+          >
+            {"NVIDIA " + resource.gpu.name}
+          </Label>
+        </Stack>
       );
-    } else if (resource.type === "deployment") {
+    }
+
+    if (resource.type === "vm") {
       return (
-        <Typography
-          variant="body2"
-          color="text.primary"
-          display="flex"
-          alignItems="center"
-        >
-          {resource.type}
+        <Stack direction="row" alignItems="center">
+          <Label
+            variant="ghost"
+            startIcon={
+              <Iconify icon="carbon:virtual-machine" sx={{ opacity: 0.65 }} />
+            }
+          >
+            VM
+          </Label>
+        </Stack>
+      );
+    }
+
+    if (resource.type === "deployment") {
+      return (
+        <Stack direction="row" alignItems="center" spacing={1}>
+          <Label
+            variant="ghost"
+            color="info"
+            startIcon={
+              <Iconify icon="lucide:container" sx={{ opacity: 0.65 }} />
+            }
+          >
+            Deployment
+          </Label>
           {resource.private === true && (
-            <Tooltip enterTouchDelay={10} title={t("deploy-hidden")}>
-              <span style={{ display: "flex", alignItems: "center" }}>
-                <Iconify icon="mdi:eye-off" width={20} height={20} ml={1} />
-              </span>
-            </Tooltip>
+            <Label
+              variant="ghost"
+              startIcon={<Iconify icon="mdi:eye-off" sx={{ opacity: 0.65 }} />}
+            >
+              {t("admin-visibility-private")}
+            </Label>
           )}
           {resource.integrations &&
             resource.integrations.includes("github") && (
@@ -268,11 +291,11 @@ export function Deploy() {
                 </span>
               </Tooltip>
             )}
-        </Typography>
+        </Stack>
       );
-    } else {
-      return resource.type;
     }
+
+    return resource.type;
   };
 
   const renderResourceStatus = (row) => {
@@ -281,7 +304,6 @@ export function Deploy() {
       (row.status === "resourceUnknown" && "error") ||
       (row.status === "resourceStopped" && "warning") ||
       (row.status === "resourceBeingCreated" && "info") ||
-      (row.status === "resourceBeingDeleted" && "info") ||
       (row.status === "resourceBeingDeleted" && "info") ||
       (row.status === "resourceStarting" && "info") ||
       (row.status === "resourceStopping" && "info") ||
@@ -296,6 +318,17 @@ export function Deploy() {
         variant="ghost"
         color={color}
         startIcon={<Iconify icon="tabler:heartbeat" sx={{ opacity: 0.65 }} />}
+        sx={
+          row.status === "resourceStopping" ||
+          row.status === "resourceStarting" ||
+          row.status === "resourceBeingCreated" ||
+          row.status === "resourceBeingDeleted" ||
+          row.status === "resourceRestarting"
+            ? {
+                animation: "pulse 2s cubic-bezier(.4,0,.6,1) infinite",
+              }
+            : null
+        }
       >
         {sentenceCase(statusMessage)}
       </Label>
@@ -352,7 +385,7 @@ export function Deploy() {
   };
 
   const renderShared = (row) => {
-    if (!row.shared) return <></>;
+    if (row?.teams?.length === 0) return <></>;
 
     return (
       <Label
@@ -383,21 +416,16 @@ export function Deploy() {
         <Page title={t("menu-dashboard")}>
           <Container>
             <Stack
-              sx={{
-                flexDirection: { xs: "column", sm: "row" },
-                alignItems: { xs: "flex-begin", sm: "center" },
-              }}
-              alignItems="center"
-              justifyContent="space-between"
-              mb={2}
               direction="row"
+              alignItems="center"
+              flexWrap="wrap"
+              justifyContent="space-between"
+              useFlexGap
+              mb={3}
             >
-              <Typography variant="h4" gutterBottom>
-                {t("menu-dashboard")}
-              </Typography>
+              <Typography variant="h4">{t("menu-dashboard")}</Typography>
 
               <Button
-                variant="contained"
                 component={RouterLink}
                 to="/create"
                 startIcon={<Iconify icon={"mdi:plus"} />}
@@ -419,7 +447,7 @@ export function Deploy() {
               />
 
               <Scrollbar>
-                <TableContainer sx={{ minWidth: 600 }}>
+                <TableContainer sx={{ minWidth: 600, overflowX: "visible" }}>
                   <Table>
                     <ListHead
                       order={order}
@@ -453,7 +481,10 @@ export function Deploy() {
                               <Link
                                 component={RouterLink}
                                 to={`/edit/${row.type}/${row.id}`}
-                                sx={{ textDecoration: "none" }}
+                                sx={{
+                                  textDecoration: "none",
+                                  whiteSpace: "nowrap",
+                                }}
                               >
                                 {row.name}
                               </Link>

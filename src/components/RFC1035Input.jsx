@@ -7,10 +7,11 @@ export default function RFC1035Input({
   type = "Fields",
   fullWidth = true,
   autofocus = false,
-  variant = "standard",
+  variant = "outlined",
   cleaned,
   setCleaned,
   initialValue = "",
+  maxWidth = "100%",
 }) {
   const [value, setValue] = useState("");
 
@@ -37,7 +38,7 @@ export default function RFC1035Input({
   };
 
   return (
-    <Stack spacing={3} useFlexGap={true}>
+    <Stack spacing={3} useFlexGap={true} sx={{ maxWidth: maxWidth }}>
       <TextField
         autoFocus={autofocus}
         fullWidth={fullWidth}
@@ -48,7 +49,7 @@ export default function RFC1035Input({
         value={cleaned && value}
         helperText={
           <Typography variant="caption">
-            {type} must follow{" "}
+            {type + " must adhere to "}
             <Link
               href="https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#rfc-1035-label-names"
               target="_blank"
@@ -56,7 +57,8 @@ export default function RFC1035Input({
             >
               RFC 1035
             </Link>{" "}
-            and must not include dots.
+            : only lowercase alphanumeric characters or '-', max 63 characters,
+            start with a letter, and end with an alphanumeric character.
           </Typography>
         }
         onChange={(e) => {

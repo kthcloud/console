@@ -89,24 +89,6 @@ export const ResourceContextProvider = ({ children }) => {
     }
   };
 
-  const getTeamResourceIds = () => {
-    if (!teams) return [];
-
-    let resourceIds = [];
-
-    teams.forEach((t) => {
-      if (t.resources) {
-        t.resources.forEach((r) => {
-          if (!resourceIds.includes(r.id)) {
-            resourceIds.push(r.id);
-          }
-        });
-      }
-    });
-
-    return resourceIds;
-  };
-
   const queueJob = (job) => {
     console.log("Queuing job", JSON.stringify(job));
     if (!job) return;
@@ -123,18 +105,7 @@ export const ResourceContextProvider = ({ children }) => {
     });
 
     setRows(array);
-
-    let teamResourceIds = getTeamResourceIds();
-
-    let userOwned = array.filter(
-      (row) => row.ownerId === user.id || teamResourceIds.includes(row.id)
-    );
-
-    userOwned.forEach((row) => {
-      row.shared = teamResourceIds.includes(row.id);
-    });
-
-    setUserRows(userOwned);
+    setUserRows(array);
   };
 
   const loadZones = async () => {
@@ -205,7 +176,6 @@ export const ResourceContextProvider = ({ children }) => {
       );
 
       setConnectionError(true);
-      console.log(loadInterval);
       if (new Date().getTime() > nextLoad)
         setLoadInterval(Math.min(loadInterval * 2, 60000));
     }

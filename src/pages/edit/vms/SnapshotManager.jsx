@@ -229,10 +229,10 @@ export default function Specs({ vm }) {
 
           <Stack
             spacing={2}
-            direction={"row"}
+            direction={"column"}
             flexWrap={"wrap"}
             useFlexGap={true}
-            alignItems={"center"}
+            alignItems={"flex-start"}
           >
             <RFC1035Input
               label={t("admin-name")}
@@ -241,6 +241,7 @@ export default function Specs({ vm }) {
               setCleaned={setSnapshotName}
               initialValue={snapshotName}
               callToAction={t("your-snapshot-will-be-created-as")}
+              maxWidth={500}
             />
 
             <Button
