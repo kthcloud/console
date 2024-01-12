@@ -158,7 +158,7 @@ export default function CreateDeployment({ finished }) {
             cleaned={cleaned}
             setCleaned={setCleaned}
             initialValue={initialName}
-            autofocus={true}
+            autofocus={!window.location.pathname.includes("onboarding")}
           />
         </CardContent>
       </Card>
