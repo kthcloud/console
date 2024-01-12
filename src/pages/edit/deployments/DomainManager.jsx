@@ -111,6 +111,14 @@ export const DomainManager = ({ deployment }) => {
 
   const handleNext = async () => {
     if (activeStep === 0) {
+      if (!domain) return;
+      if (
+        deployment.customDomainUrl &&
+        deployment.customDomainUrl.split("//")[1] === domain
+      ) {
+        setActiveStep((step) => step + 1);
+        return;
+      }
       if (!(await handleSave(domain))) return;
     }
     if (activeStep === steps.length - 1) {
