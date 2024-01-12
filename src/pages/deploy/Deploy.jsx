@@ -481,7 +481,7 @@ export function Deploy() {
                               <Link
                                 component={RouterLink}
                                 to={`/edit/${row.type}/${row.id}`}
-                                sx={{ textDecoration: "none" }}
+                                sx={{ textDecoration: "none", whiteSpace: "nowrap" }}
                               >
                                 {row.name}
                               </Link>
