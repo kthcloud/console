@@ -9,6 +9,7 @@ import {
   Chip,
   Divider,
   Drawer,
+  IconButton,
   Link,
   Skeleton,
   Stack,
@@ -148,17 +149,31 @@ export const DomainManager = ({ deployment }) => {
           },
         }}
       >
-        <Box sx={{ p: 2 }}>
-          <Typography variant="h3" sx={{ p: 2 }}>
-            {t("setup-custom-domain")}
-          </Typography>
+        <Box sx={{ p: 2, maxWidth: 700 }}>
+          <Stack
+            direction="row"
+            alignItems="center"
+            justifyContent="space-between"
+          >
+            <Typography variant="h3" sx={{ p: 2 }}>
+              {t("setup-custom-domain")}
+            </Typography>
+            <IconButton onClick={() => setCreateDialogOpen(false)}>
+              <Iconify icon="mdi:close" />
+            </IconButton>
+          </Stack>
           <Stack
             direction="column"
             alignItems={"flex-start"}
             useFlexGap
             spacing={5}
+            sx={{ minWidth: "100%" }}
           >
-            <Stepper activeStep={activeStep}>
+            <Stepper
+              activeStep={activeStep}
+              alternativeLabel={md}
+              sx={{ minWidth: "100%" }}
+            >
               {steps.map((label) => (
                 <Step key={label}>
                   <StepLabel>{label}</StepLabel>
@@ -201,10 +216,9 @@ export const DomainManager = ({ deployment }) => {
                                 handleSave(e.target.value);
                               }
                             }}
-                            fullWidth
-                            sx={{ maxWidth: "sm" }}
+                            sx={{ minWidth: 150 }}
                             disabled={loading}
-                          />{" "}
+                          />
                         </TableCell>
                         <TableCell>app.cloud.cbh.kth.se</TableCell>
                       </TableRow>
@@ -315,7 +329,13 @@ export const DomainManager = ({ deployment }) => {
         />
         <CardContent>
           <Stack direction="column" spacing={3}>
-            <Stack direction="row" spacing={3} alignItems="center" useFlexGap>
+            <Stack
+              direction="row"
+              spacing={3}
+              alignItems="center"
+              flexWrap="wrap"
+              useFlexGap
+            >
               {deployment.customDomainStatus && (
                 <Chip
                   label={

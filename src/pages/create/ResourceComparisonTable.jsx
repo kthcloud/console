@@ -4,6 +4,7 @@ import {
   Button,
   Divider,
   Drawer,
+  IconButton,
   Paper,
   Stack,
   Table,
@@ -136,9 +137,21 @@ const ResourceComparisonTable = () => {
         }}
       >
         <Box sx={{ p: 2 }}>
-          <Typography variant="h3" sx={{ p: 2 }}>
-            {t("example-use-cases")}
-          </Typography>
+          <Stack
+            direction="row"
+            alignItems="center"
+            justifyContent="space-between"
+          >
+            <Typography variant="h3" sx={{ p: 2 }}>
+              {t("example-use-cases")}
+            </Typography>
+            <IconButton
+              onClick={() => setDialogOpen(false)}
+            >
+              <Iconify icon="mdi:close" />
+            </IconButton>
+          </Stack>
+
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>

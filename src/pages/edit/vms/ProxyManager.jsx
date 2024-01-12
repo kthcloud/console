@@ -156,10 +156,19 @@ const ProxyManager = ({ vm }) => {
             },
           }}
         >
-          <Box sx={{ p: 2 }}>
+          <Stack
+            direction="row"
+            alignItems="center"
+            justifyContent="space-between"
+          >
             <Typography variant="h3" sx={{ p: 2 }}>
               {!editing ? t("new-proxy") : `${t("editing")} ${editing.name}`}
             </Typography>
+            <IconButton onClick={() => setCreateDialogOpen(false)}>
+              <Iconify icon="mdi:close" />
+            </IconButton>
+          </Stack>
+          <Box sx={{ p: 2 }}>
             <Stack
               direction="column"
               alignItems={"flex-start"}
