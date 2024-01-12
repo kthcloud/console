@@ -116,7 +116,7 @@ const ResourceComparisonTable = () => {
         }
         size="large"
         fullWidth={sm}
-        sx={{px:4, py:3}}
+        sx={{ px: 4, py: 3 }}
       >
         {t("example-use-cases")}
       </Button>
