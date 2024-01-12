@@ -324,6 +324,9 @@ const ProxyManager = ({ vm }) => {
                                     ? proxy.customDomainUrl
                                     : proxy.url
                                 }
+                                sx={{ whiteSpace: "nowrap" }}
+                                target="_blank"
+                                rel="noopener noreferrer"
                               >
                                 {proxy.customDomain && proxy.customDomainUrl
                                   ? proxy.customDomainUrl
