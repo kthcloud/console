@@ -158,6 +158,7 @@ export default function CreateDeployment({ finished }) {
             cleaned={cleaned}
             setCleaned={setCleaned}
             initialValue={initialName}
+            autofocus={true}
           />
         </CardContent>
       </Card>

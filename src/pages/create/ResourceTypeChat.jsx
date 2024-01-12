@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { GenAITooltip } from "src/components/GenAITooltip";
 import Iconify from "src/components/Iconify";
+import ResourceComparisonTable from "./ResourceComparisonTable";
 
 const ResourceTypeChat = () => {
   const [response, setResponse] = useState(null);
@@ -99,13 +100,26 @@ const ResourceTypeChat = () => {
 
       <Typography variant="body2" mb={0}></Typography>
 
-      <Stack spacing={3} direction="row">
+      <Stack
+        spacing={3}
+        direction="row"
+        flexWrap="wrap"
+        useFlexGap
+        alignItems="center"
+        justifyContent="space-between"
+      >
         <TextField
           label={t("llama-label")}
           InputProps={{
-            startAdornment: <InputAdornment position="start"></InputAdornment>,
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton onClick={() => askLlama(input)} size="large">
+                  <Iconify icon="material-symbols:send" />
+                </IconButton>
+              </InputAdornment>
+            ),
           }}
-          variant="standard"
+          variant="outlined"
           value={input}
           placeholder={lastInput}
           onChange={(e) => setInput(e.target.value)}
@@ -116,13 +130,10 @@ const ResourceTypeChat = () => {
             }
           }}
           fullWidth
-          sx={{ maxWidth: 400 }}
-          autoFocus
+          sx={{ maxWidth: 600 }}
         />
 
-        <IconButton onClick={() => askLlama(input)} size="large">
-          <Iconify icon="material-symbols:send" />
-        </IconButton>
+        <ResourceComparisonTable />
       </Stack>
     </Stack>
   );

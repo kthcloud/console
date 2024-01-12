@@ -217,6 +217,7 @@ export default function CreateVm({ finished }) {
                 cleaned={cleaned}
                 setCleaned={setCleaned}
                 initialValue={initialName}
+                autofocus={true}
               />
 
               {user && (

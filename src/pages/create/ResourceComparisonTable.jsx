@@ -1,8 +1,9 @@
 import {
+  Backdrop,
+  Box,
   Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
+  Divider,
+  Drawer,
   Paper,
   Stack,
   Table,
@@ -11,6 +12,9 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 
 import { useState } from "react";
@@ -94,31 +98,47 @@ const ResourceComparisonTable = () => {
 
   const [dialogOpen, setDialogOpen] = useState(false);
 
+  const theme = useTheme();
+  const md = useMediaQuery(theme.breakpoints.down("md"));
+  const sm = useMediaQuery(theme.breakpoints.down("sm"));
+
   return (
     <>
-      <Stack spacing={3} direction="row">
-        <Button
-          variant="outlined"
-          onClick={() => setDialogOpen(true)}
-          endIcon={
-            <Iconify
-              icon="material-symbols:compare-arrows"
-              width={24}
-              height={24}
-            />
-          }
-        >
-          {t("example-use-cases")}
-        </Button>
-      </Stack>
+      <Button
+        variant="outlined"
+        onClick={() => setDialogOpen(true)}
+        endIcon={
+          <Iconify
+            icon="material-symbols:compare-arrows"
+            width={24}
+            height={24}
+          />
+        }
+        size="large"
+        fullWidth={sm}
+        sx={{px:4, py:3}}
+      >
+        {t("example-use-cases")}
+      </Button>
 
-      <Dialog
-        fullWidth
-        maxWidth={"md"}
+      <Drawer
+        anchor={md ? "bottom" : "right"}
         open={dialogOpen}
         onClose={() => setDialogOpen(false)}
+        slots={{ backdrop: Backdrop }}
+        slotProps={{
+          backdrop: {
+            sx: {
+              background: "rgba(0, 0, 0, 0.4)",
+              backdropFilter: "blur(3px)",
+            },
+          },
+        }}
       >
-        <DialogContent>
+        <Box sx={{ p: 2 }}>
+          <Typography variant="h3" sx={{ p: 2 }}>
+            {t("example-use-cases")}
+          </Typography>
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
@@ -157,13 +177,26 @@ const ResourceComparisonTable = () => {
               </TableBody>
             </Table>
           </TableContainer>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setDialogOpen(false)}>
+        </Box>
+        <Box sx={{ flexGrow: 1 }} />
+        <Divider />
+
+        <Stack
+          direction="row"
+          spacing={1}
+          alignItems={"center"}
+          justifyContent={"space-between"}
+          useFlexGap
+          sx={{ p: 2 }}
+        >
+          <Button
+            onClick={() => setDialogOpen(false)}
+            startIcon={<Iconify icon="mdi:close" />}
+          >
             {t("button-close")}
           </Button>
-        </DialogActions>
-      </Dialog>
+        </Stack>
+      </Drawer>
     </>
   );
 };

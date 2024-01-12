@@ -55,7 +55,7 @@ const ProxyManager = ({ vm }) => {
   const [selectedPort, setSelectedPort] = useState("");
 
   const theme = useTheme();
-  const lessThanSmall = useMediaQuery(theme.breakpoints.down("md"));
+  const md = useMediaQuery(theme.breakpoints.down("md"));
 
   useEffect(() => {
     let tcpPorts = vm.ports.filter((port) => port.protocol === "tcp");
@@ -143,7 +143,7 @@ const ProxyManager = ({ vm }) => {
     <>
       {ports && (
         <Drawer
-          anchor={lessThanSmall ? "bottom" : "right"}
+          anchor={md ? "bottom" : "right"}
           onClose={() => setCreateDialogOpen(false)}
           open={createDialogOpen}
           slots={{ backdrop: Backdrop }}
@@ -171,7 +171,7 @@ const ProxyManager = ({ vm }) => {
                 <Typography variant="body1" gutterBottom>
                   {t("select-port")}
                 </Typography>
-                <FormControl >
+                <FormControl>
                   <InputLabel id="ports-select-label">{t("port")}</InputLabel>
                   <Select
                     labelId="ports-select-label"
