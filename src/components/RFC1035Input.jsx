@@ -11,6 +11,7 @@ export default function RFC1035Input({
   cleaned,
   setCleaned,
   initialValue = "",
+  maxWidth = "100%",
 }) {
   const [value, setValue] = useState("");
 
@@ -37,7 +38,7 @@ export default function RFC1035Input({
   };
 
   return (
-    <Stack spacing={3} useFlexGap={true}>
+    <Stack spacing={3} useFlexGap={true} sx={{ maxWidth: maxWidth }}>
       <TextField
         autoFocus={autofocus}
         fullWidth={fullWidth}
