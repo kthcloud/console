@@ -1,25 +1,33 @@
 # ☁️ kthcloud/landing-frontend
 
-Welcome to the kthcloud/landing-frontend repository! This project is the React frontend for kthcloud, a free cloud provider at KTH, created by students for students. We warmly welcome your contributions, and we hope this README helps you get started.
+Welcome to the kthcloud/landing-frontend repository! This project is the web console for kthcloud, a free cloud provider at KTH, created by students for students. It is built in JavaScript, leveraging React and MUI. We warmly welcome your contributions, and we hope this README helps you get started.
 
 ## Table of Contents
 
--   [☁️ kthcloud/landing-frontend](#️-kthcloudlanding-frontend)
-    -   [Table of Contents](#table-of-contents)
-    -   [External dependencies](#external-dependencies)
-    -   [Setup](#setup)
-    -   [Contributing](#contributing)
-    -   [Formatting](#formatting)
-    -   [License](#license)
+- [☁️ kthcloud/landing-frontend](#️-kthcloudlanding-frontend)
+  - [Table of Contents](#table-of-contents)
+  - [External dependencies](#external-dependencies)
+  - [Setup](#setup)
+  - [Contributing](#contributing)
+  - [Formatting](#formatting)
+  - [License](#license)
 
 ## External dependencies
 
-landing-frontend uses these services for its functionality:
+landing-frontend uses these services for its functionality.
 
--   [sys-api](https://github.com/kthcloud/sys-api): Provides stats and capacities
+kthcloud maintained:
 -   [go-deploy](https://github.com/kthcloud/go-deploy): Backend for creation, and management of resources
+-   [sys-api](https://github.com/kthcloud/sys-api): Provides stats and capacities
 -   [llama](https://llama.app.cloud.cbh.kth.se/): Enables genAI features
 -   [llama-prefetch](https://github.com/kthcloud/llama-prefetch/): Reduces genAI features latency by prefetching queries
+   
+
+External:
+-   [Gravatar](https://gravatar.com): Provides user avatars
+-   [Google Fonts](https://fonts.google.com): Provides fonts
+-   [SWAMID/KTH SSO](https://login.kth.se): Provides authentication
+-   [GitHub SSO](https://github.com): Enables linking GitHub repos for continuous delivery 
 
 ## Setup
 
@@ -42,7 +50,7 @@ The `npm start` command will start the development server. You can access the ap
 
 We are thrilled you are considering contributing to the kthcloud project! We welcome contributions from everyone, and we are here to help you if you need it.
 
-You can find our current issues in the [Issues](https://github.com/kthcloud/landing-frontend/issues) tab. If you have any questions, feel free to ask them in the issue thread.
+You can find our current issues in the [Issues](https://github.com/kthcloud/landing-frontend/issues) tab. If you have any questions, feel free to discuss in the issue thread.
 
 The `beta` branch is the main development branch, so all pull requests should be created against `beta`.
 
@@ -65,6 +73,6 @@ This project uses Prettier as the code formatter. We have a `.prettierrc` file i
 
 ## License
 
-This project is licensed under the MIT License. Feel free to the source code and modify it to your needs.
+This project is licensed under the MIT License. Feel free to use the source code and modify it to your needs.
 
 See the [LICENSE](LICENSE) file for details.
