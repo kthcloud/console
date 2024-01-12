@@ -443,6 +443,7 @@
         "setup-custom-domain-2": "Klart! Om en stund ska din app vara tillgänglig på din domän. Du ser statusen under Domän.",
         "setup-custom-domain-2-warning": "Det kan ta upp till 24 timmar innan ändringarna verkställts.",
         "type": "Typ",
-        "content": "Innehåll"
+        "content": "Innehåll",
+        "port": "Port"
     }
 }

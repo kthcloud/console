@@ -443,6 +443,7 @@
         "setup-custom-domain-2": "Done! Your deployment should soon be accessible using your domain. You can check the status on the domain section.",
         "setup-custom-domain-2-warning": "It may take up to 24 hours for the changes to take effect.",
         "type": "Type",
-        "content": "Content"
+        "content": "Content",
+        "port": "Port"
     }
 }
