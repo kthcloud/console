@@ -416,21 +416,16 @@ export function Deploy() {
         <Page title={t("menu-dashboard")}>
           <Container>
             <Stack
-              sx={{
-                flexDirection: { xs: "column", sm: "row" },
-                alignItems: { xs: "flex-begin", sm: "center" },
-              }}
-              alignItems="center"
-              justifyContent="space-between"
-              mb={2}
               direction="row"
+              alignItems="center"
+              flexWrap="wrap"
+              justifyContent="space-between"
+              useFlexGap
+              mb={3}
             >
-              <Typography variant="h4" gutterBottom>
-                {t("menu-dashboard")}
-              </Typography>
+              <Typography variant="h4">{t("menu-dashboard")}</Typography>
 
               <Button
-                variant="contained"
                 component={RouterLink}
                 to="/create"
                 startIcon={<Iconify icon={"mdi:plus"} />}
