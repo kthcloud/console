@@ -4,30 +4,31 @@ Welcome to the kthcloud/landing-frontend repository! This project is the web con
 
 ## Table of Contents
 
-- [☁️ kthcloud/landing-frontend](#️-kthcloudlanding-frontend)
-  - [Table of Contents](#table-of-contents)
-  - [External dependencies](#external-dependencies)
-  - [Setup](#setup)
-  - [Contributing](#contributing)
-  - [Formatting](#formatting)
-  - [License](#license)
+-   [☁️ kthcloud/landing-frontend](#️-kthcloudlanding-frontend)
+    -   [Table of Contents](#table-of-contents)
+    -   [External dependencies](#external-dependencies)
+    -   [Setup](#setup)
+    -   [Contributing](#contributing)
+    -   [Formatting](#formatting)
+    -   [License](#license)
 
 ## External dependencies
 
 landing-frontend uses these services for its functionality.
 
 kthcloud maintained:
+
 -   [go-deploy](https://github.com/kthcloud/go-deploy): Backend for creation, and management of resources
 -   [sys-api](https://github.com/kthcloud/sys-api): Provides stats and capacities
 -   [llama](https://llama.app.cloud.cbh.kth.se/): Enables genAI features
 -   [llama-prefetch](https://github.com/kthcloud/llama-prefetch/): Reduces genAI features latency by prefetching queries
-   
 
 External:
+
 -   [Gravatar](https://gravatar.com): Provides user avatars
 -   [Google Fonts](https://fonts.google.com): Provides fonts
 -   [SWAMID/KTH SSO](https://login.kth.se): Provides authentication
--   [GitHub SSO](https://github.com): Enables linking GitHub repos for continuous delivery 
+-   [GitHub SSO](https://github.com): Enables linking GitHub repos for continuous delivery
 
 ## Setup
 
