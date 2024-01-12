@@ -1,5 +1,13 @@
 import useResource from "src/hooks/useResource";
-import { Badge, Button, IconButton, Stack, Tooltip } from "@mui/material";
+import {
+  Badge,
+  IconButton,
+  ListItemIcon,
+  ListItemText,
+  MenuItem,
+  MenuList,
+  Tooltip,
+} from "@mui/material";
 import Iconify from "src/components/Iconify";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -13,32 +21,28 @@ const ProfileButton = () => {
     <Tooltip
       enterTouchDelay={10}
       title={
-        <Stack spacing={1} alignItems={"flex-start"}>
-          <Button
-            startIcon={<Iconify icon="mdi:user-circle" />}
-            color="inherit"
-            component={Link}
-            to="/profile"
-          >
-            {t("menu-profile")}
-          </Button>
-          <Button
-            startIcon={<Iconify icon="material-symbols:inbox" />}
-            color="inherit"
-            component={Link}
-            to="/inbox"
-          >
-            {`${t("inbox")} (${unread})`}
-          </Button>
-          <Button
-            startIcon={<Iconify icon="mdi:account-group" />}
-            color="inherit"
-            component={Link}
-            to="/teams"
-          >
-            {t("teams")}
-          </Button>
-        </Stack>
+        <MenuList>
+          <MenuItem component={Link} to="/profile">
+            <ListItemIcon>
+              <Iconify icon="mdi:user-circle" />
+            </ListItemIcon>
+            <ListItemText>{t("menu-profile")}</ListItemText>
+          </MenuItem>
+
+          <MenuItem component={Link} to="/inbox">
+            <ListItemIcon>
+              <Iconify icon="material-symbols:inbox" />
+            </ListItemIcon>
+            <ListItemText>{`${t("inbox")} (${unread})`}</ListItemText>
+          </MenuItem>
+
+          <MenuItem component={Link} to="/teams">
+            <ListItemIcon>
+              <Iconify icon="mdi:account-group" />
+            </ListItemIcon>
+            <ListItemText>{t("teams")}</ListItemText>
+          </MenuItem>
+        </MenuList>
       }
     >
       <Badge
