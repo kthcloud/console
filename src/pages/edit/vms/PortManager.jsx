@@ -280,7 +280,7 @@ export default function PortManager({ vm }) {
                 <TableCell component="th" scope="row">
                   <TextField
                     label={t("admin-name")}
-                    variant="standard"
+                    variant="outlined"
                     value={newPortName}
                     onChange={(e) => {
                       setNewPortName(e.target.value);
@@ -306,7 +306,7 @@ export default function PortManager({ vm }) {
                 <TableCell>
                   <TextField
                     label={t("internal-port")}
-                    variant="standard"
+                    variant="outlined"
                     value={newPort}
                     onChange={(e) => {
                       setNewPort(e.target.value);

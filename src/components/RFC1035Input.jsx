@@ -7,7 +7,7 @@ export default function RFC1035Input({
   type = "Fields",
   fullWidth = true,
   autofocus = false,
-  variant = "standard",
+  variant = "outlined",
   cleaned,
   setCleaned,
   initialValue = "",

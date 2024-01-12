@@ -154,7 +154,7 @@ export default function CreateDeployment({ finished }) {
             placeholder={t("admin-name")}
             callToAction={t("create-deployment-name-warning")}
             type={t("create-deployment-name")}
-            variant="standard"
+            variant="outlined"
             cleaned={cleaned}
             setCleaned={setCleaned}
             initialValue={initialName}
@@ -272,7 +272,7 @@ export default function CreateDeployment({ finished }) {
                   <TableCell component="th" scope="row">
                     <TextField
                       label={t("admin-name")}
-                      variant="standard"
+                      variant="outlined"
                       value={newEnvName}
                       onChange={(e) => {
                         setNewEnvName(e.target.value);
@@ -282,7 +282,7 @@ export default function CreateDeployment({ finished }) {
                   <TableCell>
                     <TextField
                       label={t("create-deployment-env-value")}
-                      variant="standard"
+                      variant="outlined"
                       value={newEnvValue}
                       onChange={(e) => {
                         setNewEnvValue(e.target.value);
@@ -425,7 +425,7 @@ export default function CreateDeployment({ finished }) {
                     <TableCell component="th" scope="row">
                       <TextField
                         label={t("admin-name")}
-                        variant="standard"
+                        variant="outlined"
                         value={newPersistentName}
                         onChange={(e) => {
                           setNewPersistentName(e.target.value);
@@ -435,7 +435,7 @@ export default function CreateDeployment({ finished }) {
                     <TableCell>
                       <TextField
                         label={t("create-deployment-app-path-label")}
-                        variant="standard"
+                        variant="outlined"
                         value={newPersistentAppPath}
                         onChange={(e) => {
                           setNewPersistentAppPath(e.target.value);
@@ -446,7 +446,7 @@ export default function CreateDeployment({ finished }) {
                     <TableCell>
                       <TextField
                         label={t("create-deployment-storage-path-label")}
-                        variant="standard"
+                        variant="outlined"
                         value={newPersistentServerPath}
                         onChange={(e) => {
                           setNewPersistentServerPath(e.target.value);

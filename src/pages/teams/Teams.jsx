@@ -430,7 +430,7 @@ const Teams = () => {
                                                           ...params.InputProps,
                                                           type: "search",
                                                         }}
-                                                        variant="standard"
+                                                        variant="outlined"
                                                       />
                                                     )}
                                                   />
@@ -599,6 +599,7 @@ const Teams = () => {
                       onChange={(e) => setTeamName(e.target.value)}
                       fullWidth
                       disabled={loading}
+                      variant="outlined"
                     />
                     <TextField
                       label={t("description")}
@@ -606,6 +607,7 @@ const Teams = () => {
                       onChange={(e) => setTeamDescription(e.target.value)}
                       fullWidth
                       disabled={loading}
+                      variant="outlined"
                     />
                     <Button
                       variant="contained"

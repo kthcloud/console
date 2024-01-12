@@ -194,7 +194,8 @@ export default function Specs({ vm }) {
                   }
                   inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
                   error={cpuError ? true : false}
-                />
+                  variant="outlined"
+                  />
               )}
 
               {!editing ? (
@@ -232,7 +233,8 @@ export default function Specs({ vm }) {
                   }
                   inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
                   error={ramError ? true : false}
-                />
+                  variant="outlined"
+                  />
               )}
 
               <Chip

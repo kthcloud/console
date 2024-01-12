@@ -176,7 +176,6 @@ export const ResourceContextProvider = ({ children }) => {
       );
 
       setConnectionError(true);
-      console.log(loadInterval);
       if (new Date().getTime() > nextLoad)
         setLoadInterval(Math.min(loadInterval * 2, 60000));
     }

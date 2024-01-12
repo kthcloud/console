@@ -167,7 +167,7 @@ const StorageManager = ({ deployment, persistent, setPersistent }) => {
                     <TableCell component="th" scope="row">
                       <TextField
                         label={t("admin-name")}
-                        variant="standard"
+                        variant="outlined"
                         value={newPersistentName}
                         onChange={(e) => {
                           setNewPersistentName(e.target.value);
@@ -177,7 +177,7 @@ const StorageManager = ({ deployment, persistent, setPersistent }) => {
                     <TableCell>
                       <TextField
                         label={t("create-deployment-app-path-label")}
-                        variant="standard"
+                        variant="outlined"
                         value={newPersistentAppPath}
                         onChange={(e) => {
                           setNewPersistentAppPath(e.target.value);
@@ -188,7 +188,7 @@ const StorageManager = ({ deployment, persistent, setPersistent }) => {
                     <TableCell>
                       <TextField
                         label={t("create-deployment-storage-path-label")}
-                        variant="standard"
+                        variant="outlined"
                         value={newPersistentServerPath}
                         onChange={(e) => {
                           setNewPersistentServerPath(e.target.value);

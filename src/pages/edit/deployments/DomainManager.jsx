@@ -1,15 +1,14 @@
 import { LoadingButton } from "@mui/lab";
 import {
+  Backdrop,
   Box,
   Button,
   Card,
   CardContent,
   CardHeader,
   Chip,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
+  Divider,
+  Drawer,
   Link,
   Skeleton,
   Stack,
@@ -24,6 +23,8 @@ import {
   TableRow,
   TextField,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import { useKeycloak } from "@react-keycloak/web";
 import { enqueueSnackbar } from "notistack";
@@ -46,6 +47,9 @@ export const DomainManager = ({ deployment }) => {
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
   const steps = t("setup-custom-domain-steps").split("|");
+
+  const theme = useTheme();
+  const md = useMediaQuery(theme.breakpoints.down("md"));
 
   useEffect(() => {
     if (!deployment.customDomainUrl) return;
@@ -130,12 +134,24 @@ export const DomainManager = ({ deployment }) => {
 
   return (
     <>
-      <Dialog
+      <Drawer
+        anchor={md ? "bottom" : "right"}
         open={createDialogOpen}
         onClose={() => setCreateDialogOpen(false)}
+        slots={{ backdrop: Backdrop }}
+        slotProps={{
+          backdrop: {
+            sx: {
+              background: "rgba(0, 0, 0, 0.4)",
+              backdropFilter: "blur(3px)",
+            },
+          },
+        }}
       >
-        <DialogTitle>{t("setup-custom-domain")}</DialogTitle>
-        <DialogContent>
+        <Box sx={{ p: 2 }}>
+          <Typography variant="h3" sx={{ p: 2 }}>
+            {t("setup-custom-domain")}
+          </Typography>
           <Stack
             direction="column"
             alignItems={"flex-start"}
@@ -258,8 +274,18 @@ export const DomainManager = ({ deployment }) => {
               </>
             )}
           </Stack>
-        </DialogContent>
-        <DialogActions>
+        </Box>
+        <Box sx={{ flexGrow: 1 }} />
+        <Divider />
+
+        <Stack
+          direction="row"
+          spacing={1}
+          alignItems={"center"}
+          justifyContent={"space-between"}
+          useFlexGap
+          sx={{ p: 2 }}
+        >
           <Button variant="outlined" onClick={() => setCreateDialogOpen(false)}>
             {t("button-close")}
           </Button>
@@ -280,8 +306,8 @@ export const DomainManager = ({ deployment }) => {
           >
             {t("next")}
           </LoadingButton>
-        </DialogActions>
-      </Dialog>
+        </Stack>
+      </Drawer>
       <Card sx={{ boxShadow: 20 }}>
         <CardHeader
           title={t("create-deployment-domain")}
