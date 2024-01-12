@@ -113,10 +113,7 @@ export const Onboarding = () => {
     // allow 200 ms for card to disappear
     setTimeout(() => {
       const index = cards.indexOf(selected);
-      // skip GPU if user.role.permissions does not include "useGpus"
-      if (selected === "vms" && !user.role.permissions.includes("useGpus"))
-        setSelected(cards[index + 2]);
-      else setSelected(cards[index + 1]);
+      setSelected(cards[index + 1]);
     }, timeOut + 50);
   };
 
@@ -126,10 +123,7 @@ export const Onboarding = () => {
     // allow 200 ms for card to disappear
     setTimeout(() => {
       const index = cards.indexOf(selected);
-      // skip GPU if user.role.permissions does not include "useGpus"
-      if (selected === "vms" && !user.role.permissions.includes("useGpus"))
-        setSelected(cards[index - 2]);
-      else setSelected(cards[index - 1]);
+      setSelected(cards[index - 1]);
     }, timeOut + 50);
   };
 
@@ -404,14 +398,9 @@ export const Onboarding = () => {
                               {t("onboarding-vms-2")}
                             </Typography>
 
-                            {user &&
-                              user.role &&
-                              user.permissions &&
-                              user.role.permissions.includes("useGpus") && (
-                                <Typography variant="body1" gutterBottom mb={3}>
-                                  {t("onboarding-vms-3")}
-                                </Typography>
-                              )}
+                            <Typography variant="body1" gutterBottom mb={3}>
+                              {t("onboarding-vms-3")}
+                            </Typography>
                           </OnboardingCard>
                         </div>
                       </Fade>
