@@ -116,7 +116,12 @@ export const DomainManager = ({ deployment }) => {
 
   const handleNext = async () => {
     if (activeStep === 0) {
-      if (!domain) return;
+      if (!domain) {
+        enqueueSnackbar(t("domain-missing"), {
+          variant: "error",
+        });
+        return;
+      }
       if (
         deployment.customDomainUrl &&
         deployment.customDomainUrl.split("//")[1] === domain

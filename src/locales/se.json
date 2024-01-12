@@ -445,6 +445,7 @@
         "setup-custom-domain-2-warning": "Det kan ta upp till 24 timmar innan ändringarna verkställts.",
         "type": "Typ",
         "content": "Innehåll",
-        "port": "Port"
+        "port": "Port",
+        "domain-missing": "Domän saknas"
     }
 }

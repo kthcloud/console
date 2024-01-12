@@ -445,6 +445,7 @@
         "setup-custom-domain-2-warning": "It may take up to 24 hours for the changes to take effect.",
         "type": "Type",
         "content": "Content",
-        "port": "Port"
+        "port": "Port",
+        "domain-missing": "Domain required"
     }
 }
