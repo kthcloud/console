@@ -442,10 +442,11 @@
         "setup-custom-domain-1": "Verify domain ownership by adding a TXT record with the value below to your domain.",
         "setup-custom-domain-1-table": "Your DNS records should look something like this",
         "setup-custom-domain-2": "Done! Your deployment should soon be accessible using your domain. You can check the status on the domain section.",
-        "setup-custom-domain-2-warning": "It may take up to 24 hours for the changes to take effect.",
+        "setup-custom-domain-2-warning": "It may take up to 24 hours for changes to take effect.",
         "type": "Type",
         "content": "Content",
         "port": "Port",
-        "domain-missing": "Domain required"
+        "domain-missing": "Domain required",
+        "edit-your-proxy-after-creation-for-custom-domain": "Edit your proxy after creation to setup a custom domain"
     }
 }

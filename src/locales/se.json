@@ -442,7 +442,7 @@
         "setup-custom-domain-1": "Verifiera ägarskap av din domän genom en TXT-record med följande värde.",
         "setup-custom-domain-1-table": "Dina DNS-inställningar bör se ut så här",
         "setup-custom-domain-2": "Klart! Om en stund ska din app vara tillgänglig på din domän. Du ser statusen under Domän.",
-        "setup-custom-domain-2-warning": "Det kan ta upp till 24 timmar innan ändringarna verkställts.",
+        "setup-custom-domain-2-warning": "Det kan ta upp till 24 timmar innan ändringar verkställs.",
         "type": "Typ",
         "content": "Innehåll",
         "port": "Port",

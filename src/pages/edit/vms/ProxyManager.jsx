@@ -8,6 +8,7 @@ import {
   Card,
   CardContent,
   CardHeader,
+  Chip,
   Divider,
   Drawer,
   FormControl,
@@ -16,6 +17,7 @@ import {
   Link,
   MenuItem,
   Select,
+  Skeleton,
   Stack,
   Table,
   TableBody,
@@ -38,6 +40,7 @@ import useResource from "src/hooks/useResource";
 import { errorHandler } from "src/utils/errorHandler";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useTranslation } from "react-i18next";
+import { sentenceCase } from "change-case";
 
 const ProxyManager = ({ vm }) => {
   const { t } = useTranslation();
@@ -76,10 +79,14 @@ const ProxyManager = ({ vm }) => {
       deleting.filter((p) => tcpPorts.find((port) => port.name === p.name))
     );
 
+    if (editing) {
+      setEditing(proxies.find((proxy) => proxy.name === editing.name));
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [vm]);
 
-  const handleCreate = async () => {
+  const handleCreate = async (clearCustomDomain = false) => {
     if (!initialized) return;
     setLoading(true);
 
@@ -90,6 +97,10 @@ const ProxyManager = ({ vm }) => {
         port.httpProxy = { name: newProxy.name };
         if (newProxy.customDomain) {
           port.httpProxy.customDomain = newProxy.customDomain;
+        }
+        if (clearCustomDomain) {
+          console.log("removing customDomain");
+          port.httpProxy.customDomain = "";
         }
       }
     });
@@ -102,8 +113,11 @@ const ProxyManager = ({ vm }) => {
         variant: "info",
       });
 
-      setCreateDialogOpen(false);
-      setNewProxy({ name: "", customDomain: "" });
+      if (!(editing && newProxy.customDomain)) {
+        setCreateDialogOpen(false);
+        setEditing(null);
+        setNewProxy({ name: "", customDomain: "" });
+      }
     } catch (err) {
       errorHandler(err).forEach((e) =>
         enqueueSnackbar(e, { variant: "error" })
@@ -156,19 +170,19 @@ const ProxyManager = ({ vm }) => {
             },
           }}
         >
-          <Stack
-            direction="row"
-            alignItems="center"
-            justifyContent="space-between"
-          >
-            <Typography variant="h3" sx={{ p: 2 }}>
-              {!editing ? t("new-proxy") : `${t("editing")} ${editing.name}`}
-            </Typography>
-            <IconButton onClick={() => setCreateDialogOpen(false)}>
-              <Iconify icon="mdi:close" />
-            </IconButton>
-          </Stack>
           <Box sx={{ p: 2 }}>
+            <Stack
+              direction="row"
+              alignItems="center"
+              justifyContent="space-between"
+            >
+              <Typography variant="h3" sx={{ p: 2 }}>
+                {!editing ? t("new-proxy") : `${t("editing")} ${editing.name}`}
+              </Typography>
+              <IconButton onClick={() => setCreateDialogOpen(false)}>
+                <Iconify icon="mdi:close" />
+              </IconButton>
+            </Stack>
             <Stack
               direction="column"
               alignItems={"flex-start"}
@@ -217,12 +231,17 @@ const ProxyManager = ({ vm }) => {
                 )}
               </Stack>
 
-              {user?.role?.permissions?.includes("useCustomDomains") && (
+              {user?.role?.permissions?.includes("useCustomDomains") &&
+              !editing ? (
+                <Typography variant="body2">
+                  {t("edit-your-proxy-after-creation-for-custom-domain")}
+                </Typography>
+              ) : (
                 <Accordion
                   expanded={expanded}
                   onChange={() => setExpanded(!expanded)}
-                  sx={{ minWidth: "100%" }}
                   disableGutters
+                  sx={{ width: "100%" }}
                 >
                   <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                     <Typography>
@@ -230,21 +249,108 @@ const ProxyManager = ({ vm }) => {
                     </Typography>
                   </AccordionSummary>
                   <AccordionDetails>
-                    <Typography variant="body1" gutterBottom>
-                      {t("cname-record")}
+                    <Typography variant="body2" gutterBottom>
+                      {t("setup-custom-domain-0")}
                     </Typography>
-                    <TextField
-                      label={t("custom-domain-optional")}
-                      variant="outlined"
-                      fullWidth
-                      value={newProxy.customDomain ? newProxy.customDomain : ""}
-                      onChange={(e) => {
-                        setNewProxy({
-                          ...newProxy,
-                          customDomain: e.target.value,
-                        });
-                      }}
-                    />
+
+                    <Typography variant="body2" gutterBottom>
+                      {editing?.customDomain && t("setup-custom-domain-1")}
+                    </Typography>
+
+                    <Typography variant="subtitle2" gutterBottom sx={{ mt: 3 }}>
+                      {t("setup-custom-domain-1-table")}
+                    </Typography>
+
+                    <Stack direction="column" spacing={3}>
+                      <TableContainer>
+                        <Table>
+                          <TableHead>
+                            <TableRow>
+                              <TableCell>{t("type")}</TableCell>
+                              <TableCell>{t("admin-name")}</TableCell>
+                              <TableCell>{t("content")}</TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            <TableRow>
+                              <TableCell>CNAME</TableCell>
+                              <TableCell>
+                                <TextField
+                                  label={t("create-deployment-domain")}
+                                  variant="outlined"
+                                  value={
+                                    newProxy.customDomain
+                                      ? newProxy.customDomain
+                                      : ""
+                                  }
+                                  onChange={(e) => {
+                                    setNewProxy({
+                                      ...newProxy,
+                                      customDomain: e.target.value,
+                                    });
+                                  }}
+                                  sx={{ minWidth: 150 }}
+                                />
+                              </TableCell>
+                              <TableCell>app.cloud.cbh.kth.se</TableCell>
+                            </TableRow>
+                            {editing?.customDomain && (
+                              <TableRow>
+                                <TableCell>TXT</TableCell>
+                                <TableCell>
+                                  {editing.customDomain ? (
+                                    "_kthcloud." + editing.customDomain
+                                  ) : (
+                                    <Skeleton />
+                                  )}
+                                </TableCell>
+                                <TableCell>
+                                  {editing.customDomainSecret ? (
+                                    editing.customDomainSecret
+                                  ) : (
+                                    <Skeleton />
+                                  )}
+                                </TableCell>
+                              </TableRow>
+                            )}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+
+                      <Typography variant="body2">
+                        {t("setup-custom-domain-2-warning")}
+                      </Typography>
+
+                      <Stack
+                        direction="row"
+                        spacing={3}
+                        alignItems={"center"}
+                        useFlexGap
+                      >
+                        {editing?.customDomainStatus && (
+                          <Chip
+                            label={
+                              t("admin-status") +
+                              ": " +
+                              sentenceCase(editing.customDomainStatus)
+                            }
+                          />
+                        )}
+                        {editing?.customDomain && (
+                          <Button
+                            color="error"
+                            startIcon={<Iconify icon="mdi:delete" />}
+                            onClick={() => {
+                              handleCreate(true);
+                              setExpanded(false);
+                              setCreateDialogOpen(false);
+                            }}
+                          >
+                            {t("clear-domain")}
+                          </Button>
+                        )}
+                      </Stack>
+                    </Stack>
                   </AccordionDetails>
                 </Accordion>
               )}
@@ -271,12 +377,16 @@ const ProxyManager = ({ vm }) => {
             </Button>
             <Button
               variant="contained"
-              onClick={handleCreate}
+              onClick={() => handleCreate(false)}
               disabled={loading}
               size="large"
-              startIcon={<Iconify icon="mdi:rocket-launch" />}
+              startIcon={
+                <Iconify
+                  icon={editing ? "material-symbols:save" : "mdi:rocket-launch"}
+                />
+              }
             >
-              {t("deploy-proxy")}
+              {editing ? t("button-save") : t("deploy-proxy")}
             </Button>
           </Stack>
         </Drawer>
@@ -371,7 +481,33 @@ const ProxyManager = ({ vm }) => {
                         ) : (
                           <>
                             <TableCell>{proxy.name}</TableCell>
-                            <TableCell>{t("deleting")}</TableCell>
+                            <TableCell colSpan={2}>{t("deleting")}</TableCell>
+                            <TableCell align="right">
+                              <Stack
+                                direction="row"
+                                spacing={1}
+                                useFlexGap
+                                alignItems={"center"}
+                                justifyContent={"flex-end"}
+                              >
+                                <IconButton
+                                  color="primary"
+                                  aria-label="edit proxy"
+                                  component="label"
+                                  disabled
+                                >
+                                  <Iconify icon="mdi:pencil" />
+                                </IconButton>
+                                <IconButton
+                                  color="error"
+                                  aria-label="delete proxy"
+                                  component="label"
+                                  disabled
+                                >
+                                  <Iconify icon="mdi:delete" />
+                                </IconButton>
+                              </Stack>
+                            </TableCell>
                           </>
                         )}
                       </TableRow>
@@ -391,6 +527,7 @@ const ProxyManager = ({ vm }) => {
                   setCreateDialogOpen(true);
                 }}
                 disabled={vm?.ports?.length === 0}
+                startIcon={<Iconify icon="mdi:plus" />}
               >
                 {t("deploy-proxy")}
               </Button>
