@@ -305,7 +305,12 @@ export const DomainManager = ({ deployment }) => {
           useFlexGap
           sx={{ p: 2 }}
         >
-          <Button variant="outlined" onClick={() => setCreateDialogOpen(false)}>
+          <Button
+            variant="outlined"
+            onClick={() => setCreateDialogOpen(false)}
+            size="large"
+            startIcon={<Iconify icon="mdi:close" />}
+          >
             {t("button-close")}
           </Button>
           <Box sx={{ flexGrow: 1 }} />
@@ -313,6 +318,8 @@ export const DomainManager = ({ deployment }) => {
             <Button
               variant="outlined"
               onClick={() => setActiveStep(activeStep - 1)}
+              size="large"
+              startIcon={<Iconify icon="material-symbols:arrow-left-rounded" />}
             >
               {t("previous")}
             </Button>
@@ -322,6 +329,8 @@ export const DomainManager = ({ deployment }) => {
             variant="contained"
             onClick={handleNext}
             loading={loading}
+            size="large"
+            endIcon={<Iconify icon="material-symbols:arrow-right-rounded" />}
           >
             {t("next")}
           </LoadingButton>

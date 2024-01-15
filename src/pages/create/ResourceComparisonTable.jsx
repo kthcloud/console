@@ -203,6 +203,7 @@ const ResourceComparisonTable = () => {
           <Button
             onClick={() => setDialogOpen(false)}
             startIcon={<Iconify icon="mdi:close" />}
+            size="large"
           >
             {t("button-close")}
           </Button>
