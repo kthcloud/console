@@ -6,8 +6,7 @@ import {
   Typography,
   Stack,
   CardHeader,
-  ToggleButtonGroup,
-  ToggleButton,
+  Button,
 } from "@mui/material";
 
 //hooks
@@ -81,49 +80,40 @@ export const Create = () => {
                 <CardContent>
                   <Stack spacing={3} direction="column" useFlexGap>
                     <ResourceTypeChat />
-
-                    <ToggleButtonGroup
-                      color="primary"
-                      value={alignment}
-                      exclusive
-                      onChange={(e) => setAlignment(e.target.value)}
-                      aria-label="resource-type"
+                    <Typography variant="h5" sx={{ mt: 2 }}>
+                      {t("choose-type")}
+                    </Typography>
+                    <Stack
+                      direction="row"
+                      spacing={1}
+                      alignItems="center"
+                      useFlexGap
                     >
-                      <ToggleButton value="deployment">
-                        <Stack
-                          direction="row"
-                          spacing={1}
-                          alignItems="center"
-                          onClick={() => {
-                            setTimeout(() => {
-                              setAlignment("deployment");
-                            }, 10);
-                          }}
-                        >
-                          <Iconify icon="lucide:container" />
-                          <Typography variant="body2" fontWeight="bold">
-                            {t("resource-kubernetes-deployment")}
-                          </Typography>
-                        </Stack>
-                      </ToggleButton>
-                      <ToggleButton value="vm">
-                        <Stack
-                          direction="row"
-                          spacing={1}
-                          alignItems="center"
-                          onClick={() => {
-                            setTimeout(() => {
-                              setAlignment("vm");
-                            }, 10);
-                          }}
-                        >
-                          <Iconify icon="carbon:virtual-machine" />
-                          <Typography variant="body2" fontWeight="bold">
-                            {t("resource-vm")}
-                          </Typography>
-                        </Stack>
-                      </ToggleButton>
-                    </ToggleButtonGroup>
+                      <Button
+                        color="primary"
+                        variant="contained"
+                        disabled={alignment === "deployment"}
+                        size="large"
+                        onClick={() => {
+                          setAlignment("deployment");
+                        }}
+                        startIcon={<Iconify icon="lucide:container" />}
+                      >
+                        {t("resource-kubernetes-deployment")}
+                      </Button>
+                      <Button
+                        color="primary"
+                        variant="contained"
+                        disabled={alignment === "vm"}
+                        size="large"
+                        onClick={() => {
+                          setAlignment("vm");
+                        }}
+                        startIcon={<Iconify icon="carbon:virtual-machine" />}
+                      >
+                        {t("resource-vm")}
+                      </Button>
+                    </Stack>
                   </Stack>
                 </CardContent>
               </Card>

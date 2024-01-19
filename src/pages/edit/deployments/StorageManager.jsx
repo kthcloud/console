@@ -24,6 +24,7 @@ import { useKeycloak } from "@react-keycloak/web";
 import useResource from "src/hooks/useResource";
 import { errorHandler } from "src/utils/errorHandler";
 import { useTranslation } from "react-i18next";
+import RFC1035Input from "src/components/RFC1035Input";
 
 const StorageManager = ({ deployment, persistent, setPersistent }) => {
   const { t } = useTranslation();
@@ -164,17 +165,26 @@ const StorageManager = ({ deployment, persistent, setPersistent }) => {
                       "&:last-child td, &:last-child th": { border: 0 },
                     }}
                   >
-                    <TableCell component="th" scope="row">
-                      <TextField
+                    <TableCell sx={{ verticalAlign: "top" }}>
+                      {/* <TextField
                         label={t("admin-name")}
                         variant="outlined"
                         value={newPersistentName}
                         onChange={(e) => {
                           setNewPersistentName(e.target.value);
                         }}
+                      /> */}
+
+                      <RFC1035Input
+                        cleaned={newPersistentName}
+                        setCleaned={setNewPersistentName}
+                        fullWidth={false}
+                        maxWidth={300}
+                        label={t("admin-name")}
+                        callToAction={t("admin-name") + ": "}
                       />
                     </TableCell>
-                    <TableCell>
+                    <TableCell sx={{ verticalAlign: "top", pt: 3 }}>
                       <TextField
                         label={t("create-deployment-app-path-label")}
                         variant="outlined"
@@ -185,7 +195,7 @@ const StorageManager = ({ deployment, persistent, setPersistent }) => {
                         fullWidth
                       />
                     </TableCell>
-                    <TableCell>
+                    <TableCell sx={{ verticalAlign: "top", pt: 3 }}>
                       <TextField
                         label={t("create-deployment-storage-path-label")}
                         variant="outlined"

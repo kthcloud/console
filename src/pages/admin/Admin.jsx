@@ -1,3 +1,4 @@
+import { LoadingButton } from "@mui/lab";
 import {
   AppBar,
   Box,
@@ -17,14 +18,17 @@ import {
   TextField,
   Toolbar,
   Typography,
+  useTheme,
 } from "@mui/material";
 import { useKeycloak } from "@react-keycloak/web";
 import { decode } from "js-base64";
 import { enqueueSnackbar } from "notistack";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { deleteDeployment, getDeployments } from "src/api/deploy/deployments";
+import { getJobs, restartJob } from "src/api/deploy/jobs";
+import { getTeams } from "src/api/deploy/teams";
 import { getAllUsers } from "src/api/deploy/users";
 import { deleteVM, detachGPU, getGPUs, getVMs } from "src/api/deploy/vms";
 import LoadingPage from "src/components/LoadingPage";
@@ -36,6 +40,7 @@ import { hashGPUId } from "src/utils/helpers";
 
 export const Admin = () => {
   const { t } = useTranslation();
+  const theme = useTheme();
 
   // ==================================================
   // Keycloak/user session
@@ -108,6 +113,33 @@ export const Admin = () => {
       );
     }
 
+    try {
+      const response = await getTeams(keycloak.token, true);
+      setDbTeams(response);
+    } catch (error) {
+      errorHandler(error).forEach((e) =>
+        enqueueSnackbar(t("error-could-not-fetch-teams") + ": " + e, {
+          variant: "error",
+        })
+      );
+    }
+
+    try {
+      const response = await getJobs(
+        keycloak.token,
+        undefined,
+        undefined,
+        true
+      );
+      setDbJobs(response);
+    } catch (error) {
+      errorHandler(error).forEach((e) =>
+        enqueueSnackbar(t("error-could-not-fetch-jobs") + ": " + e, {
+          variant: "error",
+        })
+      );
+    }
+
     // end timer and set last refresh, show in ms
     setLastRefresh(new Date());
     setLastRefreshRtt(Date.now() - startTimer + " ms");
@@ -134,10 +166,13 @@ export const Admin = () => {
     for (let i = 0; i < dbUsers.length; i++) {
       const user = dbUsers[i];
       if (
-        user.id.includes(usersFilter) ||
-        user.username.includes(usersFilter) ||
-        user.email.includes(usersFilter) ||
-        user.role.name.includes(usersFilter) ||
+        user.id?.toLowerCase().includes(usersFilter.toLowerCase()) ||
+        user.username?.toLowerCase().includes(usersFilter.toLowerCase()) ||
+        user.email?.toLowerCase().includes(usersFilter.toLowerCase()) ||
+        "admin".toLowerCase().includes(usersFilter.toLowerCase()) ||
+        "onboarded".toLowerCase().includes(usersFilter.toLowerCase()) ||
+        user.firstName?.toLowerCase().includes(usersFilter.toLowerCase()) ||
+        user.lastName?.toLowerCase().includes(usersFilter.toLowerCase()) ||
         usersFilter === ""
       ) {
         filtered.push(user);
@@ -171,9 +206,11 @@ export const Admin = () => {
     for (let i = 0; i < dbVMs.length; i++) {
       const vm = dbVMs[i];
       if (
-        vm.name.includes(vmFilter) ||
-        vm.id.includes(vmFilter) ||
-        vm.ownerId.includes(vmFilter) ||
+        vm.name?.toLowerCase().includes(vmFilter.toLowerCase()) ||
+        vm.id?.toLowerCase().includes(vmFilter.toLowerCase()) ||
+        vm.ownerId?.toLowerCase().includes(vmFilter.toLowerCase()) ||
+        vm.zone?.toLowerCase().includes(vmFilter.toLowerCase()) ||
+        vm.host?.toLowerCase().includes(vmFilter.toLowerCase()) ||
         vmFilter === ""
       ) {
         filtered.push(vm);
@@ -197,9 +234,30 @@ export const Admin = () => {
     for (let i = 0; i < dbDeployments.length; i++) {
       const deployment = dbDeployments[i];
       if (
-        deployment.name.includes(deploymentsFilter) ||
-        deployment.id.includes(deploymentsFilter) ||
-        deployment.ownerId.includes(deploymentsFilter) ||
+        deployment.name
+          ?.toLowerCase()
+          .includes(deploymentsFilter.toLowerCase()) ||
+        deployment.id
+          ?.toLowerCase()
+          .includes(deploymentsFilter.toLowerCase()) ||
+        deployment.ownerId
+          ?.toLowerCase()
+          .includes(deploymentsFilter.toLowerCase()) ||
+        deployment.zone
+          ?.toLowerCase()
+          .includes(deploymentsFilter.toLowerCase()) ||
+        deployment.status
+          ?.toLowerCase()
+          .includes(deploymentsFilter.toLowerCase()) ||
+        deployment.pingResult
+          ?.toLowerCase()
+          .includes(deploymentsFilter.toLowerCase()) ||
+        deployment.healthCheckPath
+          ?.toLowerCase()
+          .includes(deploymentsFilter.toLowerCase()) ||
+        deployment.customDomainUrl
+          ?.toLowerCase()
+          .includes(deploymentsFilter.toLowerCase()) ||
         deploymentsFilter === ""
       ) {
         filtered.push(deployment);
@@ -223,9 +281,9 @@ export const Admin = () => {
     for (let i = 0; i < dbGPUs.length; i++) {
       const gpu = dbGPUs[i];
       if (
-        gpu.id.includes(gpusFilter) ||
-        gpu.name.includes(gpusFilter) ||
-        decode(gpu.id).includes(gpusFilter) ||
+        gpu.id?.toLowerCase().includes(gpusFilter.toLowerCase()) ||
+        gpu.name?.toLowerCase().includes(gpusFilter.toLowerCase()) ||
+        decode(gpu.id)?.toLowerCase().includes(gpusFilter.toLowerCase()) ||
         gpusFilter === ""
       ) {
         filtered.push(gpu);
@@ -234,6 +292,72 @@ export const Admin = () => {
 
     setGPUs(filtered);
   };
+
+  // ==================================================
+  // Teams
+
+  const [dbTeams, setDbTeams] = useState([]);
+  const [teams, setTeams] = useState([]);
+  const [teamFilter, setTeamFilter] = useState("");
+  const [loadedTeams, setLoadedTeams] = useState(false);
+  const [expandedTeam, setExpandedTeam] = useState(null);
+
+  const filterTeams = async () => {
+    setLoadedTeams(true);
+
+    const filtered = [];
+
+    for (let i = 0; i < dbTeams.length; i++) {
+      const team = dbTeams[i];
+      if (
+        team.id?.toLowerCase().includes(teamFilter.toLowerCase()) ||
+        team.name?.toLowerCase().includes(teamFilter.toLowerCase()) ||
+        team.description?.toLowerCase().includes(teamFilter.toLowerCase()) ||
+        teamFilter === ""
+      ) {
+        filtered.push(team);
+      }
+    }
+
+    setTeams(filtered);
+  };
+
+  // ==================================================
+  // Jobs
+
+  const [dbJobs, setDbJobs] = useState([]);
+  const [jobs, setJobs] = useState([]);
+  const [jobFilter, setJobFilter] = useState("");
+  const [loadedJobs, setLoadedJobs] = useState(false);
+  const [restartingJobs, setRestartingJobs] = useState([]);
+
+  const filterJobs = async () => {
+    setLoadedJobs(true);
+
+    const filtered = [];
+
+    for (let i = 0; i < dbJobs.length; i++) {
+      const job = dbJobs[i];
+
+      if (
+        job.createdAt?.toLowerCase().includes(jobFilter.toLowerCase()) ||
+        job.finishedAt?.toLowerCase().includes(jobFilter.toLowerCase()) ||
+        job.id?.toLowerCase().includes(jobFilter.toLowerCase()) ||
+        job.lastRunAt?.toLowerCase().includes(jobFilter.toLowerCase()) ||
+        job.runAfter?.toLowerCase().includes(jobFilter.toLowerCase()) ||
+        job.status?.toLowerCase().includes(jobFilter.toLowerCase()) ||
+        job.type?.toLowerCase().includes(jobFilter.toLowerCase()) ||
+        job.userId?.toLowerCase().includes(jobFilter.toLowerCase()) ||
+        jobFilter === ""
+      ) {
+        filtered.push(job);
+      }
+    }
+    setJobs(filtered);
+  };
+
+  // ==================================================
+  // Time since last refresh
 
   useInterval(() => {
     const now = new Date();
@@ -282,8 +406,7 @@ export const Admin = () => {
               top: "auto",
               bottom: 0,
               borderTop: 1,
-              borderRadius: 1,
-              borderColor: "#ccd6e1",
+              borderColor: theme.palette.grey[300],
             }}
           >
             <Toolbar>
@@ -775,6 +898,330 @@ export const Admin = () => {
                               {gpu.lease && gpu.lease.expired
                                 ? t("admin-gpu-expired")
                                 : ""}
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </CardContent>
+              </Card>
+
+              <Card sx={{ boxShadow: 20 }}>
+                <CardHeader title={t("teams")} />
+
+                <CardContent>
+                  <Stack
+                    direction="row"
+                    alignItems={"center"}
+                    mb={2}
+                    spacing={2}
+                    flexWrap={"wrap"}
+                    useFlexGap
+                  >
+                    <TextField
+                      label={t("button-filter")}
+                      variant="outlined"
+                      value={teamFilter}
+                      onChange={(e) => {
+                        setTeamFilter(e.target.value.trim());
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") filterTeams();
+                      }}
+                    />
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={filterTeams}
+                    >
+                      {t("button-search")}
+                    </Button>
+                    <Button
+                      variant="contained"
+                      onClick={() => {
+                        setTeams([]);
+                        setLoadedTeams(false);
+                        setTeamFilter("");
+                      }}
+                      disabled={!loadedTeams}
+                    >
+                      {t("button-clear")}
+                    </Button>
+                    <Typography variant="body1" gutterBottom>
+                      {t("admin-showing") +
+                        " " +
+                        teams.length +
+                        "/" +
+                        dbTeams.length +
+                        " " +
+                        t("admin-loaded-teams")}
+                    </Typography>
+                  </Stack>
+                  <TableContainer>
+                    <Table>
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>{t("admin-id")}</TableCell>
+                          <TableCell>{t("admin-name")}</TableCell>
+                          <TableCell>{t("members")}</TableCell>
+                          <TableCell>{t("resources")}</TableCell>
+                          <TableCell>{t("admin-actions")}</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {teams.map((team) => (
+                          <Fragment key={team.id}>
+                            <TableRow>
+                              <TableCell>
+                                <Typography variant="caption">
+                                  {team.id}
+                                </Typography>
+                              </TableCell>
+                              <TableCell>{team.name}</TableCell>
+                              <TableCell>{team.members.length}</TableCell>
+                              <TableCell>{team.resources.length}</TableCell>
+                              <TableCell>
+                                <Stack direction="row">
+                                  <Button
+                                    size="small"
+                                    color={
+                                      expandedTeam === team.id
+                                        ? "error"
+                                        : "primary"
+                                    }
+                                    onClick={() =>
+                                      setExpandedTeam(
+                                        expandedTeam === team.id
+                                          ? null
+                                          : team.id
+                                      )
+                                    }
+                                  >
+                                    {expandedTeam === team.id
+                                      ? t("button-close")
+                                      : t("details")}
+                                  </Button>
+                                </Stack>
+                              </TableCell>
+                            </TableRow>
+                            {expandedTeam === team.id && (
+                              <>
+                                <TableRow>
+                                  <TableCell colSpan={5}>
+                                    <TableContainer>
+                                      <Table>
+                                        <TableHead>
+                                          <TableRow>
+                                            <TableCell>
+                                              {t("admin-id")}
+                                            </TableCell>
+                                            <TableCell>
+                                              {t("admin-username")}
+                                            </TableCell>
+                                            <TableCell>
+                                              {t("admin-email")}
+                                            </TableCell>
+                                            <TableCell>
+                                              {t("admin-status")}
+                                            </TableCell>
+                                            <TableCell>
+                                              {t("joinedAt")}
+                                            </TableCell>
+                                            <TableCell>
+                                              {t("addedAt")}
+                                            </TableCell>
+                                          </TableRow>
+                                        </TableHead>
+                                        <TableBody>
+                                          {team.members.map((member) => (
+                                            <TableRow
+                                              key={"teammember" + member.id}
+                                            >
+                                              <TableCell>
+                                                <Typography variant="caption">
+                                                  {member.id}
+                                                </Typography>
+                                              </TableCell>
+                                              <TableCell>
+                                                {member.username}
+                                              </TableCell>
+                                              <TableCell>
+                                                {member.email}
+                                              </TableCell>
+                                              <TableCell>
+                                                {member.memberStatus}
+                                              </TableCell>
+                                              <TableCell>
+                                                <Typography variant="caption">
+                                                  {member.joinedAt}
+                                                </Typography>
+                                              </TableCell>
+                                              <TableCell>
+                                                <Typography variant="caption">
+                                                  {member.addedAt}
+                                                </Typography>
+                                              </TableCell>
+                                            </TableRow>
+                                          ))}
+                                        </TableBody>
+                                      </Table>
+                                    </TableContainer>
+                                  </TableCell>
+                                </TableRow>
+                                <TableRow>
+                                  <TableCell colSpan={5}>
+                                    <TableContainer>
+                                      <Table>
+                                        <TableHead>
+                                          <TableRow>
+                                            <TableCell>
+                                              {t("admin-id")}
+                                            </TableCell>
+                                            <TableCell>
+                                              {t("admin-name")}
+                                            </TableCell>
+                                            <TableCell>
+                                              {t("admin-type")}
+                                            </TableCell>
+                                          </TableRow>
+                                        </TableHead>
+                                        <TableBody>
+                                          {team.resources.map((resource) => (
+                                            <TableRow
+                                              key={"teamresource" + resource.id}
+                                            >
+                                              <TableCell>
+                                                <Typography variant="caption">
+                                                  {resource.id}
+                                                </Typography>
+                                              </TableCell>
+                                              <TableCell>
+                                                {resource.name}
+                                              </TableCell>
+                                              <TableCell>
+                                                {resource.type}
+                                              </TableCell>
+                                            </TableRow>
+                                          ))}
+                                        </TableBody>
+                                      </Table>
+                                    </TableContainer>
+                                  </TableCell>
+                                </TableRow>
+                              </>
+                            )}
+                          </Fragment>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </CardContent>
+              </Card>
+
+              <Card sx={{ boxShadow: 20 }}>
+                <CardHeader title={t("jobs")} />
+
+                <CardContent>
+                  <Stack
+                    direction="row"
+                    alignItems={"center"}
+                    mb={2}
+                    spacing={2}
+                    flexWrap={"wrap"}
+                    useFlexGap
+                  >
+                    <TextField
+                      label={t("button-filter")}
+                      variant="outlined"
+                      value={jobFilter}
+                      onChange={(e) => {
+                        setJobFilter(e.target.value.trim());
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") filterJobs();
+                      }}
+                    />
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={filterJobs}
+                    >
+                      {t("button-search")}
+                    </Button>
+                    <Button
+                      variant="contained"
+                      onClick={() => {
+                        setJobs([]);
+                        setLoadedJobs(false);
+                        setJobFilter("");
+                      }}
+                      disabled={!loadedJobs}
+                    >
+                      {t("button-clear")}
+                    </Button>
+                    <Typography variant="body1" gutterBottom>
+                      {t("admin-showing") +
+                        " " +
+                        jobs.length +
+                        "/" +
+                        dbJobs.length +
+                        " " +
+                        t("admin-loaded-jobs")}
+                    </Typography>
+                  </Stack>
+                  <TableContainer>
+                    <Table>
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>{t("admin-id")}</TableCell>
+                          <TableCell>{t("type")}</TableCell>
+                          <TableCell>{t("admin-status")}</TableCell>
+                          <TableCell>{t("admin-actions")}</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {jobs.map((job) => (
+                          <TableRow key={job.id}>
+                            <TableCell>
+                              <Typography variant="caption">
+                                {job.id}
+                              </Typography>
+                            </TableCell>
+                            <TableCell>{job.type}</TableCell>
+                            <TableCell>{job.status}</TableCell>
+                            <TableCell>
+                              <Typography variant="caption">
+                                {job.lastError}
+                              </Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Stack
+                                direction="row"
+                                alignItems={"center"}
+                                spacing={2}
+                                useFlexGap
+                              >
+                                <LoadingButton
+                                  size="small"
+                                  onClick={async () => {
+                                    setRestartingJobs([
+                                      ...restartingJobs,
+                                      job.id,
+                                    ]);
+                                    await restartJob(keycloak.token, job.id);
+                                    setRestartingJobs(
+                                      restartingJobs.filter((x) => x !== job.id)
+                                    );
+                                    enqueueSnackbar(t("jobRestarted"), {
+                                      variant: "success",
+                                    });
+                                  }}
+                                  loading={restartingJobs.includes(job.id)}
+                                >
+                                  {t("button-restart")}
+                                </LoadingButton>
+                              </Stack>
                             </TableCell>
                           </TableRow>
                         ))}
