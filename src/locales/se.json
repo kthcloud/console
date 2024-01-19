@@ -88,6 +88,8 @@
         "deploy-with-github-actions-subheader": "Lägg till GitHub Actions-filen i ditt projekt för att publicera din app automatiskt.",
         "no-deployments-found": "Inga resurser hittades",
         "admin-loaded-gpus": "hämtade GPUer",
+        "admin-loaded-teams": "hämtade grupper",
+        "admin-loaded-jobs": "hämtade jobb",
         "menu-dashboard": "Översikt",
         "gravatar": "Vi använder Gravatar för profilbilder. Byt på ",
         "admin-visibility": "Synlighet",
@@ -265,6 +267,8 @@
         "admin-user": "Användare",
         "cpu-capacity": "CPU fördelning",
         "error-could-not-fetch-users": "Kunde inte hämta användare",
+        "error-could-not-fetch-jobs": "Kunde inte hämta jobb",
+        "error-could-not-fetch-teams": "Kunde inte hämta grupper",
         "menu-cbhcloud": "cbhcloud",
         "snapshots": "Avbildningar",
         "select-key-file": "Ladda upp fil",
@@ -394,6 +398,7 @@
         "read": "Arkivera",
         "menu-manage-account": "Hantera konto",
         "teams": "Grupper",
+        "jobs": "Jobb",
         "current-teams": "Dina grupper",
         "teams-subheader-1": "Grupper är ett sätt att organisera dina resurser och samarbeta med andra. Du kan skapa en grupp och bjuda in andra.",
         "teams-subheader-2": "Dela resurser med gruppen genom att besöka resursens sida och klicka på dela med grupp",
@@ -447,6 +452,8 @@
         "content": "Innehåll",
         "port": "Port",
         "domain-missing": "Domän saknas",
-        "choose-type": "Välj resurstyp"
+        "choose-type": "Välj resurstyp",
+        "joinedAt": "Gick med",
+        "addedAt": "Lades till"
     }
 }

@@ -15,8 +15,9 @@ export const joinTeam = async (token, teamId, code) => {
   return result;
 };
 
-export const getTeams = async (token) => {
-  const url = `${process.env.REACT_APP_DEPLOY_API_URL}/teams`;
+export const getTeams = async (token, all = false) => {
+  let allParam = all ? "?all=true" : "";
+  const url = `${process.env.REACT_APP_DEPLOY_API_URL}/teams${allParam}`;
 
   const response = await fetch(url, {
     method: "GET",

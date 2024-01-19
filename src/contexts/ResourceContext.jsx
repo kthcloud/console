@@ -148,7 +148,7 @@ export const ResourceContextProvider = ({ children }) => {
   const loadTeams = async () => {
     if (!(initialized && keycloak.authenticated)) return;
     try {
-      const teams = await getTeams(keycloak.token);
+      const teams = await getTeams(keycloak.token, false);
       setTeams(teams);
     } catch (error) {
       errorHandler(error).forEach((e) =>
