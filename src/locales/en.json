@@ -447,6 +447,7 @@
         "content": "Content",
         "port": "Port",
         "domain-missing": "Domain required",
-        "edit-your-proxy-after-creation-for-custom-domain": "Edit your proxy after creation to setup a custom domain"
+        "edit-your-proxy-after-creation-for-custom-domain": "Edit your proxy after creation to setup a custom domain",
+        "choose-type": "Choose type"
     }
 }

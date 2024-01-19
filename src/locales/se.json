@@ -446,6 +446,8 @@
         "type": "Typ",
         "content": "Innehåll",
         "port": "Port",
-        "domain-missing": "Domän saknas"
+        "domain-missing": "Domän saknas",
+        "choose-type": "Välj resurstyp"
+
     }
 }
