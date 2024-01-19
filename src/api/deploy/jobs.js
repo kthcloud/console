@@ -19,12 +19,7 @@ export const getJob = async (jobId, token) => {
   return await res.json();
 };
 
-export const getJobs = async (
-  token,
-  pageSize = 100,
-  page = 1,
-  all = false
-) => {
+export const getJobs = async (token, pageSize = 100, page = 1, all = false) => {
   let allParam = all ? "&all=true" : "";
 
   const res = await fetch(
