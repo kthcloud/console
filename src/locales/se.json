@@ -454,6 +454,7 @@
         "domain-missing": "Domän saknas",
         "choose-type": "Välj resurstyp",
         "joinedAt": "Gick med",
-        "addedAt": "Lades till"
+        "addedAt": "Lades till",
+        "jobRestarted": "Jobb startat om"
     }
 }

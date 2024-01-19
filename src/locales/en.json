@@ -455,6 +455,7 @@
         "edit-your-proxy-after-creation-for-custom-domain": "Edit your proxy after creation to setup a custom domain",
         "choose-type": "Choose type",
         "joinedAt": "Joined at",
-        "addedAt": "Added at"
+        "addedAt": "Added at",
+        "jobRestarted": "Job restarted"
     }
 }

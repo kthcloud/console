@@ -1,3 +1,4 @@
+import { LoadingButton } from "@mui/lab";
 import {
   AppBar,
   Box,
@@ -26,7 +27,7 @@ import { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { deleteDeployment, getDeployments } from "src/api/deploy/deployments";
-import { getJobs } from "src/api/deploy/jobs";
+import { getJobs, restartJob } from "src/api/deploy/jobs";
 import { getTeams } from "src/api/deploy/teams";
 import { getAllUsers } from "src/api/deploy/users";
 import { deleteVM, detachGPU, getGPUs, getVMs } from "src/api/deploy/vms";
@@ -165,14 +166,13 @@ export const Admin = () => {
     for (let i = 0; i < dbUsers.length; i++) {
       const user = dbUsers[i];
       if (
-        user.id.includes(usersFilter) ||
-        user.username.includes(usersFilter) ||
-        user.email.includes(usersFilter) ||
-        user.role.name.includes(usersFilter) ||
-        "admin".includes(usersFilter) ||
-        "onboarded".includes(usersFilter) ||
-        user.firstName.includes(usersFilter) ||
-        user.lastName.includes(usersFilter) ||
+        user.id?.toLowerCase().includes(usersFilter.toLowerCase()) ||
+        user.username?.toLowerCase().includes(usersFilter.toLowerCase()) ||
+        user.email?.toLowerCase().includes(usersFilter.toLowerCase()) ||
+        "admin".toLowerCase().includes(usersFilter.toLowerCase()) ||
+        "onboarded".toLowerCase().includes(usersFilter.toLowerCase()) ||
+        user.firstName?.toLowerCase().includes(usersFilter.toLowerCase()) ||
+        user.lastName?.toLowerCase().includes(usersFilter.toLowerCase()) ||
         usersFilter === ""
       ) {
         filtered.push(user);
@@ -206,11 +206,11 @@ export const Admin = () => {
     for (let i = 0; i < dbVMs.length; i++) {
       const vm = dbVMs[i];
       if (
-        vm.name.includes(vmFilter) ||
-        vm.id.includes(vmFilter) ||
-        vm.ownerId.includes(vmFilter) ||
-        vm.zone.includes(vmFilter) ||
-        vm.host.includes(vmFilter) ||
+        vm.name?.toLowerCase().includes(vmFilter.toLowerCase()) ||
+        vm.id?.toLowerCase().includes(vmFilter.toLowerCase()) ||
+        vm.ownerId?.toLowerCase().includes(vmFilter.toLowerCase()) ||
+        vm.zone?.toLowerCase().includes(vmFilter.toLowerCase()) ||
+        vm.host?.toLowerCase().includes(vmFilter.toLowerCase()) ||
         vmFilter === ""
       ) {
         filtered.push(vm);
@@ -234,14 +234,30 @@ export const Admin = () => {
     for (let i = 0; i < dbDeployments.length; i++) {
       const deployment = dbDeployments[i];
       if (
-        deployment.name.includes(deploymentsFilter) ||
-        deployment.id.includes(deploymentsFilter) ||
-        deployment.ownerId.includes(deploymentsFilter) ||
-        deployment.zone.includes(deploymentsFilter) ||
-        deployment.status.includes(deploymentsFilter) ||
-        deployment.pingResult.includes(deploymentsFilter) ||
-        deployment.healthCheckPath.includes(deploymentsFilter) ||
-        deployment.customDomainUrl.includes(deploymentsFilter) ||
+        deployment.name
+          ?.toLowerCase()
+          .includes(deploymentsFilter.toLowerCase()) ||
+        deployment.id
+          ?.toLowerCase()
+          .includes(deploymentsFilter.toLowerCase()) ||
+        deployment.ownerId
+          ?.toLowerCase()
+          .includes(deploymentsFilter.toLowerCase()) ||
+        deployment.zone
+          ?.toLowerCase()
+          .includes(deploymentsFilter.toLowerCase()) ||
+        deployment.status
+          ?.toLowerCase()
+          .includes(deploymentsFilter.toLowerCase()) ||
+        deployment.pingResult
+          ?.toLowerCase()
+          .includes(deploymentsFilter.toLowerCase()) ||
+        deployment.healthCheckPath
+          ?.toLowerCase()
+          .includes(deploymentsFilter.toLowerCase()) ||
+        deployment.customDomainUrl
+          ?.toLowerCase()
+          .includes(deploymentsFilter.toLowerCase()) ||
         deploymentsFilter === ""
       ) {
         filtered.push(deployment);
@@ -265,9 +281,9 @@ export const Admin = () => {
     for (let i = 0; i < dbGPUs.length; i++) {
       const gpu = dbGPUs[i];
       if (
-        gpu.id.includes(gpusFilter) ||
-        gpu.name.includes(gpusFilter) ||
-        decode(gpu.id).includes(gpusFilter) ||
+        gpu.id?.toLowerCase().includes(gpusFilter.toLowerCase()) ||
+        gpu.name?.toLowerCase().includes(gpusFilter.toLowerCase()) ||
+        decode(gpu.id)?.toLowerCase().includes(gpusFilter.toLowerCase()) ||
         gpusFilter === ""
       ) {
         filtered.push(gpu);
@@ -294,9 +310,9 @@ export const Admin = () => {
     for (let i = 0; i < dbTeams.length; i++) {
       const team = dbTeams[i];
       if (
-        team.id.includes(teamFilter) ||
-        team.name.includes(teamFilter) ||
-        team.description.includes(teamFilter) ||
+        team.id?.toLowerCase().includes(teamFilter.toLowerCase()) ||
+        team.name?.toLowerCase().includes(teamFilter.toLowerCase()) ||
+        team.description?.toLowerCase().includes(teamFilter.toLowerCase()) ||
         teamFilter === ""
       ) {
         filtered.push(team);
@@ -313,6 +329,7 @@ export const Admin = () => {
   const [jobs, setJobs] = useState([]);
   const [jobFilter, setJobFilter] = useState("");
   const [loadedJobs, setLoadedJobs] = useState(false);
+  const [restartingJobs, setRestartingJobs] = useState([]);
 
   const filterJobs = async () => {
     setLoadedJobs(true);
@@ -323,14 +340,14 @@ export const Admin = () => {
       const job = dbJobs[i];
 
       if (
-        job.createdAt.includes(jobFilter) ||
-        job.finishedAt.includes(jobFilter) ||
-        job.id.includes(jobFilter) ||
-        job.lastRunAt.includes(jobFilter) ||
-        job.runAfter.includes(jobFilter) ||
-        job.status.includes(jobFilter) ||
-        job.type.includes(jobFilter) ||
-        job.userId.includes(jobFilter) ||
+        job.createdAt?.toLowerCase().includes(jobFilter.toLowerCase()) ||
+        job.finishedAt?.toLowerCase().includes(jobFilter.toLowerCase()) ||
+        job.id?.toLowerCase().includes(jobFilter.toLowerCase()) ||
+        job.lastRunAt?.toLowerCase().includes(jobFilter.toLowerCase()) ||
+        job.runAfter?.toLowerCase().includes(jobFilter.toLowerCase()) ||
+        job.status?.toLowerCase().includes(jobFilter.toLowerCase()) ||
+        job.type?.toLowerCase().includes(jobFilter.toLowerCase()) ||
+        job.userId?.toLowerCase().includes(jobFilter.toLowerCase()) ||
         jobFilter === ""
       ) {
         filtered.push(job);
@@ -1158,14 +1175,54 @@ export const Admin = () => {
                       <TableHead>
                         <TableRow>
                           <TableCell>{t("admin-id")}</TableCell>
+                          <TableCell>{t("type")}</TableCell>
                           <TableCell>{t("admin-status")}</TableCell>
+                          <TableCell>{t("admin-actions")}</TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
                         {jobs.map((job) => (
                           <TableRow key={job.id}>
-                            <TableCell>{job.id}</TableCell>
+                            <TableCell>
+                              <Typography variant="caption">
+                                {job.id}
+                              </Typography>
+                            </TableCell>
+                            <TableCell>{job.type}</TableCell>
                             <TableCell>{job.status}</TableCell>
+                            <TableCell>
+                              <Typography variant="caption">
+                                {job.lastError}
+                              </Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Stack
+                                direction="row"
+                                alignItems={"center"}
+                                spacing={2}
+                                useFlexGap
+                              >
+                                <LoadingButton
+                                  size="small"
+                                  onClick={async () => {
+                                    setRestartingJobs([
+                                      ...restartingJobs,
+                                      job.id,
+                                    ]);
+                                    await restartJob(keycloak.token, job.id);
+                                    setRestartingJobs(
+                                      restartingJobs.filter((x) => x !== job.id)
+                                    );
+                                    enqueueSnackbar(t("jobRestarted"), {
+                                      variant: "success",
+                                    });
+                                  }}
+                                  loading={restartingJobs.includes(job.id)}
+                                >
+                                  {t("button-restart")}
+                                </LoadingButton>
+                              </Stack>
+                            </TableCell>
                           </TableRow>
                         ))}
                       </TableBody>
