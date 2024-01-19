@@ -105,7 +105,7 @@ export const ReplicaManager = ({ deployment }) => {
           </Grid>
         </Grid>
 
-        {count === 0 && (
+        {count === 0 && count !== deployment.replicas && (
           <Typography gutterBottom variant="body2">
             {t("replicas-shutdown-warning")}
           </Typography>
