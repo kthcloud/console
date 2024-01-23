@@ -5,7 +5,7 @@ on:
       - "main"
   workflow_dispatch:
 jobs:
-  docker:
+  kthcloud-ci:
     runs-on: ubuntu-latest
     steps:
       - name: Set release env
