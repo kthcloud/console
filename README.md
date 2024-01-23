@@ -1,10 +1,10 @@
-# ☁️ kthcloud/landing-frontend
+# ☁️ kthcloud/console
 
-Welcome to the kthcloud/landing-frontend repository! This project is the web console for kthcloud, a free cloud provider at KTH, created by students for students. It is built in JavaScript, leveraging React and MUI. We warmly welcome your contributions, and we hope this README helps you get started.
+Welcome to the kthcloud/console repository! This project is the web console for kthcloud, a free cloud provider at KTH, created by students for students. It is built in JavaScript, leveraging React and MUI. We warmly welcome your contributions, and we hope this README helps you get started.
 
 ## Table of Contents
 
--   [☁️ kthcloud/landing-frontend](#️-kthcloudlanding-frontend)
+-   [☁️ kthcloud/console](#️-kthcloudconsole)
     -   [Table of Contents](#table-of-contents)
     -   [External dependencies](#external-dependencies)
     -   [Setup](#setup)
@@ -14,7 +14,7 @@ Welcome to the kthcloud/landing-frontend repository! This project is the web con
 
 ## External dependencies
 
-landing-frontend uses these services for its functionality.
+console uses these services for its functionality.
 
 kthcloud maintained:
 
@@ -39,8 +39,8 @@ We always aim to use the latest LTS version of Node.js. The project is currently
 Once the correct Node.js is installed and loaded, you can set up the project by running the following commands in your terminal:
 
 ```bash
-git clone https://github.com/kthcloud/landing-frontend.git
-cd landing-frontend
+git clone https://github.com/kthcloud/console.git
+cd console
 npm install
 npm start
 ```
@@ -51,7 +51,7 @@ The `npm start` command will start the development server. You can access the ap
 
 We are thrilled you are considering contributing to the kthcloud project! We welcome contributions from everyone, and we are here to help you if you need it.
 
-You can find our current issues in the [Issues](https://github.com/kthcloud/landing-frontend/issues) tab. If you have any questions, feel free to discuss in the issue thread.
+You can find our current issues in the [Issues](https://github.com/kthcloud/console/issues) tab. If you have any questions, feel free to discuss in the issue thread.
 
 The `beta` branch is the main development branch, so all pull requests should be created against `beta`.
 
