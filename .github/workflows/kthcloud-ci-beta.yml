@@ -1,4 +1,4 @@
-name: kthcloud-ci-beta
+name: Build and deploy to beta.cloud.cbh.kth.se
 on:
   push:
     branches:
