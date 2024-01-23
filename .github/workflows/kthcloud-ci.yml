@@ -1,4 +1,4 @@
-name: kthcloud-ci
+name: Build and deploy to cloud.cbh.kth.se
 on:
   push:
     branches:
