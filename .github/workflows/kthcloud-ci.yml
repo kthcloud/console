@@ -1,11 +1,11 @@
-name: kthcloud-ci
+name: Build and deploy to cloud.cbh.kth.se
 on:
   push:
     branches:
       - "main"
   workflow_dispatch:
 jobs:
-  docker:
+  kthcloud-ci:
     runs-on: ubuntu-latest
     steps:
       - name: Set release env
