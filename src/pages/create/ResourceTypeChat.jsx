@@ -89,11 +89,14 @@ const ResourceTypeChat = () => {
               {t("explain-vm")}
             </Typography>
           ) : (
-            <Typography variant="body2">
-              <b>🦙 Llama:</b>
-              <br />
+            <Stack direction="column">
+              <Typography variant="body2">
+                <b>🦙 Llama:</b>
+                <br />
+              </Typography>
+
               <GenAITooltip>{response}</GenAITooltip>
-            </Typography>
+            </Stack>
           )}
         </>
       )}
