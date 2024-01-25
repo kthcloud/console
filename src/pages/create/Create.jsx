@@ -7,6 +7,7 @@ import {
   Stack,
   CardHeader,
   Button,
+  useTheme,
 } from "@mui/material";
 
 //hooks
@@ -40,16 +41,27 @@ export const Create = () => {
   const setAlignment = (newAlignment) => {
     _setAlignment(newAlignment);
     let params = new URLSearchParams(searchParams);
-    params.set("type", newAlignment);
+    if (!newAlignment) params.delete("type");
+    else params.set("type", newAlignment);
     setSearchParams(params);
   };
+  const theme = useTheme();
 
   const navigate = useNavigate();
   // eslint-disable-next-line no-unused-vars
   let [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
-    setAlignment("deployment");
+    if (searchParams.has("type")) {
+      let type = searchParams.get("type");
+      if (type === "deployment" || type === "vm") {
+        setAlignment(type);
+      } else {
+        let params = new URLSearchParams(searchParams);
+        params.delete("type");
+        setSearchParams(params);
+      }
+    } else setAlignment("");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -84,32 +96,34 @@ export const Create = () => {
                       {t("choose-type")}
                     </Typography>
                     <Stack
-                      direction="row"
+                      direction="column"
                       spacing={1}
-                      alignItems="center"
+                      alignItems="flex-start"
                       useFlexGap
                     >
                       <Button
-                        color="primary"
-                        variant="contained"
+                        variant={
+                          alignment === "deployment" ? "contained" : "text"
+                        }
                         disabled={alignment === "deployment"}
                         size="large"
                         onClick={() => {
                           setAlignment("deployment");
                         }}
                         startIcon={<Iconify icon="lucide:container" />}
+                        sx={{ px: 3 }}
                       >
                         {t("resource-kubernetes-deployment")}
                       </Button>
                       <Button
-                        color="primary"
-                        variant="contained"
+                        variant={alignment === "vm" ? "contained" : "text"}
                         disabled={alignment === "vm"}
                         size="large"
                         onClick={() => {
                           setAlignment("vm");
                         }}
                         startIcon={<Iconify icon="carbon:virtual-machine" />}
+                        sx={{ px: 3 }}
                       >
                         {t("resource-vm")}
                       </Button>
