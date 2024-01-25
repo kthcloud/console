@@ -26,17 +26,17 @@ import { enqueueSnackbar } from "notistack";
 import { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { deleteDeployment, getDeployments } from "src/api/deploy/deployments";
-import { getJobs, restartJob } from "src/api/deploy/jobs";
-import { getTeams } from "src/api/deploy/teams";
-import { getAllUsers } from "src/api/deploy/users";
-import { deleteVM, detachGPU, getGPUs, getVMs } from "src/api/deploy/vms";
-import LoadingPage from "src/components/LoadingPage";
-import Page from "src/components/Page";
-import useInterval from "src/hooks/useInterval";
-import useResource from "src/hooks/useResource";
-import { errorHandler } from "src/utils/errorHandler";
-import { hashGPUId } from "src/utils/helpers";
+import { deleteDeployment, getDeployments } from "/src/api/deploy/deployments";
+import { getJobs, restartJob } from "/src/api/deploy/jobs";
+import { getTeams } from "/src/api/deploy/teams";
+import { getAllUsers } from "/src/api/deploy/users";
+import { deleteVM, detachGPU, getGPUs, getVMs } from "/src/api/deploy/vms";
+import LoadingPage from "/src/components/LoadingPage";
+import Page from "/src/components/Page";
+import useInterval from "/src/hooks/useInterval";
+import useResource from "/src/hooks/useResource";
+import { errorHandler } from "/src/utils/errorHandler";
+import { hashGPUId } from "/src/utils/helpers";
 
 export const Admin = () => {
   const { t } = useTranslation();

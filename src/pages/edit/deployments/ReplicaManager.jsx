@@ -12,9 +12,9 @@ import {
 import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { useKeycloak } from "@react-keycloak/web";
-import useResource from "src/hooks/useResource";
-import { updateDeployment } from "src/api/deploy/deployments";
-import { errorHandler } from "src/utils/errorHandler";
+import useResource from "/src/hooks/useResource";
+import { updateDeployment } from "/src/api/deploy/deployments";
+import { errorHandler } from "/src/utils/errorHandler";
 import { useTranslation } from "react-i18next";
 
 export const ReplicaManager = ({ deployment }) => {

@@ -1,7 +1,7 @@
 import { IconButton, Tooltip } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import Iconify from "src/components/Iconify";
+import Iconify from "/src/components/Iconify";
 
 const HelpButton = () => {
   const { t, i18n } = useTranslation();

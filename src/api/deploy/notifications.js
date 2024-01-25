@@ -1,5 +1,5 @@
 export const getNotifications = async (token) => {
-  const url = `${process.env.REACT_APP_DEPLOY_API_URL}/notifications`;
+  const url = `${import.meta.env.VITE_DEPLOY_API_URL}/notifications`;
   const response = await fetch(url, {
     method: "GET",
     headers: {
@@ -20,7 +20,7 @@ export const getNotifications = async (token) => {
 
 export const markNotificationAsRead = async (token, id) => {
   const body = { read: true };
-  const url = `${process.env.REACT_APP_DEPLOY_API_URL}/notifications/${id}`;
+  const url = `${import.meta.env.VITE_DEPLOY_API_URL}/notifications/${id}`;
   const response = await fetch(url, {
     method: "POST",
     headers: {
@@ -35,7 +35,7 @@ export const markNotificationAsRead = async (token, id) => {
 };
 
 export const deleteNotification = async (token, id) => {
-  const url = `${process.env.REACT_APP_DEPLOY_API_URL}/notifications/${id}`;
+  const url = `${import.meta.env.VITE_DEPLOY_API_URL}/notifications/${id}`;
   const response = await fetch(url, {
     method: "DELETE",
     headers: {

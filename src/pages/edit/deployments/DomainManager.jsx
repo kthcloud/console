@@ -30,10 +30,10 @@ import {
 import { useKeycloak } from "@react-keycloak/web";
 import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
-import { updateDeployment } from "src/api/deploy/deployments";
-import Iconify from "src/components/Iconify";
-import useResource from "src/hooks/useResource";
-import { errorHandler } from "src/utils/errorHandler";
+import { updateDeployment } from "/src/api/deploy/deployments";
+import Iconify from "/src/components/Iconify";
+import useResource from "/src/hooks/useResource";
+import { errorHandler } from "/src/utils/errorHandler";
 import { toUnicode } from "punycode";
 import { useTranslation } from "react-i18next";
 import { sentenceCase } from "change-case";

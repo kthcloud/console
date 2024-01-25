@@ -1,16 +1,16 @@
 import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { searchUsers } from "src/api/deploy/users";
-import { errorHandler } from "src/utils/errorHandler";
+import { searchUsers } from "/src/api/deploy/users";
+import { errorHandler } from "/src/utils/errorHandler";
 import { useKeycloak } from "@react-keycloak/web";
-import ConfirmButton from "src/components/ConfirmButton";
-import { updateVM } from "src/api/deploy/vms";
+import ConfirmButton from "/src/components/ConfirmButton";
+import { updateVM } from "/src/api/deploy/vms";
 import { Link } from "react-router-dom";
-import { updateDeployment } from "src/api/deploy/deployments";
-import useResource from "src/hooks/useResource";
-import { updateTeam } from "src/api/deploy/teams";
-const {
+import { updateDeployment } from "/src/api/deploy/deployments";
+import useResource from "/src/hooks/useResource";
+import { updateTeam } from "/src/api/deploy/teams";
+import {
   Card,
   CardHeader,
   CardContent,
@@ -19,7 +19,7 @@ const {
   TextField,
   Button,
   Stack,
-} = require("@mui/material");
+} from "@mui/material";
 
 const DangerZone = ({ resource }) => {
   const { t } = useTranslation();

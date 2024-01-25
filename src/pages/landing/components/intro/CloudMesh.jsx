@@ -3,7 +3,7 @@ import { useFrame, useLoader } from "@react-three/fiber";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { Vector3 } from "three";
 
-const url = process.env.PUBLIC_URL + "/static/models/cloud.gltf";
+const url = "/static/models/cloud.gltf";
 
 function CloudModel() {
   const gltf = useLoader(GLTFLoader, url);

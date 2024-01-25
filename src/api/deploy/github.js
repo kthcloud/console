@@ -1,6 +1,6 @@
 export const getRepositories = async (code, token) => {
   const res = await fetch(
-    process.env.REACT_APP_DEPLOY_API_URL + "/github/repositories?code=" + code,
+    import.meta.env.VITE_DEPLOY_API_URL + "/github/repositories?code=" + code,
     {
       method: "GET",
       headers: {

@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import { sentenceCase } from "change-case";
 import Iconify from "./Iconify";
-import useResource from "src/hooks/useResource";
+import useResource from "/src/hooks/useResource";
 
 export default function JobList() {
   const { jobs, setJobs } = useResource();

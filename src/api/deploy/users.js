@@ -1,6 +1,6 @@
 export const getUser = async (userId, token) => {
   const res = await fetch(
-    process.env.REACT_APP_DEPLOY_API_URL + "/users/" + userId,
+    import.meta.env.VITE_DEPLOY_API_URL + "/users/" + userId,
     {
       method: "GET",
       headers: {
@@ -21,7 +21,7 @@ export const getUser = async (userId, token) => {
 
 export const getAllUsers = async (token) => {
   const res = await fetch(
-    process.env.REACT_APP_DEPLOY_API_URL + "/users?all=true",
+    import.meta.env.VITE_DEPLOY_API_URL + "/users?all=true",
     {
       method: "GET",
       headers: {
@@ -42,7 +42,7 @@ export const getAllUsers = async (token) => {
 
 export const updateUser = async (userId, token, data) => {
   const res = await fetch(
-    process.env.REACT_APP_DEPLOY_API_URL + "/users/" + userId,
+    import.meta.env.VITE_DEPLOY_API_URL + "/users/" + userId,
     {
       method: "POST",
       headers: {
@@ -64,7 +64,7 @@ export const updateUser = async (userId, token, data) => {
 
 export const searchUsers = async (token, query) => {
   const res = await fetch(
-    process.env.REACT_APP_DEPLOY_API_URL +
+    import.meta.env.VITE_DEPLOY_API_URL +
       "/users?all=true&discover=true&search=" +
       encodeURIComponent(query),
     {

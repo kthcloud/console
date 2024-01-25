@@ -5,7 +5,7 @@ import { BrowserRouter } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import { initI18n } from "./i18next";
 //
-import App from "./App";
+import App from "./App.jsx";
 import "./theme/customStyle.css";
 // ----------------------------------------------------------------------
 

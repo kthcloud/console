@@ -32,20 +32,18 @@ External:
 
 ## Setup
 
-Before you start, make sure you have Node.js installed on your system. We recommend using [nvm](https://github.com/nvm-sh/nvm) to install and manage Node.js versions.
+Before you start, make sure you have bun installed on your system. You can install it at https://bun.sh
 
-We always aim to use the latest LTS version of Node.js. The project is currently developed with Node.js 20. You can switch to the correct Node.js version by running `nvm use <version>` in your terminal.
-
-Once the correct Node.js is installed and loaded, you can set up the project by running the following commands in your terminal:
+You can then set up the project by running the following commands in your terminal:
 
 ```bash
 git clone https://github.com/kthcloud/console.git
 cd console
-npm install
-npm start
+bun install
+bun run dev
 ```
 
-The `npm start` command will start the development server. You can access the application at `http://localhost:3000`.
+The `bun run dev` command will start the development server. You can access the application at `http://localhost:3000`.
 
 ## Contributing
 
@@ -70,7 +68,7 @@ Please include a detailed description of your changes in your pull request.
 
 ## Formatting
 
-This project uses Prettier as the code formatter. We have a `.prettierrc` file in the repository that sets the formatting rules, so please make sure to format your code before submitting a pull request. You can format your code by using the appropriate extension or plugin in your IDE, or running `npx prettier --write .` in your terminal.
+This project uses Prettier as the code formatter. We have a `.prettierrc` file in the repository that sets the formatting rules, so please make sure to format your code before submitting a pull request. You can format your code by using the appropriate extension or plugin in your IDE, or running `prettier --write .` in your terminal (You can install prettier with `bun install -g prettier`).
 
 ## License
 

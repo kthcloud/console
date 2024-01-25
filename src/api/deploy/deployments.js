@@ -1,5 +1,5 @@
 export const getDeployment = async (token, id) => {
-  const url = `${process.env.REACT_APP_DEPLOY_API_URL}/deployments/${id}`;
+  const url = `${import.meta.env.VITE_DEPLOY_API_URL}/deployments/${id}`;
   const res = await fetch(url, {
     method: "GET",
     headers: {
@@ -14,7 +14,7 @@ export const getDeployment = async (token, id) => {
 
 export const getDeployments = async (token, all = false) => {
   const allQuery = all ? "?all=true" : "";
-  const url = `${process.env.REACT_APP_DEPLOY_API_URL}/deployments${allQuery}`;
+  const url = `${import.meta.env.VITE_DEPLOY_API_URL}/deployments${allQuery}`;
   const res = await fetch(url, {
     method: "GET",
     headers: {
@@ -33,7 +33,7 @@ export const getDeployments = async (token, all = false) => {
 
 export const deleteDeployment = async (id, token) => {
   const res = await fetch(
-    process.env.REACT_APP_DEPLOY_API_URL + "/deployments/" + id,
+    import.meta.env.VITE_DEPLOY_API_URL + "/deployments/" + id,
     {
       method: "DELETE",
       headers: {
@@ -58,7 +58,7 @@ export const deleteDeployment = async (id, token) => {
 
 export const getDeploymentYaml = async (id, token) => {
   const res = await fetch(
-    process.env.REACT_APP_DEPLOY_API_URL + "/deployments/" + id + "/ciConfig",
+    import.meta.env.VITE_DEPLOY_API_URL + "/deployments/" + id + "/ciConfig",
     {
       method: "GET",
       headers: {
@@ -106,7 +106,7 @@ export const createDeployment = async (
     };
 
   const res = await fetch(
-    process.env.REACT_APP_DEPLOY_API_URL + "/deployments",
+    import.meta.env.VITE_DEPLOY_API_URL + "/deployments",
     {
       method: "POST",
       headers: {
@@ -128,7 +128,7 @@ export const createDeployment = async (
 
 export const updateDeployment = async (id, changes, token) => {
   const res = await fetch(
-    process.env.REACT_APP_DEPLOY_API_URL + "/deployments/" + id,
+    import.meta.env.VITE_DEPLOY_API_URL + "/deployments/" + id,
     {
       method: "POST",
       headers: {
@@ -151,7 +151,7 @@ export const updateDeployment = async (id, changes, token) => {
 export const applyCommand = async (id, command, token) => {
   const body = { command: command };
   const res = await fetch(
-    process.env.REACT_APP_DEPLOY_API_URL + "/deployments/" + id + "/command",
+    import.meta.env.VITE_DEPLOY_API_URL + "/deployments/" + id + "/command",
     {
       method: "POST",
       headers: {
@@ -172,7 +172,7 @@ export const applyCommand = async (id, command, token) => {
 };
 
 export const acceptDeploymentTransfer = async (token, id, code) => {
-  const url = `${process.env.REACT_APP_DEPLOY_API_URL}/deployments/${id}`;
+  const url = `${import.meta.env.VITE_DEPLOY_API_URL}/deployments/${id}`;
   const body = { transferCode: code };
 
   const response = await fetch(url, {

@@ -11,7 +11,7 @@ import {
 import { useKeycloak } from "@react-keycloak/web";
 import { useEffect, useRef, useState } from "react";
 import CopyToClipboard from "react-copy-to-clipboard";
-import Iconify from "src/components/Iconify";
+import Iconify from "/src/components/Iconify";
 import polyfilledEventSource from "@sanity/eventsource";
 import { useTranslation } from "react-i18next";
 
@@ -36,7 +36,7 @@ export const LogsView = ({ deployment }) => {
     }
 
     let eventSource = new polyfilledEventSource(
-      `${process.env.REACT_APP_DEPLOY_API_URL}/deployments/${deployment.id}/logs-sse`,
+      `${import.meta.env.VITE_DEPLOY_API_URL}/deployments/${deployment.id}/logs-sse`,
       {
         headers: {
           Authorization: `Bearer ${keycloak.token}`,

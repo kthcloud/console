@@ -20,16 +20,16 @@ import { useKeycloak } from "@react-keycloak/web";
 import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import CopyToClipboard from "react-copy-to-clipboard";
-import Iconify from "src/components/Iconify";
-import useResource from "src/hooks/useResource";
+import Iconify from "/src/components/Iconify";
+import useResource from "/src/hooks/useResource";
 import {
   attachGPU,
   detachGPU,
   getGPUs,
   attachGPUById,
-} from "src/api/deploy/vms";
-import { errorHandler } from "src/utils/errorHandler";
-import { hashGPUId } from "src/utils/helpers";
+} from "/src/api/deploy/vms";
+import { errorHandler } from "/src/utils/errorHandler";
+import { hashGPUId } from "/src/utils/helpers";
 import { useTranslation } from "react-i18next";
 
 export const GPUManager = ({ vm }) => {

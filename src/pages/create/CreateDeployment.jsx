@@ -19,14 +19,14 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import Iconify from "../../components/Iconify";
-import { createDeployment } from "src/api/deploy/deployments";
+import { createDeployment } from "/src/api/deploy/deployments";
 import { useSnackbar } from "notistack";
 import { useKeycloak } from "@react-keycloak/web";
-import RFC1035Input from "src/components/RFC1035Input";
+import RFC1035Input from "/src/components/RFC1035Input";
 import { faker } from "@faker-js/faker";
 import { GHSelect } from "./GHSelect";
-import { errorHandler } from "src/utils/errorHandler";
-import useResource from "src/hooks/useResource";
+import { errorHandler } from "/src/utils/errorHandler";
+import useResource from "/src/hooks/useResource";
 import ZoneSelector from "./ZoneSelector";
 import { useTranslation } from "react-i18next";
 
@@ -69,7 +69,7 @@ export default function CreateDeployment({ finished }) {
   const [repo, setRepo] = useState("");
 
   const [initialName, setInitialName] = useState(
-    process.env.REACT_APP_RELEASE_BRANCH
+    import.meta.env.VITE_RELEASE_BRANCH
       ? ""
       : faker.word.words(3).replace(/[^a-z0-9]|\s+|\r?\n|\r/gim, "-")
   );
@@ -123,7 +123,7 @@ export default function CreateDeployment({ finished }) {
       );
       finished(job, stay);
       if (stay) {
-        if (!process.env.REACT_APP_RELEASE_BRANCH)
+        if (!import.meta.env.VITE_RELEASE_BRANCH)
           setInitialName(
             faker.word.words(3).replace(/[^a-z0-9]|\s+|\r?\n|\r/gim, "-")
           );

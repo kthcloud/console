@@ -114,7 +114,7 @@ export function Status() {
   const getStatusData = () => {
     if (statusLock) return;
     setStatusLock(true);
-    fetch(process.env.REACT_APP_API_URL + "/landing/v2/status?n=100", {
+    fetch(import.meta.env.VITE_API_URL + "/landing/v2/status?n=100", {
       method: "GET",
     })
       .then((response) => response.json())
@@ -157,7 +157,7 @@ export function Status() {
   const [podCount, setPodCount] = useState(0);
 
   const getStats = () => {
-    fetch(process.env.REACT_APP_API_URL + "/landing/v2/stats?n=1", {
+    fetch(import.meta.env.VITE_API_URL + "/landing/v2/stats?n=1", {
       method: "GET",
     })
       .then((response) => response.json())
@@ -172,7 +172,7 @@ export function Status() {
   const getCapacities = () => {
     if (capacitiesLock) return;
     setCapacitiesLock(true);
-    fetch(process.env.REACT_APP_API_URL + "/landing/v2/capacities?n=1", {
+    fetch(import.meta.env.VITE_API_URL + "/landing/v2/capacities?n=1", {
       method: "GET",
     })
       .then((response) => response.json())

@@ -3,8 +3,8 @@ import Intro from "./components/intro/Intro";
 import Page from "../../components/Page";
 import { Box, Typography } from "@mui/material";
 import { useKeycloak } from "@react-keycloak/web";
-import LoadingPage from "src/components/LoadingPage";
-import Iconify from "src/components/Iconify";
+import LoadingPage from "/src/components/LoadingPage";
+import Iconify from "/src/components/Iconify";
 import { useTranslation } from "react-i18next";
 
 export function Landing() {

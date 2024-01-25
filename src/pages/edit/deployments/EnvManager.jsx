@@ -18,11 +18,11 @@ import {
   Stack,
 } from "@mui/material";
 import Iconify from "../../../components/Iconify";
-import { updateDeployment } from "src/api/deploy/deployments";
+import { updateDeployment } from "/src/api/deploy/deployments";
 import { enqueueSnackbar } from "notistack";
-import useResource from "src/hooks/useResource";
+import useResource from "/src/hooks/useResource";
 import { useKeycloak } from "@react-keycloak/web";
-import { errorHandler } from "src/utils/errorHandler";
+import { errorHandler } from "/src/utils/errorHandler";
 import { useTranslation } from "react-i18next";
 
 export default function EnvManager({ deployment }) {
