@@ -67,7 +67,7 @@ export default function DashboardLayout() {
                         whiteSpace: "nowrap",
                         marginBottom: "1rem",
                       }}
-                      href="https://github.com/kthcloud/landing-frontend/issues/new/choose"
+                      href="https://github.com/kthcloud/console/issues/new/choose"
                       target="_blank"
                       rel="noreferrer"
                     >
@@ -80,11 +80,11 @@ export default function DashboardLayout() {
                         color: "inherit",
                         whiteSpace: "nowrap",
                       }}
-                      href="https://github.com/kthcloud/landing-frontend"
+                      href="https://github.com/kthcloud/console"
                       target="_blank"
                       rel="noreferrer"
                     >
-                      kthcloud/landing-frontend
+                      kthcloud/console
                     </a>
                   </p>
                   <p>
