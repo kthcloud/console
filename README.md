@@ -4,13 +4,13 @@ Welcome to the kthcloud/console repository! This project is the web console for 
 
 ## Table of Contents
 
--   [☁️ kthcloud/console](#️-kthcloudconsole)
-    -   [Table of Contents](#table-of-contents)
-    -   [External dependencies](#external-dependencies)
-    -   [Setup](#setup)
-    -   [Contributing](#contributing)
-    -   [Formatting](#formatting)
-    -   [License](#license)
+- [☁️ kthcloud/console](#️-kthcloudconsole)
+  - [Table of Contents](#table-of-contents)
+  - [External dependencies](#external-dependencies)
+  - [Setup](#setup)
+  - [Contributing](#contributing)
+  - [Formatting](#formatting)
+  - [License](#license)
 
 ## External dependencies
 
@@ -32,20 +32,18 @@ External:
 
 ## Setup
 
-Before you start, make sure you have Node.js installed on your system. We recommend using [nvm](https://github.com/nvm-sh/nvm) to install and manage Node.js versions.
+Before you start, make sure you have bun installed on your system. You can install it at https://bun.sh
 
-We always aim to use the latest LTS version of Node.js. The project is currently developed with Node.js 20. You can switch to the correct Node.js version by running `nvm use <version>` in your terminal.
-
-Once the correct Node.js is installed and loaded, you can set up the project by running the following commands in your terminal:
+You can then set up the project by running the following commands in your terminal:
 
 ```bash
 git clone https://github.com/kthcloud/console.git
 cd console
-npm install
-npm start
+bun install
+bun run dev
 ```
 
-The `npm start` command will start the development server. You can access the application at `http://localhost:3000`.
+The `bun run dev` command will start the development server. You can access the application at `http://localhost:3000`.
 
 ## Contributing
 
