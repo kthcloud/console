@@ -1,5 +1,5 @@
 export const getVM = async (token, id) => {
-  const url = `${process.env.REACT_APP_DEPLOY_API_URL}/vms/${id}`;
+  const url = `${import.meta.env.VITE_DEPLOY_API_URL}/vms/${id}`;
   const response = await fetch(url, {
     method: "GET",
     headers: {
@@ -15,7 +15,7 @@ export const getVM = async (token, id) => {
 
 export const getVMs = async (token, all = false) => {
   const allQuery = all ? "?all=true" : "";
-  const url = `${process.env.REACT_APP_DEPLOY_API_URL}/vms${allQuery}`;
+  const url = `${import.meta.env.VITE_DEPLOY_API_URL}/vms${allQuery}`;
   const response = await fetch(url, {
     method: "GET",
     headers: {
@@ -30,7 +30,7 @@ export const getVMs = async (token, all = false) => {
 };
 
 export const deleteVM = async (id, token) => {
-  const res = await fetch(process.env.REACT_APP_DEPLOY_API_URL + "/vms/" + id, {
+  const res = await fetch(import.meta.env.VITE_DEPLOY_API_URL + "/vms/" + id, {
     method: "DELETE",
     headers: {
       Authorization: "Bearer " + token,
@@ -49,7 +49,7 @@ export const deleteVM = async (id, token) => {
 
 export const detachGPU = async (vm, token) => {
   const res = await fetch(
-    process.env.REACT_APP_DEPLOY_API_URL + "/vms/" + vm.id,
+    import.meta.env.VITE_DEPLOY_API_URL + "/vms/" + vm.id,
     {
       method: "POST",
       headers: {
@@ -70,7 +70,7 @@ export const detachGPU = async (vm, token) => {
 
 export const attachGPU = async (vm, token) => {
   const res = await fetch(
-    process.env.REACT_APP_DEPLOY_API_URL + "/vms/" + vm.id,
+    import.meta.env.VITE_DEPLOY_API_URL + "/vms/" + vm.id,
     {
       method: "POST",
       headers: {
@@ -91,7 +91,7 @@ export const attachGPU = async (vm, token) => {
 
 export const attachGPUById = async (vm, token, id) => {
   const res = await fetch(
-    process.env.REACT_APP_DEPLOY_API_URL + "/vms/" + vm.id,
+    import.meta.env.VITE_DEPLOY_API_URL + "/vms/" + vm.id,
     {
       method: "POST",
       headers: {
@@ -112,7 +112,7 @@ export const attachGPUById = async (vm, token, id) => {
 
 export const getGPUs = async (token, availableOnly = false) => {
   const res = await fetch(
-    process.env.REACT_APP_DEPLOY_API_URL +
+    import.meta.env.VITE_DEPLOY_API_URL +
       "/gpus" +
       (availableOnly ? "?available=true" : ""),
     {
@@ -153,7 +153,7 @@ export const createVM = async (
     body.zone = zone;
   }
 
-  const res = await fetch(process.env.REACT_APP_DEPLOY_API_URL + "/vms", {
+  const res = await fetch(import.meta.env.VITE_DEPLOY_API_URL + "/vms", {
     method: "POST",
     headers: {
       Authorization: "Bearer " + token,
@@ -172,7 +172,7 @@ export const createVM = async (
 };
 
 export const updateVM = async (id, changes, token) => {
-  const res = await fetch(process.env.REACT_APP_DEPLOY_API_URL + "/vms/" + id, {
+  const res = await fetch(import.meta.env.VITE_DEPLOY_API_URL + "/vms/" + id, {
     method: "POST",
     headers: {
       Authorization: "Bearer " + token,
@@ -193,7 +193,7 @@ export const updateVM = async (id, changes, token) => {
 export const applyCommand = async (id, command, token) => {
   const body = { command: command };
   const res = await fetch(
-    process.env.REACT_APP_DEPLOY_API_URL + "/vms/" + id + "/command",
+    import.meta.env.VITE_DEPLOY_API_URL + "/vms/" + id + "/command",
     {
       method: "POST",
       headers: {
@@ -215,7 +215,7 @@ export const applyCommand = async (id, command, token) => {
 
 export const getSnapshots = async (id, token) => {
   const res = await fetch(
-    process.env.REACT_APP_DEPLOY_API_URL + "/vms/" + id + "/snapshots",
+    import.meta.env.VITE_DEPLOY_API_URL + "/vms/" + id + "/snapshots",
     {
       method: "GET",
       headers: {
@@ -238,7 +238,7 @@ export const getSnapshots = async (id, token) => {
 export const createSnapshot = async (id, name, token) => {
   const body = { name: name };
   const res = await fetch(
-    process.env.REACT_APP_DEPLOY_API_URL + "/vms/" + id + "/snapshots",
+    import.meta.env.VITE_DEPLOY_API_URL + "/vms/" + id + "/snapshots",
     {
       method: "POST",
       headers: {
@@ -260,7 +260,7 @@ export const createSnapshot = async (id, name, token) => {
 };
 
 export const acceptVmTransfer = async (token, id, code) => {
-  const url = `${process.env.REACT_APP_DEPLOY_API_URL}/vms/${id}`;
+  const url = `${import.meta.env.VITE_DEPLOY_API_URL}/vms/${id}`;
   const body = { transferCode: code };
 
   const response = await fetch(url, {

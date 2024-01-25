@@ -4,8 +4,8 @@ import { useKeycloak } from "@react-keycloak/web";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { updateUser } from "src/api/deploy/users";
-import useResource from "src/hooks/useResource";
+import { updateUser } from "/src/api/deploy/users";
+import useResource from "/src/hooks/useResource";
 
 export const ResetOnboarding = () => {
   const { t } = useTranslation();

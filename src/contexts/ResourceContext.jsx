@@ -1,18 +1,18 @@
 // hooks
 import { useState, createContext, useEffect } from "react";
-import useInterval from "src/hooks/useInterval";
+import useInterval from "/src/hooks/useInterval";
 import { useSnackbar } from "notistack";
 import { useKeycloak } from "@react-keycloak/web";
 
 // api
-import { getJob } from "src/api/deploy/jobs";
-import { getVM, getVMs } from "src/api/deploy/vms";
-import { getDeployment, getDeployments } from "src/api/deploy/deployments";
-import { errorHandler } from "src/utils/errorHandler";
-import { getUser } from "src/api/deploy/users";
-import { getZones } from "src/api/deploy/zones";
-import { getNotifications } from "src/api/deploy/notifications";
-import { getTeams } from "src/api/deploy/teams";
+import { getJob } from "/src/api/deploy/jobs";
+import { getVM, getVMs } from "/src/api/deploy/vms";
+import { getDeployment, getDeployments } from "/src/api/deploy/deployments";
+import { errorHandler } from "/src/utils/errorHandler";
+import { getUser } from "/src/api/deploy/users";
+import { getZones } from "/src/api/deploy/zones";
+import { getNotifications } from "/src/api/deploy/notifications";
+import { getTeams } from "/src/api/deploy/teams";
 
 const initialState = {
   rows: [],

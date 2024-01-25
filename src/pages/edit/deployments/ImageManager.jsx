@@ -4,10 +4,10 @@ import { useKeycloak } from "@react-keycloak/web";
 import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { updateDeployment } from "src/api/deploy/deployments";
-import Iconify from "src/components/Iconify";
-import useResource from "src/hooks/useResource";
-import { errorHandler } from "src/utils/errorHandler";
+import { updateDeployment } from "/src/api/deploy/deployments";
+import Iconify from "/src/components/Iconify";
+import useResource from "/src/hooks/useResource";
+import { errorHandler } from "/src/utils/errorHandler";
 
 export const ImageManager = ({ deployment }) => {
   const { t } = useTranslation();

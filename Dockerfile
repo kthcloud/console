@@ -1,29 +1,26 @@
-FROM node as build
-WORKDIR /app
-ENV PATH /app/node_modules/.bin:$PATH
-ENV CHOKIDAR_USEPOLLING=true
-
-ENV REACT_APP_API_URL=https://api.cloud.cbh.kth.se
+# Build with Bun
+FROM docker.io/oven/bun:latest as build
 
 ARG RELEASE_BRANCH
-ENV REACT_APP_RELEASE_BRANCH=${RELEASE_BRANCH}
-
 ARG RELEASE_DATE
-ENV REACT_APP_RELEASE_DATE=${RELEASE_DATE}
-
 ARG RELEASE_COMMIT
-ENV REACT_APP_RELEASE_COMMIT=${RELEASE_COMMIT}
 
-COPY ./package.json /app/
-COPY ./package-lock.json /app/
+ENV VITE_RELEASE_BRANCH=${RELEASE_BRANCH}
+ENV VITE_RELEASE_DATE=${RELEASE_DATE}
+ENV VITE_RELEASE_COMMIT=${RELEASE_COMMIT}
+
+ENV VITE_API_URL="https://api.cloud.cbh.kth.se"
+ENV VITE_DEPLOY_API_URL="https://api.cloud.cbh.kth.se/deploy/v1"
+
+WORKDIR /app
 COPY . /app
-RUN npm ci --production
-RUN npm install
-RUN npm run build
 
-# stage 2 - build the final image and copy the react build files
+RUN bun install
+RUN bun run build
+
+# Serve with NGINX
 FROM nginx
-COPY --from=build /app/build /usr/share/nginx/html
+COPY --from=build /app/dist /usr/share/nginx/html
 RUN rm /etc/nginx/conf.d/default.conf
 COPY nginx/nginx.conf /etc/nginx/conf.d
 EXPOSE 3000

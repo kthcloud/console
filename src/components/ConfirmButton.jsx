@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
-const {
+import {
   Button,
   Dialog,
   DialogTitle,
@@ -9,7 +9,7 @@ const {
   DialogContentText,
   DialogActions,
   Backdrop,
-} = require("@mui/material");
+} from "@mui/material";
 
 const ConfirmButton = ({ action, actionText, callback, props }) => {
   const { t } = useTranslation();

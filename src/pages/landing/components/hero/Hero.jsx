@@ -8,10 +8,10 @@ import {
 } from "@mui/material";
 import "./hero.css";
 import { useEffect, useState } from "react";
-import { fShortenNumber } from "src/utils/formatNumber";
+import { fShortenNumber } from "/src/utils/formatNumber";
 import { useKeycloak } from "@react-keycloak/web";
 import { useTranslation } from "react-i18next";
-import { GenAITooltip } from "src/components/GenAITooltip";
+import { GenAITooltip } from "/src/components/GenAITooltip";
 import { Link } from "react-router-dom";
 
 const Hero = () => {
@@ -25,7 +25,7 @@ const Hero = () => {
   const [gpus, setGpus] = useState(0);
 
   const getCapacities = () => {
-    fetch(process.env.REACT_APP_API_URL + "/landing/v2/capacities?n=1", {
+    fetch(import.meta.env.VITE_API_URL + "/landing/v2/capacities?n=1", {
       method: "GET",
     })
       .then((response) => response.json())
@@ -89,9 +89,7 @@ const Hero = () => {
             padding: { md: "80px 0", sm: "20px 0" },
             backgroundImage: {
               xs: "none",
-              sm: `url(${
-                process.env.PUBLIC_URL + "/static/landing/hero-portrait.webp"
-              })`,
+              sm: `url(${"/static/landing/hero-portrait.webp"})`,
             },
             backgroundRepeat: "no-repeat",
             backgroundSize: "contain",
@@ -162,7 +160,7 @@ const Hero = () => {
         >
           <CardMedia
             component="img"
-            src={process.env.PUBLIC_URL + "/static/landing/hero-landscape.webp"}
+            src={"/static/landing/hero-landscape.webp"}
             alt="hero phone"
           />
         </Grid>

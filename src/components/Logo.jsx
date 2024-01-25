@@ -3,7 +3,7 @@ import { Link as RouterLink } from "react-router-dom";
 import { Box } from "@mui/material";
 import { useKeycloak } from "@react-keycloak/web";
 import { useContext } from "react";
-import { ThemeModeContext } from "src/contexts/ThemeModeContext";
+import { ThemeModeContext } from "/src/contexts/ThemeModeContext";
 
 Logo.propTypes = {
   disabledLink: PropTypes.bool,
@@ -17,7 +17,7 @@ export default function Logo({ disabledLink = false, sx }) {
   const logo = (
     <Box sx={{ width: 140, height: "auto", ...sx }}>
       <img
-        src={process.env.PUBLIC_URL + "/static/logo_" + mode + ".svg"}
+        src={"/static/logo_" + mode + ".svg"}
         className="App-logo"
         alt="logo"
       />

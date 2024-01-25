@@ -2,12 +2,12 @@ import { Button, Stack, Link, Tooltip } from "@mui/material";
 import { useKeycloak } from "@react-keycloak/web";
 import { enqueueSnackbar } from "notistack";
 import { useNavigate } from "react-router-dom";
-import { deleteDeployment, applyCommand } from "src/api/deploy/deployments";
-import Iconify from "src/components/Iconify";
-import useResource from "src/hooks/useResource";
+import { deleteDeployment, applyCommand } from "/src/api/deploy/deployments";
+import Iconify from "/src/components/Iconify";
+import useResource from "/src/hooks/useResource";
 import { sentenceCase } from "change-case";
-import ConfirmButton from "src/components/ConfirmButton";
-import { errorHandler } from "src/utils/errorHandler";
+import ConfirmButton from "/src/components/ConfirmButton";
+import { errorHandler } from "/src/utils/errorHandler";
 import { useTranslation } from "react-i18next";
 
 export const DeploymentCommands = ({ deployment }) => {

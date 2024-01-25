@@ -14,9 +14,9 @@ import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
-import { getRepositories } from "src/api/deploy/github";
-import Iconify from "src/components/Iconify";
-import { errorHandler } from "src/utils/errorHandler";
+import { getRepositories } from "/src/api/deploy/github";
+import Iconify from "/src/components/Iconify";
+import { errorHandler } from "/src/utils/errorHandler";
 
 export const GHSelect = ({ setAccessToken, repo, setRepo }) => {
   const { t } = useTranslation();

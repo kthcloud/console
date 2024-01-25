@@ -12,7 +12,7 @@ import { palette, lightPalette } from "./palette";
 import typography from "./typography";
 import componentsOverride from "./overrides";
 import { makeCustomShadows, makeShadows } from "./shadows";
-import { ThemeModeContext } from "src/contexts/ThemeModeContext";
+import { ThemeModeContext } from "/src/contexts/ThemeModeContext";
 
 // ----------------------------------------------------------------------
 

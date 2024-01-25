@@ -8,8 +8,8 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { GenAITooltip } from "src/components/GenAITooltip";
-import Iconify from "src/components/Iconify";
+import { GenAITooltip } from "/src/components/GenAITooltip";
+import Iconify from "/src/components/Iconify";
 import ResourceComparisonTable from "./ResourceComparisonTable";
 
 const ResourceTypeChat = () => {

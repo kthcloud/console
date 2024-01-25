@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 // component
 import Iconify from "../../components/Iconify";
-import ConfirmButton from "src/components/ConfirmButton";
+import ConfirmButton from "/src/components/ConfirmButton";
 import { useTranslation } from "react-i18next";
 
 // ----------------------------------------------------------------------

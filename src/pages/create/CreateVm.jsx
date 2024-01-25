@@ -19,12 +19,12 @@ import { useEffect, useState } from "react";
 
 import { useKeycloak } from "@react-keycloak/web";
 import { useSnackbar } from "notistack";
-import { createVM } from "src/api/deploy/vms";
+import { createVM } from "/src/api/deploy/vms";
 import { Link } from "react-router-dom";
-import RFC1035Input from "src/components/RFC1035Input";
+import RFC1035Input from "/src/components/RFC1035Input";
 import { faker } from "@faker-js/faker";
-import { errorHandler } from "src/utils/errorHandler";
-import useResource from "src/hooks/useResource";
+import { errorHandler } from "/src/utils/errorHandler";
+import useResource from "/src/hooks/useResource";
 import ZoneSelector from "./ZoneSelector";
 import { useTranslation } from "react-i18next";
 
@@ -51,7 +51,7 @@ export default function CreateVm({ finished }) {
   const [availableDisk, setAvailableDisk] = useState(0);
 
   const [initialName, setInitialName] = useState(
-    process.env.REACT_APP_RELEASE_BRANCH
+    import.meta.env.VITE_RELEASE_BRANCH
       ? ""
       : faker.word.words(3).replace(/[^a-z0-9]|\s+|\r?\n|\r/gim, "-")
   );
@@ -171,7 +171,7 @@ export default function CreateVm({ finished }) {
       finished(job, stay);
 
       if (stay) {
-        if (!process.env.REACT_APP_RELEASE_BRANCH)
+        if (!import.meta.env.VITE_RELEASE_BRANCH)
           setInitialName(
             faker.word.words(3).replace(/[^a-z0-9]|\s+|\r?\n|\r/gim, "-")
           );

@@ -13,7 +13,7 @@ import {
 //hooks
 import { useState, useEffect } from "react";
 import { useKeycloak } from "@react-keycloak/web";
-import useResource from "src/hooks/useResource";
+import useResource from "/src/hooks/useResource";
 import { useParams, useNavigate } from "react-router-dom";
 
 // utils
@@ -45,7 +45,7 @@ import { HealthCheckRoute } from "./deployments/HealthCheckRoute";
 import { useTranslation } from "react-i18next";
 import DangerZone from "./DangerZone";
 import { ReplicaManager } from "./deployments/ReplicaManager";
-import Iconify from "src/components/Iconify";
+import Iconify from "/src/components/Iconify";
 import { enqueueSnackbar } from "notistack";
 
 export function Edit() {

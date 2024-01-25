@@ -33,10 +33,10 @@ import {
 import Page from "../../components/Page";
 
 import { AccountCircle, Email } from "@mui/icons-material";
-import { getUser, updateUser } from "src/api/deploy/users";
+import { getUser, updateUser } from "/src/api/deploy/users";
 import { UserQuotas } from "./UserQuotas";
-import { errorHandler } from "src/utils/errorHandler";
-import JobList from "src/components/JobList";
+import { errorHandler } from "/src/utils/errorHandler";
+import JobList from "/src/components/JobList";
 import { ResetOnboarding } from "./ResetOnboarding";
 import { useTranslation } from "react-i18next";
 

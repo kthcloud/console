@@ -1,5 +1,5 @@
 export const getZones = async (token) => {
-  const url = `${process.env.REACT_APP_DEPLOY_API_URL}/zones`;
+  const url = `${import.meta.env.VITE_DEPLOY_API_URL}/zones`;
   const response = await fetch(url, {
     method: "GET",
     headers: {

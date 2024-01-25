@@ -4,11 +4,11 @@ import { sentenceCase } from "change-case";
 import { enqueueSnackbar } from "notistack";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { deleteVM, applyCommand } from "src/api/deploy/vms";
-import ConfirmButton from "src/components/ConfirmButton";
-import Iconify from "src/components/Iconify";
-import useResource from "src/hooks/useResource";
-import { errorHandler } from "src/utils/errorHandler";
+import { deleteVM, applyCommand } from "/src/api/deploy/vms";
+import ConfirmButton from "/src/components/ConfirmButton";
+import Iconify from "/src/components/Iconify";
+import useResource from "/src/hooks/useResource";
+import { errorHandler } from "/src/utils/errorHandler";
 
 export const VMCommands = ({ vm }) => {
   const { t } = useTranslation();
