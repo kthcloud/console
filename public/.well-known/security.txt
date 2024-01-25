@@ -1,0 +1,4 @@
+Contact: mailto:harshak@kth.se
+Expires: 2024-12-31T23:00:00.000Z
+Preferred-Languages: en, sv
+Canonical: https://cloud.cbh.kth.se/.well-known/security.txt
