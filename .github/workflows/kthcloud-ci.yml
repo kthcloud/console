@@ -22,7 +22,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: true
-          tags: registry.cloud.cbh.kth.se/landing/landing-frontend:latest
+          tags: ${{ secrets.DOCKER_TAG }}
           build-args: |
             "RELEASE_BRANCH=release"
             "RELEASE_DATE=${{ env.RELEASE_DATE }}"
