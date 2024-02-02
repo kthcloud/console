@@ -321,6 +321,10 @@ const ProxyManager = ({ vm }) => {
                         {t("setup-custom-domain-2-warning")}
                       </Typography>
 
+                      <Typography variant="body2">
+                        {t("setup-custom-domain-0-warning")}
+                      </Typography>
+
                       <Stack
                         direction="row"
                         spacing={3}
