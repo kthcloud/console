@@ -265,8 +265,7 @@ export function Edit() {
                 )}
 
               {resource.type === "deployment" &&
-                resource.deploymentType !== "prebuilt" &&
-                !resource.integrations.includes("github") && (
+                resource.deploymentType !== "prebuilt" && (
                   <GHActions resource={resource} />
                 )}
 

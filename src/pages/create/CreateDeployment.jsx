@@ -24,7 +24,6 @@ import { useSnackbar } from "notistack";
 import { useKeycloak } from "@react-keycloak/web";
 import RFC1035Input from "/src/components/RFC1035Input";
 import { faker } from "@faker-js/faker";
-import { GHSelect } from "./GHSelect";
 import { errorHandler } from "/src/utils/errorHandler";
 import useResource from "/src/hooks/useResource";
 import ZoneSelector from "./ZoneSelector";
@@ -188,13 +187,6 @@ export default function CreateDeployment({ finished }) {
         </CardContent>
       </Card>
 
-      {image === "" && (
-        <GHSelect
-          setAccessToken={setAccessToken}
-          repo={repo}
-          setRepo={setRepo}
-        />
-      )}
       <Card sx={{ boxShadow: 20 }}>
         <CardHeader
           title={t("create-deployment-env")}

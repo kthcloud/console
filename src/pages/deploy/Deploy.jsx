@@ -283,14 +283,6 @@ export function Deploy() {
               {t("admin-visibility-private")}
             </Label>
           )}
-          {resource.integrations &&
-            resource.integrations.includes("github") && (
-              <Tooltip enterTouchDelay={10} title={t("deploy-github")}>
-                <span style={{ display: "flex", alignItems: "center" }}>
-                  <Iconify icon="mdi:github" width={20} height={20} ml={1} />
-                </span>
-              </Tooltip>
-            )}
         </Stack>
       );
     }
