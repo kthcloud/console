@@ -70,7 +70,7 @@ export const GPUManager = ({ vm }) => {
   const loadGPUs = async () => {
     if (userCanListGPUs) {
       try {
-        const gpuRes = await getGPUs(keycloak.token);
+        let gpuRes = await getGPUs(keycloak.token);
 
         // sort by name
         gpuRes.sort((a, b) => {
@@ -78,6 +78,9 @@ export const GPUManager = ({ vm }) => {
           if (a.name > b.name) return -1;
           return hashGPUId(a.id) < hashGPUId(b.id) ? -1 : 1;
         });
+
+        // only keep the GPUS that have zone === vm.zone
+        gpuRes = gpuRes.filter((gpu) => gpu.zone === vm.zone);
 
         setGpus(gpuRes);
       } catch (_) {}
