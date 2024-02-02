@@ -4,9 +4,9 @@ import {
   CardContent,
   CardHeader,
   Grid,
-  Slider,
   Stack,
   Typography,
+  Slider,
 } from "@mui/material";
 
 import { enqueueSnackbar } from "notistack";
@@ -82,7 +82,7 @@ export const ReplicaManager = ({ deployment }) => {
           {t("replicas-shutdown")}
         </Typography>
 
-        <Grid container spacing={2} alignItems="center">
+        <Grid container spacing={2}>
           <Grid item xs>
             <Slider
               aria-labelledby="input-slider"
@@ -93,7 +93,6 @@ export const ReplicaManager = ({ deployment }) => {
               step={1}
               marks
               aria-label={t("replicas")}
-              valueLabelDisplay="auto"
               disabled={loading}
             />
           </Grid>
