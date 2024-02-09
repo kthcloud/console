@@ -4,15 +4,15 @@ Welcome to the kthcloud/console repository! This project is the web console for 
 
 ## Table of Contents
 
--   [☁️ kthcloud/console](#️-kthcloudconsole)
-    -   [Table of Contents](#table-of-contents)
-    -   [External dependencies](#external-dependencies)
-    -   [Setup](#setup)
-    -   [Contributing](#contributing)
-    -   [Locales and translations](#locales-and-translations)
-        -   [Other languages](#other-languages)
-    -   [Formatting](#formatting)
-    -   [License](#license)
+- [☁️ kthcloud/console](#️-kthcloudconsole)
+  - [Table of Contents](#table-of-contents)
+  - [External dependencies](#external-dependencies)
+  - [Setup](#setup)
+  - [Contributing](#contributing)
+  - [Locales and translations](#locales-and-translations)
+    - [Other languages](#other-languages)
+  - [Formatting](#formatting)
+  - [License](#license)
 
 ## External dependencies
 
@@ -54,6 +54,7 @@ We are thrilled you are considering contributing to the kthcloud project! We wel
 You can find our current issues in the [Issues](https://github.com/kthcloud/console/issues) tab. If you have any questions, feel free to discuss in the issue thread.
 
 The `beta` branch is the main development branch, so all pull requests should be created against `beta`.
+You can find a CI/CD build of the `beta` branch at [beta.app.cloud.cbh.kth.se](https://beta.app.cloud.cbh.kth.se/).
 
 Before you start coding:
 
