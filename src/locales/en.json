@@ -207,6 +207,7 @@
         "could-not-save-visibility": "Could not save visibility: ",
         "visibility-subheader": "Choose whether to make this deployment hidden from the internet",
         "lease-gpu": "Lease GPU",
+        "lease-gpu-forever": "Lease GPU forever",
         "renew-gpu-lease": "Renew GPU lease",
         "gpu-lease": "GPU Lease",
         "gpu-lease-subheader": "Leasing a GPU allows you to use it for a limited time.",

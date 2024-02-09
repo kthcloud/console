@@ -101,6 +101,7 @@
         "create-vm-select-specs": "Välj specifikationer",
         "create-deployment-storage-path-label": "Filösökväg i din molnlagring",
         "lease-gpu": "Låna grafikkort",
+        "lease-gpu-forever": "Låna grafikkort för alltid",
         "admin-gpu-active": "Aktiv",
         "create-deployment-persistent-subheader": "Lagring tillåter din app att spara data säkert. Du kan nå filerna från alla dina deployments.",
         "creating-snapshot": "Skapar avbildning...",

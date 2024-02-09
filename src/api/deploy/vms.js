@@ -89,7 +89,13 @@ export const attachGPU = async (vm, token) => {
   return await res.json();
 };
 
-export const attachGPUById = async (vm, token, id) => {
+export const attachGPUById = async (vm, token, id, noLeaseEnd = false) => {
+  let body = { gpuId: id };
+
+  if (noLeaseEnd) {
+    body.noLeaseEnd = true;
+  }
+
   const res = await fetch(
     import.meta.env.VITE_DEPLOY_API_URL + "/vms/" + vm.id,
     {
@@ -97,7 +103,7 @@ export const attachGPUById = async (vm, token, id) => {
       headers: {
         Authorization: "Bearer " + token,
       },
-      body: JSON.stringify({ gpuId: id }),
+      body: JSON.stringify(body),
     }
   );
   if (!res.ok) {
