@@ -69,76 +69,89 @@ export const Admin = () => {
   const [loading, setLoading] = useState(true);
   const getResources = async () => {
     const startTimer = Date.now();
-    try {
-      const response = await getAllUsers(keycloak.token);
-      setDbUsers(response);
-    } catch (error) {
-      errorHandler(error).forEach((e) =>
-        enqueueSnackbar(t("error-could-not-fetch-users") + ": " + e, {
-          variant: "error",
-        })
-      );
-    }
+    let promises = [
+      async () => {
+        try {
+          const response = await getAllUsers(keycloak.token);
+          setDbUsers(response);
+        } catch (error) {
+          errorHandler(error).forEach((e) =>
+            enqueueSnackbar(t("error-could-not-fetch-users") + ": " + e, {
+              variant: "error",
+            })
+          );
+        }
+      },
 
-    try {
-      const response = await getVMs(keycloak.token, true);
-      setDbVMs(response);
-    } catch (error) {
-      errorHandler(error).forEach((e) =>
-        enqueueSnackbar(t("error-could-not-fetch-vms") + ": " + e, {
-          variant: "error",
-        })
-      );
-    }
+      async () => {
+        try {
+          const response = await getVMs(keycloak.token, true);
+          setDbVMs(response);
+        } catch (error) {
+          errorHandler(error).forEach((e) =>
+            enqueueSnackbar(t("error-could-not-fetch-vms") + ": " + e, {
+              variant: "error",
+            })
+          );
+        }
+      },
+      async () => {
+        try {
+          const response = await getDeployments(keycloak.token, true);
+          setDbDeployments(response);
+        } catch (error) {
+          errorHandler(error).forEach((e) =>
+            enqueueSnackbar(t("error-could-not-fetch-deployments") + ": " + e, {
+              variant: "error",
+            })
+          );
+        }
+      },
+      async () => {
+        try {
+          const response = await getGPUs(keycloak.token);
+          setDbGPUs(response);
+        } catch (error) {
+          errorHandler(error).forEach((e) =>
+            enqueueSnackbar(t("error-could-not-fetch-gpus") + ": " + e, {
+              variant: "error",
+            })
+          );
+        }
+      },
+      async () => {
+        try {
+          const response = await getTeams(keycloak.token, true);
+          setDbTeams(response);
+        } catch (error) {
+          errorHandler(error).forEach((e) =>
+            enqueueSnackbar(t("error-could-not-fetch-teams") + ": " + e, {
+              variant: "error",
+            })
+          );
+        }
+      },
 
-    try {
-      const response = await getDeployments(keycloak.token, true);
-      setDbDeployments(response);
-    } catch (error) {
-      errorHandler(error).forEach((e) =>
-        enqueueSnackbar(t("error-could-not-fetch-deployments") + ": " + e, {
-          variant: "error",
-        })
-      );
-    }
+      async () => {
+        try {
+          const response = await getJobs(
+            keycloak.token,
+            undefined,
+            undefined,
+            true
+          );
+          setDbJobs(response);
+        } catch (error) {
+          errorHandler(error).forEach((e) =>
+            enqueueSnackbar(t("error-could-not-fetch-jobs") + ": " + e, {
+              variant: "error",
+            })
+          );
+        }
+      },
+    ];
 
-    try {
-      const response = await getGPUs(keycloak.token);
-      setDbGPUs(response);
-    } catch (error) {
-      errorHandler(error).forEach((e) =>
-        enqueueSnackbar(t("error-could-not-fetch-gpus") + ": " + e, {
-          variant: "error",
-        })
-      );
-    }
-
-    try {
-      const response = await getTeams(keycloak.token, true);
-      setDbTeams(response);
-    } catch (error) {
-      errorHandler(error).forEach((e) =>
-        enqueueSnackbar(t("error-could-not-fetch-teams") + ": " + e, {
-          variant: "error",
-        })
-      );
-    }
-
-    try {
-      const response = await getJobs(
-        keycloak.token,
-        undefined,
-        undefined,
-        true
-      );
-      setDbJobs(response);
-    } catch (error) {
-      errorHandler(error).forEach((e) =>
-        enqueueSnackbar(t("error-could-not-fetch-jobs") + ": " + e, {
-          variant: "error",
-        })
-      );
-    }
+    await Promise.all(promises.map((p) => p()));
 
     // end timer and set last refresh, show in ms
     setLastRefresh(new Date());

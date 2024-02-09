@@ -9,6 +9,8 @@ Welcome to the kthcloud/console repository! This project is the web console for 
     -   [External dependencies](#external-dependencies)
     -   [Setup](#setup)
     -   [Contributing](#contributing)
+    -   [Locales and translations](#locales-and-translations)
+        -   [Other languages](#other-languages)
     -   [Formatting](#formatting)
     -   [License](#license)
 
@@ -52,6 +54,7 @@ We are thrilled you are considering contributing to the kthcloud project! We wel
 You can find our current issues in the [Issues](https://github.com/kthcloud/console/issues) tab. If you have any questions, feel free to discuss in the issue thread.
 
 The `beta` branch is the main development branch, so all pull requests should be created against `beta`.
+You can find a CI/CD build of the `beta` branch at [beta.app.cloud.cbh.kth.se](https://beta.app.cloud.cbh.kth.se/).
 
 Before you start coding:
 
@@ -65,6 +68,25 @@ After you've made your changes:
 2. Open a pull request in the original repository, from your fork's branch to `beta`.
 
 Please include a detailed description of your changes in your pull request.
+
+## Locales and translations
+
+Any strings added in the code should be created as entries in the `src/locales` folder, in `en.json`. kthcloud also supports Swedish, and we would be grateful if you could provide translations for both languages. You can add translations in `sv.json`. If you are unsure about the translation, feel free to ask in the issue thread or on Discord.
+
+To add a new string, you can use the `t` function from `react-i18next`. For example:
+
+```jsx
+import { useTranslation } from "react-i18next";
+
+function MyComponent() {
+    const { t } = useTranslation();
+    return <h1>{t("myString")}</h1>;
+}
+```
+
+### Other languages
+
+If you would like to add support for another language, please discuss this as an issue first. We would be happy to help you get started, however as this creates a maintenance burden, we would like to discuss the need for the language first.
 
 ## Formatting
 

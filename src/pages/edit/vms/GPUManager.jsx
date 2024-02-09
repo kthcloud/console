@@ -428,6 +428,42 @@ export const GPUManager = ({ vm }) => {
                           >
                             {t("lease-gpu")}
                           </Button>
+
+                          {user.admin && (
+                            <Button
+                              onClick={async () => {
+                                setGpuLoading(true);
+                                setGpuPickerOpen(false);
+                                try {
+                                  const res = await attachGPUById(
+                                    vm,
+                                    keycloak.token,
+                                    gpuChoice,
+                                    true
+                                  );
+                                  queueJob(res);
+                                  setGpuChoice("");
+                                  enqueueSnackbar(t("gpu-attached"), {
+                                    variant: "success",
+                                  });
+                                } catch (error) {
+                                  setGpuLoading(false);
+
+                                  errorHandler(error).forEach((e) =>
+                                    enqueueSnackbar(
+                                      t("could-not-attach-gpu") + e,
+                                      {
+                                        variant: "error",
+                                      }
+                                    )
+                                  );
+                                }
+                              }}
+                              color="primary"
+                            >
+                              {t("lease-gpu-forever")}
+                            </Button>
+                          )}
                         </Stack>
                       </>
                     )}

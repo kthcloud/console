@@ -101,6 +101,7 @@
         "create-vm-select-specs": "Välj specifikationer",
         "create-deployment-storage-path-label": "Filösökväg i din molnlagring",
         "lease-gpu": "Låna grafikkort",
+        "lease-gpu-forever": "Låna grafikkort för alltid",
         "admin-gpu-active": "Aktiv",
         "create-deployment-persistent-subheader": "Lagring tillåter din app att spara data säkert. Du kan nå filerna från alla dina deployments.",
         "creating-snapshot": "Skapar avbildning...",
@@ -455,6 +456,14 @@
         "choose-type": "Välj resurstyp",
         "joinedAt": "Gick med",
         "addedAt": "Lades till",
-        "jobRestarted": "Jobb startat om"
+        "jobRestarted": "Jobb startat om",
+        "funding-provided-by": "kthcloud samarbetar med och stöttas av många organisationer. Finansiellt stöd har vi fått från ",
+        "the": " ",
+        "program-and-the": "programmet och ",
+        "kth-digitalization-platform": "KTH Digitaliseringsplattformen",
+        "computational-support": "Vi får även stöd i form av hårdvara från ",
+        "funding": "Finansiellt stöd",
+        "disclaimer": "Ansvarsfriskrivning",
+        "genai-long": "Innehåll genererat av AI kan vara felaktigt eller missvisande, verifiera alltid informationen. Allt innehåll genererat av AI på denna sida är märkt med följande symbol"
     }
 }

@@ -47,112 +47,111 @@ export default function DashboardLayout() {
       <Navbar />
       <MainStyle>
         <Outlet />
-        {!window.location.pathname.startsWith("/onboarding") &&
-          window.location.pathname !== "/" && (
-            <Container
-              sx={{ opacity: 0.4, textAlign: "center", padding: "2rem" }}
+        {!window.location.pathname.startsWith("/onboarding") && (
+          <Container
+            sx={{ opacity: 0.4, textAlign: "center", padding: "2rem" }}
+          >
+            <Stack
+              direction="row"
+              spacing={3}
+              alignItems="flex-start"
+              flexWrap="wrap"
+              useFlexGap
             >
-              <Stack
-                direction="row"
-                spacing={3}
-                alignItems="flex-start"
-                flexWrap="wrap"
-                useFlexGap
-              >
-                <Stack spacing={1} alignItems={"flex-start"}>
-                  <p>
-                    <a
-                      style={{
-                        color: "inherit",
-                        whiteSpace: "nowrap",
-                        marginBottom: "1rem",
-                      }}
-                      href="https://github.com/kthcloud/console/issues/new/choose"
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      {t("report-a-bug")}
-                    </a>
-                  </p>
-                  <p>
-                    <a
-                      style={{
-                        color: "inherit",
-                        whiteSpace: "nowrap",
-                      }}
-                      href="https://github.com/kthcloud/console"
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      kthcloud/console
-                    </a>
-                  </p>
-                  <p>
-                    <span style={{ whiteSpace: "nowrap" }}>{name}</span>
-                  </p>
-                </Stack>
-                <Box sx={{ flexGrow: 1 }} />
-                <Stack spacing={1} alignItems={"flex-start"}>
-                  <p>{t("button-help")}</p>
-                  <p>
-                    <a
-                      style={{
-                        color: "inherit",
-                        whiteSpace: "nowrap",
-                      }}
-                      href="https://discord.gg/MuHQd6QEtM"
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      Discord
-                    </a>
-                  </p>
-                  <p>
-                    <a
-                      style={{
-                        color: "inherit",
-                        whiteSpace: "nowrap",
-                      }}
-                      href="https://docs.cloud.cbh.kth.se"
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      {t("menu-docs")}
-                    </a>
-                  </p>
-                </Stack>
-                <Stack spacing={1} alignItems={"flex-start"}>
-                  <p>{t("follow-kthcloud")}</p>
-                  <p>
-                    <a
-                      style={{
-                        color: "inherit",
-                        whiteSpace: "nowrap",
-                      }}
-                      href="https://mastodon.social/@kthcloud"
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      Mastodon
-                    </a>
-                  </p>
-                  <p>
-                    <a
-                      style={{
-                        color: "inherit",
-                        whiteSpace: "nowrap",
-                      }}
-                      href="https://bsky.app/profile/cloud.cbh.kth.se"
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      Bluesky
-                    </a>
-                  </p>
-                </Stack>
+              <Stack spacing={1} alignItems={"flex-start"}>
+                <p>
+                  <a
+                    style={{
+                      color: "inherit",
+                      whiteSpace: "nowrap",
+                      marginBottom: "1rem",
+                    }}
+                    href="https://github.com/kthcloud/console/issues/new/choose"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {t("report-a-bug")}
+                  </a>
+                </p>
+                <p>
+                  <a
+                    style={{
+                      color: "inherit",
+                      whiteSpace: "nowrap",
+                    }}
+                    href="https://github.com/kthcloud/console"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    kthcloud/console
+                  </a>
+                </p>
+                <p>
+                  <span style={{ whiteSpace: "nowrap" }}>{name}</span>
+                </p>
               </Stack>
-            </Container>
-          )}
+              <Box sx={{ flexGrow: 1 }} />
+              <Stack spacing={1} alignItems={"flex-start"}>
+                <p>{t("button-help")}</p>
+                <p>
+                  <a
+                    style={{
+                      color: "inherit",
+                      whiteSpace: "nowrap",
+                    }}
+                    href="https://discord.gg/MuHQd6QEtM"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Discord
+                  </a>
+                </p>
+                <p>
+                  <a
+                    style={{
+                      color: "inherit",
+                      whiteSpace: "nowrap",
+                    }}
+                    href="https://docs.cloud.cbh.kth.se"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {t("menu-docs")}
+                  </a>
+                </p>
+              </Stack>
+              <Stack spacing={1} alignItems={"flex-start"}>
+                <p>{t("follow-kthcloud")}</p>
+                <p>
+                  <a
+                    style={{
+                      color: "inherit",
+                      whiteSpace: "nowrap",
+                    }}
+                    href="https://mastodon.social/@kthcloud"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Mastodon
+                  </a>
+                </p>
+                <p>
+                  <a
+                    style={{
+                      color: "inherit",
+                      whiteSpace: "nowrap",
+                    }}
+                    href="https://bsky.app/profile/cloud.cbh.kth.se"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Bluesky
+                  </a>
+                </p>
+              </Stack>
+            </Stack>
+          </Container>
+        )}
       </MainStyle>
     </RootStyle>
   );

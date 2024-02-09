@@ -207,6 +207,7 @@
         "could-not-save-visibility": "Could not save visibility: ",
         "visibility-subheader": "Choose whether to make this deployment hidden from the internet",
         "lease-gpu": "Lease GPU",
+        "lease-gpu-forever": "Lease GPU forever",
         "renew-gpu-lease": "Renew GPU lease",
         "gpu-lease": "GPU Lease",
         "gpu-lease-subheader": "Leasing a GPU allows you to use it for a limited time.",
@@ -456,6 +457,14 @@
         "choose-type": "Choose type",
         "joinedAt": "Joined at",
         "addedAt": "Added at",
-        "jobRestarted": "Job restarted"
+        "jobRestarted": "Job restarted",
+        "funding-provided-by": "kthcloud is proudly supported by a diverse group of partners. Financial backing is provided by ",
+        "the": " the ",
+        "program-and-the": "program and the ",
+        "kth-digitalization-platform": "KTH Digitalisation Platform",
+        "computational-support": "We receive invaluable computational support from ",
+        "funding": "Funding",
+        "disclaimer": "Disclaimer",
+        "genai-long": "AI generated content may be inaccurate or misleading, always verify the information. All AI generated content on this page is marked with the following symbol"
     }
 }
