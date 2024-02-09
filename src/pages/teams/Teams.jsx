@@ -46,7 +46,7 @@ import { Link as RouterLink } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
 
 const Teams = () => {
-  const { user, teams } = useResource();
+  const { user, teams, beginFastLoad } = useResource();
   const { t } = useTranslation();
   const { initialized, keycloak } = useKeycloak();
 
@@ -70,6 +70,7 @@ const Teams = () => {
 
     try {
       await createTeam(keycloak.token, teamName, teamDescription);
+      beginFastLoad();
       setTeamName("");
       setTeamDescription("");
       setStale("created");
@@ -90,6 +91,7 @@ const Teams = () => {
     setStale("delete " + team.id);
     try {
       await deleteTeam(keycloak.token, team.id);
+      beginFastLoad();
     } catch (error) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar(t("update-error") + e, {
@@ -136,6 +138,7 @@ const Teams = () => {
 
     try {
       await addMembers(keycloak.token, team.id, [...team.members, member]);
+      beginFastLoad();
     } catch (error) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar(t("update-error") + e, {
@@ -158,6 +161,7 @@ const Teams = () => {
 
     try {
       await updateTeam(keycloak.token, team.id, body);
+      beginFastLoad();
       setStale("removeResource " + resource.id + team.id);
     } catch (error) {
       errorHandler(error).forEach((e) =>
@@ -177,6 +181,7 @@ const Teams = () => {
 
     try {
       await updateTeam(keycloak.token, team.id, body);
+      beginFastLoad();
       setStale("removeUser " + user.id + team.id);
     } catch (error) {
       errorHandler(error).forEach((e) =>

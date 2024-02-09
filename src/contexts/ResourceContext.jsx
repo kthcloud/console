@@ -28,8 +28,11 @@ export const ResourceContext = createContext({
 export const ResourceContextProvider = ({ children }) => {
   const { initialized, keycloak } = useKeycloak();
 
+  // Admin impersonation
   const [impersonatingDeployment, setImpersonatingDeployment] = useState(null);
   const [impersonatingVm, setImpersonatingVm] = useState(null);
+
+  // Resources
   const [rows, setRows] = useState([]);
   const [userRows, setUserRows] = useState([]);
   const [jobs, setJobs] = useState([]);
@@ -38,10 +41,17 @@ export const ResourceContextProvider = ({ children }) => {
   const [unread, setUnread] = useState(0);
   const [teams, setTeams] = useState([]);
   const [zones, setZones] = useState([]);
+
+  // Loading and connection error handler
   const [initialLoad, setInitialLoad] = useState(false);
   const [nextLoad, setNextLoad] = useState(0);
   const [loadInterval, setLoadInterval] = useState(5000);
   const [connectionError, setConnectionError] = useState(false);
+
+  // Dynamic reload interval
+  const [rtt, setRtt] = useState(0);
+  const [loadStart, setLoadStart] = useState(null);
+
   const { enqueueSnackbar } = useSnackbar();
 
   const refreshJob = async (jobId) => {
@@ -93,6 +103,11 @@ export const ResourceContextProvider = ({ children }) => {
     console.log("Queuing job", JSON.stringify(job));
     if (!job) return;
     setJobs((jobs) => [...jobs, job]);
+    setLoadInterval(rtt + 100);
+  };
+
+  const beginFastLoad = () => {
+    setLoadInterval(rtt + 100);
   };
 
   const mergeLists = (resources) => {
@@ -168,6 +183,14 @@ export const ResourceContextProvider = ({ children }) => {
 
       loadNotifications();
       loadTeams();
+
+      if (loadInterval < 5000) {
+        let newInterval = loadInterval + 100;
+        if (newInterval > 5000) {
+          newInterval = 5000;
+        }
+        setLoadInterval(newInterval);
+      }
     } catch (error) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar("Error fetching user: " + e, {
@@ -200,6 +223,7 @@ export const ResourceContextProvider = ({ children }) => {
       mergeLists(await Promise.all(promises));
 
       setInitialLoad(true);
+      if (loadStart) setRtt(Date.now() - loadStart);
     } catch (error) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar("Error fetching resources: " + e, {
@@ -224,7 +248,13 @@ export const ResourceContextProvider = ({ children }) => {
     // eslint-disable-next-line
   }, [user]);
 
+  useEffect(() => {
+    console.log(loadInterval);
+    // eslint-disable-next-line
+  }, [loadInterval]);
+
   useInterval(() => {
+    setLoadStart(Date.now());
     loadUser();
 
     setNextLoad(Date.now() + loadInterval);
@@ -260,6 +290,7 @@ export const ResourceContextProvider = ({ children }) => {
         zones,
         setZones,
         queueJob,
+        beginFastLoad,
         initialLoad,
         setInitialLoad,
         impersonatingDeployment,
