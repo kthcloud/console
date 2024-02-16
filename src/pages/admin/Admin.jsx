@@ -205,6 +205,29 @@ export const Admin = () => {
     );
   };
 
+  const renderGpuLeaser = (gpuId) => {
+    let vm = dbVMs.find((vm) => vm.gpu?.id === gpuId);
+
+    if (!vm)
+      return (
+        <>
+          <TableCell></TableCell>
+          <TableCell></TableCell>
+        </>
+      );
+    return (
+      <>
+        <TableCell>{renderUsername(vm?.ownerId)}</TableCell>
+        <TableCell>
+          <Stack direction={"column"}>
+            <Typography variant="caption">{vm.id}</Typography>
+            {user && <Typography variant="caption">{vm.name}</Typography>}
+          </Stack>
+        </TableCell>
+      </>
+    );
+  };
+
   // ==================================================
   // Virtual Machines
   const [dbVMs, setDbVMs] = useState([]);
@@ -889,6 +912,8 @@ export const Admin = () => {
                         <TableRow>
                           <TableCell>{t("admin-id")}</TableCell>
                           <TableCell>{t("admin-name")}</TableCell>
+                          <TableCell>{t("admin-user")}</TableCell>
+                          <TableCell>{`${t("resource-vm")} ${t("admin-name").toLowerCase()}`}</TableCell>
                           <TableCell>{t("admin-leased-until")}</TableCell>
                           <TableCell>{t("admin-gpu-expired")}</TableCell>
                         </TableRow>
@@ -900,6 +925,7 @@ export const Admin = () => {
                               {`${decode(gpu.id)} ${hashGPUId(gpu.id)}`}
                             </TableCell>
                             <TableCell>{gpu.name}</TableCell>
+                            {renderGpuLeaser(gpu.id)}
                             <TableCell>
                               {gpu.lease &&
                                 gpu.lease.end
