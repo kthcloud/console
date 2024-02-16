@@ -248,11 +248,6 @@ export const ResourceContextProvider = ({ children }) => {
     // eslint-disable-next-line
   }, [user]);
 
-  useEffect(() => {
-    console.log(loadInterval);
-    // eslint-disable-next-line
-  }, [loadInterval]);
-
   useInterval(() => {
     setLoadStart(Date.now());
     loadUser();
