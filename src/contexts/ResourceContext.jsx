@@ -13,6 +13,7 @@ import { getUser } from "/src/api/deploy/users";
 import { getZones } from "/src/api/deploy/zones";
 import { getNotifications } from "/src/api/deploy/notifications";
 import { getTeams } from "/src/api/deploy/teams";
+import { getUserData } from "/src/api/deploy/userData";
 
 const initialState = {
   rows: [],
@@ -183,6 +184,7 @@ export const ResourceContextProvider = ({ children }) => {
 
       loadNotifications();
       loadTeams();
+      loadUserData();
 
       if (loadInterval < 5000) {
         let newInterval = loadInterval + 100;
@@ -201,6 +203,19 @@ export const ResourceContextProvider = ({ children }) => {
       setConnectionError(true);
       if (new Date().getTime() > nextLoad)
         setLoadInterval(Math.min(loadInterval * 2, 60000));
+    }
+  };
+
+  const loadUserData = async () => {
+    try {
+      const userData = await getUserData(keycloak.token);
+      setUser((user) => ({ ...user, userData }));
+    } catch (error) {
+      errorHandler(error).forEach((e) =>
+        enqueueSnackbar("Error fetching user data: " + e, {
+          variant: "error",
+        })
+      );
     }
   };
 
