@@ -47,7 +47,7 @@ const Hero = () => {
 
   // Header
   const [headerLoading, setHeaderLoading] = useState(true);
-  const [header, setHeader] = useState("Welcome to cbhcloud");
+  const [header, setHeader] = useState("Welcome to kthcloud");
   const [subheader, setSubheader] = useState(
     "Start deploying your projects today"
   );
