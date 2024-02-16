@@ -55,16 +55,28 @@ export const LogsView = ({ deployment }) => {
       }, 5000);
     };
 
+    const pushLog = (log) => {
+      try {
+        let flat = Object.entries(JSON.parse(log))
+          .map(([key, value]) => `${key}: ${value}`)
+          .join(", ");
+
+        setLogs((logs) => [...logs, flat]);
+      } catch (e) {
+        setLogs((logs) => [...logs, log]);
+      }
+    };
+
     eventSource.addEventListener("deployment", (e) => {
-      setLogs((logs) => [...logs, e.data]);
+      pushLog(e.data);
     });
 
     eventSource.addEventListener("pod", (e) => {
-      setLogs((logs) => [...logs, e.data]);
+      pushLog(e.data);
     });
 
     eventSource.addEventListener("build", (e) => {
-      setLogs((logs) => [...logs, e.data]);
+      pushLog(e.data);
     });
 
     eventSource.onopen = (e) => {
