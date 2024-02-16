@@ -57,14 +57,8 @@ export const LogsView = ({ deployment }) => {
 
     const pushLog = (log) => {
       try {
-        let flat = Object.entries(JSON.parse(log))
-          .map(([key, value]) => `${key}: ${value}`)
-          .join(", ");
-
-        setLogs((logs) => [...logs, flat]);
-      } catch (e) {
-        setLogs((logs) => [...logs, log]);
-      }
+        setLogs((logs) => [...logs, JSON.parse(log)]);
+      } catch (e) {}
     };
 
     eventSource.addEventListener("deployment", (e) => {
@@ -201,7 +195,9 @@ export const LogsView = ({ deployment }) => {
                 }}
                 ref={i === viewableLogs.length - 1 ? last : null}
               >
-                {log}
+                <span>{new Date(log.createdAt).toLocaleString("sv")}</span>
+                &nbsp;<span>{log.prefix}</span>
+                &nbsp;{log.line}
               </pre>
             ))}
 
