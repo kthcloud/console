@@ -18,7 +18,6 @@ import {
 import { useKeycloak } from "@react-keycloak/web";
 import { enqueueSnackbar } from "notistack";
 import { useState } from "react";
-import { updateUser } from "/src/api/deploy/users";
 import LoadingPage from "/src/components/LoadingPage";
 import Page from "/src/components/Page";
 import { errorHandler } from "/src/utils/errorHandler";
@@ -28,6 +27,7 @@ import CreateVm from "../create/CreateVm";
 import { useNavigate } from "react-router-dom";
 import useResource from "/src/hooks/useResource";
 import { useTranslation } from "react-i18next";
+import { updateUserData } from "/src/api/deploy/userData";
 
 export const Onboarding = () => {
   const navigate = useNavigate();
@@ -68,9 +68,11 @@ export const Onboarding = () => {
 
   const onboard = async () => {
     try {
-      const response = await updateUser(keycloak.subject, keycloak.token, {
-        onboarded: true,
-      });
+      const response = await updateUserData(
+        keycloak.token,
+        "onboarded",
+        "true"
+      );
       if (response) {
         setUser(response);
         navigate("/deploy", { replace: true });

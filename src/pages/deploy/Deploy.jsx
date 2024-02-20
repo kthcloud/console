@@ -393,12 +393,16 @@ export function Deploy() {
   };
 
   useEffect(() => {
-    if (user && !user.onboarded) {
+    if (
+      user &&
+      user.userData &&
+      user.userData.find((d) => d.id === "onboarded")?.data !== "true"
+    ) {
       navigate("/onboarding");
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initialLoad]);
+  }, [user]);
 
   return (
     <>

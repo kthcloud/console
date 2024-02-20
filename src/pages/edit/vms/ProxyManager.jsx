@@ -99,7 +99,6 @@ const ProxyManager = ({ vm }) => {
           port.httpProxy.customDomain = newProxy.customDomain;
         }
         if (clearCustomDomain) {
-          console.log("removing customDomain");
           port.httpProxy.customDomain = "";
         }
       }

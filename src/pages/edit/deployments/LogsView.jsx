@@ -55,16 +55,22 @@ export const LogsView = ({ deployment }) => {
       }, 5000);
     };
 
+    const pushLog = (log) => {
+      try {
+        setLogs((logs) => [...logs, JSON.parse(log)]);
+      } catch (e) {}
+    };
+
     eventSource.addEventListener("deployment", (e) => {
-      setLogs((logs) => [...logs, e.data]);
+      pushLog(e.data);
     });
 
     eventSource.addEventListener("pod", (e) => {
-      setLogs((logs) => [...logs, e.data]);
+      pushLog(e.data);
     });
 
     eventSource.addEventListener("build", (e) => {
-      setLogs((logs) => [...logs, e.data]);
+      pushLog(e.data);
     });
 
     eventSource.onopen = (e) => {
@@ -189,7 +195,9 @@ export const LogsView = ({ deployment }) => {
                 }}
                 ref={i === viewableLogs.length - 1 ? last : null}
               >
-                {log}
+                <span>{new Date(log.createdAt).toLocaleString("sv")}</span>
+                &nbsp;<span>{log.prefix}</span>
+                &nbsp;{log.line}
               </pre>
             ))}
 
