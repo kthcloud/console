@@ -13,6 +13,7 @@ import {
   FormHelperText,
   InputAdornment,
   CircularProgress,
+  Link as MuiLink,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 
@@ -240,9 +241,9 @@ export default function CreateVm({ finished }) {
                   </Select>
                   <FormHelperText>
                     {t("create-vm-ssh-key-subheader")}
-                    <Link to="/profile">
+                    <MuiLink to="/profile" component={Link}>
                       {t("create-vm-ssh-key-subheader-link")}
-                    </Link>
+                    </MuiLink>
                     .
                   </FormHelperText>
                 </FormControl>
@@ -316,12 +317,11 @@ export default function CreateVm({ finished }) {
                     helperText={
                       user.admin
                         ? ""
-                        : 
-                      diskError
-                        ? diskError
-                        : t("create-vm-disk-size-helper") +
-                          ", 20-" +
-                          availableDisk
+                        : diskError
+                          ? diskError
+                          : t("create-vm-disk-size-helper") +
+                            ", 20-" +
+                            availableDisk
                     }
                     InputProps={{
                       inputMode: "numeric",
