@@ -11,6 +11,7 @@ ENV VITE_RELEASE_COMMIT=${RELEASE_COMMIT}
 
 ENV VITE_API_URL="https://api.cloud.cbh.kth.se"
 ENV VITE_DEPLOY_API_URL="https://api.cloud.cbh.kth.se/deploy/v1"
+ENV NODE_ENV="production"
 
 WORKDIR /app
 COPY . /app
@@ -24,4 +25,4 @@ COPY --from=build /app/dist /usr/share/nginx/html
 RUN rm /etc/nginx/conf.d/default.conf
 COPY nginx/nginx.conf /etc/nginx/conf.d
 EXPOSE 3000
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["nginx", "-g", "daemon off;"]  

@@ -1,4 +1,3 @@
-// @mui
 import {
   Button,
   TextField,
@@ -14,6 +13,7 @@ import {
   FormHelperText,
   InputAdornment,
   CircularProgress,
+  Link as MuiLink,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 
@@ -241,9 +241,9 @@ export default function CreateVm({ finished }) {
                   </Select>
                   <FormHelperText>
                     {t("create-vm-ssh-key-subheader")}
-                    <Link to="/profile">
+                    <MuiLink to="/profile" component={Link}>
                       {t("create-vm-ssh-key-subheader-link")}
-                    </Link>
+                    </MuiLink>
                     .
                   </FormHelperText>
                 </FormControl>
@@ -273,14 +273,16 @@ export default function CreateVm({ finished }) {
                     value={cpuCores}
                     onChange={(e) => calculateCPU(e.target.value)}
                     helperText={
-                      cpuError
-                        ? cpuError
-                        : t("create-vm-number-of-cpu-cores") +
-                          ", 2-" +
-                          availableCPU
+                      user.admin
+                        ? ""
+                        : cpuError
+                          ? cpuError
+                          : t("create-vm-number-of-cpu-cores") +
+                            ", 2-" +
+                            availableCPU
                     }
                     inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
-                    error={cpuError ? true : false}
+                    error={!user.admin && (cpuError ? true : false)}
                     variant="outlined"
                   />
 
@@ -290,9 +292,11 @@ export default function CreateVm({ finished }) {
                     value={ram}
                     onChange={(e) => calculateRAM(e.target.value)}
                     helperText={
-                      ramError
-                        ? ramError
-                        : t("create-vm-amount-of-ram") + ", 4-" + availableRAM
+                      user.admin
+                        ? ""
+                        : ramError
+                          ? ramError
+                          : t("create-vm-amount-of-ram") + ", 4-" + availableRAM
                     }
                     InputProps={{
                       inputMode: "numeric",
@@ -301,7 +305,7 @@ export default function CreateVm({ finished }) {
                         <InputAdornment position="end">GB</InputAdornment>
                       ),
                     }}
-                    error={ramError ? true : false}
+                    error={!user.admin && (ramError ? true : false)}
                     variant="outlined"
                   />
 
@@ -311,11 +315,13 @@ export default function CreateVm({ finished }) {
                     value={diskSize}
                     onChange={(e) => calculateDisk(e.target.value)}
                     helperText={
-                      diskError
-                        ? diskError
-                        : t("create-vm-disk-size-helper") +
-                          ", 20-" +
-                          availableDisk
+                      user.admin
+                        ? ""
+                        : diskError
+                          ? diskError
+                          : t("create-vm-disk-size-helper") +
+                            ", 20-" +
+                            availableDisk
                     }
                     InputProps={{
                       inputMode: "numeric",
@@ -324,7 +330,7 @@ export default function CreateVm({ finished }) {
                         <InputAdornment position="end">GB</InputAdornment>
                       ),
                     }}
-                    error={diskError ? true : false}
+                    error={!user.admin && (diskError ? true : false)}
                     variant="outlined"
                   />
                 </Stack>
