@@ -398,7 +398,8 @@ export function Deploy() {
       user.userData &&
       user.userData.find((d) => d.id === "onboarded")?.data !== "true"
     ) {
-      navigate("/onboarding");
+      // navigate("/onboarding");
+      // Userdata broken for now
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
