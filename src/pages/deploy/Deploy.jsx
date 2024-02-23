@@ -467,6 +467,9 @@ export function Deploy() {
                             role="checkbox"
                             selected={isItemSelected}
                             aria-checked={isItemSelected}
+                            onDoubleClick={() =>
+                              navigate(`/edit/${row.type}/${row.id}`)
+                            }
                           >
                             <TableCell padding="checkbox">
                               <Checkbox
