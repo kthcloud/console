@@ -13,6 +13,7 @@ import { Deployment } from "../../../types";
 export const ImageManager = ({ deployment }: { deployment: Deployment }) => {
   const { t } = useTranslation();
   const [image, setImage] = useState<string>("");
+  const [imageArgs, setImageArgs] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const { initialized, keycloak } = useKeycloak();
   const { queueJob } = useResource();
@@ -20,20 +21,22 @@ export const ImageManager = ({ deployment }: { deployment: Deployment }) => {
   useEffect(() => {
     if (!deployment.image) return;
     setImage(deployment.image);
+
+    setImageArgs(deployment.args ? deployment.args.join(" ") : "");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleSave = async (img: string) => {
+  const handleSave = async (img: string, args: string) => {
     if (!(initialized && keycloak.token)) return;
     const newImage = img.trim();
-    if (newImage === deployment.image) return;
+    const newArgs = args.trim();
 
     setLoading(true);
 
     try {
       const res = await updateDeployment(
         deployment.id,
-        { image: newImage },
+        { image: newImage, args: newArgs.split(" ") },
         keycloak.token
       );
       queueJob(res);
@@ -73,7 +76,24 @@ export const ImageManager = ({ deployment }: { deployment: Deployment }) => {
             onChange={(e) => setImage(e.target.value.trim())}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
-                handleSave(image);
+                handleSave(image, imageArgs);
+              }
+            }}
+            fullWidth
+            sx={{ maxWidth: "sm" }}
+            disabled={loading}
+          />
+          <TextField
+            label={t("run-args")}
+            variant="outlined"
+            placeholder={deployment.args.join(" ")}
+            value={imageArgs}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setImageArgs(e.target.value)
+            }
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleSave(image, imageArgs);
               }
             }}
             fullWidth
@@ -82,7 +102,7 @@ export const ImageManager = ({ deployment }: { deployment: Deployment }) => {
           />
           <LoadingButton
             variant="contained"
-            onClick={() => handleSave(image)}
+            onClick={() => handleSave(image, imageArgs)}
             startIcon={<Iconify icon="material-symbols:save" />}
             loading={loading}
           >
