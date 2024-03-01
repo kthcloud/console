@@ -20,7 +20,7 @@ export const ImageManager = ({ deployment }) => {
   useEffect(() => {
     if (!deployment.image) return;
     setImage(deployment.image);
-    
+
     setImageArgs(deployment.args ? deployment.args.join(" ") : "");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

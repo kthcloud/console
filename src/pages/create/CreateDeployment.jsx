@@ -199,7 +199,7 @@ export default function CreateDeployment({ finished }) {
               placeholder="--setParameter httpVerboseLogging=true"
               value={imageArgs}
               onChange={(e) => {
-                setImageArgs(e.target.value)
+                setImageArgs(e.target.value);
               }}
               fullWidth
             />
