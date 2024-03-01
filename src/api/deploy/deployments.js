@@ -81,6 +81,7 @@ export const createDeployment = async (
   name,
   zone,
   image,
+  imageArgs,
   envs,
   repo,
   volumes,
@@ -93,6 +94,7 @@ export const createDeployment = async (
 
   if (zone) body = { ...body, zone };
   if (image) body = { ...body, image };
+  if (imageArgs) body = { ...body, args: imageArgs };
   if (envs) body = { ...body, envs };
   if (volumes) body = { ...body, volumes };
 

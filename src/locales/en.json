@@ -92,6 +92,7 @@
         "create-deployment-image-subheader": "If you would like to use a prebuilt image, enter its name below. For example mongo, mongo:4.4 or quay.io/keycloak/keycloak",
         "create-deployment-custom-domain": "Custom Domain",
         "create-deployment-custom-domain-subheader": "Specify a custom domain. Add a CNAME record for this domain pointing to app.cloud.cbh.kth.se. If you are using Cloudflare or some other proxy service, disable the proxy so our DNS lookup resolves correctly. You can reenable the proxy after the deployment is created.",
+        "run-args": "Run arguments",
         "create-deployment-domain": "Domain",
         "create-deployment-domain-example": "example.com",
         "create-deployment-env": "Environment variables",
@@ -465,6 +466,7 @@
         "computational-support": "We receive invaluable computational support from ",
         "funding": "Funding",
         "disclaimer": "Disclaimer",
-        "genai-long": "AI generated content may be inaccurate or misleading, always verify the information. All AI generated content on this page is marked with the following symbol"
+        "genai-long": "AI generated content may be inaccurate or misleading, always verify the information. All AI generated content on this page is marked with the following symbol",
+        "nothing-to-do": "Nothing to do"
     }
 }

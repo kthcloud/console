@@ -12,6 +12,7 @@ import { errorHandler } from "/src/utils/errorHandler";
 export const ImageManager = ({ deployment }) => {
   const { t } = useTranslation();
   const [image, setImage] = useState("");
+  const [imageArgs, setImageArgs] = useState("");
   const [loading, setLoading] = useState(false);
   const { keycloak } = useKeycloak();
   const { queueJob } = useResource();
@@ -19,19 +20,21 @@ export const ImageManager = ({ deployment }) => {
   useEffect(() => {
     if (!deployment.image) return;
     setImage(deployment.image);
+    
+    setImageArgs(deployment.args ? deployment.args.join(" ") : "");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleSave = async (img) => {
+  const handleSave = async (img, args) => {
     const newImage = img.trim();
-    if (newImage === deployment.image) return;
+    const newArgs = args.trim();
 
     setLoading(true);
 
     try {
       const res = await updateDeployment(
         deployment.id,
-        { image: newImage },
+        { image: newImage, args: newArgs.split(" ") },
         keycloak.token
       );
       queueJob(res);
@@ -71,7 +74,22 @@ export const ImageManager = ({ deployment }) => {
             onChange={(e) => setImage(e.target.value.trim())}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
-                handleSave(e.target.value);
+                handleSave(e.target.value, imageArgs);
+              }
+            }}
+            fullWidth
+            sx={{ maxWidth: "sm" }}
+            disabled={loading}
+          />
+          <TextField
+            label={t("run-args")}
+            variant="outlined"
+            placeholder={deployment.args}
+            value={imageArgs}
+            onChange={(e) => setImageArgs(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleSave(image, e.target.value);
               }
             }}
             fullWidth
@@ -80,7 +98,7 @@ export const ImageManager = ({ deployment }) => {
           />
           <LoadingButton
             variant="contained"
-            onClick={() => handleSave(image)}
+            onClick={() => handleSave(image, imageArgs)}
             startIcon={<Iconify icon="material-symbols:save" />}
             loading={loading}
           >

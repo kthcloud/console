@@ -53,6 +53,7 @@ export default function CreateDeployment({ finished }) {
 
   const [selectedZone, setSelectedZone] = useState("");
   const [image, setImage] = useState("");
+  const [imageArgs, setImageArgs] = useState("");
 
   const [envs, setEnvs] = useState([{ name: "PORT", value: "8080" }]);
   const [newEnvName, setNewEnvName] = useState("");
@@ -114,6 +115,7 @@ export default function CreateDeployment({ finished }) {
         cleaned,
         selectedZone,
         image,
+        imageArgs.split(" "),
         newEnvs,
         repo,
         newPersistent,
@@ -174,16 +176,34 @@ export default function CreateDeployment({ finished }) {
           subheader={t("create-deployment-image-subheader")}
         />
         <CardContent>
-          <TextField
-            label={t("create-deployment-image")}
-            variant="outlined"
-            placeholder="mongo:latest"
-            value={image}
-            onChange={(e) => {
-              setImage(e.target.value.trim());
-            }}
-            fullWidth
-          />
+          <Stack
+            direction="row"
+            spacing={3}
+            alignItems={"center"}
+            flexWrap={"wrap"}
+            useFlexGap
+          >
+            <TextField
+              label={t("create-deployment-image")}
+              variant="outlined"
+              placeholder="mongo:latest"
+              value={image}
+              onChange={(e) => {
+                setImage(e.target.value.trim());
+              }}
+              fullWidth
+            />
+            <TextField
+              label={t("run-args")}
+              variant="outlined"
+              placeholder="--setParameter httpVerboseLogging=true"
+              value={imageArgs}
+              onChange={(e) => {
+                setImageArgs(e.target.value)
+              }}
+              fullWidth
+            />
+          </Stack>
         </CardContent>
       </Card>
 
