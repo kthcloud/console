@@ -158,6 +158,8 @@ export default function Menu() {
             target="_blank"
             rel="me"
           >
+            {t("menu-maia")}
+          </MenuItem>
           <MenuItem
             href={"https://docs.cloud.cbh.kth.se/"}
             component={Link}
