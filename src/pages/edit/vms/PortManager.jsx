@@ -28,9 +28,9 @@ import { enqueueSnackbar } from "notistack";
 import useResource from "/src/hooks/useResource";
 import { updateVM } from "/src/api/deploy/vms";
 import { useKeycloak } from "@react-keycloak/web";
-import CopyToClipboard from "react-copy-to-clipboard";
 import { errorHandler } from "/src/utils/errorHandler";
 import { useTranslation } from "react-i18next";
+import CopyButton from "/src/components/CopyButton";
 
 export default function PortManager({ vm }) {
   const { t } = useTranslation();
@@ -147,19 +147,16 @@ export default function PortManager({ vm }) {
             {t("port-forwarding-subheader-2")}
             <br />
             {t("port-forwarding-subheader-3")}
-            <CopyToClipboard text={publicDomain}>
-              <Tooltip enterTouchDelay={10} title={t("copy-to-clipboard")}>
-                <b
-                  style={{
-                    fontFamily: "monospace",
-                    cursor: "pointer",
-                    color: theme.palette.grey[700],
-                  }}
-                >
-                  {publicDomain}
-                </b>
-              </Tooltip>
-            </CopyToClipboard>
+
+            <CopyButton content={publicDomain} />
+            <b
+              style={{
+                fontFamily: "monospace",
+                color: theme.palette.grey[700],
+              }}
+            >
+              {publicDomain}
+            </b>
             <span
               style={{
                 fontFamily: "monospace",
@@ -171,19 +168,16 @@ export default function PortManager({ vm }) {
             {publicIP && (
               <>
                 {" " + t("or") + " "}
-                <CopyToClipboard text={publicIP}>
-                  <Tooltip enterTouchDelay={10} title="Copy to clipboard">
-                    <b
-                      style={{
-                        fontFamily: "monospace",
-                        cursor: "pointer",
-                        color: theme.palette.grey[700],
-                      }}
-                    >
-                      {publicIP}
-                    </b>
-                  </Tooltip>
-                </CopyToClipboard>
+                <CopyButton content={publicIP} />
+
+                <b
+                  style={{
+                    fontFamily: "monospace",
+                    color: theme.palette.grey[700],
+                  }}
+                >
+                  {publicIP}
+                </b>
                 <span
                   style={{
                     fontFamily: "monospace",

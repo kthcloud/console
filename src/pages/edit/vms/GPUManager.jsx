@@ -19,7 +19,6 @@ import {
 import { useKeycloak } from "@react-keycloak/web";
 import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
-import CopyToClipboard from "react-copy-to-clipboard";
 import Iconify from "/src/components/Iconify";
 import useResource from "/src/hooks/useResource";
 import {
@@ -31,6 +30,7 @@ import {
 import { errorHandler } from "/src/utils/errorHandler";
 import { hashGPUId } from "/src/utils/helpers";
 import { useTranslation } from "react-i18next";
+import CopyButton from "/src/components/CopyButton";
 
 export const GPUManager = ({ vm }) => {
   const { t } = useTranslation();
@@ -473,20 +473,21 @@ export const GPUManager = ({ vm }) => {
                     {t("gpu-drivers-1")}
                     <br />
                     {t("gpu-drivers-2")}
-                    <CopyToClipboard text="apt install nvidia-driver-535-server nvidia-utils-535-server -y">
-                      <Tooltip enterTouchDelay={10} title="Copy to clipboard">
-                        <span
-                          style={{
-                            fontFamily: "monospace",
-                            fontWeight: "bold",
-                            cursor: "pointer",
-                          }}
-                        >
-                          apt install nvidia-driver-535-server
-                          nvidia-utils-535-server -y
-                        </span>
-                      </Tooltip>
-                    </CopyToClipboard>
+                    <span
+                      style={{
+                        fontFamily: "monospace",
+                        fontWeight: "bold",
+                        paddingRight: "0.5rem"
+                      }}
+                    >
+                      apt install nvidia-driver-535-server
+                      nvidia-utils-535-server -y
+                    </span>
+                    <CopyButton
+                      content={
+                        "apt install nvidia-driver-535-server nvidia-utils-535-server -y"
+                      }
+                    />
                     {t("gpu-drivers-3")}
 
                     <Link

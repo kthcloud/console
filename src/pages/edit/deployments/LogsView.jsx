@@ -10,10 +10,10 @@ import {
 } from "@mui/material";
 import { useKeycloak } from "@react-keycloak/web";
 import { useEffect, useRef, useState } from "react";
-import CopyToClipboard from "react-copy-to-clipboard";
 import Iconify from "/src/components/Iconify";
 import polyfilledEventSource from "@sanity/eventsource";
 import { useTranslation } from "react-i18next";
+import CopyButton from "/src/components/CopyButton";
 
 export const LogsView = ({ deployment }) => {
   const { t } = useTranslation();
@@ -263,25 +263,26 @@ export const LogsView = ({ deployment }) => {
               {t("button-clear")}
             </Button>
 
-            <CopyToClipboard text={logs.join("\n")}>
-              <Button
-                variant="contained"
-                startIcon={
-                  <Iconify icon={"material-symbols:content-copy-outline"} />
-                }
-              >
-                {t("copy")}
-              </Button>
-            </CopyToClipboard>
+            <CopyButton
+              content={logs
+                .map((log) => `${log.createdAt} ${log.prefix} ${log.line}`)
+                .join("\n")}
+              variant="button"
+            />
 
             <Button
               variant="contained"
               startIcon={<Iconify icon={"material-symbols:download"} />}
               onClick={() => {
                 const element = document.createElement("a");
-                const file = new Blob([logs.join("\n")], {
-                  type: "text/plain",
-                });
+                const file = new Blob([
+                  logs
+                    .map((log) => `${log.createdAt} ${log.prefix} ${log.line}`)
+                    .join("\n"),
+                  {
+                    type: "text/plain",
+                  },
+                ]);
                 element.href = URL.createObjectURL(file);
                 element.download = "logs_" + deployment.name + ".txt";
                 document.body.appendChild(element); // Required for this to work in FireFox
