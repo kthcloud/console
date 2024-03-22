@@ -8,6 +8,11 @@ import {
   Button,
   AppBar,
   Chip,
+  IconButton,
+  FormControl,
+  OutlinedInput,
+  InputAdornment,
+  useTheme,
 } from "@mui/material";
 
 //hooks
@@ -47,13 +52,24 @@ import DangerZone from "./DangerZone";
 import { ReplicaManager } from "./deployments/ReplicaManager";
 import Iconify from "/src/components/Iconify";
 import { enqueueSnackbar } from "notistack";
+import { updateDeployment } from "/src/api/deploy/deployments";
+import { updateVM } from "/src/api/deploy/vms";
+import { errorHandler } from "/src/utils/errorHandler";
 
 export function Edit() {
   const { t } = useTranslation();
-  const { initialized } = useKeycloak();
+  const { keycloak, initialized } = useKeycloak();
+  const theme = useTheme();
+
+  const { queueJob, beginFastLoad } = useResource();
+
   const [resource, setResource] = useState(null);
   const [envs, setEnvs] = useState([]);
   const [persistent, setPersistent] = useState([]);
+
+  const [editingName, setEditingName] = useState(false);
+  const [nameFieldValue, setNameFieldValue] = useState("");
+
   const {
     user,
     rows,
@@ -73,11 +89,54 @@ export function Edit() {
     navigate("/deploy");
   }
 
+  const handleNameChange = async () => {
+    setEditingName(false);
+
+    if (!initialized && resource) {
+      enqueueSnackbar(t("error-updating"), { variant: "error" });
+      return;
+    }
+
+    if (nameFieldValue.trim() === "") {
+      enqueueSnackbar(t("name-cannot-be-empty"), { variant: "error" });
+      return;
+    }
+
+    try {
+      let result = "";
+      if (resource.type === "deployment") {
+        result = await updateDeployment(
+          resource.id,
+          { name: nameFieldValue },
+          keycloak.token
+        );
+      } else if (resource.type === "vm") {
+        result = await updateVM(
+          resource.id,
+          { name: nameFieldValue },
+          keycloak.token
+        );
+      }
+
+      if (result) {
+        queueJob(result);
+        beginFastLoad();
+        enqueueSnackbar(t("saving-name"), { variant: "info" });
+      }
+    } catch (error) {
+      errorHandler(error).forEach((e) =>
+        enqueueSnackbar(t("error-updating") + ": " + e, {
+          variant: "error",
+        })
+      );
+    }
+  };
+
   const loadResource = () => {
     const row = rows.find((row) => row.id === id);
     if (!row) {
       setReloads(reloads + 1);
-      if (reloads > 3) {
+      if (reloads > 10) {
         enqueueSnackbar(t("resource-not-found"), { variant: "error" });
         navigate("/deploy");
       }
@@ -140,7 +199,46 @@ export function Edit() {
                 spacing={3}
                 useFlexGap={true}
               >
-                <Typography variant="h4">{resource.name}</Typography>
+                {!editingName && (
+                  <Stack direction="row" alignItems="center" spacing={1}>
+                    <Typography variant="h4">{resource.name}</Typography>
+                    <IconButton
+                      onClick={() => {
+                        setEditingName(!editingName);
+                        setNameFieldValue(resource.name);
+                      }}
+                      sx={{ color: theme.palette.grey[500] }}
+                    >
+                      <Iconify icon="mdi:pencil" />
+                    </IconButton>
+                  </Stack>
+                )}
+                {editingName && (
+                  <FormControl sx={{ m: 1, width: "25ch" }} variant="outlined">
+                    <OutlinedInput
+                      id="outlined-adornment-weight"
+                      endAdornment={
+                        <InputAdornment position="end">
+                          <IconButton onClick={handleNameChange}>
+                            <Iconify icon="mdi:content-save" />
+                          </IconButton>
+                        </InputAdornment>
+                      }
+                      aria-describedby="outlined-weight-helper-text"
+                      inputProps={{
+                        "aria-label": "weight",
+                      }}
+                      value={nameFieldValue}
+                      onChange={(e) => {
+                        setNameFieldValue(e.target.value.trim());
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") handleNameChange();
+                      }}
+                      autoFocus
+                    />
+                  </FormControl>
+                )}
 
                 <Stack
                   direction="row"

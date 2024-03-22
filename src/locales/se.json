@@ -466,6 +466,8 @@
         "funding": "Finansiellt stöd",
         "menu-maia": "MAIA",
         "disclaimer": "Ansvarsfriskrivning",
-        "genai-long": "Innehåll genererat av AI kan vara felaktigt eller missvisande, verifiera alltid informationen. Allt innehåll genererat av AI på denna sida är märkt med följande symbol"
+        "genai-long": "Innehåll genererat av AI kan vara felaktigt eller missvisande, verifiera alltid informationen. Allt innehåll genererat av AI på denna sida är märkt med följande symbol",
+        "name-cannot-be-empty": "Namnfältet är obligatoriskt",
+        "saving-name": "Sparar namn..."
     }
 }

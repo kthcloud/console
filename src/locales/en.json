@@ -176,7 +176,7 @@
         "error-deleting-resource": "Error deleting resource: ",
         "deployment-in-progress": "deployment in progress... ",
         "failed-update": "Failed to update",
-        "visit-page": "Visit page",
+        "visit-page": "Visit",
         "storage-manager": "Manage storage",
         "saving-domain-update": "Saving domain update...",
         "could-not-update-domain": "Could not update domain",
@@ -467,6 +467,8 @@
         "computational-support": "We receive invaluable computational support from ",
         "funding": "Funding",
         "disclaimer": "Disclaimer",
-        "genai-long": "AI generated content may be inaccurate or misleading, always verify the information. All AI generated content on this page is marked with the following symbol"
+        "genai-long": "AI generated content may be inaccurate or misleading, always verify the information. All AI generated content on this page is marked with the following symbol",
+        "name-cannot-be-empty": "Name cannot be empty",
+        "saving-name": "Saving name..."
     }
 }
