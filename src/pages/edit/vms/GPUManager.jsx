@@ -477,7 +477,7 @@ export const GPUManager = ({ vm }) => {
                       style={{
                         fontFamily: "monospace",
                         fontWeight: "bold",
-                        paddingRight: "0.5rem"
+                        paddingRight: "0.5rem",
                       }}
                     >
                       apt install nvidia-driver-535-server
