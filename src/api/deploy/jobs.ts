@@ -1,4 +1,4 @@
-export const getJob = async (jobId, token) => {
+export const getJob = async (jobId: string, token: string) => {
   const res = await fetch(
     import.meta.env.VITE_DEPLOY_API_URL + "/jobs/" + jobId,
     {
@@ -19,7 +19,7 @@ export const getJob = async (jobId, token) => {
   return await res.json();
 };
 
-export const getJobs = async (token, pageSize = 100, page = 1, all = false) => {
+export const getJobs = async (token: string, pageSize = 100, page = 1, all = false) => {
   let allParam = all ? "&all=true" : "";
 
   const res = await fetch(
@@ -43,7 +43,7 @@ export const getJobs = async (token, pageSize = 100, page = 1, all = false) => {
   return await res.json();
 };
 
-export const restartJob = async (token, jobId) => {
+export const restartJob = async (token: string, jobId: string) => {
   let body = { status: "pending" };
 
   const res = await fetch(

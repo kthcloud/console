@@ -1,4 +1,4 @@
-export const getNotifications = async (token) => {
+export const getNotifications = async (token: string) => {
   const url = `${import.meta.env.VITE_DEPLOY_API_URL}/notifications`;
   const response = await fetch(url, {
     method: "GET",
@@ -12,13 +12,13 @@ export const getNotifications = async (token) => {
   }
 
   result.sort((a, b) => {
-    return new Date(b.createdAt) - new Date(a.createdAt);
+    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
   });
 
   return result;
 };
 
-export const markNotificationAsRead = async (token, id) => {
+export const markNotificationAsRead = async (token: string, id: string) => {
   const body = { read: true };
   const url = `${import.meta.env.VITE_DEPLOY_API_URL}/notifications/${id}`;
   const response = await fetch(url, {
@@ -34,7 +34,7 @@ export const markNotificationAsRead = async (token, id) => {
   return result;
 };
 
-export const deleteNotification = async (token, id) => {
+export const deleteNotification = async (token: string, id: string) => {
   const url = `${import.meta.env.VITE_DEPLOY_API_URL}/notifications/${id}`;
   const response = await fetch(url, {
     method: "DELETE",

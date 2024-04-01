@@ -1,4 +1,4 @@
-export const getUserData = async (token) => {
+export const getUserData = async (token: string) => {
   const res = await fetch(import.meta.env.VITE_DEPLOY_API_URL + "/userData", {
     method: "GET",
     headers: {
@@ -16,7 +16,7 @@ export const getUserData = async (token) => {
   return await res.json();
 };
 
-export const updateUserData = async (token, key, value) => {
+export const updateUserData = async (token: string, key: string, value: string) => {
   const res = await fetch(
     import.meta.env.VITE_DEPLOY_API_URL + "/userData/" + key,
     {
@@ -38,7 +38,7 @@ export const updateUserData = async (token, key, value) => {
   return await res.json();
 };
 
-export const getUserDataByKey = async (token, key) => {
+export const getUserDataByKey = async (token: string, key: string) => {
   const res = await fetch(
     import.meta.env.VITE_DEPLOY_API_URL + "/userData/" + key,
     {
@@ -59,7 +59,7 @@ export const getUserDataByKey = async (token, key) => {
   return await res.json();
 };
 
-export const deleteUserDataByKey = async (token, key) => {
+export const deleteUserDataByKey = async (token: string, key: string) => {
   const res = await fetch(
     import.meta.env.VITE_DEPLOY_API_URL + "/userData/" + key,
     {

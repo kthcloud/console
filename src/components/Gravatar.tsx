@@ -2,8 +2,16 @@ import { Avatar } from "@mui/material";
 import { MD5 } from "crypto-js";
 import { useEffect, useState } from "react";
 
-const Gravatar = ({ user, fallback, ...props }) => {
-  const [userAvatar, setUserAvatar] = useState(null);
+const Gravatar = ({
+  user,
+  fallback,
+  ...props
+}: {
+  user: any;
+  fallback: any;
+  props: any;
+}) => {
+  const [userAvatar, setUserAvatar] = useState("");
   const [hasFetched, setHasFetched] = useState(false);
 
   const gravatar = async () => {

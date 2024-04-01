@@ -1,4 +1,4 @@
-export const getVM = async (token, id) => {
+export const getVM = async (token: string, id: string) => {
   const url = `${import.meta.env.VITE_DEPLOY_API_URL}/vms/${id}`;
   const response = await fetch(url, {
     method: "GET",
@@ -13,7 +13,7 @@ export const getVM = async (token, id) => {
   return result.map((obj) => ({ ...obj, type: "vm" }));
 };
 
-export const getVMs = async (token, all = false) => {
+export const getVMs = async (token: string, all: boolean = false) => {
   const allQuery = all ? "?all=true" : "";
   const url = `${import.meta.env.VITE_DEPLOY_API_URL}/vms${allQuery}`;
   const response = await fetch(url, {
@@ -29,7 +29,7 @@ export const getVMs = async (token, all = false) => {
   return result.map((obj) => ({ ...obj, type: "vm" }));
 };
 
-export const deleteVM = async (id, token) => {
+export const deleteVM = async (id: string, token: string) => {
   const res = await fetch(import.meta.env.VITE_DEPLOY_API_URL + "/vms/" + id, {
     method: "DELETE",
     headers: {
@@ -47,7 +47,7 @@ export const deleteVM = async (id, token) => {
   return await res.json();
 };
 
-export const detachGPU = async (vm, token) => {
+export const detachGPU = async (vm: any, token: string) => {
   const res = await fetch(
     import.meta.env.VITE_DEPLOY_API_URL + "/vms/" + vm.id,
     {
@@ -68,7 +68,7 @@ export const detachGPU = async (vm, token) => {
   return await res.json();
 };
 
-export const attachGPU = async (vm, token) => {
+export const attachGPU = async (vm: any, token: string) => {
   const res = await fetch(
     import.meta.env.VITE_DEPLOY_API_URL + "/vms/" + vm.id,
     {
@@ -89,8 +89,8 @@ export const attachGPU = async (vm, token) => {
   return await res.json();
 };
 
-export const attachGPUById = async (vm, token, id, noLeaseEnd = false) => {
-  let body = { gpuId: id };
+export const attachGPUById = async (vm: any, token: string, id: string, noLeaseEnd = false) => {
+  let body: any = { gpuId: id };
 
   if (noLeaseEnd) {
     body.noLeaseEnd = true;
@@ -116,7 +116,7 @@ export const attachGPUById = async (vm, token, id, noLeaseEnd = false) => {
   return await res.json();
 };
 
-export const getGPUs = async (token, availableOnly = false) => {
+export const getGPUs = async (token: string, availableOnly = false) => {
   const res = await fetch(
     import.meta.env.VITE_DEPLOY_API_URL +
       "/gpus" +
@@ -139,15 +139,15 @@ export const getGPUs = async (token, availableOnly = false) => {
 };
 
 export const createVM = async (
-  name,
-  zone,
-  sshPublicKey,
-  cpuCores,
-  diskSize,
-  ram,
-  token
+  name: string,
+  zone: string,
+  sshPublicKey: string,
+  cpuCores: number,
+  diskSize: number,
+  ram: number,
+  token: string
 ) => {
-  let body = {
+  let body: any = {
     name,
     sshPublicKey,
     cpuCores,
@@ -177,7 +177,7 @@ export const createVM = async (
   return await res.json();
 };
 
-export const updateVM = async (id, changes, token) => {
+export const updateVM = async (id: string, changes: any, token: string) => {
   const res = await fetch(import.meta.env.VITE_DEPLOY_API_URL + "/vms/" + id, {
     method: "POST",
     headers: {
@@ -196,7 +196,7 @@ export const updateVM = async (id, changes, token) => {
   return await res.json();
 };
 
-export const applyCommand = async (id, command, token) => {
+export const applyCommand = async (id: string, command: any, token: string) => {
   const body = { command: command };
   const res = await fetch(
     import.meta.env.VITE_DEPLOY_API_URL + "/vms/" + id + "/command",
@@ -219,7 +219,7 @@ export const applyCommand = async (id, command, token) => {
   return true;
 };
 
-export const getSnapshots = async (id, token) => {
+export const getSnapshots = async (id: string, token: string) => {
   const res = await fetch(
     import.meta.env.VITE_DEPLOY_API_URL + "/vms/" + id + "/snapshots",
     {
@@ -241,7 +241,7 @@ export const getSnapshots = async (id, token) => {
   return snapshots;
 };
 
-export const createSnapshot = async (id, name, token) => {
+export const createSnapshot = async (id: string, name: string, token: string) => {
   const body = { name: name };
   const res = await fetch(
     import.meta.env.VITE_DEPLOY_API_URL + "/vms/" + id + "/snapshots",
@@ -265,7 +265,7 @@ export const createSnapshot = async (id, name, token) => {
   return await res.json();
 };
 
-export const acceptVmTransfer = async (token, id, code) => {
+export const acceptVmTransfer = async (token: any, id: any, code: any) => {
   const url = `${import.meta.env.VITE_DEPLOY_API_URL}/vms/${id}`;
   const body = { transferCode: code };
 

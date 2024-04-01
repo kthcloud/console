@@ -11,10 +11,20 @@ import {
   Backdrop,
 } from "@mui/material";
 
-const ConfirmButton = ({ action, actionText, callback, props }) => {
+const ConfirmButton = ({
+  action,
+  actionText,
+  callback,
+  props,
+}: {
+  action: string;
+  actionText: string;
+  callback: () => void;
+  props: any;
+}) => {
   const { t } = useTranslation();
   const [open, _setOpen] = useState(false);
-  const setOpen = (state) => {
+  const setOpen = (state: boolean) => {
     if (state) navigator.vibrate?.([0.1, 5, 0.1]);
     _setOpen(state);
   };

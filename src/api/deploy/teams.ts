@@ -1,4 +1,4 @@
-export const joinTeam = async (token, teamId, code) => {
+export const joinTeam = async (token: string, teamId: string, code: string) => {
   const url = `${import.meta.env.VITE_DEPLOY_API_URL}/teams/${teamId}`;
   const body = { invitationCode: code };
 
@@ -15,7 +15,7 @@ export const joinTeam = async (token, teamId, code) => {
   return result;
 };
 
-export const getTeams = async (token, all = false) => {
+export const getTeams = async (token: string, all = false) => {
   let allParam = all ? "?all=true" : "";
   const url = `${import.meta.env.VITE_DEPLOY_API_URL}/teams${allParam}`;
 
@@ -27,25 +27,25 @@ export const getTeams = async (token, all = false) => {
   });
 
   let result = await response.json();
-  result.sort((a, b) => {
-    return new Date(b.createdAt) - new Date(a.createdAt);
+  result.sort((a: any, b: any) => {
+    return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
   });
 
   for (let i = 0; i < result.length; i++) {
     result[i].members &&
-      result[i].members.sort((a, b) => {
+      result[i].members.sort((a: any, b: any) => {
         return a.id < b.id ? -1 : 1;
       });
 
     result[i].resources &&
-      result[i].resources.sort((a, b) => {
+      result[i].resources.sort((a: any, b: any) => {
         return a.id < b.id ? -1 : 1;
       });
   }
   return result;
 };
 
-export const createTeam = async (token, name, description) => {
+export const createTeam = async (token: string, name: string, description: string) => {
   const url = `${import.meta.env.VITE_DEPLOY_API_URL}/teams`;
 
   let res = await fetch(url, {
@@ -67,7 +67,7 @@ export const createTeam = async (token, name, description) => {
   return await res.json();
 };
 
-export const deleteTeam = async (token, teamId) => {
+export const deleteTeam = async (token: string, teamId: string) => {
   const url = `${import.meta.env.VITE_DEPLOY_API_URL}/teams/${teamId}`;
 
   await fetch(url, {
@@ -78,7 +78,8 @@ export const deleteTeam = async (token, teamId) => {
   });
 };
 
-export const addMembers = async (token, teamId, members) => {
+
+export const addMembers = async (token: string, teamId: string, members: { id: string }[]) => {
   const url = `${import.meta.env.VITE_DEPLOY_API_URL}/teams/${teamId}`;
   const body = { members: members };
 
@@ -101,7 +102,7 @@ export const addMembers = async (token, teamId, members) => {
   return await res.json();
 };
 
-export const updateTeam = async (token, teamId, body) => {
+export const updateTeam = async (token: string, teamId: string, body: any) => {
   const url = `${import.meta.env.VITE_DEPLOY_API_URL}/teams/${teamId}`;
 
   let res = await fetch(url, {

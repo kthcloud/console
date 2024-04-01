@@ -1,4 +1,4 @@
-export const getUser = async (userId, token) => {
+export const getUser = async (userId: string, token: string) => {
   const res = await fetch(
     import.meta.env.VITE_DEPLOY_API_URL + "/users/" + userId,
     {
@@ -19,7 +19,7 @@ export const getUser = async (userId, token) => {
   return await res.json();
 };
 
-export const getAllUsers = async (token) => {
+export const getAllUsers = async (token: string) => {
   const res = await fetch(
     import.meta.env.VITE_DEPLOY_API_URL + "/users?all=true",
     {
@@ -40,7 +40,7 @@ export const getAllUsers = async (token) => {
   return await res.json();
 };
 
-export const updateUser = async (userId, token, data) => {
+export const updateUser = async (userId: string, token: string, data: any) => {
   const res = await fetch(
     import.meta.env.VITE_DEPLOY_API_URL + "/users/" + userId,
     {
@@ -62,7 +62,7 @@ export const updateUser = async (userId, token, data) => {
   return await res.json();
 };
 
-export const searchUsers = async (token, query) => {
+export const searchUsers = async (token: string, query: string) => {
   const res = await fetch(
     import.meta.env.VITE_DEPLOY_API_URL +
       "/users?all=true&discover=true&search=" +

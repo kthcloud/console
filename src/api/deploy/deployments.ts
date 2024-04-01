@@ -1,4 +1,4 @@
-export const getDeployment = async (token, id) => {
+export const getDeployment = async (token: string, id: string) => {
   const url = `${import.meta.env.VITE_DEPLOY_API_URL}/deployments/${id}`;
   const res = await fetch(url, {
     method: "GET",
@@ -12,7 +12,7 @@ export const getDeployment = async (token, id) => {
   else throw new Error("Error getting deployments, response was not an array");
 };
 
-export const getDeployments = async (token, all = false) => {
+export const getDeployments = async (token: string, all: boolean = false) => {
   const allQuery = all ? "?all=true" : "";
   const url = `${import.meta.env.VITE_DEPLOY_API_URL}/deployments${allQuery}`;
   const res = await fetch(url, {
@@ -22,7 +22,7 @@ export const getDeployments = async (token, all = false) => {
     },
   });
   const response = await res.json();
-  const result = response.map((obj) => ({
+  const result = response.map((obj: any) => ({
     ...obj,
     deploymentType: obj.type,
     type: "deployment",
@@ -31,7 +31,7 @@ export const getDeployments = async (token, all = false) => {
   else throw new Error("Error getting deployments, response was not an array");
 };
 
-export const deleteDeployment = async (id, token) => {
+export const deleteDeployment = async (id: string, token: string) => {
   const res = await fetch(
     import.meta.env.VITE_DEPLOY_API_URL + "/deployments/" + id,
     {
@@ -56,7 +56,7 @@ export const deleteDeployment = async (id, token) => {
   return await res.json();
 };
 
-export const getDeploymentYaml = async (id, token) => {
+export const getDeploymentYaml = async (id: string, token: string) => {
   const res = await fetch(
     import.meta.env.VITE_DEPLOY_API_URL + "/deployments/" + id + "/ciConfig",
     {
@@ -78,16 +78,16 @@ export const getDeploymentYaml = async (id, token) => {
 };
 
 export const createDeployment = async (
-  name,
-  zone,
-  image,
-  envs,
-  repo,
-  volumes,
-  accessToken,
-  token
+  name: any,
+  zone: any,
+  image: any,
+  envs: any,
+  repo: any,
+  volumes: any,
+  accessToken: any,
+  token: string
 ) => {
-  let body = {
+  let body: any = {
     name,
   };
 
@@ -126,7 +126,7 @@ export const createDeployment = async (
   return await res.json();
 };
 
-export const updateDeployment = async (id, changes, token) => {
+export const updateDeployment = async (id: string, changes: any, token: string) => {
   const res = await fetch(
     import.meta.env.VITE_DEPLOY_API_URL + "/deployments/" + id,
     {
@@ -148,7 +148,7 @@ export const updateDeployment = async (id, changes, token) => {
   return await res.json();
 };
 
-export const applyCommand = async (id, command, token) => {
+export const applyCommand = async (id: string, command: any, token: string) => {
   const body = { command: command };
   const res = await fetch(
     import.meta.env.VITE_DEPLOY_API_URL + "/deployments/" + id + "/command",
@@ -171,7 +171,7 @@ export const applyCommand = async (id, command, token) => {
   return true;
 };
 
-export const acceptDeploymentTransfer = async (token, id, code) => {
+export const acceptDeploymentTransfer = async (token: any, id: any, code: any) => {
   const url = `${import.meta.env.VITE_DEPLOY_API_URL}/deployments/${id}`;
   const body = { transferCode: code };
 

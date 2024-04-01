@@ -4,7 +4,13 @@ import Iconify from "./Iconify";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
-const CopyButton = ({ content, variant = "icon" }) => {
+const CopyButton = ({
+  content,
+  variant = "icon",
+}: {
+  content: string;
+  variant?: string;
+}) => {
   const [tooltipLabel, setTooltipLabel] = useState("copy-to-clipboard");
   const { t } = useTranslation();
 

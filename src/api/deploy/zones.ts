@@ -1,4 +1,4 @@
-export const getZones = async (token) => {
+export const getZones = async (token: string) => {
   const url = `${import.meta.env.VITE_DEPLOY_API_URL}/zones`;
   const response = await fetch(url, {
     method: "GET",
