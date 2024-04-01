@@ -3,10 +3,10 @@ import "simplebar/dist/simplebar.css";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
-import { initI18n } from "./src/i18next.js";
+import { initI18n } from "./i18next.ts";
 //
-import App from "./src/App.jsx";
-import "./src/theme/customStyle.css";
+import App from "./App.tsx";
+import "./theme/customStyle.css";
 
 // ----------------------------------------------------------------------
 
