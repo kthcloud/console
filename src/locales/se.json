@@ -160,7 +160,7 @@
         "resouce-comparison-real-time-analytics": "Realtidsanalys: t.ex. Apache Kafka, Elasticsearch",
         "button-help": "Hjälp",
         "next": "Nästa",
-        "danger-zone": "Farliga knappar",
+        "danger-zone": "Farlig zon",
         "github-actions-quickstart": "GitHub Actions dokumentation",
         "onboarding-wait-2": "Hmm, det här verkar ta för lång tid. Du kan prova att ladda om sidan eller kontakta oss på Discord.",
         "ssh-public-keys-subheader-1": "Dina nycklar kommer att installeras när du skapar en virtuell maskin. Ändringar kommer inte att installeras på befintliga maskiner",
@@ -258,6 +258,7 @@
         "creating-proxy": "Skapar proxy ",
         "onboarding-deployments-2": "Allt du behöver är en Docker container eller ett projekt med en Dockerfile, och lite konfiguration. kthcloud tar hand om resten.",
         "copy-to-clipboard": "Kopiera",
+        "copied": "Kopierat!",
         "select-port": "Välj port för proxy till",
         "admin-leased-until": "Lånat till",
         "specs-subheader": "Ändra storlek av maskinen utifrån dina behov",
@@ -465,6 +466,8 @@
         "funding": "Finansiellt stöd",
         "menu-maia": "MAIA",
         "disclaimer": "Ansvarsfriskrivning",
-        "genai-long": "Innehåll genererat av AI kan vara felaktigt eller missvisande, verifiera alltid informationen. Allt innehåll genererat av AI på denna sida är märkt med följande symbol"
+        "genai-long": "Innehåll genererat av AI kan vara felaktigt eller missvisande, verifiera alltid informationen. Allt innehåll genererat av AI på denna sida är märkt med följande symbol",
+        "name-cannot-be-empty": "Namnfältet är obligatoriskt",
+        "saving-name": "Sparar namn..."
     }
 }

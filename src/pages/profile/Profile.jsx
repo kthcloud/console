@@ -11,7 +11,7 @@ import LoadingPage from "../../components/LoadingPage";
 import { useKeycloak } from "@react-keycloak/web";
 import { useSnackbar } from "notistack";
 import { sentenceCase } from "change-case";
-import { CopyToClipboard } from "react-copy-to-clipboard";
+import CopyButton from "/src/components/CopyButton";
 
 // material
 import {
@@ -124,14 +124,10 @@ export function Profile() {
         justifyContent={"flex-start"}
         useFlexGap={true}
       >
-        <>{"..." + rawKey.substring(rawKey.length - 20, rawKey.length - 1)}</>
-        <CopyToClipboard text={key}>
-          <Tooltip enterTouchDelay={10} title={t("copy-key")}>
-            <IconButton>
-              <Iconify icon={"ic:round-content-copy"} width={24} height={24} />
-            </IconButton>
-          </Tooltip>
-        </CopyToClipboard>
+        <Typography type={"body2"} sx={{ fontFamily: "monospace" }}>
+          {"..." + rawKey.substring(rawKey.length - 20, rawKey.length - 1)}
+        </Typography>
+        <CopyButton content={key} />
       </Stack>
     );
   };

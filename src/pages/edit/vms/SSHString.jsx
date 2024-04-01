@@ -3,11 +3,11 @@ import {
   CardContent,
   CardHeader,
   Skeleton,
-  Tooltip,
+  Stack,
   Typography,
 } from "@mui/material";
-import { CopyToClipboard } from "react-copy-to-clipboard";
 import { useTranslation } from "react-i18next";
+import CopyButton from "/src/components/CopyButton";
 
 const SSHString = ({ resource }) => {
   const { t } = useTranslation();
@@ -23,20 +23,18 @@ const SSHString = ({ resource }) => {
         {!ssh ? (
           <Skeleton height={"2rem"} sx={{ maxWidth: "30rem" }} />
         ) : (
-          <Typography variant="body1">
-            <CopyToClipboard text={ssh}>
-              <Tooltip enterTouchDelay={10} title={t("copy-to-clipboard")}>
-                <b
-                  style={{
-                    fontFamily: "monospace",
-                    cursor: "pointer",
-                  }}
-                >
-                  {ssh}
-                </b>
-              </Tooltip>
-            </CopyToClipboard>
-          </Typography>
+          <Stack direction="row" spacing={1} alignItems="center">
+            <Typography variant="body1">
+              <b
+                style={{
+                  fontFamily: "monospace",
+                }}
+              >
+                {ssh}
+              </b>
+            </Typography>
+            <CopyButton content={ssh} />
+          </Stack>
         )}
       </CardContent>
     </Card>

@@ -4,21 +4,29 @@ import { useEffect, useState } from "react";
 import { parse } from "yaml";
 
 import {
+  Box,
   Button,
   Card,
   CardActions,
   CardContent,
   CardHeader,
   Link,
+  Paper,
   Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
   TextareaAutosize,
   Tooltip,
   Typography,
   useTheme,
 } from "@mui/material";
-import { CopyToClipboard } from "react-copy-to-clipboard";
 import Iconify from "/src/components/Iconify";
 import { useTranslation } from "react-i18next";
+import CopyButton from "/src/components/CopyButton";
 
 const GHActions = ({ resource }) => {
   const { t } = useTranslation();
@@ -112,9 +120,7 @@ const GHActions = ({ resource }) => {
           />
         </CardContent>
         <CardActions>
-          <CopyToClipboard text={cliCommands}>
-            <Button> {t("copy-to-clipboard")}</Button>
-          </CopyToClipboard>{" "}
+          <CopyButton content={cliCommands} />
         </CardActions>
       </Card>
 
@@ -144,9 +150,7 @@ const GHActions = ({ resource }) => {
               useFlexGap
               alignItems={"center"}
             >
-              <CopyToClipboard text={actionsFile}>
-                <Button>{t("copy-to-clipboard")}</Button>
-              </CopyToClipboard>
+              <CopyButton content={actionsFile} />
 
               <Typography variant="body2">
                 {t("unsure-where-to-paste-this")}
@@ -173,56 +177,86 @@ const GHActions = ({ resource }) => {
             </Button>
 
             {showSecrets && (
-              <Stack
-                spacing={1}
-                useFlexGap
-                alignItems={"flex-start"}
-                my={2}
-                py={3}
-                sx={{
-                  border: 1,
-                  p: 2,
-                  borderRadius: 1,
-                  borderColor: "#ff534c",
-                }}
-                boxShadow={10}
-              >
-                <Typography variant="h6">{t("danger-zone")}</Typography>
-                <Typography variant="body2">
-                  {t("danger-zone-subheader")}
-                </Typography>
-                {secrets.map((secret) => (
-                  <Typography
-                    variant="body2"
-                    fontFamily={"monospace"}
-                    sx={{ cursor: "pointer" }}
-                  >
-                    <CopyToClipboard text={secret.name}>
-                      <Tooltip
-                        enterTouchDelay={10}
-                        title={t("copy-to-clipboard")}
-                      >
-                        {`${secret.name}: `}
-                      </Tooltip>
-                    </CopyToClipboard>
-                    <CopyToClipboard text={secret.value}>
-                      <Tooltip
-                        enterTouchDelay={10}
-                        title={t("copy-to-clipboard")}
-                      >
-                        <b
-                          style={{
-                            fontFamily: "monospace",
-                            cursor: "pointer",
-                          }}
-                        >
-                          {secret.value}
-                        </b>
-                      </Tooltip>
-                    </CopyToClipboard>
+              <Box sx={{ overflowX: "auto", maxWidth: "100%" }}>
+                <Stack
+                  spacing={1}
+                  useFlexGap
+                  alignItems={"flex-start"}
+                  my={2}
+                  py={3}
+                  sx={{
+                    border: 1,
+                    p: 2,
+                    borderRadius: 1,
+                    borderColor: "#ff534c",
+                  }}
+                  boxShadow={10}
+                >
+                  <Typography variant="h6">{t("danger-zone")}</Typography>
+                  <Typography variant="body2">
+                    {t("danger-zone-subheader")}
                   </Typography>
-                ))}
-              </Stack>
+
+                  <TableContainer component={Paper}>
+                    <Table aria-label="simple table">
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>
+                            {t("create-deployment-env-key")}
+                          </TableCell>
+                          <TableCell>
+                            {t("create-deployment-env-value")}
+                          </TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {secrets.map((secret, tableIndex) => (
+                          <TableRow
+                            key={"secret-" + tableIndex}
+                            sx={{
+                              "&:last-child td, &:last-child th": { border: 0 },
+                            }}
+                          >
+                            <TableCell component="th" scope="row">
+                              <Stack
+                                direction="row"
+                                alignItems="center"
+                                justifyContent="space-between"
+                                spacing={1}
+                              >
+                                <Typography
+                                  variant="body2"
+                                  fontFamily={"monospace"}
+                                  fontWeight={"bold"}
+                                >
+                                  {secret.name}
+                                </Typography>
+                                <CopyButton content={secret.name} />
+                              </Stack>
+                            </TableCell>
+                            <TableCell component="th" scope="row">
+                              <Stack
+                                direction="row"
+                                alignItems="center"
+                                justifyContent="space-between"
+                                spacing={1}
+                              >
+                                <Typography
+                                  variant="body2"
+                                  fontFamily={"monospace"}
+                                >
+                                  {secret.value}
+                                </Typography>
+                                <CopyButton content={secret.value} />
+                              </Stack>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </Stack>
+              </Box>
             )}
           </Stack>
         </CardContent>
