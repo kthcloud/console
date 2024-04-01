@@ -4,7 +4,7 @@ import languageDetector from "i18next-browser-languagedetector";
 import en from "./locales/en.json";
 import se from "./locales/se.json";
 
-export const initI18n = (): i18n => {
+export const initI18n = () => {
   i18n
     .use(languageDetector)
     .use(initReactI18next)
