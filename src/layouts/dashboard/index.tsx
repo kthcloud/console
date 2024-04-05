@@ -6,7 +6,6 @@ import Navbar from "./Navbar";
 import { Box, Container, Stack } from "@mui/material";
 import { useTranslation } from "react-i18next";
 
-
 const APP_BAR_MOBILE = 64;
 const APP_BAR_DESKTOP = 92;
 

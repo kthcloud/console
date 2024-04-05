@@ -22,7 +22,6 @@ import ServerStats from "./ServerStats";
 import LineChart from "./LineChart";
 import { useTranslation } from "react-i18next";
 
-
 export function Status() {
   const { t } = useTranslation();
 

@@ -15,9 +15,7 @@ import {
   ListItemButton,
 } from "@mui/material";
 
-
 import Iconify from "./Iconify";
-
 
 const ListItemStyle = styled((props) => (
   <ListItemButton disableGutters {...props} />
@@ -38,7 +36,6 @@ const ListItemIconStyle = styled(ListItemIcon)({
   alignItems: "center",
   justifyContent: "center",
 });
-
 
 NavItem.propTypes = {
   item: PropTypes.object,

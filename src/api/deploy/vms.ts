@@ -89,7 +89,12 @@ export const attachGPU = async (vm: any, token: string) => {
   return await res.json();
 };
 
-export const attachGPUById = async (vm: any, token: string, id: string, noLeaseEnd = false) => {
+export const attachGPUById = async (
+  vm: any,
+  token: string,
+  id: string,
+  noLeaseEnd = false
+) => {
   let body: any = { gpuId: id };
 
   if (noLeaseEnd) {
@@ -241,7 +246,11 @@ export const getSnapshots = async (id: string, token: string) => {
   return snapshots;
 };
 
-export const createSnapshot = async (id: string, name: string, token: string) => {
+export const createSnapshot = async (
+  id: string,
+  name: string,
+  token: string
+) => {
   const body = { name: name };
   const res = await fetch(
     import.meta.env.VITE_DEPLOY_API_URL + "/vms/" + id + "/snapshots",

@@ -79,7 +79,6 @@ const RootStyle = styled("span")(({
   };
 });
 
-
 interface LabelProps {
   children?: ReactNode;
   startIcon?: ReactNode;

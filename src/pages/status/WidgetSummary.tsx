@@ -7,7 +7,6 @@ import { fShortenNumber } from "../../utils/formatNumber";
 // components
 import Iconify from "../../components/Iconify";
 
-
 const IconWrapperStyle = styled("div")(({ theme }) => ({
   margin: "auto",
   display: "flex",
@@ -18,7 +17,6 @@ const IconWrapperStyle = styled("div")(({ theme }) => ({
   justifyContent: "center",
   marginBottom: theme.spacing(3),
 }));
-
 
 WidgetSummary.propTypes = {
   color: PropTypes.string,

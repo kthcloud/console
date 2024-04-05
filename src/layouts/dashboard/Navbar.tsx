@@ -16,7 +16,6 @@ import LoginButton from "./LoginButton";
 import Logo from "../../components/Logo";
 import Shortcuts from "./Shortcuts";
 
-
 const DRAWER_WIDTH = 0;
 const APPBAR_MOBILE = 64;
 const APPBAR_DESKTOP = 92;
@@ -39,7 +38,6 @@ const ToolbarStyle = styled(Toolbar)(({ theme }) => ({
     // padding: theme.spacing(0, 5),
   },
 }));
-
 
 Navbar.propTypes = {
   onOpenSidebar: PropTypes.func,

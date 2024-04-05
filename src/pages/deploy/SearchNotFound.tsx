@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import { Paper, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 
-
 SearchNotFound.propTypes = {
   searchQuery: PropTypes.string,
 };

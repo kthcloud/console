@@ -126,7 +126,11 @@ export const createDeployment = async (
   return await res.json();
 };
 
-export const updateDeployment = async (id: string, changes: any, token: string) => {
+export const updateDeployment = async (
+  id: string,
+  changes: any,
+  token: string
+) => {
   const res = await fetch(
     import.meta.env.VITE_DEPLOY_API_URL + "/deployments/" + id,
     {
@@ -171,7 +175,11 @@ export const applyCommand = async (id: string, command: any, token: string) => {
   return true;
 };
 
-export const acceptDeploymentTransfer = async (token: any, id: any, code: any) => {
+export const acceptDeploymentTransfer = async (
+  token: any,
+  id: any,
+  code: any
+) => {
   const url = `${import.meta.env.VITE_DEPLOY_API_URL}/deployments/${id}`;
   const body = { transferCode: code };
 

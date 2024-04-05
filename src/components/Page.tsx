@@ -4,7 +4,6 @@ import { forwardRef } from "react";
 // @mui
 import { Box } from "@mui/material";
 
-
 const Page = forwardRef(({ children, title = "", meta, ...other }, ref) => {
   const isCbhCloud = window.location.hostname.includes("cloud.cbh.kth.se");
   const pageTitle = isCbhCloud ? "cbhcloud" : "kthcloud";

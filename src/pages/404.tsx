@@ -6,7 +6,6 @@ import { Button, Typography, Container, Box } from "@mui/material";
 import Page from "../components/Page";
 import { useTranslation } from "react-i18next";
 
-
 const ContentStyle = styled("div")(({ theme }) => ({
   maxWidth: 480,
   margin: "auto",
@@ -16,7 +15,6 @@ const ContentStyle = styled("div")(({ theme }) => ({
   flexDirection: "column",
   padding: theme.spacing(12, 0),
 }));
-
 
 export default function Page404() {
   const { t } = useTranslation();

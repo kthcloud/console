@@ -7,7 +7,6 @@ import { Card, CardHeader, CardContent } from "@mui/material";
 // components
 import { BaseOptionChart } from "../../components/chart";
 
-
 const CHART_HEIGHT = 360;
 
 const LEGEND_HEIGHT = 0;
@@ -29,7 +28,6 @@ const ChartWrapperStyle = styled("div")(({ theme }) => ({
     top: `calc(${CHART_HEIGHT - LEGEND_HEIGHT}px) !important`,
   },
 }));
-
 
 ServerStats.propTypes = {
   title: PropTypes.string,

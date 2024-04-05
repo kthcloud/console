@@ -8,7 +8,6 @@ import Typography from "./Typography";
 import CssBaseline from "./CssBaseline";
 import Autocomplete from "./Autocomplete";
 
-
 export default function ComponentsOverrides(theme) {
   return Object.assign(
     Card(theme),

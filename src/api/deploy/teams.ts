@@ -45,7 +45,11 @@ export const getTeams = async (token: string, all = false) => {
   return result;
 };
 
-export const createTeam = async (token: string, name: string, description: string) => {
+export const createTeam = async (
+  token: string,
+  name: string,
+  description: string
+) => {
   const url = `${import.meta.env.VITE_DEPLOY_API_URL}/teams`;
 
   let res = await fetch(url, {
@@ -78,8 +82,11 @@ export const deleteTeam = async (token: string, teamId: string) => {
   });
 };
 
-
-export const addMembers = async (token: string, teamId: string, members: { id: string }[]) => {
+export const addMembers = async (
+  token: string,
+  teamId: string,
+  members: { id: string }[]
+) => {
   const url = `${import.meta.env.VITE_DEPLOY_API_URL}/teams/${teamId}`;
   const body = { members: members };
 
