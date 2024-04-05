@@ -1,3 +1,5 @@
+import { Uuid } from "../../types";
+
 export const getUser = async (userId: string, token: string) => {
   const res = await fetch(
     import.meta.env.VITE_DEPLOY_API_URL + "/users/" + userId,
@@ -19,7 +21,7 @@ export const getUser = async (userId: string, token: string) => {
   return await res.json();
 };
 
-export const getAllUsers = async (token: string) => {
+export const getAllUsers = async (token: Uuid) => {
   const res = await fetch(
     import.meta.env.VITE_DEPLOY_API_URL + "/users?all=true",
     {

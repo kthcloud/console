@@ -1,9 +1,10 @@
 import {
-  UserRead as User,
+  UserRead,
   UserDataRead as UserData,
   DeploymentRead,
   VmRead,
   JobRead,
+  GpuRead,
 } from "kthcloud-types/types/v1/body/index";
 
 export type Uuid = string;
@@ -11,6 +12,7 @@ export type Jwt = string;
 
 export interface Vm extends VmRead {
   type: string;
+  gpu?: GpuRead;
 }
 
 export interface Deployment extends DeploymentRead {
@@ -19,7 +21,7 @@ export interface Deployment extends DeploymentRead {
 
 export type Resource = Vm | Deployment;
 
-export interface UserResource extends User {
+export interface User extends UserRead {
   userData: UserData[];
 }
 

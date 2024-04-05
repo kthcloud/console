@@ -26,17 +26,19 @@ import { enqueueSnackbar } from "notistack";
 import { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { deleteDeployment, getDeployments } from "/src/api/deploy/deployments";
-import { getJobs, restartJob } from "/src/api/deploy/jobs";
-import { getTeams } from "/src/api/deploy/teams";
-import { getAllUsers } from "/src/api/deploy/users";
-import { deleteVM, detachGPU, getGPUs, getVMs } from "/src/api/deploy/vms";
-import LoadingPage from "/src/components/LoadingPage";
-import Page from "/src/components/Page";
-import useInterval from "/src/hooks/useInterval";
-import useResource from "/src/hooks/useResource";
-import { errorHandler } from "/src/utils/errorHandler";
-import { hashGPUId } from "/src/utils/helpers";
+import { deleteDeployment, getDeployments } from "../../api/deploy/deployments";
+import { getJobs, restartJob } from "../../api/deploy/jobs";
+import { getTeams } from "../../api/deploy/teams";
+import { getAllUsers } from "../../api/deploy/users";
+import { deleteVM, detachGPU, getGPUs, getVMs } from "../../api/deploy/vms";
+import LoadingPage from "../../components/LoadingPage";
+import Page from "../../components/Page";
+import useInterval from "../../hooks/useInterval";
+import useResource from "../../hooks/useResource";
+import { errorHandler } from "../../utils/errorHandler";
+import { hashGPUId } from "../../utils/helpers";
+import { Deployment, Job, User, Uuid, Vm } from "../../types";
+import { GpuRead, TeamRead } from "kthcloud-types/types/v1/body";
 
 export const Admin = () => {
   const { t } = useTranslation();
@@ -45,7 +47,7 @@ export const Admin = () => {
   // ==================================================
   // Keycloak/user session
 
-  const { keycloak, initialized } = useKeycloak();
+  const { initialized, keycloak } = useKeycloak();
   const { user, setImpersonatingDeployment, setImpersonatingVm } =
     useResource();
   const navigate = useNavigate();
@@ -68,11 +70,13 @@ export const Admin = () => {
   const [timeDiffSinceLastRefresh, setTimeDiffSinceLastRefresh] = useState("");
   const [loading, setLoading] = useState(true);
   const getResources = async () => {
+    if (!(initialized && keycloak.authenticated && keycloak.token)) return;
+
     const startTimer = Date.now();
-    let promises = [
+    const promises = [
       async () => {
         try {
-          const response = await getAllUsers(keycloak.token);
+          const response = await getAllUsers(keycloak.token!);
           setDbUsers(response);
         } catch (error) {
           errorHandler(error).forEach((e) =>
@@ -85,7 +89,7 @@ export const Admin = () => {
 
       async () => {
         try {
-          const response = await getVMs(keycloak.token, true);
+          const response = await getVMs(keycloak.token!, true);
           setDbVMs(response);
         } catch (error) {
           errorHandler(error).forEach((e) =>
@@ -97,7 +101,7 @@ export const Admin = () => {
       },
       async () => {
         try {
-          const response = await getDeployments(keycloak.token, true);
+          const response = await getDeployments(keycloak.token!, true);
           setDbDeployments(response);
         } catch (error) {
           errorHandler(error).forEach((e) =>
@@ -109,7 +113,7 @@ export const Admin = () => {
       },
       async () => {
         try {
-          const response = await getGPUs(keycloak.token);
+          const response = await getGPUs(keycloak.token!);
           setDbGPUs(response);
         } catch (error) {
           errorHandler(error).forEach((e) =>
@@ -121,7 +125,7 @@ export const Admin = () => {
       },
       async () => {
         try {
-          const response = await getTeams(keycloak.token, true);
+          const response = await getTeams(keycloak.token!, true);
           setDbTeams(response);
         } catch (error) {
           errorHandler(error).forEach((e) =>
@@ -135,7 +139,7 @@ export const Admin = () => {
       async () => {
         try {
           const response = await getJobs(
-            keycloak.token,
+            keycloak.token!,
             undefined,
             undefined,
             true
@@ -154,8 +158,8 @@ export const Admin = () => {
     await Promise.all(promises.map((p) => p()));
 
     // end timer and set last refresh, show in ms
-    setLastRefresh(new Date());
-    setLastRefreshRtt(Date.now() - startTimer + " ms");
+    setLastRefresh(new Date().getTime());
+    setLastRefreshRtt(Date.now() - startTimer);
     setLoading(false);
   };
 
@@ -167,10 +171,10 @@ export const Admin = () => {
 
   // ==================================================
   // Users
-  const [dbUsers, setDbUsers] = useState([]);
-  const [users, setUsers] = useState([]);
-  const [usersFilter, setUsersFilter] = useState("");
-  const [loadedUsers, setLoadedUsers] = useState(false);
+  const [dbUsers, setDbUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
+  const [usersFilter, setUsersFilter] = useState<string>("");
+  const [loadedUsers, setLoadedUsers] = useState<boolean>(false);
   const filterUsers = async () => {
     setLoadedUsers(true);
 
@@ -195,8 +199,8 @@ export const Admin = () => {
     setUsers(filtered);
   };
 
-  const renderUsername = (id) => {
-    let user = dbUsers.find((user) => user.id === id);
+  const renderUsername = (id: Uuid) => {
+    const user = dbUsers.find((user) => user.id === id);
     return (
       <Stack direction={"column"}>
         <Typography variant="caption">{id}</Typography>
@@ -205,8 +209,8 @@ export const Admin = () => {
     );
   };
 
-  const renderGpuLeaser = (gpuId) => {
-    let vm = dbVMs.find((vm) => vm.gpu?.id === gpuId);
+  const renderGpuLeaser = (gpuId: string) => {
+    const vm = dbVMs.find((vm) => vm.gpu?.id === gpuId);
 
     if (!vm)
       return (
@@ -230,15 +234,15 @@ export const Admin = () => {
 
   // ==================================================
   // Virtual Machines
-  const [dbVMs, setDbVMs] = useState([]);
-  const [vmFilter, setVmFilter] = useState("");
-  const [vms, setVms] = useState([]);
-  const [loadedVms, setLoadedVms] = useState(false);
+  const [dbVMs, setDbVMs] = useState<Vm[]>([]);
+  const [vmFilter, setVmFilter] = useState<string>("");
+  const [vms, setVms] = useState<Vm[]>([]);
+  const [loadedVms, setLoadedVms] = useState<boolean>(false);
 
   const filterVms = async () => {
     setLoadedVms(true);
 
-    const filtered = [];
+    const filtered = new Array<Vm>();
     for (let i = 0; i < dbVMs.length; i++) {
       const vm = dbVMs[i];
       if (
@@ -258,10 +262,10 @@ export const Admin = () => {
 
   // ==================================================
   // Deployments
-  const [dbDeployments, setDbDeployments] = useState([]);
-  const [deployments, setDeployments] = useState([]);
-  const [deploymentsFilter, setDeploymentsFilter] = useState("");
-  const [loadedDeployments, setLoadedDeployments] = useState(false);
+  const [dbDeployments, setDbDeployments] = useState<Deployment[]>([]);
+  const [deployments, setDeployments] = useState<Deployment[]>([]);
+  const [deploymentsFilter, setDeploymentsFilter] = useState<string>("");
+  const [loadedDeployments, setLoadedDeployments] = useState<boolean>(false);
 
   const filterDeployments = async () => {
     setLoadedDeployments(true);
@@ -286,6 +290,7 @@ export const Admin = () => {
           ?.toLowerCase()
           .includes(deploymentsFilter.toLowerCase()) ||
         deployment.pingResult
+          ?.toString()
           ?.toLowerCase()
           .includes(deploymentsFilter.toLowerCase()) ||
         deployment.healthCheckPath
@@ -305,10 +310,10 @@ export const Admin = () => {
 
   // ==================================================
   // GPUs
-  const [dbGPUs, setDbGPUs] = useState([]);
-  const [gpus, setGPUs] = useState([]);
-  const [gpusFilter, setGPUsFilter] = useState("");
-  const [loadedGPUs, setLoadedGPUs] = useState(false);
+  const [dbGPUs, setDbGPUs] = useState<GpuRead[]>([]);
+  const [gpus, setGPUs] = useState<GpuRead[]>([]);
+  const [gpusFilter, setGPUsFilter] = useState<string>("");
+  const [loadedGPUs, setLoadedGPUs] = useState<boolean>(false);
 
   const filterGPUs = async () => {
     setLoadedGPUs(true);
@@ -332,11 +337,11 @@ export const Admin = () => {
   // ==================================================
   // Teams
 
-  const [dbTeams, setDbTeams] = useState([]);
-  const [teams, setTeams] = useState([]);
-  const [teamFilter, setTeamFilter] = useState("");
-  const [loadedTeams, setLoadedTeams] = useState(false);
-  const [expandedTeam, setExpandedTeam] = useState(null);
+  const [dbTeams, setDbTeams] = useState<TeamRead[]>([]);
+  const [teams, setTeams] = useState<TeamRead[]>([]);
+  const [teamFilter, setTeamFilter] = useState<string>("");
+  const [loadedTeams, setLoadedTeams] = useState<boolean>(false);
+  const [expandedTeam, setExpandedTeam] = useState<string | null>(null);
 
   const filterTeams = async () => {
     setLoadedTeams(true);
@@ -361,11 +366,11 @@ export const Admin = () => {
   // ==================================================
   // Jobs
 
-  const [dbJobs, setDbJobs] = useState([]);
-  const [jobs, setJobs] = useState([]);
-  const [jobFilter, setJobFilter] = useState("");
-  const [loadedJobs, setLoadedJobs] = useState(false);
-  const [restartingJobs, setRestartingJobs] = useState([]);
+  const [dbJobs, setDbJobs] = useState<Job[]>([]);
+  const [jobs, setJobs] = useState<Job[]>([]);
+  const [jobFilter, setJobFilter] = useState<string>("");
+  const [loadedJobs, setLoadedJobs] = useState<boolean>(false);
+  const [restartingJobs, setRestartingJobs] = useState<string[]>([]);
 
   const filterJobs = async () => {
     setLoadedJobs(true);
@@ -396,7 +401,7 @@ export const Admin = () => {
   // Time since last refresh
 
   useInterval(() => {
-    const now = new Date();
+    const now = new Date().getTime();
     const diff = now - lastRefresh;
     const seconds = Math.floor(diff / 1000);
     const minutes = Math.floor(seconds / 60);
@@ -419,7 +424,7 @@ export const Admin = () => {
     setTimeDiffSinceLastRefresh("0 " + t("time-seconds-ago"));
   }, 1000);
 
-  const impersonate = (resourceType, id) => {
+  const impersonate = (resourceType: string, id: Uuid) => {
     if (resourceType === "vm") {
       setImpersonatingVm(id);
       navigate("/edit/vm/" + id);
@@ -459,7 +464,7 @@ export const Admin = () => {
                     <span>
                       RTT:
                       <span style={{ fontFamily: "monospace" }}>
-                        {" " + lastRefreshRtt + " "}
+                        {" " + lastRefreshRtt + " ms "}
                       </span>
                       {t("admin-last-load")}:
                       <span style={{ fontFamily: "monospace" }}>

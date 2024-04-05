@@ -16,24 +16,23 @@ import { getTeams } from "../api/deploy/teams";
 import { getUserData } from "../api/deploy/userData";
 
 import {
-  JobRead as Job,
   NotificationRead as Notification,
   TeamRead as Team,
   ZoneRead as Zone,
 } from "kthcloud-types/types/v1/body/index";
-import { JobResource, Resource, UserResource, Uuid } from "../types";
+import { Job, Resource, User, Uuid } from "../types";
 
 type ResourceContextType = {
   rows: Resource[];
   setRows: (rows: Resource[]) => void;
   userRows: Resource[];
   setUserRows: (rows: Resource[]) => void;
-  jobs: JobResource[];
-  setJobs: (jobs: JobResource[]) => void;
+  jobs: Job[];
+  setJobs: (jobs: Job[]) => void;
   nextLoad: number;
   connectionError: boolean;
-  user: UserResource | null;
-  setUser: (user: UserResource) => void;
+  user: User | null;
+  setUser: (user: User) => void;
   notifications: Notification[];
   setNotifications: (notifications: Notification[]) => void;
   unread: number;
@@ -57,7 +56,7 @@ const initialState: ResourceContextType = {
   setRows: () => {},
   userRows: new Array<Resource>(),
   setUserRows: () => {},
-  jobs: new Array<JobResource>(),
+  jobs: new Array<Job>(),
   setJobs: () => {},
   nextLoad: 0,
   connectionError: false,
@@ -99,8 +98,8 @@ export const ResourceContextProvider = ({
   // Resources
   const [rows, setRows] = useState<Resource[]>([]);
   const [userRows, setUserRows] = useState<Resource[]>([]);
-  const [jobs, setJobs] = useState<JobResource[]>([]);
-  const [user, setUser] = useState<UserResource | null>(null);
+  const [jobs, setJobs] = useState<Job[]>([]);
+  const [user, setUser] = useState<User | null>(null);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unread, setUnread] = useState<number>(0);
   const [teams, setTeams] = useState<Team[]>([]);

@@ -1,10 +1,15 @@
-import PropTypes from "prop-types";
 import { Helmet } from "react-helmet-async";
-import { forwardRef } from "react";
-// @mui
+import { forwardRef, ReactNode, ForwardedRef } from "react";
 import { Box } from "@mui/material";
 
-const Page = forwardRef(({ children, title = "", meta, ...other }, ref) => {
+interface PageProps {
+  children: ReactNode;
+  title?: string;
+  meta?: ReactNode;
+}
+
+const Page = forwardRef((props: PageProps, ref: ForwardedRef<any>) => {
+  const { children, title = "", meta, ...other } = props;
   const isCbhCloud = window.location.hostname.includes("cloud.cbh.kth.se");
   const pageTitle = isCbhCloud ? "cbhcloud" : "kthcloud";
 
@@ -27,10 +32,6 @@ const Page = forwardRef(({ children, title = "", meta, ...other }, ref) => {
   );
 });
 
-Page.propTypes = {
-  children: PropTypes.node.isRequired,
-  title: PropTypes.string,
-  meta: PropTypes.node,
-};
+Page.displayName = "Page";
 
 export default Page;
