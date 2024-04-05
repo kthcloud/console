@@ -6,7 +6,6 @@ import HelpButton from "./HelpButton";
 import LocaleSwitcher from "./LocaleSwitcher";
 import { useTranslation } from "react-i18next";
 import ProfileButton from "./ProfileButton";
-// ----------------------------------------------------------------------
 
 export default function Shortcuts() {
   const { keycloak, initialized } = useKeycloak();

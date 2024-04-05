@@ -2,7 +2,7 @@ import { Icon } from "@iconify/react";
 import { Box } from "@mui/material";
 
 interface IconifyProps {
-  icon: JSX.Element | string;
+  icon: string;
   sx?: object;
   [key: string]: any;
 }

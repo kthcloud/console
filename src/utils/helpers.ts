@@ -1,4 +1,4 @@
-export const hashGPUId = (id) => {
+export const hashGPUId = (id: string) => {
   let hash = 0;
   for (let i = 0; i < id.length; i++) {
     hash = ((hash << 5) - hash + id.charCodeAt(i)) | 0; // |0 is used to convert to 32bit integer

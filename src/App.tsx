@@ -14,7 +14,6 @@ import { IconButton } from "@mui/material";
 import Iconify from "./components/Iconify";
 import { ThemeModeContextProvider } from "./contexts/ThemeModeContext";
 
-// ----------------------------------------------------------------------
 
 export default function App() {
   return (

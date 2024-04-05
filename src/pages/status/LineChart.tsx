@@ -6,7 +6,6 @@ import { Card, CardHeader, CardContent } from "@mui/material";
 // components
 import { BaseOptionChart } from "../../components/chart";
 
-// ----------------------------------------------------------------------
 
 const CHART_HEIGHT = 360;
 
@@ -30,7 +29,6 @@ const ChartWrapperStyle = styled("div")(({ theme }) => ({
   },
 }));
 
-// ----------------------------------------------------------------------
 
 export default function LineChart({
   title,

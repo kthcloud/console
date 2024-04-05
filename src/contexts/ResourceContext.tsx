@@ -1,23 +1,82 @@
 // hooks
-import { useState, createContext, useEffect } from "react";
-import useInterval from "/src/hooks/useInterval";
+import React, { useState, createContext, useEffect } from "react";
+import useInterval from "../hooks/useInterval";
 import { useSnackbar } from "notistack";
 import { useKeycloak } from "@react-keycloak/web";
 
 // api
-import { getJob } from "/src/api/deploy/jobs";
-import { getVM, getVMs } from "/src/api/deploy/vms";
-import { getDeployment, getDeployments } from "/src/api/deploy/deployments";
-import { errorHandler } from "/src/utils/errorHandler";
-import { getUser } from "/src/api/deploy/users";
-import { getZones } from "/src/api/deploy/zones";
-import { getNotifications } from "/src/api/deploy/notifications";
-import { getTeams } from "/src/api/deploy/teams";
-import { getUserData } from "/src/api/deploy/userData";
+import { getJob } from "../api/deploy/jobs";
+import { getVM, getVMs } from "../api/deploy/vms";
+import { getDeployment, getDeployments } from "../api/deploy/deployments";
+import { errorHandler } from "../utils/errorHandler";
+import { getUser } from "../api/deploy/users";
+import { getZones } from "../api/deploy/zones";
+import { getNotifications } from "../api/deploy/notifications";
+import { getTeams } from "../api/deploy/teams";
+import { getUserData } from "../api/deploy/userData";
 
-const initialState = {
-  rows: [],
-  jobs: [],
+import {
+  JobRead as Job,
+  NotificationRead as Notification,
+  TeamRead as Team,
+  ZoneRead as Zone,
+} from "kthcloud-types/types/v1/body/index";
+import { JobResource, Resource, UserResource, Uuid } from "../types";
+
+type ResourceContextType = {
+  rows: Resource[];
+  setRows: (rows: Resource[]) => void;
+  userRows: Resource[];
+  setUserRows: (rows: Resource[]) => void;
+  jobs: JobResource[];
+  setJobs: (jobs: JobResource[]) => void;
+  nextLoad: number;
+  connectionError: boolean;
+  user: UserResource | null;
+  setUser: (user: UserResource) => void;
+  notifications: Notification[];
+  setNotifications: (notifications: Notification[]) => void;
+  unread: number;
+  setUnread: (unread: number) => void;
+  teams: Team[];
+  setTeams: (teams: Team[]) => void;
+  zones: Zone[];
+  setZones: (zones: Zone[]) => void;
+  queueJob: (job: Job) => void;
+  beginFastLoad: () => void;
+  impersonatingDeployment: Uuid | null;
+  setImpersonatingDeployment: (deployment: Uuid) => void;
+  impersonatingVm: Uuid | null;
+  setImpersonatingVm: (vm: Uuid) => void;
+
+  initialLoad: boolean;
+};
+
+const initialState: ResourceContextType = {
+  rows: new Array<Resource>(),
+  setRows: () => {},
+  userRows: new Array<Resource>(),
+  setUserRows: () => {},
+  jobs: new Array<JobResource>(),
+  setJobs: () => {},
+  nextLoad: 0,
+  connectionError: false,
+  user: null,
+  setUser: () => {},
+  notifications: new Array<Notification>(),
+  setNotifications: () => {},
+  unread: 0,
+  setUnread: () => {},
+  teams: new Array<Team>(),
+  setTeams: () => {},
+  zones: new Array<Zone>(),
+  setZones: () => {},
+  queueJob: () => {},
+  beginFastLoad: () => {},
+  impersonatingDeployment: null,
+  setImpersonatingDeployment: () => {},
+  impersonatingVm: null,
+  setImpersonatingVm: () => {},
   initialLoad: false,
 };
 
@@ -26,7 +85,11 @@ export const ResourceContext = createContext({
   queueJob: () => {},
 });
 
-export const ResourceContextProvider = ({ children }) => {
+export const ResourceContextProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
   const { initialized, keycloak } = useKeycloak();
 
   // Admin impersonation
@@ -34,29 +97,29 @@ export const ResourceContextProvider = ({ children }) => {
   const [impersonatingVm, setImpersonatingVm] = useState(null);
 
   // Resources
-  const [rows, setRows] = useState([]);
-  const [userRows, setUserRows] = useState([]);
-  const [jobs, setJobs] = useState([]);
-  const [user, setUser] = useState(null);
-  const [notifications, setNotifications] = useState([]);
-  const [unread, setUnread] = useState(0);
-  const [teams, setTeams] = useState([]);
-  const [zones, setZones] = useState([]);
+  const [rows, setRows] = useState<Resource[]>([]);
+  const [userRows, setUserRows] = useState<Resource[]>([]);
+  const [jobs, setJobs] = useState<JobResource[]>([]);
+  const [user, setUser] = useState<UserResource | null>(null);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [unread, setUnread] = useState<number>(0);
+  const [teams, setTeams] = useState<Team[]>([]);
+  const [zones, setZones] = useState<Zone[]>([]);
 
   // Loading and connection error handler
-  const [initialLoad, setInitialLoad] = useState(false);
-  const [nextLoad, setNextLoad] = useState(0);
-  const [loadInterval, setLoadInterval] = useState(5000);
-  const [connectionError, setConnectionError] = useState(false);
+  const [initialLoad, setInitialLoad] = useState<boolean>(false);
+  const [nextLoad, setNextLoad] = useState<number>(0);
+  const [loadInterval, setLoadInterval] = useState<number>(5000);
+  const [connectionError, setConnectionError] = useState<boolean>(false);
 
   // Dynamic reload interval
-  const [rtt, setRtt] = useState(0);
-  const [loadStart, setLoadStart] = useState(null);
+  const [rtt, setRtt] = useState<number>(0);
+  const [loadStart, setLoadStart] = useState<number | null>(null);
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const refreshJob = async (jobId) => {
-    if (!(initialized && keycloak.authenticated)) return;
+  const refreshJob = async (jobId: Uuid) => {
+    if (!(initialized && keycloak.authenticated && keycloak.token)) return;
 
     try {
       const response = await getJob(jobId, keycloak.token);
@@ -100,7 +163,7 @@ export const ResourceContextProvider = ({ children }) => {
     }
   };
 
-  const queueJob = (job) => {
+  const queueJob = (job: JobResource) => {
     console.log("Queuing job", JSON.stringify(job));
     if (!job) return;
     setJobs((jobs) => [...jobs, job]);
@@ -111,8 +174,8 @@ export const ResourceContextProvider = ({ children }) => {
     setLoadInterval(rtt + 100);
   };
 
-  const mergeLists = (resources) => {
-    let array = [];
+  const mergeLists = (resources: Resource[][]) => {
+    let array: Resource[] = [];
 
     resources.forEach((resource) => {
       if (resource) {
@@ -125,7 +188,7 @@ export const ResourceContextProvider = ({ children }) => {
   };
 
   const loadZones = async () => {
-    if (!(initialized && keycloak.authenticated)) return;
+    if (!(initialized && keycloak.authenticated && keycloak.token)) return;
     try {
       const zones = await getZones(keycloak.token);
       setZones(zones);
@@ -139,7 +202,7 @@ export const ResourceContextProvider = ({ children }) => {
   };
 
   const loadNotifications = async () => {
-    if (!(initialized && keycloak.authenticated)) return;
+    if (!(initialized && keycloak.authenticated && keycloak.token)) return;
     try {
       const notifications = await getNotifications(keycloak.token);
       setNotifications(notifications);
@@ -162,7 +225,7 @@ export const ResourceContextProvider = ({ children }) => {
   };
 
   const loadTeams = async () => {
-    if (!(initialized && keycloak.authenticated)) return;
+    if (!(initialized && keycloak.authenticated && keycloak.token)) return;
     try {
       const teams = await getTeams(keycloak.token, false);
       setTeams(teams);
@@ -177,7 +240,15 @@ export const ResourceContextProvider = ({ children }) => {
 
   const loadUser = async () => {
     try {
-      if (!(initialized && keycloak.authenticated)) return;
+      if (
+        !(
+          initialized &&
+          keycloak.authenticated &&
+          keycloak.token &&
+          keycloak.subject
+        )
+      )
+        return;
       const user = await getUser(keycloak.subject, keycloak.token);
       setUser(user);
       setConnectionError(false);
@@ -208,6 +279,16 @@ export const ResourceContextProvider = ({ children }) => {
 
   const loadUserData = async () => {
     try {
+      if (
+        !(
+          initialized &&
+          keycloak.authenticated &&
+          keycloak.token &&
+          keycloak.subject
+        )
+      )
+        return;
+
       const userData = await getUserData(keycloak.token);
       setUser((user) => ({ ...user, userData }));
     } catch (error) {
@@ -220,19 +301,21 @@ export const ResourceContextProvider = ({ children }) => {
   };
 
   const loadResources = async () => {
-    if (!(initialized && keycloak.authenticated)) return;
+    if (!(initialized && keycloak.authenticated && keycloak.token)) return;
 
     try {
       const promises = [getVMs(keycloak.token), getDeployments(keycloak.token)];
 
-      if (user.admin && impersonatingVm) {
-        console.log("Getting impersonation vm");
-        promises.push(getVM(keycloak.token, impersonatingVm));
-      }
+      if (user && user.admin) {
+        if (impersonatingVm) {
+          console.log("Getting impersonation vm");
+          promises.push(getVM(keycloak.token, impersonatingVm));
+        }
 
-      if (user.admin && impersonatingDeployment) {
-        console.log("Getting impersonation deployment");
-        promises.push(getDeployment(keycloak.token, impersonatingDeployment));
+        if (impersonatingDeployment) {
+          console.log("Getting impersonation deployment");
+          promises.push(getDeployment(keycloak.token, impersonatingDeployment));
+        }
       }
 
       mergeLists(await Promise.all(promises));

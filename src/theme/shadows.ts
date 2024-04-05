@@ -2,7 +2,6 @@
 import { alpha } from "@mui/material/styles";
 import { lightPalette, palette } from "./palette";
 
-// ----------------------------------------------------------------------
 
 const LIGHT_MODE = lightPalette.grey[500];
 const DARK_MODE = palette.grey[100];

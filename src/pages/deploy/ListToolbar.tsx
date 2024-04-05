@@ -14,7 +14,6 @@ import Iconify from "../../components/Iconify";
 import ConfirmButton from "/src/components/ConfirmButton";
 import { useTranslation } from "react-i18next";
 
-// ----------------------------------------------------------------------
 
 const RootStyle = styled(Toolbar)(({ theme }) => ({
   height: 96,
@@ -36,7 +35,6 @@ const SearchStyle = styled(OutlinedInput)(({ theme }) => ({
   },
 }));
 
-// ----------------------------------------------------------------------
 
 ListToolbar.propTypes = {
   numSelected: PropTypes.number,

@@ -6,7 +6,6 @@ import Navbar from "./Navbar";
 import { Box, Container, Stack } from "@mui/material";
 import { useTranslation } from "react-i18next";
 
-// ----------------------------------------------------------------------
 
 const APP_BAR_MOBILE = 64;
 const APP_BAR_DESKTOP = 92;
@@ -30,7 +29,6 @@ const MainStyle = styled("div")(({ theme }) => ({
   },
 }));
 
-// ----------------------------------------------------------------------
 const releaseBranch = import.meta.env.VITE_RELEASE_BRANCH || "dev";
 const releaseDate = import.meta.env.VITE_RELEASE_DATE || "1970-01-01_00:00";
 const releaseCommit =

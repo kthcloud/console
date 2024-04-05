@@ -8,12 +8,13 @@ import {
 } from "@mui/material";
 import { sentenceCase } from "change-case";
 import Iconify from "./Iconify";
-import useResource from "/src/hooks/useResource";
+import useResource from "../hooks/useResource";
+import { Job } from "../types";
 
 export default function JobList() {
   const { jobs, setJobs } = useResource();
 
-  const handleDelete = (job) => {
+  const handleDelete = (job: Job) => {
     setJobs(
       jobs.filter(
         (j) =>
@@ -22,7 +23,7 @@ export default function JobList() {
     );
   };
 
-  const resolveColor = (status) => {
+  const resolveColor = (status: string) => {
     switch (status) {
       case "finished":
         return "primary";
@@ -33,14 +34,14 @@ export default function JobList() {
     }
   };
 
-  const fixAbbr = (jobType) => {
+  const fixAbbr = (jobType: string) => {
     return jobType
       .replace("vm", "VM")
       .replace("gpu", "GPU")
       .replace("Vm", "VM");
   };
 
-  const renderText = (job) => {
+  const renderText = (job: Job) => {
     if (job.status !== "running" && job.status !== "finished") {
       return (
         <>

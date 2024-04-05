@@ -16,7 +16,6 @@ import { useTranslation } from "react-i18next";
 import useResource from "/src/hooks/useResource";
 import { ThemeModeContext } from "/src/contexts/ThemeModeContext";
 
-// ----------------------------------------------------------------------
 
 export default function Menu() {
   const anchorRef = useRef(null);

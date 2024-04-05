@@ -9,7 +9,6 @@ import {
   TableSortLabel,
 } from "@mui/material";
 
-// ----------------------------------------------------------------------
 
 const visuallyHidden = {
   border: 0,

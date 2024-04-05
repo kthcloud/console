@@ -4,7 +4,6 @@ import { Box, Checkbox } from "@mui/material";
 //
 import Iconify from "../Iconify";
 
-// ----------------------------------------------------------------------
 
 IconColor.propTypes = {
   sx: PropTypes.object,

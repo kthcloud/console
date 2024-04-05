@@ -1,26 +1,41 @@
-import PropTypes from "prop-types";
-// @mui
 import { alpha, styled } from "@mui/material/styles";
 import { Box } from "@mui/material";
+import { ReactNode } from "react";
 
-// ----------------------------------------------------------------------
+interface OwnerState {
+  color:
+    | "default"
+    | "primary"
+    | "secondary"
+    | "info"
+    | "success"
+    | "warning"
+    | "error";
+  variant: "filled" | "outlined" | "ghost";
+}
 
-const RootStyle = styled("span")(({ theme, ownerState }) => {
+const RootStyle = styled("span")(({
+  theme,
+  ownerState,
+}: {
+  theme?: any;
+  ownerState: OwnerState;
+}) => {
   const isLight = theme.palette.mode === "light";
   const { color, variant } = ownerState;
 
-  const styleFilled = (color) => ({
+  const styleFilled = (color: string) => ({
     color: theme.palette[color].contrastText,
     backgroundColor: theme.palette[color].main,
   });
 
-  const styleOutlined = (color) => ({
+  const styleOutlined = (color: string) => ({
     color: theme.palette[color].main,
     backgroundColor: "transparent",
     border: `1px solid ${theme.palette[color].main}`,
   });
 
-  const styleGhost = (color) => ({
+  const styleGhost = (color: string) => ({
     color: theme.palette[color][isLight ? "dark" : "light"],
     backgroundColor: alpha(theme.palette[color].main, 0.16),
   });
@@ -64,24 +79,22 @@ const RootStyle = styled("span")(({ theme, ownerState }) => {
   };
 });
 
-// ----------------------------------------------------------------------
 
-Label.propTypes = {
-  children: PropTypes.node,
-  startIcon: PropTypes.node,
-  endIcon: PropTypes.node,
-  color: PropTypes.oneOf([
-    "default",
-    "primary",
-    "secondary",
-    "info",
-    "success",
-    "warning",
-    "error",
-  ]),
-  variant: PropTypes.oneOf(["filled", "outlined", "ghost"]),
-  sx: PropTypes.object,
-};
+interface LabelProps {
+  children?: ReactNode;
+  startIcon?: ReactNode;
+  endIcon?: ReactNode;
+  color?:
+    | "default"
+    | "primary"
+    | "secondary"
+    | "info"
+    | "success"
+    | "warning"
+    | "error";
+  variant?: "filled" | "outlined" | "ghost";
+  sx?: any;
+}
 
 export default function Label({
   children,
@@ -90,7 +103,7 @@ export default function Label({
   startIcon,
   endIcon,
   sx,
-}) {
+}: LabelProps) {
   const style = {
     width: 16,
     height: 16,

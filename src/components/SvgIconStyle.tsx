@@ -1,7 +1,6 @@
 import PropTypes from "prop-types";
 import { Box } from "@mui/material";
 
-// ----------------------------------------------------------------------
 
 SvgIconStyle.propTypes = {
   src: PropTypes.string.isRequired,

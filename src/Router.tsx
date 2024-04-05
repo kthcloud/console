@@ -18,7 +18,6 @@ import Onboarding from "./pages/onboarding";
 import Inbox from "./pages/inbox/Inbox";
 import Teams from "./pages/teams/Teams";
 
-// ----------------------------------------------------------------------
 
 export default function Router() {
   return useRoutes([

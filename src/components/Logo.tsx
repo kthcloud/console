@@ -1,16 +1,16 @@
-import PropTypes from "prop-types";
 import { Link as RouterLink } from "react-router-dom";
 import { Box } from "@mui/material";
 import { useKeycloak } from "@react-keycloak/web";
 import { useContext } from "react";
-import { ThemeModeContext } from "/src/contexts/ThemeModeContext";
+import { ThemeModeContext } from "../contexts/ThemeModeContext";
 
-Logo.propTypes = {
-  disabledLink: PropTypes.bool,
-  sx: PropTypes.object,
-};
-
-export default function Logo({ disabledLink = false, sx }) {
+export default function Logo({
+  disabledLink = false,
+  sx,
+}: {
+  disabledLink?: boolean;
+  sx?: any;
+}) {
   const { initialized, keycloak } = useKeycloak();
   const { mode } = useContext(ThemeModeContext);
 

@@ -43,7 +43,6 @@ import { getReasonPhrase } from "http-status-codes";
 import { errorHandler } from "/src/utils/errorHandler";
 import { useTranslation } from "react-i18next";
 
-// ----------------------------------------------------------------------
 
 const descendingComparator = (a, b, orderBy) => {
   if (b[orderBy] < a[orderBy]) {

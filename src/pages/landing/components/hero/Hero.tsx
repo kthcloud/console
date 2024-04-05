@@ -8,10 +8,10 @@ import {
 } from "@mui/material";
 import "./hero.css";
 import { useEffect, useState } from "react";
-import { fShortenNumber } from "/src/utils/formatNumber";
+import { fShortenNumber } from "../../../../utils/formatNumber";
 import { useKeycloak } from "@react-keycloak/web";
 import { useTranslation } from "react-i18next";
-import { GenAITooltip } from "/src/components/GenAITooltip";
+import { GenAITooltip } from "../../../../components/GenAITooltip";
 import { Link } from "react-router-dom";
 
 const Hero = () => {

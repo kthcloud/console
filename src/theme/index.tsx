@@ -14,7 +14,6 @@ import componentsOverride from "./overrides";
 import { makeCustomShadows, makeShadows } from "./shadows";
 import { ThemeModeContext } from "/src/contexts/ThemeModeContext";
 
-// ----------------------------------------------------------------------
 
 ThemeProvider.propTypes = {
   children: PropTypes.node,

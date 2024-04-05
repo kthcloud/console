@@ -2,7 +2,6 @@ import { IconButton, Tooltip } from "@mui/material";
 import Iconify from "../../components/Iconify";
 import { useKeycloak } from "@react-keycloak/web";
 import { useTranslation } from "react-i18next";
-// ----------------------------------------------------------------------
 
 export default function LoginButton() {
   const { keycloak, initialized } = useKeycloak();
