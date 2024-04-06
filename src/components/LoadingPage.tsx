@@ -11,9 +11,9 @@ const LoadingPage = () => {
   const { t, i18n } = useTranslation();
 
   useInterval(() => {
-    let now = new Date();
-    let diff = new Date(nextLoad) - now;
-    let seconds = Math.floor(diff / 1000);
+    const now = new Date().getTime();
+    const diff = new Date(nextLoad).getTime() - now;
+    const seconds = Math.floor(diff / 1000);
     setRetryIn(seconds);
   }, 500);
 

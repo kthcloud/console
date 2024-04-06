@@ -93,7 +93,7 @@ export default function JobList() {
                         mx={1}
                       />
                     ) : (
-                      <CircularProgress size={20} mx={1} />
+                      <CircularProgress size={20} sx={{ mx: 1 }} />
                     )
                   }
                   label={renderText(job)}

@@ -1,5 +1,19 @@
 import { Link, Stack, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+
+export type RFC1035InputProps = {
+  label: string;
+  callToAction?: string;
+  type?: string;
+  fullWidth?: boolean;
+  autofocus?: boolean;
+  variant?: "standard" | "outlined" | "filled";
+  cleaned: string;
+  setCleaned: (val: string) => void;
+  initialValue?: string;
+  maxWidth?: string;
+};
 
 export default function RFC1035Input({
   label,
@@ -12,8 +26,9 @@ export default function RFC1035Input({
   setCleaned,
   initialValue = "",
   maxWidth = "100%",
-}) {
+}: RFC1035InputProps) {
   const [value, setValue] = useState("");
+  const { t } = useTranslation();
 
   useEffect(() => {
     setValue(initialValue);
@@ -21,7 +36,7 @@ export default function RFC1035Input({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialValue]);
 
-  const clean = (val) => {
+  const clean = (val: string) => {
     // convert name to RFC 1035
     val = val.toLowerCase();
     val = val.replace(/[^a-z0-9-]/g, "-");
@@ -49,16 +64,15 @@ export default function RFC1035Input({
         value={cleaned && value}
         helperText={
           <Typography variant="caption">
-            {type + " must adhere to "}
+            {type + t("rfc-1035-1")}
             <Link
               href="https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#rfc-1035-label-names"
               target="_blank"
               rel="noreferrer"
             >
               RFC 1035
-            </Link>{" "}
-            : only lowercase alphanumeric characters or '-', max 63 characters,
-            start with a letter, and end with an alphanumeric character.
+            </Link>
+            {t("rfc-1035-2")}
           </Typography>
         }
         onChange={(e) => {

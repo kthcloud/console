@@ -2,10 +2,10 @@ import { Navigate } from "react-router-dom";
 import { useKeycloak } from "@react-keycloak/web";
 import LoadingPage from "./LoadingPage";
 
-const ProtectedRoute = ({ children }) => {
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { keycloak, initialized } = useKeycloak();
 
-  const renderPage = (children) => {
+  const renderPage = (children: React.ReactNode) => {
     if (!initialized) {
       return <LoadingPage />;
     } else if (initialized && keycloak.authenticated) {
