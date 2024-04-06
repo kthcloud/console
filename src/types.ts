@@ -17,6 +17,7 @@ export interface Vm extends VmRead {
 
 export interface Deployment extends DeploymentRead {
   type: string;
+  deploymentType?: string;
 }
 
 export type Resource = Vm | Deployment;
@@ -29,3 +30,16 @@ export interface Job extends JobRead {
   jobId: Uuid;
   name: string;
 }
+
+export type ValidationError = {
+  [key: string]: string[];
+};
+
+export type ErrorElement = {
+  msg: string;
+};
+
+export type DeployApiError = {
+  validationErrors?: ValidationError;
+  errors?: ErrorElement[];
+};

@@ -1,4 +1,6 @@
-export default function Button(theme) {
+import { CustomTheme } from "../types";
+
+export default function Button(theme: CustomTheme) {
   return {
     MuiButton: {
       styleOverrides: {

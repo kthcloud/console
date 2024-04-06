@@ -79,10 +79,7 @@ const initialState: ResourceContextType = {
   initialLoad: false,
 };
 
-export const ResourceContext = createContext({
-  ...initialState,
-  queueJob: () => {},
-});
+export const ResourceContext = createContext(initialState);
 
 export const ResourceContextProvider = ({
   children,
@@ -162,7 +159,7 @@ export const ResourceContextProvider = ({
     }
   };
 
-  const queueJob = (job: JobResource) => {
+  const queueJob = (job: Job) => {
     console.log("Queuing job", JSON.stringify(job));
     if (!job) return;
     setJobs((jobs) => [...jobs, job]);

@@ -1,3 +1,5 @@
+import { Job } from "../../types";
+
 export const getVM = async (token: string, id: string) => {
   const url = `${import.meta.env.VITE_DEPLOY_API_URL}/vms/${id}`;
   const response = await fetch(url, {
@@ -182,7 +184,11 @@ export const createVM = async (
   return await res.json();
 };
 
-export const updateVM = async (id: string, changes: any, token: string) => {
+export const updateVM = async (
+  id: string,
+  changes: any,
+  token: string
+): Promise<Job> => {
   const res = await fetch(import.meta.env.VITE_DEPLOY_API_URL + "/vms/" + id, {
     method: "POST",
     headers: {

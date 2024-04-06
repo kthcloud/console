@@ -1,3 +1,5 @@
+import { Job } from "../../types";
+
 export const getDeployment = async (token: string, id: string) => {
   const url = `${import.meta.env.VITE_DEPLOY_API_URL}/deployments/${id}`;
   const res = await fetch(url, {
@@ -130,7 +132,7 @@ export const updateDeployment = async (
   id: string,
   changes: any,
   token: string
-) => {
+): Promise<Job> => {
   const res = await fetch(
     import.meta.env.VITE_DEPLOY_API_URL + "/deployments/" + id,
     {

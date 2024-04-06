@@ -1,4 +1,6 @@
-export default function Input(theme) {
+import { CustomTheme } from "../types";
+
+export default function Input(theme: CustomTheme) {
   return {
     MuiInputBase: {
       styleOverrides: {

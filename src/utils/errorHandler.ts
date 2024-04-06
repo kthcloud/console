@@ -1,15 +1,4 @@
-type ValidationError = {
-  [key: string]: string[];
-};
-
-type ErrorElement = {
-  msg: string;
-};
-
-type DeployApiError = {
-  validationErrors?: ValidationError;
-  errors?: ErrorElement[];
-};
+import { DeployApiError } from "../types";
 
 export const errorHandler = (error: DeployApiError) => {
   const errors = [];

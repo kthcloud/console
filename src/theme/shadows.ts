@@ -5,7 +5,7 @@ import { lightPalette, palette } from "./palette";
 const LIGHT_MODE = lightPalette.grey[500];
 const DARK_MODE = palette.grey[100];
 
-const createShadow = (color) => {
+const createShadow = (color: string) => {
   const transparent1 = alpha(color, 0.2);
   const transparent2 = alpha(color, 0.14);
   const transparent3 = alpha(color, 0.12);
@@ -38,7 +38,7 @@ const createShadow = (color) => {
   ];
 };
 
-const createCustomShadow = (color) => {
+const createCustomShadow = (color: string) => {
   const transparent = alpha(color, 0.24);
 
   return {
@@ -59,13 +59,13 @@ const createCustomShadow = (color) => {
 
 export const customShadows = createCustomShadow(LIGHT_MODE);
 
-export const makeCustomShadows = (mode) => {
+export const makeCustomShadows = (mode: string) => {
   return createCustomShadow(mode === "light" ? LIGHT_MODE : DARK_MODE);
 };
 
 const shadows = createShadow(LIGHT_MODE);
 
-export const makeShadows = (mode) => {
+export const makeShadows = (mode: string) => {
   return createShadow(mode === "light" ? LIGHT_MODE : DARK_MODE);
 };
 

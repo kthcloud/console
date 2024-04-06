@@ -8,7 +8,7 @@ import { initI18n } from "./i18next.ts";
 import App from "./App.tsx";
 import "./theme/customStyle.css";
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
+const root = ReactDOM.createRoot(document.getElementById("root")!);
 initI18n();
 
 root.render(

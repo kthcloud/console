@@ -1,4 +1,3 @@
-// mui
 import {
   Container,
   Typography,
@@ -14,23 +13,15 @@ import {
   InputAdornment,
   useTheme,
 } from "@mui/material";
-
-//hooks
-import { useState, useEffect } from "react";
+import { useState, useEffect, ReactNode } from "react";
 import { useKeycloak } from "@react-keycloak/web";
 import useResource from "../../hooks/useResource";
 import { useParams, useNavigate } from "react-router-dom";
-
-// utils
 import { sentenceCase } from "change-case";
-
-// components
 import Page from "../../components/Page";
 import LoadingPage from "../../components/LoadingPage";
 import PortManager from "./vms/PortManager";
 import JobList from "../../components/JobList";
-
-// api
 import EnvManager from "./deployments/EnvManager";
 import GHActions from "./deployments/GHActions";
 import SSHString from "./vms/SSHString";
@@ -55,21 +46,13 @@ import { enqueueSnackbar } from "notistack";
 import { updateDeployment } from "../../api/deploy/deployments";
 import { updateVM } from "../../api/deploy/vms";
 import { errorHandler } from "../../utils/errorHandler";
+import { Job, Resource, Deployment, DeployApiError, Vm } from "../../types";
+import { Env, Volume } from "kthcloud-types/types/v1/body";
 
 export function Edit() {
   const { t } = useTranslation();
   const { keycloak, initialized } = useKeycloak();
   const theme = useTheme();
-
-  const { queueJob, beginFastLoad } = useResource();
-
-  const [resource, setResource] = useState(null);
-  const [envs, setEnvs] = useState([]);
-  const [persistent, setPersistent] = useState([]);
-
-  const [editingName, setEditingName] = useState(false);
-  const [nameFieldValue, setNameFieldValue] = useState("");
-
   const {
     user,
     rows,
@@ -77,22 +60,28 @@ export function Edit() {
     zones,
     impersonatingVm,
     impersonatingDeployment,
+    queueJob,
+    beginFastLoad,
   } = useResource();
-  const [loaded, setLoaded] = useState(false);
-  const [reloads, setReloads] = useState(0);
-
-  const allowedTypes = ["vm", "deployment"];
-  let { type, id } = useParams();
+  const { type, id } = useParams();
   const navigate = useNavigate();
 
-  if (!allowedTypes.includes(type)) {
+  const [resource, setResource] = useState<Resource | null>(null);
+  const [persistent, setPersistent] = useState<Volume[]>([]);
+  const [editingName, setEditingName] = useState<boolean>(false);
+  const [nameFieldValue, setNameFieldValue] = useState<string>("");
+  const [loaded, setLoaded] = useState<boolean>(false);
+  const [reloads, setReloads] = useState<number>(0);
+
+  const allowedTypes = ["vm", "deployment"];
+  if (type && !allowedTypes.includes(type)) {
     navigate("/deploy");
   }
 
   const handleNameChange = async () => {
     setEditingName(false);
 
-    if (!initialized && resource) {
+    if (!(initialized && resource && keycloak.token)) {
       enqueueSnackbar(t("error-updating"), { variant: "error" });
       return;
     }
@@ -103,7 +92,7 @@ export function Edit() {
     }
 
     try {
-      let result = "";
+      let result: Job | null = null;
       if (resource.type === "deployment") {
         result = await updateDeployment(
           resource.id,
@@ -123,7 +112,7 @@ export function Edit() {
         beginFastLoad();
         enqueueSnackbar(t("saving-name"), { variant: "info" });
       }
-    } catch (error) {
+    } catch (error: DeployApiError | any) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar(t("error-updating") + ": " + e, {
           variant: "error",
@@ -144,9 +133,8 @@ export function Edit() {
     }
 
     setResource(row);
-    if (type === "deployment" && !loaded) {
-      setEnvs(row.envs);
-      setPersistent(row.volumes);
+    if (row.type === "deployment" && !loaded) {
+      setPersistent((row as Deployment).volumes);
     }
     setLoaded(true);
   };
@@ -154,6 +142,25 @@ export function Edit() {
   // Update resource whenever rows changes
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(loadResource, [rows]);
+
+  const renderPingResult = (resource: Deployment): ReactNode => {
+    if (!resource.pingResult) return null;
+    return (
+      <Chip
+        label={
+          sentenceCase(resource.pingResult.toString()) +
+          " " +
+          getReasonPhrase(resource.pingResult)
+        }
+        icon={
+          <Iconify
+            icon="mdi:transit-connection-variant"
+            sx={{ opacity: 0.75 }}
+          />
+        }
+      />
+    );
+  };
 
   return (
     <>
@@ -270,21 +277,8 @@ export function Edit() {
                       }
                     />
                   )}
-                  {resource.pingResult && (
-                    <Chip
-                      label={
-                        sentenceCase(resource.pingResult.toString()) +
-                        " " +
-                        getReasonPhrase(resource.pingResult)
-                      }
-                      icon={
-                        <Iconify
-                          icon="mdi:transit-connection-variant"
-                          sx={{ opacity: 0.75 }}
-                        />
-                      }
-                    />
-                  )}
+                  {resource.type === "deployment" &&
+                    renderPingResult(resource as Deployment)}
                   {resource.zone && zones && (
                     <Chip
                       label={
@@ -328,16 +322,12 @@ export function Edit() {
 
               {resource.type === "vm" && <PortManager vm={resource} />}
 
-              {resource.type === "vm" && <ProxyManager vm={resource} />}
+              {resource.type === "vm" && <ProxyManager vm={resource as Vm} />}
 
               {resource.type === "vm" && <Specs vm={resource} />}
 
               {resource.type === "deployment" && (
-                <EnvManager
-                  deployment={resource}
-                  envs={envs}
-                  setEnvs={setEnvs}
-                />
+                <EnvManager deployment={resource} />
               )}
 
               {resource.type === "deployment" && (
@@ -353,7 +343,7 @@ export function Edit() {
               )}
 
               {resource.type === "deployment" &&
-                resource.deploymentType === "prebuilt" && (
+                (resource as Deployment).deploymentType === "prebuilt" && (
                   <ImageManager deployment={resource} />
                 )}
 
@@ -363,7 +353,7 @@ export function Edit() {
                 )}
 
               {resource.type === "deployment" &&
-                resource.deploymentType !== "prebuilt" && (
+                (resource as Deployment).deploymentType !== "prebuilt" && (
                   <GHActions resource={resource} />
                 )}
 
