@@ -15,7 +15,27 @@ import { Coin } from "./Coin";
 import { useState } from "react";
 import { useKeycloak } from "@react-keycloak/web";
 
-const TierCard = ({ tier }) => {
+type Tier = {
+  name: string;
+  description: string;
+  permissions: {
+    chooseZone: boolean;
+    chooseGpu: boolean;
+    useGpus: boolean;
+    usePrivilegedGpus: boolean;
+    useCustomDomains: boolean;
+    gpuLeaseDuration: number | string;
+  };
+  quotas: {
+    deployments: number;
+    cpuCores: number;
+    ram: number;
+    diskSize: number;
+    snapshots: number;
+  };
+};
+
+const TierCard = ({ tier }: { tier: Tier }) => {
   const { t } = useTranslation();
   const [hovering, setHovering] = useState(false);
   const { user } = useResource();

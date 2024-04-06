@@ -1,11 +1,24 @@
-export const errorHandler = (error) => {
-  let errors = [];
+type ValidationError = {
+  [key: string]: string[];
+};
 
-  if (Object.hasOwn(error, "validationErrors")) {
-    let errorTypes = Object.keys(error.validationErrors);
+type ErrorElement = {
+  msg: string;
+};
+
+type DeployApiError = {
+  validationErrors?: ValidationError;
+  errors?: ErrorElement[];
+};
+
+export const errorHandler = (error: DeployApiError) => {
+  const errors = [];
+
+  if (error.validationErrors) {
+    const errorTypes = Object.keys(error.validationErrors);
 
     errorTypes.forEach((type) => {
-      let errorTypeErrors = error.validationErrors[type];
+      const errorTypeErrors = error.validationErrors![type];
 
       errorTypeErrors.forEach((msg) => {
         errors.push(msg + ": " + type);
@@ -13,7 +26,7 @@ export const errorHandler = (error) => {
     });
   }
 
-  if (Object.hasOwn(error, "errors")) {
+  if (error.errors) {
     error.errors.forEach((element) => {
       errors.push(element.msg);
     });

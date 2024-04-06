@@ -1,4 +1,6 @@
-export default function Autocomplete(theme) {
+import { CustomTheme } from "../types";
+
+export default function Autocomplete(theme: CustomTheme) {
   return {
     MuiAutocomplete: {
       styleOverrides: {
