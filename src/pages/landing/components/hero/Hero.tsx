@@ -211,7 +211,7 @@ const Hero = () => {
               variant="h2"
               sx={{ textAlign: { md: "left", xs: "center" } }}
             >
-              {(ram / 1000).toString().substring(0, 3)}
+              {fShortenNumber(Math.round(ram/1000))}
             </Typography>
             <Typography
               variant="body2"

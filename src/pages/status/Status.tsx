@@ -21,6 +21,7 @@ import WidgetSummary from "./WidgetSummary";
 import ServerStats from "./ServerStats";
 import LineChart from "./LineChart";
 import { useTranslation } from "react-i18next";
+import { fShortenNumber } from "../../utils/formatNumber";
 
 export function Status() {
   const { t } = useTranslation();
@@ -262,7 +263,7 @@ export function Status() {
           <Grid item xs={12} sm={6} md={3}>
             <WidgetSummary
               title={t("landing-hero-ram")}
-              total={ram}
+              total={Math.round(ram/1000)}
               color="success"
               icon={"bi:memory"}
             />
