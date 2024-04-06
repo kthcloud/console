@@ -25,12 +25,12 @@ import {
 } from "@mui/material";
 import Iconify from "../../../components/Iconify";
 import { enqueueSnackbar } from "notistack";
-import useResource from "/src/hooks/useResource";
-import { updateVM } from "/src/api/deploy/vms";
+import useResource from "../../../hooks/useResource";
+import { updateVM } from "../../../api/deploy/vms";
 import { useKeycloak } from "@react-keycloak/web";
-import { errorHandler } from "/src/utils/errorHandler";
+import { errorHandler } from "../../../utils/errorHandler";
 import { useTranslation } from "react-i18next";
-import CopyButton from "/src/components/CopyButton";
+import CopyButton from "../../../components/CopyButton";
 
 export default function PortManager({ vm }) {
   const { t } = useTranslation();

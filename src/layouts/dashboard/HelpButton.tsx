@@ -1,6 +1,6 @@
 import { IconButton, Link, Tooltip } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import Iconify from "/src/components/Iconify";
+import Iconify from "../../components/Iconify";
 
 const resolveURL = () => {
   const path = window.location.href.replace(window.location.origin, "");

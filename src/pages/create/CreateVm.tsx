@@ -19,12 +19,12 @@ import { useEffect, useState } from "react";
 
 import { useKeycloak } from "@react-keycloak/web";
 import { useSnackbar } from "notistack";
-import { createVM } from "/src/api/deploy/vms";
+import { createVM } from "../../api/deploy/vms";
 import { Link } from "react-router-dom";
-import RFC1035Input from "/src/components/RFC1035Input";
+import RFC1035Input from "../../components/RFC1035Input";
 import { faker } from "@faker-js/faker";
-import { errorHandler } from "/src/utils/errorHandler";
-import useResource from "/src/hooks/useResource";
+import { errorHandler } from "../../utils/errorHandler";
+import useResource from "../../hooks/useResource";
 import ZoneSelector from "./ZoneSelector";
 import { useTranslation } from "react-i18next";
 

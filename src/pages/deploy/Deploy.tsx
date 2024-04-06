@@ -17,7 +17,7 @@ import {
 
 // hooks
 import { useSnackbar } from "notistack";
-import useResource from "/src/hooks/useResource";
+import useResource from "../../hooks/useResource";
 import { useEffect, useState } from "react";
 import { useKeycloak } from "@react-keycloak/web";
 import { useNavigate } from "react-router-dom";
@@ -37,10 +37,10 @@ import JobList from "../../components/JobList";
 import { Link as RouterLink } from "react-router-dom";
 import LoadingPage from "../../components/LoadingPage";
 import Iconify from "../../components/Iconify";
-import { deleteDeployment } from "/src/api/deploy/deployments";
-import { deleteVM } from "/src/api/deploy/vms";
+import { deleteDeployment } from "../../api/deploy/deployments";
+import { deleteVM } from "../../api/deploy/vms";
 import { getReasonPhrase } from "http-status-codes";
-import { errorHandler } from "/src/utils/errorHandler";
+import { errorHandler } from "../../utils/errorHandler";
 import { useTranslation } from "react-i18next";
 
 const descendingComparator = (a, b, orderBy) => {

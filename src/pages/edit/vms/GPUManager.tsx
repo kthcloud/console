@@ -19,18 +19,18 @@ import {
 import { useKeycloak } from "@react-keycloak/web";
 import { useSnackbar } from "notistack";
 import { useEffect, useState } from "react";
-import Iconify from "/src/components/Iconify";
-import useResource from "/src/hooks/useResource";
+import Iconify from "../../../components/Iconify";
+import useResource from "../../../hooks/useResource";
 import {
   attachGPU,
   detachGPU,
   getGPUs,
   attachGPUById,
-} from "/src/api/deploy/vms";
-import { errorHandler } from "/src/utils/errorHandler";
-import { hashGPUId } from "/src/utils/helpers";
+} from "../../../api/deploy/vms";
+import { errorHandler } from "../../../utils/errorHandler";
+import { hashGPUId } from "../../../utils/helpers";
 import { useTranslation } from "react-i18next";
-import CopyButton from "/src/components/CopyButton";
+import CopyButton from "../../../components/CopyButton";
 
 export const GPUManager = ({ vm }) => {
   const { t } = useTranslation();

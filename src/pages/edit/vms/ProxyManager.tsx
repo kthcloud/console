@@ -33,16 +33,17 @@ import {
 import { useKeycloak } from "@react-keycloak/web";
 import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
-import { updateVM } from "/src/api/deploy/vms";
-import Iconify from "/src/components/Iconify";
-import RFC1035Input from "/src/components/RFC1035Input";
-import useResource from "/src/hooks/useResource";
-import { errorHandler } from "/src/utils/errorHandler";
+import { updateVM } from "../../../api/deploy/vms";
+import Iconify from "../../../components/Iconify";
+import RFC1035Input from "../../../components/RFC1035Input";
+import useResource from "../../../hooks/useResource";
+import { errorHandler } from "../../../utils/errorHandler";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useTranslation } from "react-i18next";
 import { sentenceCase } from "change-case";
+import { Vm } from "../../../types";
 
-const ProxyManager = ({ vm }) => {
+const ProxyManager = ({ vm }: { vm: Vm }) => {
   const { t } = useTranslation();
   const { initialized, keycloak } = useKeycloak();
   const [newProxy, setNewProxy] = useState({ name: "", customDomain: "" });

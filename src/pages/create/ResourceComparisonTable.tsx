@@ -21,7 +21,7 @@ import {
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import Iconify from "/src/components/Iconify";
+import Iconify from "../../components/Iconify";
 
 const ResourceComparisonTable = () => {
   const { t } = useTranslation();

@@ -1,4 +1,4 @@
-import { getDeploymentYaml } from "/src/api/deploy/deployments";
+import { getDeploymentYaml } from "../../../api/deploy/deployments";
 import { useKeycloak } from "@react-keycloak/web";
 import { useEffect, useState } from "react";
 import { parse } from "yaml";
@@ -24,9 +24,9 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import Iconify from "/src/components/Iconify";
+import Iconify from "../../../components/Iconify";
 import { useTranslation } from "react-i18next";
-import CopyButton from "/src/components/CopyButton";
+import CopyButton from "../../../components/CopyButton";
 
 const GHActions = ({ resource }) => {
   const { t } = useTranslation();

@@ -32,16 +32,16 @@ import {
   createTeam,
   deleteTeam,
   updateTeam,
-} from "/src/api/deploy/teams";
-import { searchUsers } from "/src/api/deploy/users";
-import ConfirmButton from "/src/components/ConfirmButton";
-import Gravatar from "/src/components/Gravatar";
-import Iconify from "/src/components/Iconify";
-import JobList from "/src/components/JobList";
-import LoadingPage from "/src/components/LoadingPage";
-import Page from "/src/components/Page";
-import useResource from "/src/hooks/useResource";
-import { errorHandler } from "/src/utils/errorHandler";
+} from "../../api/deploy/teams";
+import { searchUsers } from "../../api/deploy/users";
+import ConfirmButton from "../../components/ConfirmButton";
+import Gravatar from "../../components/Gravatar";
+import Iconify from "../../components/Iconify";
+import JobList from "../../components/JobList";
+import LoadingPage from "../../components/LoadingPage";
+import Page from "../../components/Page";
+import useResource from "../../hooks/useResource";
+import { errorHandler } from "../../utils/errorHandler";
 import { Link as RouterLink } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
 

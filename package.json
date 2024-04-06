@@ -24,6 +24,7 @@
     "@sanity/eventsource": "^5.0.1",
     "@types/crypto-js": "^4.2.2",
     "@types/numeral": "^2.0.5",
+    "@types/punycode": "^2.1.4",
     "@types/three": "^0.163.0",
     "apexcharts": "^3.45.2",
     "change-case": "^5.4.2",

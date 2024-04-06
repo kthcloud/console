@@ -2,10 +2,10 @@ import { useKeycloak } from "@react-keycloak/web";
 import { enqueueSnackbar } from "notistack";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { updateDeployment } from "/src/api/deploy/deployments";
-import Iconify from "/src/components/Iconify";
-import useResource from "/src/hooks/useResource";
-import { errorHandler } from "/src/utils/errorHandler";
+import { updateDeployment } from "../../../api/deploy/deployments";
+import Iconify from "../../../components/Iconify";
+import useResource from "../../../hooks/useResource";
+import { errorHandler } from "../../../utils/errorHandler";
 
 import {
   Card,

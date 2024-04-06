@@ -18,13 +18,13 @@ import {
 } from "@mui/material";
 import { enqueueSnackbar } from "notistack";
 import { useState } from "react";
-import { updateDeployment } from "/src/api/deploy/deployments";
-import Iconify from "/src/components/Iconify";
+import { updateDeployment } from "../../../api/deploy/deployments";
+import Iconify from "../../../components/Iconify";
 import { useKeycloak } from "@react-keycloak/web";
-import useResource from "/src/hooks/useResource";
-import { errorHandler } from "/src/utils/errorHandler";
+import useResource from "../../../hooks/useResource";
+import { errorHandler } from "../../../utils/errorHandler";
 import { useTranslation } from "react-i18next";
-import RFC1035Input from "/src/components/RFC1035Input";
+import RFC1035Input from "../../../components/RFC1035Input";
 
 const StorageManager = ({ deployment, persistent, setPersistent }) => {
   const { t } = useTranslation();

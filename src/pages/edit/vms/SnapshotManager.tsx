@@ -12,12 +12,16 @@ import { TreeItem, TreeView } from "@mui/x-tree-view";
 import { useKeycloak } from "@react-keycloak/web";
 import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
-import { getSnapshots, createSnapshot, updateVM } from "/src/api/deploy/vms";
-import ConfirmButton from "/src/components/ConfirmButton";
-import Iconify from "/src/components/Iconify";
-import RFC1035Input from "/src/components/RFC1035Input";
-import useResource from "/src/hooks/useResource";
-import { errorHandler } from "/src/utils/errorHandler";
+import {
+  getSnapshots,
+  createSnapshot,
+  updateVM,
+} from "../../../api/deploy/vms";
+import ConfirmButton from "../../../components/ConfirmButton";
+import Iconify from "../../../components/Iconify";
+import RFC1035Input from "../../../components/RFC1035Input";
+import useResource from "../../../hooks/useResource";
+import { errorHandler } from "../../../utils/errorHandler";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import { useTranslation } from "react-i18next";

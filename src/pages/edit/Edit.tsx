@@ -18,7 +18,7 @@ import {
 //hooks
 import { useState, useEffect } from "react";
 import { useKeycloak } from "@react-keycloak/web";
-import useResource from "/src/hooks/useResource";
+import useResource from "../../hooks/useResource";
 import { useParams, useNavigate } from "react-router-dom";
 
 // utils
@@ -50,11 +50,11 @@ import { HealthCheckRoute } from "./deployments/HealthCheckRoute";
 import { useTranslation } from "react-i18next";
 import DangerZone from "./DangerZone";
 import { ReplicaManager } from "./deployments/ReplicaManager";
-import Iconify from "/src/components/Iconify";
+import Iconify from "../../components/Iconify";
 import { enqueueSnackbar } from "notistack";
-import { updateDeployment } from "/src/api/deploy/deployments";
-import { updateVM } from "/src/api/deploy/vms";
-import { errorHandler } from "/src/utils/errorHandler";
+import { updateDeployment } from "../../api/deploy/deployments";
+import { updateVM } from "../../api/deploy/vms";
+import { errorHandler } from "../../utils/errorHandler";
 
 export function Edit() {
   const { t } = useTranslation();

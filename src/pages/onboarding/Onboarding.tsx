@@ -18,16 +18,16 @@ import {
 import { useKeycloak } from "@react-keycloak/web";
 import { enqueueSnackbar } from "notistack";
 import { useState } from "react";
-import LoadingPage from "/src/components/LoadingPage";
-import Page from "/src/components/Page";
-import { errorHandler } from "/src/utils/errorHandler";
+import LoadingPage from "../../components/LoadingPage";
+import Page from "../../components/Page";
+import { errorHandler } from "../../utils/errorHandler";
 import Profile from "../profile";
 import CreateDeployment from "../create/CreateDeployment";
 import CreateVm from "../create/CreateVm";
 import { useNavigate } from "react-router-dom";
-import useResource from "/src/hooks/useResource";
+import useResource from "../../hooks/useResource";
 import { useTranslation } from "react-i18next";
-import { updateUserData } from "/src/api/deploy/userData";
+import { updateUserData } from "../../api/deploy/userData";
 
 export const Onboarding = () => {
   const navigate = useNavigate();

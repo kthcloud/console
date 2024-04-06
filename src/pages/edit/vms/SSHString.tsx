@@ -7,7 +7,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import CopyButton from "/src/components/CopyButton";
+import CopyButton from "../../../components/CopyButton";
 
 const SSHString = ({ resource }) => {
   const { t } = useTranslation();

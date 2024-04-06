@@ -13,10 +13,10 @@ import { useKeycloak } from "@react-keycloak/web";
 import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { updateVM } from "/src/api/deploy/vms";
-import Iconify from "/src/components/Iconify";
-import useResource from "/src/hooks/useResource";
-import { errorHandler } from "/src/utils/errorHandler";
+import { updateVM } from "../../../api/deploy/vms";
+import Iconify from "../../../components/Iconify";
+import useResource from "../../../hooks/useResource";
+import { errorHandler } from "../../../utils/errorHandler";
 
 export default function Specs({ vm }) {
   const { t } = useTranslation();

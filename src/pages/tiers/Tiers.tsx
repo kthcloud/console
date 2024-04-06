@@ -8,9 +8,9 @@ import {
   Typography,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import Page from "/src/components/Page";
+import Page from "../../components/Page";
 import tierConfig from "./tiers.json";
-import useResource from "/src/hooks/useResource";
+import useResource from "../../hooks/useResource";
 import { Coin } from "./Coin";
 import { useState } from "react";
 import { useKeycloak } from "@react-keycloak/web";

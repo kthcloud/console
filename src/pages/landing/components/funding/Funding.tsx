@@ -7,7 +7,7 @@ import {
   Link,
   Typography,
 } from "@mui/material";
-import Iconify from "/src/components/Iconify";
+import Iconify from "../../../../components/Iconify";
 import { t } from "i18next";
 
 const Funding = () => {

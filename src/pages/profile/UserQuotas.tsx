@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, Chip, Stack } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import Iconify from "/src/components/Iconify";
+import Iconify from "../../components/Iconify";
 
 export const UserQuotas = ({ user }) => {
   const { t } = useTranslation();

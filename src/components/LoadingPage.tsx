@@ -1,7 +1,7 @@
 import { CircularProgress, Grid } from "@mui/material";
 import Page from "./Page";
-import useResource from "/src/hooks/useResource";
-import useInterval from "/src/hooks/useInterval";
+import useResource from "../hooks/useResource";
+import useInterval from "../hooks/useInterval";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 

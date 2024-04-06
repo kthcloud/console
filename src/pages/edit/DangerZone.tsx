@@ -1,15 +1,15 @@
 import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { searchUsers } from "/src/api/deploy/users";
-import { errorHandler } from "/src/utils/errorHandler";
+import { searchUsers } from "../../api/deploy/users";
+import { errorHandler } from "../../utils/errorHandler";
 import { useKeycloak } from "@react-keycloak/web";
-import ConfirmButton from "/src/components/ConfirmButton";
-import { updateVM } from "/src/api/deploy/vms";
+import ConfirmButton from "../../components/ConfirmButton";
+import { updateVM } from "../../api/deploy/vms";
 import { Link } from "react-router-dom";
-import { updateDeployment } from "/src/api/deploy/deployments";
-import useResource from "/src/hooks/useResource";
-import { updateTeam } from "/src/api/deploy/teams";
+import { updateDeployment } from "../../api/deploy/deployments";
+import useResource from "../../hooks/useResource";
+import { updateTeam } from "../../api/deploy/teams";
 import {
   Card,
   CardHeader,

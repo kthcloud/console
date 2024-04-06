@@ -13,8 +13,8 @@ import Iconify from "../../components/Iconify";
 import Link from "@mui/material/Link";
 import { Link as RouterLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import useResource from "/src/hooks/useResource";
-import { ThemeModeContext } from "/src/contexts/ThemeModeContext";
+import useResource from "../../hooks/useResource";
+import { ThemeModeContext } from "../../contexts/ThemeModeContext";
 
 export default function Menu() {
   const anchorRef = useRef(null);

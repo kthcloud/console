@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import useResource from "/src/hooks/useResource";
+import useResource from "../../hooks/useResource";
 
 const ZoneSelector = ({ alignment, selectedZone, setSelectedZone }) => {
   const [filteredZones, setFilteredZones] = useState([]);

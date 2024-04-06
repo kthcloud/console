@@ -10,10 +10,10 @@ import {
 } from "@mui/material";
 import { useKeycloak } from "@react-keycloak/web";
 import { useEffect, useRef, useState } from "react";
-import Iconify from "/src/components/Iconify";
+import Iconify from "../../../components/Iconify";
 import polyfilledEventSource from "@sanity/eventsource";
 import { useTranslation } from "react-i18next";
-import CopyButton from "/src/components/CopyButton";
+import CopyButton from "../../../components/CopyButton";
 
 export const LogsView = ({ deployment }) => {
   const { t } = useTranslation();

@@ -19,13 +19,13 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import Iconify from "../../components/Iconify";
-import { createDeployment } from "/src/api/deploy/deployments";
+import { createDeployment } from "../../api/deploy/deployments";
 import { useSnackbar } from "notistack";
 import { useKeycloak } from "@react-keycloak/web";
-import RFC1035Input from "/src/components/RFC1035Input";
+import RFC1035Input from "../../components/RFC1035Input";
 import { faker } from "@faker-js/faker";
-import { errorHandler } from "/src/utils/errorHandler";
-import useResource from "/src/hooks/useResource";
+import { errorHandler } from "../../utils/errorHandler";
+import useResource from "../../hooks/useResource";
 import ZoneSelector from "./ZoneSelector";
 import { useTranslation } from "react-i18next";
 

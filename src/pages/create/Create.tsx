@@ -14,7 +14,7 @@ import {
 import { useEffect, useState } from "react";
 import { useKeycloak } from "@react-keycloak/web";
 import { useSnackbar } from "notistack";
-import useResource from "/src/hooks/useResource";
+import useResource from "../../hooks/useResource";
 
 // utils
 import { sentenceCase } from "change-case";
@@ -30,7 +30,7 @@ import CreateVm from "./CreateVm";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import ResourceTypeChat from "./ResourceTypeChat";
 import { useTranslation } from "react-i18next";
-import Iconify from "/src/components/Iconify";
+import Iconify from "../../components/Iconify";
 
 export const Create = () => {
   const { initialized } = useKeycloak();

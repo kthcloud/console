@@ -20,19 +20,19 @@ import { useKeycloak } from "@react-keycloak/web";
 import { enqueueSnackbar } from "notistack";
 import { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { acceptDeploymentTransfer } from "/src/api/deploy/deployments";
+import { acceptDeploymentTransfer } from "../../api/deploy/deployments";
 import {
   deleteNotification,
   markNotificationAsRead,
-} from "/src/api/deploy/notifications";
-import { joinTeam } from "/src/api/deploy/teams";
-import { acceptVmTransfer } from "/src/api/deploy/vms";
-import Iconify from "/src/components/Iconify";
-import JobList from "/src/components/JobList";
-import LoadingPage from "/src/components/LoadingPage";
-import Page from "/src/components/Page";
-import useResource from "/src/hooks/useResource";
-import { errorHandler } from "/src/utils/errorHandler";
+} from "../../api/deploy/notifications";
+import { joinTeam } from "../../api/deploy/teams";
+import { acceptVmTransfer } from "../../api/deploy/vms";
+import Iconify from "../../components/Iconify";
+import JobList from "../../components/JobList";
+import LoadingPage from "../../components/LoadingPage";
+import Page from "../../components/Page";
+import useResource from "../../hooks/useResource";
+import { errorHandler } from "../../utils/errorHandler";
 import { useTheme } from "@mui/material/styles";
 
 const Inbox = () => {

@@ -1,4 +1,4 @@
-import useResource from "/src/hooks/useResource";
+import useResource from "../../hooks/useResource";
 import {
   Badge,
   IconButton,
@@ -8,10 +8,10 @@ import {
   MenuList,
   Tooltip,
 } from "@mui/material";
-import Iconify from "/src/components/Iconify";
+import Iconify from "../../components/Iconify";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import Gravatar from "/src/components/Gravatar";
+import Gravatar from "../../components/Gravatar";
 
 const ProfileButton = () => {
   const { user, unread } = useResource();
