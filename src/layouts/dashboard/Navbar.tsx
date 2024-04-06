@@ -1,5 +1,3 @@
-import PropTypes from "prop-types";
-// material
 import { alpha, styled } from "@mui/material/styles";
 import {
   Box,
@@ -10,7 +8,6 @@ import {
   useTheme,
   useMediaQuery,
 } from "@mui/material";
-// components
 import MenuPopover from "./Menu";
 import LoginButton from "./LoginButton";
 import Logo from "../../components/Logo";
@@ -39,16 +36,12 @@ const ToolbarStyle = styled(Toolbar)(({ theme }) => ({
   },
 }));
 
-Navbar.propTypes = {
-  onOpenSidebar: PropTypes.func,
-};
-
-export default function Navbar({ onOpenSidebar }) {
+export default function Navbar() {
   const theme = useTheme();
   const greaterThan = useMediaQuery(theme.breakpoints.up("lg"));
   const smallerThan = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const renderContainer = (children) => {
+  const renderContainer = (children: React.ReactNode) => {
     if (greaterThan || smallerThan) {
       return <Container maxWidth="xl">{children}</Container>;
     } else {

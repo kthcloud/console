@@ -1,5 +1,4 @@
-import PropTypes from "prop-types";
-// material
+import { FC, ChangeEvent } from "react";
 import { styled } from "@mui/material/styles";
 import {
   Toolbar,
@@ -9,9 +8,8 @@ import {
   OutlinedInput,
   InputAdornment,
 } from "@mui/material";
-// component
 import Iconify from "../../components/Iconify";
-import ConfirmButton from "/src/components/ConfirmButton";
+import ConfirmButton from "../../components/ConfirmButton";
 import { useTranslation } from "react-i18next";
 
 const RootStyle = styled(Toolbar)(({ theme }) => ({
@@ -34,19 +32,21 @@ const SearchStyle = styled(OutlinedInput)(({ theme }) => ({
   },
 }));
 
-ListToolbar.propTypes = {
-  numSelected: PropTypes.number,
-  filterName: PropTypes.string,
-  onFilterName: PropTypes.func,
-};
+interface ListToolbarProps {
+  numSelected: number;
+  filterName: string;
+  onFilterName: (event: ChangeEvent<HTMLInputElement>) => void;
+  loading?: boolean;
+  onDelete?: () => void;
+}
 
-export default function ListToolbar({
+const ListToolbar: FC<ListToolbarProps> = ({
   numSelected,
   filterName,
   onFilterName,
   loading,
   onDelete,
-}) {
+}) => {
   const { t } = useTranslation();
 
   return (
@@ -104,4 +104,6 @@ export default function ListToolbar({
       )}
     </RootStyle>
   );
-}
+};
+
+export default ListToolbar;

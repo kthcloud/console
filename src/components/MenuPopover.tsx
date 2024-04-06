@@ -1,5 +1,4 @@
-import PropTypes from "prop-types";
-// material
+import { FC, ReactNode } from "react";
 import { Popover } from "@mui/material";
 import { alpha, styled } from "@mui/material/styles";
 
@@ -20,22 +19,32 @@ const ArrowStyle = styled("span")(({ theme }) => ({
   },
 }));
 
-MenuPopover.propTypes = {
-  children: PropTypes.node.isRequired,
-  sx: PropTypes.object,
-};
+interface MenuPopoverProps {
+  open: boolean;
+  children: ReactNode;
+  sx?: object;
+  [key: string]: any;
+}
 
-export default function MenuPopover({ children, sx, ...other }) {
+const MenuPopover: FC<MenuPopoverProps> = ({
+  open,
+  children,
+  sx,
+  ...other
+}) => {
   return (
     <Popover
+      open={open}
       anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
       transformOrigin={{ vertical: "top", horizontal: "right" }}
-      PaperProps={{
-        sx: {
-          p: 1,
-          width: 200,
-          overflow: "inherit",
-          ...sx,
+      slotProps={{
+        paper: {
+          sx: {
+            p: 1,
+            width: 200,
+            overflow: "inherit",
+            ...sx,
+          },
         },
       }}
       {...other}
@@ -45,4 +54,6 @@ export default function MenuPopover({ children, sx, ...other }) {
       {children}
     </Popover>
   );
-}
+};
+
+export default MenuPopover;

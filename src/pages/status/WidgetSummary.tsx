@@ -1,10 +1,6 @@
-// @mui
-import PropTypes from "prop-types";
 import { alpha, styled, useTheme } from "@mui/material/styles";
 import { Card, Typography } from "@mui/material";
-// utils
 import { fShortenNumber } from "../../utils/formatNumber";
-// components
 import Iconify from "../../components/Iconify";
 
 const IconWrapperStyle = styled("div")(({ theme }) => ({
@@ -18,13 +14,14 @@ const IconWrapperStyle = styled("div")(({ theme }) => ({
   marginBottom: theme.spacing(3),
 }));
 
-WidgetSummary.propTypes = {
-  color: PropTypes.string,
-  icon: PropTypes.string,
-  title: PropTypes.string.isRequired,
-  total: PropTypes.number.isRequired,
-  sx: PropTypes.object,
-};
+interface WidgetSummaryProps {
+  color?: string;
+  icon?: string;
+  title: string;
+  total: number;
+  sx?: object;
+  [key: string]: any;
+}
 
 export default function WidgetSummary({
   title,
@@ -33,7 +30,7 @@ export default function WidgetSummary({
   color = "primary",
   sx,
   ...other
-}) {
+}: WidgetSummaryProps) {
   const theme = useTheme();
 
   let textColor =
@@ -71,7 +68,7 @@ export default function WidgetSummary({
             )} 100%)`,
         }}
       >
-        <Iconify icon={icon} width={24} height={24} />
+        {icon && <Iconify icon={icon} width={24} height={24} />}
       </IconWrapperStyle>
       {icon === "bi:memory" ? (
         <Typography variant="h3">

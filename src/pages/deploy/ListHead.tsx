@@ -1,5 +1,3 @@
-import PropTypes from "prop-types";
-// material
 import {
   Box,
   Checkbox,
@@ -8,6 +6,22 @@ import {
   TableHead,
   TableSortLabel,
 } from "@mui/material";
+
+interface HeadCell {
+  id: string;
+  alignRight?: boolean;
+  label: string;
+}
+
+interface ListHeadProps {
+  order: "asc" | "desc";
+  orderBy: string;
+  rowCount: number;
+  headLabel: HeadCell[];
+  numSelected: number;
+  onRequestSort: (event: React.MouseEvent<unknown>, property: any) => void;
+  onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
+}
 
 const visuallyHidden = {
   border: 0,
@@ -21,16 +35,6 @@ const visuallyHidden = {
   clip: "rect(0 0 0 0)",
 };
 
-ListHead.propTypes = {
-  order: PropTypes.oneOf(["asc", "desc"]),
-  orderBy: PropTypes.string,
-  rowCount: PropTypes.number,
-  headLabel: PropTypes.array,
-  numSelected: PropTypes.number,
-  onRequestSort: PropTypes.func,
-  onSelectAllClick: PropTypes.func,
-};
-
 export default function ListHead({
   order,
   orderBy,
@@ -39,8 +43,8 @@ export default function ListHead({
   numSelected,
   onRequestSort,
   onSelectAllClick,
-}) {
-  const createSortHandler = (property) => (event) => {
+}: ListHeadProps) {
+  const createSortHandler = (property: any) => (event: React.MouseEvent<unknown>) => {
     onRequestSort(event, property);
   };
 

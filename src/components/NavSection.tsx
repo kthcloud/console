@@ -1,5 +1,4 @@
 import { useState } from "react";
-import PropTypes from "prop-types";
 import {
   NavLink as RouterLink,
   matchPath,
@@ -17,7 +16,21 @@ import {
 
 import Iconify from "./Iconify";
 
-const ListItemStyle = styled((props) => (
+interface NavItemProps {
+  item: {
+    title: string;
+    path: string;
+    icon?: JSX.Element;
+    info?: JSX.Element;
+    children?: Array<{
+      title: string;
+      path: string;
+    }>;
+  };
+  active: (path: string) => boolean;
+}
+
+const ListItemStyle = styled((props: any) => (
   <ListItemButton disableGutters {...props} />
 ))(({ theme }) => ({
   ...theme.typography.body2,
@@ -37,12 +50,7 @@ const ListItemIconStyle = styled(ListItemIcon)({
   justifyContent: "center",
 });
 
-NavItem.propTypes = {
-  item: PropTypes.object,
-  active: PropTypes.func,
-};
-
-function NavItem({ item, active }) {
+function NavItem({ item, active }: NavItemProps) {
   const theme = useTheme();
 
   const isActiveRoot = active(item.path);
@@ -151,14 +159,23 @@ function NavItem({ item, active }) {
   );
 }
 
-NavSection.propTypes = {
-  navConfig: PropTypes.array,
-};
+interface NavSectionProps {
+  navConfig: Array<{
+    title: string;
+    path: string;
+    icon?: JSX.Element;
+    info?: JSX.Element;
+    children?: Array<{
+      title: string;
+      path: string;
+    }>;
+  }>;
+}
 
-export default function NavSection({ navConfig, ...other }) {
+export default function NavSection({ navConfig, ...other }: NavSectionProps) {
   const { pathname } = useLocation();
 
-  const match = (path) =>
+  const match = (path: string) =>
     path ? !!matchPath({ path, end: false }, pathname) : false;
 
   return (

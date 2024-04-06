@@ -1,10 +1,7 @@
-import PropTypes from "prop-types";
 import merge from "lodash/merge";
 import ReactApexChart from "react-apexcharts";
-// @mui
 import { styled } from "@mui/material/styles";
 import { Card, CardHeader, CardContent } from "@mui/material";
-// components
 import { BaseOptionChart } from "../../components/chart";
 
 const CHART_HEIGHT = 360;
@@ -29,13 +26,13 @@ const ChartWrapperStyle = styled("div")(({ theme }) => ({
   },
 }));
 
-ServerStats.propTypes = {
-  title: PropTypes.string,
-  subheader: PropTypes.string,
-  chartData: PropTypes.array.isRequired,
-  chartColors: PropTypes.arrayOf(PropTypes.string).isRequired,
-  chartLabels: PropTypes.arrayOf(PropTypes.string).isRequired,
-};
+interface ServerStatsProps {
+  title?: string;
+  subheader?: string;
+  chartData: any[];
+  chartColors: string[];
+  chartLabels: string[];
+}
 
 export default function ServerStats({
   title,
@@ -44,7 +41,7 @@ export default function ServerStats({
   chartColors,
   chartLabels,
   ...other
-}) {
+}: ServerStatsProps) {
   const chartOptions = merge(BaseOptionChart(), {
     stroke: { width: 2 },
     fill: { opacity: 0.48 },

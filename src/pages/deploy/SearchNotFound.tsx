@@ -1,13 +1,12 @@
-import PropTypes from "prop-types";
-// material
 import { Paper, Typography } from "@mui/material";
 import { useTranslation } from "react-i18next";
 
-SearchNotFound.propTypes = {
-  searchQuery: PropTypes.string,
-};
+interface SearchNotFoundProps {
+  searchQuery?: string;
+  [x: string]: any;
+}
 
-export default function SearchNotFound({ searchQuery = "", ...other }) {
+export default function SearchNotFound({ searchQuery = "", ...other }: SearchNotFoundProps) {
   const { t } = useTranslation();
 
   return (

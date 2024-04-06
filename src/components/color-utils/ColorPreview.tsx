@@ -1,4 +1,4 @@
-import PropTypes from "prop-types";
+import { FC, ReactNode } from 'react';
 // material
 import { alpha, styled } from "@mui/material/styles";
 import { Box, Typography } from "@mui/material";
@@ -9,7 +9,7 @@ const RootStyle = styled(Box)({
   justifyContent: "flex-end",
 });
 
-const IconStyle = styled("div")(({ theme }) => ({
+const IconStyle = styled("div")<{ theme: any }>(({ theme }) => ({
   marginLeft: -4,
   borderRadius: "50%",
   width: theme.spacing(2),
@@ -18,12 +18,13 @@ const IconStyle = styled("div")(({ theme }) => ({
   boxShadow: `inset -1px 1px 2px ${alpha(theme.palette.common.black, 0.24)}`,
 }));
 
-ColorPreview.propTypes = {
-  colors: PropTypes.array.isRequired,
-  limit: PropTypes.number,
-};
+interface ColorPreviewProps {
+  colors: string[];
+  limit?: number;
+  children?: ReactNode;
+}
 
-export default function ColorPreview({ colors, limit = 3, ...other }) {
+const ColorPreview: FC<ColorPreviewProps> = ({ colors, limit = 3, ...other }) => {
   const showColor = colors.slice(0, limit);
   const moreColor = colors.length - limit;
 
@@ -39,3 +40,5 @@ export default function ColorPreview({ colors, limit = 3, ...other }) {
     </RootStyle>
   );
 }
+
+export default ColorPreview;

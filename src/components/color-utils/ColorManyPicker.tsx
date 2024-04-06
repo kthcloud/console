@@ -1,14 +1,12 @@
-import PropTypes from "prop-types";
-// material
 import { Box, Checkbox } from "@mui/material";
-//
 import Iconify from "../Iconify";
 
-IconColor.propTypes = {
-  sx: PropTypes.object,
-};
+interface IconColorProps {
+  sx?: object;
+  [x: string]: any;
+}
 
-function IconColor({ sx, ...other }) {
+function IconColor({ sx, ...other }: IconColorProps) {
   return (
     <Box
       sx={{
@@ -33,13 +31,14 @@ function IconColor({ sx, ...other }) {
   );
 }
 
-ColorManyPicker.propTypes = {
-  colors: PropTypes.array.isRequired,
-  onChecked: PropTypes.func,
-  sx: PropTypes.object,
-};
+interface ColorManyPickerProps {
+  colors: string[];
+  onChecked?: (color: string) => boolean;
+  sx?: object;
+  [x: string]: any;
+}
 
-export default function ColorManyPicker({ colors, onChecked, sx, ...other }) {
+export default function ColorManyPicker({ colors, onChecked, sx, ...other }: ColorManyPickerProps) {
   return (
     <Box sx={sx}>
       {colors.map((color) => {
@@ -51,7 +50,7 @@ export default function ColorManyPicker({ colors, onChecked, sx, ...other }) {
             size="small"
             value={color}
             color="default"
-            checked={onChecked(color)}
+            checked={onChecked ? onChecked(color) : false}
             icon={
               <IconColor
                 sx={{
