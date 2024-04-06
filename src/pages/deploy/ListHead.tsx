@@ -44,9 +44,10 @@ export default function ListHead({
   onRequestSort,
   onSelectAllClick,
 }: ListHeadProps) {
-  const createSortHandler = (property: any) => (event: React.MouseEvent<unknown>) => {
-    onRequestSort(event, property);
-  };
+  const createSortHandler =
+    (property: any) => (event: React.MouseEvent<unknown>) => {
+      onRequestSort(event, property);
+    };
 
   return (
     <TableHead>

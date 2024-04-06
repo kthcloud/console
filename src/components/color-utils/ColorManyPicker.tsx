@@ -38,7 +38,12 @@ interface ColorManyPickerProps {
   [x: string]: any;
 }
 
-export default function ColorManyPicker({ colors, onChecked, sx, ...other }: ColorManyPickerProps) {
+export default function ColorManyPicker({
+  colors,
+  onChecked,
+  sx,
+  ...other
+}: ColorManyPickerProps) {
   return (
     <Box sx={sx}>
       {colors.map((color) => {

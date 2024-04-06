@@ -1,4 +1,4 @@
-import { FC, ReactNode } from 'react';
+import { FC, ReactNode } from "react";
 // material
 import { alpha, styled } from "@mui/material/styles";
 import { Box, Typography } from "@mui/material";
@@ -24,7 +24,11 @@ interface ColorPreviewProps {
   children?: ReactNode;
 }
 
-const ColorPreview: FC<ColorPreviewProps> = ({ colors, limit = 3, ...other }) => {
+const ColorPreview: FC<ColorPreviewProps> = ({
+  colors,
+  limit = 3,
+  ...other
+}) => {
   const showColor = colors.slice(0, limit);
   const moreColor = colors.length - limit;
 
@@ -39,6 +43,6 @@ const ColorPreview: FC<ColorPreviewProps> = ({ colors, limit = 3, ...other }) =>
       )}
     </RootStyle>
   );
-}
+};
 
 export default ColorPreview;

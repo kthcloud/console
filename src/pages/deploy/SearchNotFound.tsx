@@ -6,7 +6,10 @@ interface SearchNotFoundProps {
   [x: string]: any;
 }
 
-export default function SearchNotFound({ searchQuery = "", ...other }: SearchNotFoundProps) {
+export default function SearchNotFound({
+  searchQuery = "",
+  ...other
+}: SearchNotFoundProps) {
   const { t } = useTranslation();
 
   return (
