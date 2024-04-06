@@ -263,7 +263,7 @@ export function Status() {
           <Grid item xs={12} sm={6} md={3}>
             <WidgetSummary
               title={t("landing-hero-ram")}
-              total={Math.round(ram/1000)}
+              total={Math.round(ram / 1000)}
               color="success"
               icon={"bi:memory"}
             />
