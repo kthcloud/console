@@ -43,12 +43,12 @@ type ResourceContextType = {
   setZones: (zones: Zone[]) => void;
   queueJob: (job: Job) => void;
   beginFastLoad: () => void;
+  initialLoad: boolean;
+  setInitialLoad: (initialLoad: boolean) => void;
   impersonatingDeployment: Uuid | null;
   setImpersonatingDeployment: (deployment: Uuid) => void;
   impersonatingVm: Uuid | null;
   setImpersonatingVm: (vm: Uuid) => void;
-
-  initialLoad: boolean;
 };
 
 const initialState: ResourceContextType = {
@@ -71,12 +71,13 @@ const initialState: ResourceContextType = {
   zones: new Array<Zone>(),
   setZones: () => {},
   queueJob: () => {},
+  initialLoad: false,
+  setInitialLoad: () => {},
   beginFastLoad: () => {},
   impersonatingDeployment: null,
   setImpersonatingDeployment: () => {},
   impersonatingVm: null,
   setImpersonatingVm: () => {},
-  initialLoad: false,
 };
 
 export const ResourceContext = createContext(initialState);
@@ -89,8 +90,9 @@ export const ResourceContextProvider = ({
   const { initialized, keycloak } = useKeycloak();
 
   // Admin impersonation
-  const [impersonatingDeployment, setImpersonatingDeployment] = useState(null);
-  const [impersonatingVm, setImpersonatingVm] = useState(null);
+  const [impersonatingDeployment, setImpersonatingDeployment] =
+    useState<Uuid | null>(null);
+  const [impersonatingVm, setImpersonatingVm] = useState<Uuid | null>(null);
 
   // Resources
   const [rows, setRows] = useState<Resource[]>([]);
@@ -150,7 +152,7 @@ export const ResourceContextProvider = ({
           return job;
         })
       );
-    } catch (error) {
+    } catch (error: any) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar("Error refreshing job: " + e, {
           variant: "error",
@@ -188,7 +190,7 @@ export const ResourceContextProvider = ({
     try {
       const zones = await getZones(keycloak.token);
       setZones(zones);
-    } catch (error) {
+    } catch (error: any | any) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar("Error fetching zones: " + e, {
           variant: "error",
@@ -211,7 +213,7 @@ export const ResourceContextProvider = ({
       });
 
       setUnread(u);
-    } catch (error) {
+    } catch (error: any | any) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar("Error fetching notifications: " + e, {
           variant: "error",
@@ -225,7 +227,7 @@ export const ResourceContextProvider = ({
     try {
       const teams = await getTeams(keycloak.token, false);
       setTeams(teams);
-    } catch (error) {
+    } catch (error: any | any) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar("Error fetching teams: " + e, {
           variant: "error",
@@ -260,7 +262,7 @@ export const ResourceContextProvider = ({
         }
         setLoadInterval(newInterval);
       }
-    } catch (error) {
+    } catch (error: any | any) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar("Error fetching user: " + e, {
           variant: "error",
@@ -287,7 +289,7 @@ export const ResourceContextProvider = ({
 
       const userData = await getUserData(keycloak.token);
       setUser((user) => ({ ...user, userData }));
-    } catch (error) {
+    } catch (error: any | any) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar("Error fetching user data: " + e, {
           variant: "error",
@@ -318,7 +320,7 @@ export const ResourceContextProvider = ({
 
       setInitialLoad(true);
       if (loadStart) setRtt(Date.now() - loadStart);
-    } catch (error) {
+    } catch (error: any | any) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar("Error fetching resources: " + e, {
           variant: "error",

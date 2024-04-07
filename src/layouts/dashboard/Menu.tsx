@@ -1,5 +1,4 @@
 import { useContext, useRef, useState } from "react";
-// @mui
 import {
   Box,
   Divider,
@@ -22,12 +21,12 @@ export default function Menu() {
 
   const { mode, toggleMode } = useContext(ThemeModeContext);
 
-  const [open, setOpen] = useState(null);
+  const [open, setOpen] = useState<EventTarget | null>(null);
 
   const { unread, user } = useResource();
 
-  const handleOpen = (event) => {
-    setOpen(event.currentTarget);
+  const handleOpen = (event: MouseEvent) => {
+    if (event.currentTarget) setOpen(event.currentTarget);
   };
 
   const handleClose = () => {

@@ -2,15 +2,25 @@ import { useMediaQuery } from "@mui/material";
 import { createContext, useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 
-const initialState = {
-  mode: "light",
+type ThemeModeContextType = {
+  mode: string;
+  setMode: (mode: string) => void;
+  toggleMode: () => void;
 };
 
-export const ThemeModeContext = createContext({
-  ...initialState,
-});
+const initialState: ThemeModeContextType = {
+  mode: "light",
+  setMode: () => {},
+  toggleMode: () => {},
+};
 
-export const ThemeModeContextProvider = ({ children }) => {
+export const ThemeModeContext = createContext(initialState);
+
+export const ThemeModeContextProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
   const [cookies, setCookie] = useCookies();
 
   const initial = useMediaQuery("(prefers-color-scheme: dark)")

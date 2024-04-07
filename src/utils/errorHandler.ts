@@ -1,6 +1,6 @@
 import { DeployApiError } from "../types";
 
-export const errorHandler = (error: DeployApiError) => {
+export const errorHandler = (error: DeployApiError): string[] => {
   const errors = [];
 
   if (error.validationErrors) {

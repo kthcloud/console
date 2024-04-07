@@ -4,15 +4,15 @@ Welcome to the kthcloud/console repository! This project is the web console for 
 
 ## Table of Contents
 
--   [☁️ kthcloud/console](#️-kthcloudconsole)
-    -   [Table of Contents](#table-of-contents)
-    -   [External dependencies](#external-dependencies)
-    -   [Setup](#setup)
-    -   [Contributing](#contributing)
-    -   [Locales and translations](#locales-and-translations)
-        -   [Other languages](#other-languages)
-    -   [Formatting](#formatting)
-    -   [License](#license)
+- [☁️ kthcloud/console](#️-kthcloudconsole)
+  - [Table of Contents](#table-of-contents)
+  - [External dependencies](#external-dependencies)
+  - [Setup](#setup)
+  - [Contributing](#contributing)
+  - [Locales and translations](#locales-and-translations)
+    - [Other languages](#other-languages)
+  - [Formatting](#formatting)
+  - [License](#license)
 
 ## External dependencies
 
@@ -90,7 +90,7 @@ If you would like to add support for another language, please discuss this as an
 
 ## Formatting
 
-This project uses Prettier as the code formatter. We have a `.prettierrc` file in the repository that sets the formatting rules, so please make sure to format your code before submitting a pull request. You can format your code by using the appropriate extension or plugin in your IDE, or running `prettier --write .` in your terminal (You can install prettier with `bun install -g prettier`).
+This project uses Prettier as the code formatter. We have a `.prettierrc` file in the repository that sets the formatting rules, so please make sure to format your code before submitting a pull request. You can format your code by using the appropriate extension or plugin in your IDE, or running `bun run format` in your terminal (You can install prettier with `bun install -g prettier`).
 
 ## License
 

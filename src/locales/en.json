@@ -472,6 +472,5 @@
         "saving-name": "Saving name...",
         "rfc-1035-1": " must adhere to ",
         "rfc-1035-2": ": only lowercase alphanumeric characters or '-', max 63 characters, start with a letter, and end with an alphanumeric character."
-
     }
 }

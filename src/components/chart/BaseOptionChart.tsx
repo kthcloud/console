@@ -1,9 +1,9 @@
-// material
 import { alpha, useTheme } from "@mui/material/styles";
 import { GlobalStyles } from "@mui/material";
+import { CustomTheme } from "../../theme/types";
 
 export function BaseOptionChartStyle() {
-  const theme = useTheme();
+  const theme: CustomTheme = useTheme();
 
   const background = {
     backdropFilter: "blur(6px)",
@@ -65,7 +65,7 @@ export function BaseOptionChartStyle() {
 }
 
 export default function BaseOptionChart() {
-  const theme = useTheme();
+  const theme: CustomTheme = useTheme();
 
   const LABEL_TOTAL = {
     show: true,
