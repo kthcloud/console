@@ -42,29 +42,38 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useTranslation } from "react-i18next";
 import { sentenceCase } from "change-case";
 import { Vm } from "../../../types";
+import { HttpProxyRead, PortRead } from "kthcloud-types/types/v1/body";
+
+interface Proxy extends HttpProxyRead {
+  port?: number;
+}
+
+interface Port extends PortRead {
+  httpProxy?: Proxy;
+}
 
 const ProxyManager = ({ vm }: { vm: Vm }) => {
   const { t } = useTranslation();
   const { initialized, keycloak } = useKeycloak();
   const [newProxy, setNewProxy] = useState({ name: "", customDomain: "" });
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
-  const [proxies, setProxies] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [proxies, setProxies] = useState<Proxy[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
   const { queueJob, user } = useResource();
   const [expanded, setExpanded] = useState(false);
-  const [ports, setPorts] = useState([]);
-  const [deleting, setDeleting] = useState([]);
-  const [editing, setEditing] = useState({});
+  const [ports, setPorts] = useState<Port[]>([]);
+  const [deleting, setDeleting] = useState<string[]>([]);
+  const [editing, setEditing] = useState<Proxy | null>(null);
 
-  const [selectedPort, setSelectedPort] = useState("");
+  const [selectedPort, setSelectedPort] = useState<number>(0);
 
   const theme = useTheme();
   const md = useMediaQuery(theme.breakpoints.down("md"));
 
   useEffect(() => {
-    let tcpPorts = vm.ports.filter((port) => port.protocol === "tcp");
+    const tcpPorts: Port[] = vm.ports.filter((port) => port.protocol === "tcp");
 
-    let proxies = [];
+    const proxies: Proxy[] = [];
     tcpPorts.forEach((port) => {
       if (port.httpProxy) {
         port.httpProxy.port = port.port;
@@ -73,25 +82,26 @@ const ProxyManager = ({ vm }: { vm: Vm }) => {
     });
     setProxies(proxies);
     setPorts(tcpPorts);
-    if (selectedPort === "" && tcpPorts.length > 0)
+    if (selectedPort === 0 && tcpPorts.length > 0 && tcpPorts[0].port)
       setSelectedPort(tcpPorts[0].port);
 
     setDeleting(
-      deleting.filter((p) => tcpPorts.find((port) => port.name === p.name))
+      deleting.filter((p) => tcpPorts.find((port) => port.name === p))
     );
 
     if (editing) {
-      setEditing(proxies.find((proxy) => proxy.name === editing.name));
+      const editingProxy = proxies.find((proxy) => proxy.name === editing.name);
+      if (editingProxy) setEditing(editingProxy);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [vm]);
 
   const handleCreate = async (clearCustomDomain = false) => {
-    if (!initialized) return;
+    if (!(initialized && keycloak.token)) return;
     setLoading(true);
 
-    let portsList = vm.ports;
+    const portsList = vm.ports;
 
     portsList.forEach((port) => {
       if (port.port === selectedPort) {
@@ -118,8 +128,8 @@ const ProxyManager = ({ vm }: { vm: Vm }) => {
         setEditing(null);
         setNewProxy({ name: "", customDomain: "" });
       }
-    } catch (err) {
-      errorHandler(err).forEach((e) =>
+    } catch (error: any) {
+      errorHandler(error).forEach((e) =>
         enqueueSnackbar(e, { variant: "error" })
       );
     } finally {
@@ -127,16 +137,16 @@ const ProxyManager = ({ vm }: { vm: Vm }) => {
     }
   };
 
-  const handleDelete = async (proxy) => {
-    if (!initialized) return;
+  const handleDelete = async (proxy: Proxy) => {
+    if (!(initialized && keycloak.token)) return;
 
     setDeleting([...deleting, proxy.name]);
 
-    let portsList = vm.ports;
+    const portsList = vm.ports;
 
     portsList.forEach((port) => {
       if (port.httpProxy?.name === proxy.name) {
-        port.httpProxy = null;
+        port.httpProxy = undefined;
       }
     });
 
