@@ -84,9 +84,7 @@ export const createDeployment = async (
   zone: any,
   image: any,
   envs: any,
-  repo: any,
   volumes: any,
-  accessToken: any,
   token: string
 ) => {
   let body: any = {
@@ -97,15 +95,6 @@ export const createDeployment = async (
   if (image) body = { ...body, image };
   if (envs) body = { ...body, envs };
   if (volumes) body = { ...body, volumes };
-
-  if (!image && repo)
-    body = {
-      ...body,
-      github: {
-        repositoryId: repo,
-        token: accessToken,
-      },
-    };
 
   const res = await fetch(
     import.meta.env.VITE_DEPLOY_API_URL + "/deployments",

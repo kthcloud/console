@@ -23,7 +23,7 @@ export interface Deployment extends DeploymentRead {
 export type Resource = Vm | Deployment;
 
 export interface User extends UserRead {
-  userData: UserData[];
+  userData?: UserData[];
 }
 
 export interface Job extends JobRead {

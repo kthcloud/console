@@ -217,7 +217,7 @@ export const GPUManager = ({ vm }) => {
                                   vm.gpu.id
                                 );
                                 queueJob(res);
-                              } catch (error) {
+                              } catch (error: any) {
                                 errorHandler(error).forEach((e) =>
                                   enqueueSnackbar(
                                     t("could-not-attach-gpu") + e,
@@ -236,7 +236,7 @@ export const GPUManager = ({ vm }) => {
                               setGpuLoading(true);
                               const res = await attachGPU(vm, keycloak.token);
                               queueJob(res);
-                            } catch (error) {
+                            } catch (error: any) {
                               setGpuLoading(false);
                               errorHandler(error).forEach((e) =>
                                 enqueueSnackbar(t("could-not-attach-gpu") + e, {
@@ -267,7 +267,7 @@ export const GPUManager = ({ vm }) => {
                             setGpuLoading(true);
                             const res = await detachGPU(vm, keycloak.token);
                             queueJob(res);
-                          } catch (error) {
+                          } catch (error: any) {
                             errorHandler(error).forEach((e) =>
                               enqueueSnackbar(t("could-not-detach-gpu") + e, {
                                 variant: "error",
@@ -411,7 +411,7 @@ export const GPUManager = ({ vm }) => {
                                 enqueueSnackbar(t("gpu-attached"), {
                                   variant: "success",
                                 });
-                              } catch (error) {
+                              } catch (error: any) {
                                 setGpuLoading(false);
 
                                 errorHandler(error).forEach((e) =>
@@ -446,7 +446,7 @@ export const GPUManager = ({ vm }) => {
                                   enqueueSnackbar(t("gpu-attached"), {
                                     variant: "success",
                                   });
-                                } catch (error) {
+                                } catch (error: any) {
                                   setGpuLoading(false);
 
                                   errorHandler(error).forEach((e) =>

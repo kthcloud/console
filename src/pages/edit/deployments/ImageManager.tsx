@@ -38,7 +38,7 @@ export const ImageManager = ({ deployment }) => {
       enqueueSnackbar(t("saving-image-update"), {
         variant: "info",
       });
-    } catch (error) {
+    } catch (error: any) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar(t("could-not-save-image") + e, {
           variant: "error",

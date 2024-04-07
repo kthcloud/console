@@ -28,29 +28,33 @@ import useResource from "../../hooks/useResource";
 import ZoneSelector from "./ZoneSelector";
 import { useTranslation } from "react-i18next";
 
-export default function CreateVm({ finished }) {
+export default function CreateVm({
+  finished,
+}: {
+  finished: (job: any, stay: boolean) => void;
+}) {
   const { t } = useTranslation();
-  const [cleaned, setCleaned] = useState("");
-
-  const [selectedZone, setSelectedZone] = useState("");
-  const [publicKey, setPublicKey] = useState("");
-  const [cpuCores, setCpuCores] = useState(2);
-  const [diskSize, setDiskSize] = useState(20);
-  const [ram, setRam] = useState(4);
-
   const { enqueueSnackbar } = useSnackbar();
   const { initialized, keycloak } = useKeycloak();
   const { initialLoad, user } = useResource();
 
-  const [cpuError, setCpuError] = useState(null);
-  const [ramError, setRamError] = useState(null);
-  const [diskError, setDiskError] = useState(null);
+  const [cleaned, setCleaned] = useState<string>("");
+  const [selectedZone, setSelectedZone] = useState<string>("");
+  const [publicKey, setPublicKey] = useState<string>("");
 
-  const [availableCPU, setAvailableCPU] = useState(0);
-  const [availableRAM, setAvailableRAM] = useState(0);
-  const [availableDisk, setAvailableDisk] = useState(0);
+  const [cpuCores, setCpuCores] = useState<number>(2);
+  const [diskSize, setDiskSize] = useState<number>(20);
+  const [ram, setRam] = useState<number>(4);
 
-  const [initialName, setInitialName] = useState(
+  const [cpuError, setCpuError] = useState<string | null>(null);
+  const [ramError, setRamError] = useState<string | null>(null);
+  const [diskError, setDiskError] = useState<string | null>(null);
+
+  const [availableCPU, setAvailableCPU] = useState<number>(0);
+  const [availableRAM, setAvailableRAM] = useState<number>(0);
+  const [availableDisk, setAvailableDisk] = useState<number>(0);
+
+  const [initialName, setInitialName] = useState<string>(
     import.meta.env.VITE_RELEASE_BRANCH
       ? ""
       : faker.word.words(3).replace(/[^a-z0-9]|\s+|\r?\n|\r/gim, "-")
@@ -68,10 +72,10 @@ export default function CreateVm({ finished }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
-  const calculateCPU = (raw) => {
+  const calculateCPU = (raw: string) => {
     const value = parseInt(raw);
     if (!value) {
-      setCpuCores("");
+      setCpuCores(0);
       setCpuError(t("create-vm-input-number") + ", 2-" + availableCPU);
       return;
     }
@@ -93,10 +97,10 @@ export default function CreateVm({ finished }) {
     setCpuCores(value);
   };
 
-  const calculateRAM = (raw) => {
+  const calculateRAM = (raw: string) => {
     const value = parseInt(raw);
     if (!value) {
-      setRam("");
+      setRam(0);
       setRamError(t("create-vm-input-number") + ", 4-" + availableRAM);
       return;
     }
@@ -117,10 +121,10 @@ export default function CreateVm({ finished }) {
     setRam(value);
   };
 
-  const calculateDisk = (raw) => {
+  const calculateDisk = (raw: string) => {
     const value = parseInt(raw);
     if (!value) {
-      setDiskSize("");
+      setDiskSize(0);
       setDiskError(t("create-vm-input-number") + ", 20-" + availableDisk);
       return;
     }
@@ -150,8 +154,8 @@ export default function CreateVm({ finished }) {
     return true;
   };
 
-  const handleCreate = async (stay) => {
-    if (!initialized) return;
+  const handleCreate = async (stay: boolean) => {
+    if (!(initialized && keycloak.token)) return;
 
     if (!cleaned || !publicKey || !cpuCores || !diskSize || !ram) {
       enqueueSnackbar(t("error-all-fields"), { variant: "error" });
@@ -180,7 +184,7 @@ export default function CreateVm({ finished }) {
         setDiskSize(20);
         setRam(4);
       }
-    } catch (error) {
+    } catch (error: any) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar(t("error-creating-vm") + ": " + e, {
           variant: "error",
@@ -201,7 +205,7 @@ export default function CreateVm({ finished }) {
 
   return (
     <>
-      {!(initialLoad, user) ? (
+      {!(initialLoad && user) ? (
         <CircularProgress />
       ) : (
         <>
@@ -210,7 +214,6 @@ export default function CreateVm({ finished }) {
             <CardContent>
               <RFC1035Input
                 label={t("admin-name")}
-                placeholder={t("admin-name")}
                 callToAction={t("create-vm-warning")}
                 type={t("admin-name")}
                 variant="outlined"
@@ -298,7 +301,7 @@ export default function CreateVm({ finished }) {
                           ? ramError
                           : t("create-vm-amount-of-ram") + ", 4-" + availableRAM
                     }
-                    InputProps={{
+                    inputProps={{
                       inputMode: "numeric",
                       pattern: "[0-9]*",
                       endAdornment: (
@@ -323,7 +326,7 @@ export default function CreateVm({ finished }) {
                             ", 20-" +
                             availableDisk
                     }
-                    InputProps={{
+                    inputProps={{
                       inputMode: "numeric",
                       pattern: "[0-9]*",
                       endAdornment: (

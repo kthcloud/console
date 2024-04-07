@@ -190,7 +190,7 @@ export const ResourceContextProvider = ({
     try {
       const zones = await getZones(keycloak.token);
       setZones(zones);
-    } catch (error: any | any) {
+    } catch (error: any) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar("Error fetching zones: " + e, {
           variant: "error",
@@ -213,7 +213,7 @@ export const ResourceContextProvider = ({
       });
 
       setUnread(u);
-    } catch (error: any | any) {
+    } catch (error: any) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar("Error fetching notifications: " + e, {
           variant: "error",
@@ -227,7 +227,7 @@ export const ResourceContextProvider = ({
     try {
       const teams = await getTeams(keycloak.token, false);
       setTeams(teams);
-    } catch (error: any | any) {
+    } catch (error: any) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar("Error fetching teams: " + e, {
           variant: "error",
@@ -262,7 +262,7 @@ export const ResourceContextProvider = ({
         }
         setLoadInterval(newInterval);
       }
-    } catch (error: any | any) {
+    } catch (error: any) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar("Error fetching user: " + e, {
           variant: "error",
@@ -289,7 +289,7 @@ export const ResourceContextProvider = ({
 
       const userData = await getUserData(keycloak.token);
       setUser((user) => ({ ...user, userData }));
-    } catch (error: any | any) {
+    } catch (error: any) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar("Error fetching user data: " + e, {
           variant: "error",
@@ -320,7 +320,7 @@ export const ResourceContextProvider = ({
 
       setInitialLoad(true);
       if (loadStart) setRtt(Date.now() - loadStart);
-    } catch (error: any | any) {
+    } catch (error: any) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar("Error fetching resources: " + e, {
           variant: "error",

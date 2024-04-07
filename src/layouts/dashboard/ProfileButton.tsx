@@ -17,6 +17,8 @@ const ProfileButton = () => {
   const { user, unread } = useResource();
   const { t } = useTranslation();
 
+  if (!user) return null;
+
   return (
     <Tooltip
       enterTouchDelay={10}

@@ -55,7 +55,7 @@ const DangerZone = ({ resource }) => {
       options = [...new Set(options)];
       options.sort((a, b) => a.localeCompare(b));
       setResultsUser(options);
-    } catch (error) {
+    } catch (error: any) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar(t("search-error") + e, {
           variant: "error",
@@ -109,7 +109,7 @@ const DangerZone = ({ resource }) => {
           variant: "success",
         });
       }
-    } catch (error) {
+    } catch (error: any) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar(t("update-error") + e, {
           variant: "error",
@@ -149,7 +149,7 @@ const DangerZone = ({ resource }) => {
           variant: "success",
         });
       }
-    } catch (error) {
+    } catch (error: any) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar(t("update-error") + e, {
           variant: "error",

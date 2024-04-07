@@ -28,7 +28,7 @@ export const VMCommands = ({ vm }) => {
         enqueueSnackbar(t("vm-deleting"), { variant: "info" });
         navigate("/deploy");
       }
-    } catch (error) {
+    } catch (error: any) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar(t("error-deleting-vm") + e, {
           variant: "error",
@@ -45,7 +45,7 @@ export const VMCommands = ({ vm }) => {
       enqueueSnackbar(sentenceCase(command) + t("vm-in-progress"), {
         variant: "info",
       });
-    } catch (error) {
+    } catch (error: any) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar(t("could-not-execute-command") + e, {
           variant: "error",

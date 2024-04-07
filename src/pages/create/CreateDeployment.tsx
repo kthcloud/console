@@ -28,12 +28,17 @@ import { errorHandler } from "../../utils/errorHandler";
 import useResource from "../../hooks/useResource";
 import ZoneSelector from "./ZoneSelector";
 import { useTranslation } from "react-i18next";
+import { Volume } from "kthcloud-types/types/v1/body";
 
-export default function CreateDeployment({ finished }) {
+export default function CreateDeployment({
+  finished,
+}: {
+  finished: (job: any, stay: boolean) => void;
+}) {
   const [cleaned, _setCleaned] = useState("");
   const { t } = useTranslation();
 
-  const setCleaned = (value) => {
+  const setCleaned = (value: string) => {
     if (rows.find((row) => row.name === value)) {
       enqueueSnackbar(
         t("admin-name") + " " + value + " " + t("create-already-taken"),
@@ -59,13 +64,10 @@ export default function CreateDeployment({ finished }) {
   const [newEnvValue, setNewEnvValue] = useState("");
 
   const [usePersistent, setUsePersistent] = useState(false);
-  const [persistent, setPersistent] = useState([]);
+  const [persistent, setPersistent] = useState<Volume[]>([]);
   const [newPersistentName, setNewPersistentName] = useState("");
   const [newPersistentAppPath, setNewPersistentAppPath] = useState("");
   const [newPersistentServerPath, setNewPersistentServerPath] = useState("");
-
-  const [accessToken, setAccessToken] = useState("");
-  const [repo, setRepo] = useState("");
 
   const [initialName, setInitialName] = useState(
     import.meta.env.VITE_RELEASE_BRANCH
@@ -74,8 +76,8 @@ export default function CreateDeployment({ finished }) {
   );
   const { enqueueSnackbar } = useSnackbar();
 
-  const handleCreate = async (stay) => {
-    if (!initialized) return;
+  const handleCreate = async (stay: boolean) => {
+    if (!(initialized && keycloak.token)) return;
 
     let newEnvs = envs;
     // Apply unsaved ENVS
@@ -115,9 +117,7 @@ export default function CreateDeployment({ finished }) {
         selectedZone,
         image,
         newEnvs,
-        repo,
         newPersistent,
-        accessToken,
         keycloak.token
       );
       finished(job, stay);
@@ -131,7 +131,7 @@ export default function CreateDeployment({ finished }) {
         setNewEnvName("");
         setNewEnvValue("");
       }
-    } catch (error) {
+    } catch (error: any) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar(t("error-creating-deployment") + ": " + e, {
           variant: "error",
@@ -150,7 +150,6 @@ export default function CreateDeployment({ finished }) {
         <CardContent>
           <RFC1035Input
             label={t("admin-name")}
-            placeholder={t("admin-name")}
             callToAction={t("create-deployment-name-warning")}
             type={t("create-deployment-name")}
             variant="outlined"

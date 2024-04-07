@@ -70,7 +70,7 @@ const Inbox = () => {
           notification.content.code
         );
       }
-    } catch (error) {
+    } catch (error: any) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar(t("update-error") + e, {
           variant: "error",
@@ -87,7 +87,7 @@ const Inbox = () => {
     try {
       setStale(notification.id);
       await markNotificationAsRead(keycloak.token, notification.id);
-    } catch (error) {
+    } catch (error: any) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar(t("update-error") + e, {
           variant: "error",
@@ -102,7 +102,7 @@ const Inbox = () => {
     try {
       setStale(notification.id);
       await deleteNotification(keycloak.token, notification.id);
-    } catch (error) {
+    } catch (error: any) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar(t("update-error") + e, {
           variant: "error",

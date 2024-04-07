@@ -51,7 +51,7 @@ const StorageManager = ({ deployment, persistent, setPersistent }) => {
       enqueueSnackbar("Storage saving...", {
         variant: "info",
       });
-    } catch (error) {
+    } catch (error: any) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar("Could not update storage: " + e, {
           variant: "error",

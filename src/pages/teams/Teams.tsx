@@ -74,7 +74,7 @@ const Teams = () => {
       setTeamName("");
       setTeamDescription("");
       setStale("created");
-    } catch (error) {
+    } catch (error: any) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar(t("update-error") + e, {
           variant: "error",
@@ -92,7 +92,7 @@ const Teams = () => {
     try {
       await deleteTeam(keycloak.token, team.id);
       beginFastLoad();
-    } catch (error) {
+    } catch (error: any) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar(t("update-error") + e, {
           variant: "error",
@@ -120,7 +120,7 @@ const Teams = () => {
       options = [...new Set(options)];
       options.sort((a, b) => a.localeCompare(b));
       setResults(options);
-    } catch (error) {
+    } catch (error: any) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar(t("search-error") + e, {
           variant: "error",
@@ -139,7 +139,7 @@ const Teams = () => {
     try {
       await addMembers(keycloak.token, team.id, [...team.members, member]);
       beginFastLoad();
-    } catch (error) {
+    } catch (error: any) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar(t("update-error") + e, {
           variant: "error",
@@ -163,7 +163,7 @@ const Teams = () => {
       await updateTeam(keycloak.token, team.id, body);
       beginFastLoad();
       setStale("removeResource " + resource.id + team.id);
-    } catch (error) {
+    } catch (error: any) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar(t("update-error") + e, {
           variant: "error",
@@ -183,7 +183,7 @@ const Teams = () => {
       await updateTeam(keycloak.token, team.id, body);
       beginFastLoad();
       setStale("removeUser " + user.id + team.id);
-    } catch (error) {
+    } catch (error: any) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar(t("update-error") + e, {
           variant: "error",

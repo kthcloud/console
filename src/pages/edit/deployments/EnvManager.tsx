@@ -58,7 +58,7 @@ export default function EnvManager({ deployment }) {
       enqueueSnackbar(t("environment-variables-saving"), {
         variant: "info",
       });
-    } catch (error) {
+    } catch (error: any) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar(t("could-not-save-environment-variables") + e, {
           variant: "error",

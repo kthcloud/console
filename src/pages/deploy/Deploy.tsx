@@ -131,7 +131,7 @@ export function Deploy() {
 
       await Promise.all(promises);
       enqueueSnackbar("Deleting resources", { variant: "info" });
-    } catch (error) {
+    } catch (error: any) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar("Error deleting resources: " + e, {
           variant: "error",

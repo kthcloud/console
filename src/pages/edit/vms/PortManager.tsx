@@ -93,7 +93,7 @@ export default function PortManager({ vm }) {
       const res = await updateVM(vm.id, { ports: newPorts }, keycloak.token);
       queueJob(res);
       enqueueSnackbar(t("port-changes-saving"), { variant: "info" });
-    } catch (error) {
+    } catch (error: any) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar(t("could-not-change-ports") + e, {
           variant: "error",
@@ -125,7 +125,7 @@ export default function PortManager({ vm }) {
       const res = await updateVM(vm.id, { ports: newPorts }, keycloak.token);
       queueJob(res);
       enqueueSnackbar(t("port-changes-saving"), { variant: "info" });
-    } catch (error) {
+    } catch (error: any) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar(t("could-not-change-ports") + e, {
           variant: "error",

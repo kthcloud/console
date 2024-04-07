@@ -36,7 +36,7 @@ export const PrivateMode = ({ deployment }) => {
 
       queueJob(res);
       enqueueSnackbar(t("visibility-saving"), { variant: "info" });
-    } catch (error) {
+    } catch (error: any) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar(t("could-not-save-visibility") + e, {
           variant: "error",

@@ -57,7 +57,7 @@ export function Profile() {
     try {
       const response = await getUser(keycloak.subject, keycloak.token);
       setUser(response);
-    } catch (error) {
+    } catch (error: any) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar(t("could-not-fetch-profile") + e, {
           variant: "error",
@@ -91,7 +91,7 @@ export function Profile() {
       enqueueSnackbar(t("successfully-updated") + " " + mode, {
         variant: "success",
       });
-    } catch (error) {
+    } catch (error: any) {
       if (error.validationErrors) setValidationError(error.validationErrors);
 
       enqueueSnackbar(t("error-updating") + mode, {

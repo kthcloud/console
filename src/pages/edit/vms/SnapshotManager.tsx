@@ -62,7 +62,7 @@ export default function Specs({ vm }) {
       if (!initialLoad) setSelectedSnapshot(response.find((s) => s.current).id);
 
       setExpanded(response.slice(0, 5).map((s) => s.id));
-    } catch (error) {
+    } catch (error: any) {
       console.error(t("error-fetching-snapshot") + error);
     } finally {
       setInitialLoad(true);
@@ -79,7 +79,7 @@ export default function Specs({ vm }) {
       enqueueSnackbar(t("creating-snapshot"), {
         variant: "info",
       });
-    } catch (error) {
+    } catch (error: any) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar(t("error-creating-snapshot") + e, {
           variant: "error",
@@ -99,7 +99,7 @@ export default function Specs({ vm }) {
       enqueueSnackbar(t("reverting-to-snapshot"), {
         variant: "info",
       });
-    } catch (error) {
+    } catch (error: any) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar(t("error-reverting-to-snapshot") + e, {
           variant: "error",

@@ -77,7 +77,7 @@ export const Onboarding = () => {
         setUser(response);
         navigate("/deploy", { replace: true });
       }
-    } catch (error) {
+    } catch (error: any) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar(t("could-not-fetch-profile") + e, {
           variant: "error",

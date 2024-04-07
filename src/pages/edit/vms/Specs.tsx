@@ -122,7 +122,7 @@ export default function Specs({ vm }) {
       );
       queueJob(res);
       enqueueSnackbar(t("specs-saving"), { variant: "info" });
-    } catch (error) {
+    } catch (error: any) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar(t("could-not-save-specs") + e, {
           variant: "error",

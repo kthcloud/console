@@ -45,7 +45,7 @@ export const HealthCheckRoute = ({ deployment }) => {
       enqueueSnackbar(t("saving-route-update"), {
         variant: "info",
       });
-    } catch (error) {
+    } catch (error: any) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar(t("could-not-save-route") + e, {
           variant: "error",

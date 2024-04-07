@@ -51,7 +51,7 @@ export const ReplicaManager = ({ deployment }) => {
 
       queueJob(res);
       enqueueSnackbar(t("replicas-saving"), { variant: "info" });
-    } catch (error) {
+    } catch (error: any) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar(t("could-not-save-replicas") + e, {
           variant: "error",

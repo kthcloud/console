@@ -30,7 +30,7 @@ export const DeploymentCommands = ({ deployment }) => {
         enqueueSnackbar(t("resource-deleting"), { variant: "info" });
         navigate("/deploy");
       }
-    } catch (error) {
+    } catch (error: any) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar(t("error-deleting-resource") + e, {
           variant: "error",
@@ -50,7 +50,7 @@ export const DeploymentCommands = ({ deployment }) => {
           variant: "info",
         }
       );
-    } catch (error) {
+    } catch (error: any) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar(t("failed-update"), ": " + e, {
           variant: "error",

@@ -78,7 +78,7 @@ export const DomainManager = ({ deployment }) => {
       enqueueSnackbar(t("saving-domain-update"), {
         variant: "info",
       });
-    } catch (error) {
+    } catch (error: any) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar(t("could-not-update-domain") + e, {
           variant: "error",
@@ -103,7 +103,7 @@ export const DomainManager = ({ deployment }) => {
       enqueueSnackbar(t("saving-domain-update"), {
         variant: "info",
       });
-    } catch (error) {
+    } catch (error: any) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar(t("could-not-update-domain") + e, {
           variant: "error",

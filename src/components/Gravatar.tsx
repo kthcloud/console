@@ -10,7 +10,7 @@ const Gravatar = ({
 }: {
   user: User;
   fallback: any;
-  props: any;
+  props?: any;
 }) => {
   const [userAvatar, setUserAvatar] = useState("");
   const [hasFetched, setHasFetched] = useState(false);
