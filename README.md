@@ -4,15 +4,15 @@ Welcome to the kthcloud/console repository! This project is the web console for 
 
 ## Table of Contents
 
-- [☁️ kthcloud/console](#️-kthcloudconsole)
-  - [Table of Contents](#table-of-contents)
-  - [External dependencies](#external-dependencies)
-  - [Setup](#setup)
-  - [Contributing](#contributing)
-  - [Locales and translations](#locales-and-translations)
-    - [Other languages](#other-languages)
-  - [Formatting](#formatting)
-  - [License](#license)
+-   [☁️ kthcloud/console](#️-kthcloudconsole)
+    -   [Table of Contents](#table-of-contents)
+    -   [External dependencies](#external-dependencies)
+    -   [Setup](#setup)
+    -   [Contributing](#contributing)
+    -   [Locales and translations](#locales-and-translations)
+        -   [Other languages](#other-languages)
+    -   [Formatting](#formatting)
+    -   [License](#license)
 
 ## External dependencies
 
