@@ -580,12 +580,13 @@ export const Admin = () => {
                                 </Button>
                                 <Button
                                   color="error"
-                                  onClick={() =>
-                                    deleteDeployment(
-                                      deployment.id,
-                                      keycloak.token
-                                    )
-                                  }
+                                  onClick={() => {
+                                    if (keycloak.token)
+                                      deleteDeployment(
+                                        deployment.id,
+                                        keycloak.token
+                                      );
+                                  }}
                                 >
                                   {t("button-delete")}
                                 </Button>
@@ -679,14 +680,30 @@ export const Admin = () => {
                             <TableCell>
                               <Typography variant="caption">
                                 <Stack direction={"column"}>
-                                  {Object.keys(vm.specs).map((key) => (
+                                  {vm.specs?.cpuCores && (
                                     <Typography
                                       variant="caption"
-                                      key={vm.id + key}
+                                      key={vm.id + "cpuCores"}
                                     >
-                                      {key + ": " + vm.specs[key]}
+                                      {"cpu: " + vm.specs?.cpuCores}
                                     </Typography>
-                                  ))}
+                                  )}
+                                  {vm.specs?.cpuCores && (
+                                    <Typography
+                                      variant="caption"
+                                      key={vm.id + "ram"}
+                                    >
+                                      {"ram: " + vm.specs?.ram}
+                                    </Typography>
+                                  )}
+                                  {vm.specs?.cpuCores && (
+                                    <Typography
+                                      variant="caption"
+                                      key={vm.id + "diskSize"}
+                                    >
+                                      {"disk: " + vm.specs?.diskSize}
+                                    </Typography>
+                                  )}
                                 </Stack>
                               </Typography>
                             </TableCell>
@@ -698,11 +715,13 @@ export const Admin = () => {
                                       vm.gpu.id
                                     )}`}
                                   </Typography>
+                                  {vm.gpu?.lease?.end && (
+                                    <Typography variant="caption">
+                                      {vm.gpu.lease.end}
+                                    </Typography>
+                                  )}
                                   <Typography variant="caption">
-                                    {vm.gpu.leaseEnd}
-                                  </Typography>
-                                  <Typography variant="caption">
-                                    {vm.gpu.expired ? (
+                                    {vm.gpu?.lease?.expired ? (
                                       <b>{t("admin-gpu-expired")}</b>
                                     ) : (
                                       t("admin-gpu-active")
@@ -723,9 +742,10 @@ export const Admin = () => {
                                 {vm.gpu && (
                                   <Button
                                     color="error"
-                                    onClick={() =>
-                                      detachGPU(vm, keycloak.token)
-                                    }
+                                    onClick={() => {
+                                      if (keycloak.token)
+                                        detachGPU(vm, keycloak.token);
+                                    }}
                                   >
                                     {t("button-detach-gpu")}
                                   </Button>
@@ -733,9 +753,10 @@ export const Admin = () => {
 
                                 <Button
                                   color="error"
-                                  onClick={() =>
-                                    deleteVM(vm.id, keycloak.token)
-                                  }
+                                  onClick={() => {
+                                    if (keycloak.token)
+                                      deleteVM(vm.id, keycloak.token);
+                                  }}
                                 >
                                   {t("button-delete")}
                                 </Button>
@@ -838,18 +859,51 @@ export const Admin = () => {
                             </TableCell>
                             <TableCell>
                               <Stack direction={"column"}>
-                                {Object.keys(user.usage).map((key) => (
-                                  <Typography
-                                    variant="caption"
-                                    key={user.id + key}
-                                  >
-                                    {key +
-                                      ": " +
-                                      user.usage[key] +
-                                      "/" +
-                                      user.quota[key]}
-                                  </Typography>
-                                ))}
+                                <Typography
+                                  variant="caption"
+                                  key={user.id + "deployments"}
+                                >
+                                  {"deployments: " +
+                                    user.usage.deployments +
+                                    "/" +
+                                    user.quota.deployments}
+                                </Typography>
+                                <Typography
+                                  variant="caption"
+                                  key={user.id + "cpuCores"}
+                                >
+                                  {"cpuCores: " +
+                                    user.usage.cpuCores +
+                                    "/" +
+                                    user.quota.cpuCores}
+                                </Typography>
+                                <Typography
+                                  variant="caption"
+                                  key={user.id + "ram"}
+                                >
+                                  {"ram: " +
+                                    user.usage.ram +
+                                    "/" +
+                                    user.quota.ram}
+                                </Typography>
+                                <Typography
+                                  variant="caption"
+                                  key={user.id + "diskSize"}
+                                >
+                                  {"diskSize: " +
+                                    user.usage.diskSize +
+                                    "/" +
+                                    user.quota.diskSize}
+                                </Typography>
+                                <Typography
+                                  variant="caption"
+                                  key={user.id + "snapshots"}
+                                >
+                                  {"snapshots: " +
+                                    user.usage.snapshots +
+                                    "/" +
+                                    user.quota.snapshots}
+                                </Typography>
                               </Stack>
                             </TableCell>
                           </TableRow>
@@ -1249,6 +1303,7 @@ export const Admin = () => {
                                 <LoadingButton
                                   size="small"
                                   onClick={async () => {
+                                    if (!keycloak.token) return;
                                     setRestartingJobs([
                                       ...restartingJobs,
                                       job.id,
