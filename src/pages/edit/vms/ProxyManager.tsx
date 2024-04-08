@@ -55,20 +55,22 @@ interface Port extends PortRead {
 const ProxyManager = ({ vm }: { vm: Vm }) => {
   const { t } = useTranslation();
   const { initialized, keycloak } = useKeycloak();
-  const [newProxy, setNewProxy] = useState({ name: "", customDomain: "" });
-  const [createDialogOpen, setCreateDialogOpen] = useState(false);
-  const [proxies, setProxies] = useState<Proxy[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
   const { queueJob, user } = useResource();
-  const [expanded, setExpanded] = useState(false);
-  const [ports, setPorts] = useState<Port[]>([]);
-  const [deleting, setDeleting] = useState<string[]>([]);
-  const [editing, setEditing] = useState<Proxy | null>(null);
-
-  const [selectedPort, setSelectedPort] = useState<number>(0);
-
   const theme = useTheme();
   const md = useMediaQuery(theme.breakpoints.down("md"));
+
+  const [newProxy, setNewProxy] = useState<Proxy>({
+    name: "",
+    customDomain: "",
+  });
+  const [createDialogOpen, setCreateDialogOpen] = useState<boolean>(false);
+  const [expanded, setExpanded] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [proxies, setProxies] = useState<Proxy[]>([]);
+  const [editing, setEditing] = useState<Proxy | null>(null);
+  const [ports, setPorts] = useState<Port[]>([]);
+  const [deleting, setDeleting] = useState<string[]>([]);
+  const [selectedPort, setSelectedPort] = useState<number>(0);
 
   useEffect(() => {
     const tcpPorts: Port[] = vm.ports.filter((port) => port.protocol === "tcp");
@@ -156,8 +158,8 @@ const ProxyManager = ({ vm }: { vm: Vm }) => {
       enqueueSnackbar(`${t("deleting-proxy")} ${proxy.name}...`, {
         variant: "info",
       });
-    } catch (err) {
-      errorHandler(err).forEach((e) =>
+    } catch (error: any) {
+      errorHandler(error).forEach((e) =>
         enqueueSnackbar(e, { variant: "error" })
       );
     }
@@ -210,11 +212,15 @@ const ProxyManager = ({ vm }: { vm: Vm }) => {
                     labelId="ports-select-label"
                     label={t("port")}
                     value={selectedPort}
-                    onChange={(e) => setSelectedPort(e.target.value)}
+                    onChange={(e) =>
+                      setSelectedPort(parseInt(e.target.value.toString()))
+                    }
                   >
                     {ports.map((port) => (
                       <MenuItem value={port.port} key={port.port}>
-                        {port.name} ({port.protocol.toUpperCase()}:{port.port})
+                        {port.name} (
+                        {port.protocol && port.protocol.toUpperCase()}:
+                        {port.port})
                       </MenuItem>
                     ))}
                   </Select>
@@ -235,7 +241,7 @@ const ProxyManager = ({ vm }: { vm: Vm }) => {
                       setCleaned={(val) =>
                         setNewProxy({ ...newProxy, name: val })
                       }
-                      maxWidth={500}
+                      maxWidth={"500"}
                     />
                   </>
                 )}
@@ -473,7 +479,7 @@ const ProxyManager = ({ vm }: { vm: Vm }) => {
                                   onClick={() => {
                                     setNewProxy(proxy);
                                     setEditing(proxy);
-                                    setSelectedPort(proxy.port);
+                                    if (proxy.port) setSelectedPort(proxy.port);
                                     setCreateDialogOpen(true);
                                     setExpanded(Boolean(proxy.customDomain));
                                   }}
@@ -533,7 +539,7 @@ const ProxyManager = ({ vm }: { vm: Vm }) => {
             <Stack direction="row" spacing={1} alignItems={"center"} useFlexGap>
               <Button
                 variant="contained"
-                pl={3}
+                sx={{ pl: 3 }}
                 onClick={() => {
                   setEditing(null);
                   setNewProxy({ name: "", customDomain: "" });
