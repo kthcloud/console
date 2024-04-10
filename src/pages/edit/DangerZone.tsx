@@ -20,19 +20,20 @@ import {
   Button,
   Stack,
 } from "@mui/material";
-import { Resource } from "../../types";
+import { Resource, User, Uuid } from "../../types";
+import { TeamRead } from "kthcloud-types/types/v1/body";
 
 const DangerZone = ({ resource }: { resource: Resource }) => {
   const { t } = useTranslation();
   const { initialized, keycloak } = useKeycloak();
   const { teams } = useResource();
 
-  const [users, setUsers] = useState([]);
-  const [resultsUser, setResultsUser] = useState([]);
+  const [users, setUsers] = useState<User[]>([]);
+  const [resultsUser, setResultsUser] = useState<string[]>([]);
   const [selectedUser, setSelectedUser] = useState("");
 
-  const [teamsList, setTeamsList] = useState([]);
-  const [resultsTeam, setResultsTeam] = useState([]);
+  const [teamsList, setTeamsList] = useState<TeamRead[]>([]);
+  const [resultsTeam, setResultsTeam] = useState<string[]>([]);
   const [selectedTeam, setSelectedTeam] = useState("");
 
   const [transferred, setTransferred] = useState(false);
@@ -40,10 +41,10 @@ const DangerZone = ({ resource }: { resource: Resource }) => {
   const userSearch = async (query: string) => {
     if (!(initialized && keycloak.token)) return;
     try {
-      let response = await searchUsers(keycloak.token, query);
-      let options = [];
+      const response = await searchUsers(keycloak.token, query);
+      let options: string[] = [];
 
-      response.forEach((user) => {
+      response.forEach((user: User) => {
         if (user.email) {
           user.username = user.email;
         }
@@ -65,10 +66,10 @@ const DangerZone = ({ resource }: { resource: Resource }) => {
     }
   };
 
-  const teamSearch = async (query) => {
+  const teamSearch = async (query: string) => {
     if (!teams) return;
 
-    let options = [];
+    let options: string[] = [];
 
     teams.forEach((team) => {
       if (!teamsList.find((t) => t.name === team.name)) {
@@ -79,11 +80,14 @@ const DangerZone = ({ resource }: { resource: Resource }) => {
 
     options = [...new Set(options)];
     options.sort((a, b) => a.localeCompare(b));
+    options = options.filter((option) =>
+      option.toLowerCase().includes(query.toLowerCase())
+    );
     setResultsTeam(options);
   };
 
   const updateOwner = async () => {
-    if (!initialized) return;
+    if (!(initialized && keycloak.token)) return;
 
     // find owner id of selected user
     const selected = users.find(
@@ -120,14 +124,16 @@ const DangerZone = ({ resource }: { resource: Resource }) => {
   };
 
   const addToTeam = async () => {
-    if (!initialized) return;
+    if (!(initialized && keycloak.token)) return;
 
     // find team id of selected team
     const selected = teams.find(
       (team) => team.name === selectedTeam || team.id === selectedTeam
     );
 
-    let currentIds = [];
+    if (!selected) return;
+
+    let currentIds: Uuid[] = [];
     if (selected.resources) {
       selected.resources.forEach((r) => {
         currentIds.push(r.id);
@@ -143,7 +149,7 @@ const DangerZone = ({ resource }: { resource: Resource }) => {
     };
 
     try {
-      let response = await updateTeam(keycloak.token, selected.id, body);
+      const response = await updateTeam(keycloak.token, selected.id, body);
 
       if (response) {
         enqueueSnackbar(t("successfully-added-to-team"), {

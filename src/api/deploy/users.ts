@@ -1,6 +1,10 @@
+import { UserRead } from "kthcloud-types/types/v1/body";
 import { Uuid } from "../../types";
 
-export const getUser = async (userId: string, token: string) => {
+export const getUser = async (
+  userId: string,
+  token: string
+): Promise<UserRead> => {
   const res = await fetch(
     import.meta.env.VITE_DEPLOY_API_URL + "/users/" + userId,
     {
@@ -21,7 +25,7 @@ export const getUser = async (userId: string, token: string) => {
   return await res.json();
 };
 
-export const getAllUsers = async (token: Uuid) => {
+export const getAllUsers = async (token: Uuid): Promise<UserRead[]> => {
   const res = await fetch(
     import.meta.env.VITE_DEPLOY_API_URL + "/users?all=true",
     {
@@ -42,7 +46,11 @@ export const getAllUsers = async (token: Uuid) => {
   return await res.json();
 };
 
-export const updateUser = async (userId: string, token: string, data: any) => {
+export const updateUser = async (
+  userId: string,
+  token: string,
+  data: any
+): Promise<UserRead> => {
   const res = await fetch(
     import.meta.env.VITE_DEPLOY_API_URL + "/users/" + userId,
     {
@@ -64,7 +72,10 @@ export const updateUser = async (userId: string, token: string, data: any) => {
   return await res.json();
 };
 
-export const searchUsers = async (token: string, query: string) => {
+export const searchUsers = async (
+  token: string,
+  query: string
+): Promise<UserRead[]> => {
   const res = await fetch(
     import.meta.env.VITE_DEPLOY_API_URL +
       "/users?all=true&discover=true&search=" +
