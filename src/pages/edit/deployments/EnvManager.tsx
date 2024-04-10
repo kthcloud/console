@@ -24,10 +24,12 @@ import useResource from "../../../hooks/useResource";
 import { useKeycloak } from "@react-keycloak/web";
 import { errorHandler } from "../../../utils/errorHandler";
 import { useTranslation } from "react-i18next";
+import { Deployment } from "../../../types";
+import { Env } from "kthcloud-types/types/v1/body";
 
-export default function EnvManager({ deployment }) {
+export default function EnvManager({ deployment }: { deployment: Deployment }) {
   const { t } = useTranslation();
-  const [envs, setEnvs] = useState([]);
+  const [envs, setEnvs] = useState<Env[]>([]);
   const [newEnvName, setNewEnvName] = useState("");
   const [newEnvValue, setNewEnvValue] = useState("");
   const { queueJob } = useResource();
@@ -42,8 +44,8 @@ export default function EnvManager({ deployment }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const applyChanges = async (envs) => {
-    if (!initialized) return;
+  const applyChanges = async (envs: Env[]) => {
+    if (!(initialized && keycloak.token)) return;
     setLoading(true);
 
     setEnvs(envs);

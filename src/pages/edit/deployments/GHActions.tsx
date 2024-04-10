@@ -20,24 +20,31 @@ import {
   TableHead,
   TableRow,
   TextareaAutosize,
-  Tooltip,
   Typography,
   useTheme,
 } from "@mui/material";
 import Iconify from "../../../components/Iconify";
 import { useTranslation } from "react-i18next";
 import CopyButton from "../../../components/CopyButton";
+import { Deployment } from "../../../types";
+import { CustomTheme } from "../../../theme/types";
 
-const GHActions = ({ resource }) => {
+type Secret = {
+  name: string;
+  value: string;
+};
+
+const GHActions = ({ resource }: { resource: Deployment }) => {
   const { t } = useTranslation();
   const { keycloak, initialized } = useKeycloak();
-  const [actionsFile, setActionsFile] = useState(null);
-  const [cliCommands, setCliCommands] = useState(null);
-  const [secrets, setSecrets] = useState([]);
+  const [actionsFile, setActionsFile] = useState<string>("");
+  const [cliCommands, setCliCommands] = useState<string>("");
+  const [secrets, setSecrets] = useState<Secret[]>([]);
   const [showSecrets, setShowSecrets] = useState(false);
-  const theme = useTheme();
+  const theme: CustomTheme = useTheme();
 
   const loadYaml = async () => {
+    if (!(initialized && keycloak.token)) return;
     try {
       // Get the deployment yaml
       const res = await getDeploymentYaml(resource.id, keycloak.token);
@@ -77,7 +84,7 @@ const GHActions = ({ resource }) => {
 
       setSecrets(secrets);
 
-      let cleaned = res.config;
+      let cleaned: string = res.config;
 
       secrets.forEach((secret) => {
         cleaned = cleaned.replace(
@@ -87,7 +94,9 @@ const GHActions = ({ resource }) => {
       });
 
       setActionsFile(cleaned);
-    } catch (e) {}
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   useEffect(() => {
@@ -112,10 +121,7 @@ const GHActions = ({ resource }) => {
               width: "100%",
               border: 0,
               color: theme.palette.grey[900],
-              background:
-                theme.palette.mode === "light"
-                  ? theme.palette.grey[0]
-                  : theme.palette.grey[100],
+              background: "transparent",
             }}
           />
         </CardContent>
@@ -137,10 +143,7 @@ const GHActions = ({ resource }) => {
                 width: "100%",
                 border: 0,
                 color: theme.palette.grey[800],
-                background:
-                  theme.palette.mode === "light"
-                    ? theme.palette.grey[0]
-                    : theme.palette.grey[100],
+                background: "transparent",
               }}
             />
 
