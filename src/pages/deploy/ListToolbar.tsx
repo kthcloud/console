@@ -11,8 +11,9 @@ import {
 import Iconify from "../../components/Iconify";
 import ConfirmButton from "../../components/ConfirmButton";
 import { useTranslation } from "react-i18next";
+import { CustomTheme } from "../../theme/types";
 
-const RootStyle = styled(Toolbar)(({ theme }) => ({
+const RootStyle = styled(Toolbar)(({ theme }: { theme: CustomTheme }) => ({
   height: 96,
   display: "flex",
   justifyContent: "space-between",
@@ -35,7 +36,7 @@ const SearchStyle = styled(OutlinedInput)(({ theme }) => ({
 interface ListToolbarProps {
   numSelected: number;
   filterName: string;
-  onFilterName: (event: ChangeEvent<HTMLInputElement>) => void;
+  onFilterName: (filterName: string) => void;
   loading?: boolean;
   onDelete?: () => void;
 }
@@ -65,7 +66,7 @@ const ListToolbar: FC<ListToolbarProps> = ({
       ) : (
         <SearchStyle
           value={filterName}
-          onChange={onFilterName}
+          onChange={(e) => onFilterName(e.target.value)}
           placeholder={t("deploy-search")}
           startAdornment={
             <InputAdornment position="start">

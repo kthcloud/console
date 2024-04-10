@@ -43,3 +43,12 @@ export interface CustomTheme extends Theme {
   };
   palette: CustomPalette;
 }
+
+export type ThemeColor =
+  | "error"
+  | "warning"
+  | "info"
+  | "success"
+  | "primary"
+  | "secondary"
+  | undefined;

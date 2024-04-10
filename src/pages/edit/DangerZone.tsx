@@ -20,8 +20,9 @@ import {
   Button,
   Stack,
 } from "@mui/material";
+import { Resource } from "../../types";
 
-const DangerZone = ({ resource }) => {
+const DangerZone = ({ resource }: { resource: Resource }) => {
   const { t } = useTranslation();
   const { initialized, keycloak } = useKeycloak();
   const { teams } = useResource();
@@ -36,8 +37,8 @@ const DangerZone = ({ resource }) => {
 
   const [transferred, setTransferred] = useState(false);
 
-  const userSearch = async (query) => {
-    if (!initialized) return;
+  const userSearch = async (query: string) => {
+    if (!(initialized && keycloak.token)) return;
     try {
       let response = await searchUsers(keycloak.token, query);
       let options = [];

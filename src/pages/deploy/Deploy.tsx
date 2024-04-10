@@ -18,7 +18,7 @@ import {
 // hooks
 import { useSnackbar } from "notistack";
 import useResource from "../../hooks/useResource";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { useKeycloak } from "@react-keycloak/web";
 import { useNavigate } from "react-router-dom";
 
@@ -42,8 +42,14 @@ import { deleteVM } from "../../api/deploy/vms";
 import { getReasonPhrase } from "http-status-codes";
 import { errorHandler } from "../../utils/errorHandler";
 import { useTranslation } from "react-i18next";
+import { Deployment, Resource, Uuid, Vm } from "../../types";
+import { ThemeColor } from "../../theme/types";
 
-const descendingComparator = (a, b, orderBy) => {
+const descendingComparator = (
+  a: Record<string, any>,
+  b: Record<string, any>,
+  orderBy: string
+) => {
   if (b[orderBy] < a[orderBy]) {
     return -1;
   }
@@ -53,18 +59,20 @@ const descendingComparator = (a, b, orderBy) => {
   return 0;
 };
 
-const getComparator = (order, orderBy) => {
+const getComparator = (order: string, orderBy: string) => {
   return order === "desc"
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
+    ? (a: any, b: any) => descendingComparator(a, b, orderBy)
+    : (a: any, b: any) => -descendingComparator(a, b, orderBy);
 };
 
-const applySortFilter = (array, comparator, query) => {
+const applySortFilter = (
+  array: Resource[],
+  comparator: (a: any, b: any) => number,
+  query: string
+): any[] => {
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
+    return comparator(a[0], b[0]);
   });
   if (query) {
     return filter(
@@ -77,25 +85,17 @@ const applySortFilter = (array, comparator, query) => {
 
 export function Deploy() {
   const { t } = useTranslation();
-
-  const [order, setOrder] = useState("asc");
-
-  const [selected, setSelected] = useState([]);
-
-  const [orderBy, setOrderBy] = useState("name");
-
-  const [filterName, setFilterName] = useState("");
-
-  const { userRows, user, initialLoad, queueJob, zones } = useResource();
-
-  const [filteredRows, setFilteredRows] = useState(userRows);
-
-  const [loading, setLoading] = useState(false);
-
   const { keycloak, initialized } = useKeycloak();
-
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
+
+  const [order, setOrder] = useState<"desc" | "asc">("asc");
+  const [selected, setSelected] = useState<Uuid[]>([]);
+  const [orderBy, setOrderBy] = useState<string>("name");
+  const [filterName, setFilterName] = useState<string>("");
+  const { userRows, initialLoad, queueJob, zones } = useResource();
+  const [filteredRows, setFilteredRows] = useState<Resource[]>(userRows);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     setFilteredRows(
@@ -112,18 +112,18 @@ export function Deploy() {
   ];
 
   const bulkDelete = async () => {
-    if (!initialized) return;
+    if (!(initialized && keycloak.token)) return;
     setLoading(true);
 
     try {
       const promises = selected.map(async (id) => {
-        if (userRows.find((row) => row.id === id).type === "vm") {
-          const res = await deleteVM(id, keycloak.token);
+        if (userRows.find((row) => row.id === id)?.type === "vm") {
+          const res = await deleteVM(id, keycloak.token!);
           queueJob(res);
           return;
         }
-        if (userRows.find((row) => row.id === id).type === "deployment") {
-          const res = await deleteDeployment(id, keycloak.token);
+        if (userRows.find((row) => row.id === id)?.type === "deployment") {
+          const res = await deleteDeployment(id, keycloak.token!);
           queueJob(res);
           return;
         }
@@ -143,13 +143,13 @@ export function Deploy() {
     }
   };
 
-  const handleRequestSort = (event, property) => {
+  const handleRequestSort = (property: string) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
 
-  const handleSelectAllClick = (event) => {
+  const handleSelectAllClick = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
       const newSelecteds = userRows.map((n) => n.id);
       setSelected(newSelecteds);
@@ -158,9 +158,9 @@ export function Deploy() {
     setSelected([]);
   };
 
-  const handleClick = (event, name) => {
+  const handleClick = (name: Uuid) => {
     const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
+    let newSelected: Uuid[] = [];
     if (selectedIndex === -1) {
       newSelected = newSelected.concat(selected, name);
     } else if (selectedIndex === 0) {
@@ -176,16 +176,12 @@ export function Deploy() {
     setSelected(newSelected);
   };
 
-  const handleFilterByName = (event) => {
-    setFilterName(event.target.value);
-  };
-
-  const renderResourceButtons = (resource) => {
+  const renderResourceButtons = (resource: Resource) => {
     if (
       resource.type === "deployment" &&
       Object.hasOwn(resource, "url") &&
-      resource.url !== "" &&
-      resource.private === false
+      (resource as Deployment).url !== "" &&
+      (resource as Deployment).private === false
     ) {
       return (
         <Stack
@@ -196,7 +192,7 @@ export function Deploy() {
           spacing={2}
         >
           <Link
-            href={resource.url}
+            href={(resource as Deployment).url}
             target="_blank"
             rel="noreferrer"
             underline="none"
@@ -223,8 +219,8 @@ export function Deploy() {
     }
   };
 
-  const renderResourceType = (resource) => {
-    if (resource.type === "vm" && resource.gpu) {
+  const renderResourceType = (resource: Resource) => {
+    if (resource.type === "vm" && (resource as Vm).gpu) {
       return (
         <Stack direction="row" alignItems="center" spacing={1}>
           <Label
@@ -240,7 +236,7 @@ export function Deploy() {
             variant="ghost"
             startIcon={<Iconify icon="mdi:gpu" sx={{ opacity: 0.65 }} />}
           >
-            {"NVIDIA " + resource.gpu.name}
+            {"NVIDIA " + (resource as Vm).gpu!.name}
           </Label>
         </Stack>
       );
@@ -273,7 +269,7 @@ export function Deploy() {
           >
             Deployment
           </Label>
-          {resource.private === true && (
+          {(resource as Deployment).private === true && (
             <Label
               variant="ghost"
               startIcon={<Iconify icon="mdi:eye-off" sx={{ opacity: 0.65 }} />}
@@ -288,8 +284,8 @@ export function Deploy() {
     return resource.type;
   };
 
-  const renderResourceStatus = (row) => {
-    let color =
+  const renderResourceStatus = (row: Resource) => {
+    const color: ThemeColor =
       (row.status === "resourceError" && "error") ||
       (row.status === "resourceUnknown" && "error") ||
       (row.status === "resourceStopped" && "warning") ||
@@ -297,11 +293,10 @@ export function Deploy() {
       (row.status === "resourceBeingDeleted" && "info") ||
       (row.status === "resourceStarting" && "info") ||
       (row.status === "resourceStopping" && "info") ||
-      (row.status === "resourceRunning" && "success");
+      (row.status === "resourceRunning" && "success") ||
+      "info";
 
-    if (!color) color = "info";
-
-    let statusMessage = t(row.status);
+    const statusMessage = t(row.status);
 
     return (
       <Label
@@ -325,12 +320,15 @@ export function Deploy() {
     );
   };
 
-  const renderStatusCode = (row) => {
-    if (!row.pingResult) return <></>;
+  const renderStatusCode = (row: Resource) => {
+    if (!(row.type === "deployment" && (row as Deployment).pingResult))
+      return <></>;
 
-    let codeType = parseInt(row.pingResult.toString().charAt(0));
+    const codeType = parseInt(
+      (row as Deployment).pingResult!.toString().charAt(0)
+    );
 
-    let color = "info";
+    let color: ThemeColor = "info";
     if (codeType === 2 || codeType === 3) {
       color = "success";
     } else if (codeType === 4 || codeType === 5) {
@@ -341,7 +339,6 @@ export function Deploy() {
       <Label
         variant="ghost"
         color={color}
-        style={{ fontFamily: "monospace" }}
         startIcon={
           <Iconify
             icon="mdi:transit-connection-variant"
@@ -349,12 +346,14 @@ export function Deploy() {
           />
         }
       >
-        {row.pingResult + " " + getReasonPhrase(row.pingResult)}
+        {(row as Deployment).pingResult +
+          " " +
+          getReasonPhrase((row as Deployment).pingResult!)}
       </Label>
     );
   };
 
-  const renderZone = (row) => {
+  const renderZone = (row: Resource) => {
     if (!row.zone || !zones) {
       return <></>;
     }
@@ -366,7 +365,6 @@ export function Deploy() {
     return (
       <Label
         variant="ghost"
-        style={{ fontFamily: "monospace" }}
         startIcon={<Iconify icon="mdi:earth" sx={{ opacity: 0.65 }} />}
       >
         {zone?.description}
@@ -374,13 +372,12 @@ export function Deploy() {
     );
   };
 
-  const renderShared = (row) => {
+  const renderShared = (row: Resource) => {
     if (row?.teams?.length === 0) return <></>;
 
     return (
       <Label
         variant="ghost"
-        style={{ fontFamily: "monospace" }}
         startIcon={<Iconify icon="mdi:account-group" sx={{ opacity: 0.65 }} />}
       >
         <Tooltip title={t("shared-in-group")}>
@@ -390,18 +387,22 @@ export function Deploy() {
     );
   };
 
-  useEffect(() => {
-    if (
-      user &&
-      user.userData &&
-      user.userData.find((d) => d.id === "onboarded")?.data !== "true"
-    ) {
-      // navigate("/onboarding");
-      // Userdata broken for now
-    }
+  // Fix this when go-deploy#
+  // useEffect(() => {
+  //   if (
+  //     user &&
+  //     user.userData &&
+  //     user.userData.find((d) => d.id === "onboarded")?.data !== "true"
+  //   ) {
+  //     if (user.onboarded && initialized && keycloak.token) {
+  //       createUserData(keycloak.token, "onboarded", "true");
+  //     } else {
+  //       navigate("/onboarding");
+  //     }
+  //   }
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [user]);
 
   return (
     <>
@@ -435,9 +436,8 @@ export function Deploy() {
               <ListToolbar
                 numSelected={selected.length}
                 filterName={filterName}
-                onFilterName={handleFilterByName}
+                onFilterName={setFilterName}
                 loading={loading}
-                selected={selected}
                 onDelete={bulkDelete}
               />
 
@@ -472,7 +472,7 @@ export function Deploy() {
                             <TableCell padding="checkbox">
                               <Checkbox
                                 checked={isItemSelected}
-                                onChange={(event) => handleClick(event, row.id)}
+                                onChange={() => handleClick(row.id)}
                               />
                             </TableCell>
                             <TableCell align="left">

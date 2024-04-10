@@ -19,7 +19,7 @@ interface ListHeadProps {
   rowCount: number;
   headLabel: HeadCell[];
   numSelected: number;
-  onRequestSort: (event: React.MouseEvent<unknown>, property: any) => void;
+  onRequestSort: (property: string) => void;
   onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -44,11 +44,6 @@ export default function ListHead({
   onRequestSort,
   onSelectAllClick,
 }: ListHeadProps) {
-  const createSortHandler =
-    (property: any) => (event: React.MouseEvent<unknown>) => {
-      onRequestSort(event, property);
-    };
-
   return (
     <TableHead>
       <TableRow>
@@ -69,7 +64,7 @@ export default function ListHead({
               hideSortIcon
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : "asc"}
-              onClick={createSortHandler(headCell.id)}
+              onClick={() => onRequestSort(headCell.id)}
             >
               {headCell.label}
               {orderBy === headCell.id ? (

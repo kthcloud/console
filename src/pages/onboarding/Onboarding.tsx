@@ -28,16 +28,17 @@ import { useNavigate } from "react-router-dom";
 import useResource from "../../hooks/useResource";
 import { useTranslation } from "react-i18next";
 import { updateUserData } from "../../api/deploy/userData";
+import { UserDataRead } from "kthcloud-types/types/v1/body";
 
 export const Onboarding = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
   // user profile
-  const { keycloak } = useKeycloak();
+  const { initialized, keycloak } = useKeycloak();
   const { initialLoad, user, setUser } = useResource();
 
-  const cards = [
+  const cards: string[] = [
     "welcome",
     "profile",
     "resources",
@@ -47,7 +48,9 @@ export const Onboarding = () => {
     "finish",
   ];
 
-  const cardTitles = {
+  type CardTitles = Record<string, string>;
+
+  const cardTitles: CardTitles = {
     welcome: t("onboarding-welcome"),
     profile: t("onboarding-profile"),
     resources: t("onboarding-resources"),
@@ -67,14 +70,26 @@ export const Onboarding = () => {
   const timeOut = 150;
 
   const onboard = async () => {
+    if (!(initialized && keycloak.token && user)) return;
     try {
-      const response = await updateUserData(
+      const response: UserDataRead = await updateUserData(
         keycloak.token,
         "onboarded",
         "true"
       );
       if (response) {
-        setUser(response);
+        let data: UserDataRead[];
+        if (user && user.userData && user.userData.length > 0) {
+          data = user.userData.map((data) => {
+            if (data.id === "onboarded") {
+              return response;
+            }
+            return data;
+          });
+        } else {
+          data = [response];
+        }
+        setUser({ ...user, userData: data });
         navigate("/deploy", { replace: true });
       }
     } catch (error: any) {
@@ -130,7 +145,12 @@ export const Onboarding = () => {
   };
 
   // take title and children as prop, put children in card content
-  const OnboardingCard = ({ id, subheader, children }) => {
+  type OnboardingCardProps = {
+    id: string;
+    subheader?: string;
+    children: React.ReactNode;
+  };
+  const OnboardingCard = ({ id, subheader, children }: OnboardingCardProps) => {
     return (
       <Card
         sx={{
@@ -158,7 +178,7 @@ export const Onboarding = () => {
     );
   };
 
-  const renderCardDirection = (id) => {
+  const renderCardDirection = (id: string) => {
     if (lastAction === "next") {
       if (id === lastDismissed) return "right";
       return "left";
