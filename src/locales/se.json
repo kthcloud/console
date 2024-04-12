@@ -470,6 +470,7 @@
         "name-cannot-be-empty": "Namnfältet är obligatoriskt",
         "saving-name": "Sparar namn...",
         "rfc-1035-1": " måste följa ",
-        "rfc-1035-2": ": endast små bokstäver, siffror eller '-', max 63 tecken, börja med en bokstav och sluta med en alfanumerisk karaktär."
+        "rfc-1035-2": ": endast små bokstäver, siffror eller '-', max 63 tecken, börja med en bokstav och sluta med en alfanumerisk karaktär.",
+        "clear-on-reconnect": "Rensa vid anslutning"
     }
 }

@@ -14,19 +14,23 @@ import Iconify from "../../../components/Iconify";
 import polyfilledEventSource from "@sanity/eventsource";
 import { useTranslation } from "react-i18next";
 import CopyButton from "../../../components/CopyButton";
+import { Deployment } from "../../../types";
+import { LogMessage } from "kthcloud-types/types/v1/body";
 
-export const LogsView = ({ deployment }) => {
+export const LogsView = ({ deployment }: { deployment: Deployment }) => {
   const { t } = useTranslation();
   const { initialized, keycloak } = useKeycloak();
-  const [logs, setLogs] = useState([]);
-  const [viewableLogs, setViewableLogs] = useState([]);
-  const [lineWrap, setLineWrap] = useState(true);
-  const [compactMode, setCompactMode] = useState(false);
-  const [autoScroll, setAutoScroll] = useState(true);
-  const [connection, setConnection] = useState("connecting");
-  const [sse, setSse] = useState(null);
 
-  const last = useRef(null);
+  const [logs, setLogs] = useState<LogMessage[]>([]);
+  const [viewableLogs, setViewableLogs] = useState<LogMessage[]>([]);
+  const [connection, setConnection] = useState("connecting");
+  const [sse, setSse] = useState<any>(null);
+  const last = useRef<HTMLPreElement>(null);
+
+  const [lineWrap, setLineWrap] = useState<boolean>(true);
+  const [compactMode, setCompactMode] = useState<boolean>(false);
+  const [clearOnReconnect, setClearOnReconnect] = useState<boolean>(true);
+  const [autoScroll, setAutoScroll] = useState<boolean>(true);
 
   const initSse = () => {
     if (!(deployment && initialized)) return;
@@ -35,7 +39,7 @@ export const LogsView = ({ deployment }) => {
       sse.close();
     }
 
-    let eventSource = new polyfilledEventSource(
+    const eventSource = new polyfilledEventSource(
       `${import.meta.env.VITE_DEPLOY_API_URL}/deployments/${deployment.id}/logs-sse`,
       {
         headers: {
@@ -46,6 +50,10 @@ export const LogsView = ({ deployment }) => {
 
     setSse(eventSource);
 
+    if (clearOnReconnect) {
+      setLogs([]);
+    }
+
     eventSource.onerror = () => {
       eventSource.close();
       setConnection("error");
@@ -55,10 +63,12 @@ export const LogsView = ({ deployment }) => {
       }, 5000);
     };
 
-    const pushLog = (log) => {
+    const pushLog = (log: string) => {
       try {
         setLogs((logs) => [...logs, JSON.parse(log)]);
-      } catch (e) {}
+      } catch (e) {
+        console.error("Could not parse log: " + log);
+      }
     };
 
     eventSource.addEventListener("deployment", (e) => {
@@ -73,7 +83,7 @@ export const LogsView = ({ deployment }) => {
       pushLog(e.data);
     });
 
-    eventSource.onopen = (e) => {
+    eventSource.onopen = () => {
       setConnection("connected");
     };
   };
@@ -83,20 +93,23 @@ export const LogsView = ({ deployment }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialized]);
 
-  const scrollParentToChild = (parent, child) => {
+  const scrollParentToChild = (
+    parent: HTMLDivElement,
+    child: HTMLPreElement
+  ) => {
     // borrowed from https://stackoverflow.com/a/45411081
     // Where is the parent on page
-    var parentRect = parent.getBoundingClientRect();
+    const parentRect = parent.getBoundingClientRect();
     // What can you see?
-    var parentViewableArea = {
+    const parentViewableArea = {
       height: parent.clientHeight,
       width: parent.clientWidth,
     };
 
     // Where is the child
-    var childRect = child.getBoundingClientRect();
+    const childRect = child.getBoundingClientRect();
     // Is the child viewable?
-    var isViewable =
+    const isViewable =
       childRect.top >= parentRect.top &&
       childRect.bottom <= parentRect.top + parentViewableArea.height;
 
@@ -123,8 +136,12 @@ export const LogsView = ({ deployment }) => {
         setViewableLogs(logs);
       }
 
-      if (autoScroll && last && last.current) {
-        // last.current.scroll.scrollIntoView();
+      if (
+        autoScroll &&
+        last &&
+        last.current &&
+        last.current.parentNode instanceof HTMLDivElement
+      ) {
         scrollParentToChild(last.current.parentNode, last.current);
       }
     },
@@ -139,21 +156,34 @@ export const LogsView = ({ deployment }) => {
       <CardHeader
         title={t("logs")}
         subheader={
-          <>
-            {t("logs-subheader") +
-              " " +
-              t("admin-showing") +
-              " " +
-              viewableLogs.length +
-              "/" +
-              logs.length}{" "}
-            {logs.length > 1000 && (
-              <>
-                <br />
-                {t("logs-truncated")}
-              </>
-            )}
-          </>
+          <Stack
+            direction={"row"}
+            justifyContent={"space-between"}
+            alignItems={"center"}
+            useFlexGap
+            flexWrap={"wrap"}
+            spacing={3}
+          >
+            <Typography variant="body2">
+              {t("logs-subheader") +
+                " " +
+                t("admin-showing") +
+                " " +
+                viewableLogs.length +
+                "/" +
+                logs.length}{" "}
+              {logs.length > 1000 && (
+                <>
+                  <br />
+                  {t("logs-truncated")}
+                </>
+              )}
+            </Typography>
+
+            <Typography variant="body2">
+              {t("connection-status")}: {t(connection)}
+            </Typography>
+          </Stack>
         }
       />
 
@@ -255,6 +285,17 @@ export const LogsView = ({ deployment }) => {
               label={t("auto-scroll")}
             />
 
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={clearOnReconnect}
+                  onChange={(e) => setClearOnReconnect(e.target.checked)}
+                  inputProps={{ "aria-label": "controlled" }}
+                />
+              }
+              label={t("clear-on-reconnect")}
+            />
+
             <Button
               variant="contained"
               startIcon={<Iconify icon={"mdi:broom"} />}
@@ -275,14 +316,18 @@ export const LogsView = ({ deployment }) => {
               startIcon={<Iconify icon={"material-symbols:download"} />}
               onClick={() => {
                 const element = document.createElement("a");
-                const file = new Blob([
-                  logs
-                    .map((log) => `${log.createdAt} ${log.prefix} ${log.line}`)
-                    .join("\n"),
+                const file = new Blob(
+                  [
+                    logs
+                      .map(
+                        (log) => `${log.createdAt} ${log.prefix} ${log.line}`
+                      )
+                      .join("\n"),
+                  ],
                   {
                     type: "text/plain",
-                  },
-                ]);
+                  }
+                );
                 element.href = URL.createObjectURL(file);
                 element.download = "logs_" + deployment.name + ".txt";
                 document.body.appendChild(element); // Required for this to work in FireFox
@@ -291,10 +336,6 @@ export const LogsView = ({ deployment }) => {
             >
               {t("download")}
             </Button>
-
-            <Typography variant="body2">
-              {t("connection-status")}: {t(connection)}
-            </Typography>
           </Stack>
         </Stack>
       </CardContent>
