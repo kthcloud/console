@@ -256,7 +256,6 @@ export const Onboarding = () => {
                     <div>
                       <Fade
                         timeout={timeOut}
-                        direction={renderCardDirection("welcome")}
                         in={
                           selected === "welcome" &&
                           "welcome" !== lastDismissed &&
@@ -290,7 +289,6 @@ export const Onboarding = () => {
                     <div>
                       <Fade
                         timeout={timeOut}
-                        direction={renderCardDirection("profile")}
                         in={
                           selected === "profile" &&
                           "profile" !== lastDismissed &&
@@ -326,7 +324,6 @@ export const Onboarding = () => {
                     <div>
                       <Fade
                         timeout={timeOut}
-                        direction={renderCardDirection("resources")}
                         in={
                           selected === "resources" &&
                           "resources" !== lastDismissed &&
@@ -367,7 +364,6 @@ export const Onboarding = () => {
                     <div>
                       <Fade
                         timeout={timeOut}
-                        direction={renderCardDirection("deployments")}
                         in={
                           selected === "deployments" &&
                           "deployments" !== lastDismissed &&
@@ -401,7 +397,6 @@ export const Onboarding = () => {
                     <div>
                       <Fade
                         timeout={timeOut}
-                        direction={renderCardDirection("vms")}
                         in={
                           selected === "vms" &&
                           "vms" !== lastDismissed &&
@@ -439,7 +434,6 @@ export const Onboarding = () => {
                     <div>
                       <Fade
                         timeout={timeOut}
-                        direction={renderCardDirection("gpu")}
                         in={
                           selected === "gpu" &&
                           "gpu" !== lastDismissed &&
@@ -473,7 +467,6 @@ export const Onboarding = () => {
                     <div>
                       <Fade
                         timeout={timeOut}
-                        direction={renderCardDirection("finish")}
                         in={
                           selected === "finish" &&
                           "finish" !== lastDismissed &&
@@ -515,6 +508,7 @@ export const Onboarding = () => {
             }}
           >
             <Box
+              component="div"
               sx={{
                 zIndex: 100,
                 position: "absolute",
@@ -534,7 +528,7 @@ export const Onboarding = () => {
               unmountOnExit
             >
               <div>
-                <Profile user={user} />
+                <Profile />
               </div>
             </Fade>
 
@@ -549,7 +543,7 @@ export const Onboarding = () => {
             >
               <div>
                 <Stack spacing={3}>
-                  <CreateDeployment />
+                  <CreateDeployment finished={() => {}} />
                 </Stack>
               </div>
             </Fade>
@@ -561,7 +555,7 @@ export const Onboarding = () => {
             >
               <div>
                 <Stack spacing={3}>
-                  <CreateVm />
+                  <CreateVm finished={() => {}} />
                 </Stack>
               </div>
             </Fade>

@@ -136,7 +136,7 @@ const ResourceComparisonTable = () => {
           },
         }}
       >
-        <Box sx={{ p: 2 }}>
+        <Box component="div" sx={{ p: 2 }}>
           <Stack
             direction="row"
             alignItems="center"
@@ -189,7 +189,7 @@ const ResourceComparisonTable = () => {
             </Table>
           </TableContainer>
         </Box>
-        <Box sx={{ flexGrow: 1 }} />
+        <Box component="div" sx={{ flexGrow: 1 }} />
         <Divider />
 
         <Stack

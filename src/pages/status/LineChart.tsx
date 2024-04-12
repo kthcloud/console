@@ -28,12 +28,7 @@ const ChartWrapperStyle = styled("div")(({ theme }) => ({
   },
 }));
 
-export default function LineChart({
-  title,
-  subheader,
-  chartData,
-  chartColors,
-}) {
+export default function LineChart({ title, chartData, chartColors }) {
   const chartOptions = merge(BaseOptionChart(), {
     plotOptions: { treemap: {} },
     xaxis: {
@@ -71,7 +66,7 @@ export default function LineChart({
   return (
     <Card sx={{ boxShadow: 20 }}>
       <CardContent>
-        <CardHeader title={title} subheader={subheader} />
+        <CardHeader title={title} />
         <ChartWrapperStyle dir="ltr">
           <ReactApexChart
             type="line"

@@ -68,7 +68,7 @@ export default function ListHead({
             >
               {headCell.label}
               {orderBy === headCell.id ? (
-                <Box sx={{ ...visuallyHidden }}>
+                <Box component="div" sx={{ ...visuallyHidden }}>
                   {order === "desc" ? "sorted descending" : "sorted ascending"}
                 </Box>
               ) : null}

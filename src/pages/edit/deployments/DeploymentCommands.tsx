@@ -1,4 +1,4 @@
-import { Button, Stack, Link, Tooltip } from "@mui/material";
+import { Button, Stack, Link } from "@mui/material";
 import { useKeycloak } from "@react-keycloak/web";
 import { enqueueSnackbar } from "notistack";
 import { useNavigate } from "react-router-dom";
@@ -12,15 +12,20 @@ import { sentenceCase } from "change-case";
 import ConfirmButton from "../../../components/ConfirmButton";
 import { errorHandler } from "../../../utils/errorHandler";
 import { useTranslation } from "react-i18next";
+import { Deployment } from "../../../types";
 
-export const DeploymentCommands = ({ deployment }) => {
+export const DeploymentCommands = ({
+  deployment,
+}: {
+  deployment: Deployment;
+}) => {
   const { t } = useTranslation();
   const { queueJob } = useResource();
   const { initialized, keycloak } = useKeycloak();
   const navigate = useNavigate();
 
   const doDelete = async () => {
-    if (!initialized) return;
+    if (!(initialized && keycloak.token)) return;
 
     try {
       const res = await deleteDeployment(deployment.id, keycloak.token);
@@ -39,8 +44,8 @@ export const DeploymentCommands = ({ deployment }) => {
     }
   };
 
-  const executeCommand = async (command) => {
-    if (!(initialized && keycloak.authenticated)) return;
+  const executeCommand = async (command: string) => {
+    if (!(initialized && keycloak.authenticated && keycloak.token)) return;
 
     try {
       await applyCommand(deployment.id, command, keycloak.token);
@@ -52,7 +57,7 @@ export const DeploymentCommands = ({ deployment }) => {
       );
     } catch (error: any) {
       errorHandler(error).forEach((e) =>
-        enqueueSnackbar(t("failed-update"), ": " + e, {
+        enqueueSnackbar(t("failed-update") + ": " + e, {
           variant: "error",
         })
       );
@@ -71,7 +76,6 @@ export const DeploymentCommands = ({ deployment }) => {
         <Button
           onClick={() => executeCommand("restart")}
           variant="contained"
-          to="#"
           startIcon={<Iconify icon="mdi:restart" />}
           color="warning"
         >

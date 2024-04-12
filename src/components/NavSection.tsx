@@ -179,7 +179,7 @@ export default function NavSection({ navConfig, ...other }: NavSectionProps) {
     path ? !!matchPath({ path, end: false }, pathname) : false;
 
   return (
-    <Box {...other}>
+    <Box component="div" {...other}>
       <List disablePadding sx={{ p: 1 }}>
         {navConfig.map((item) => (
           <NavItem key={item.title} item={item} active={match} />

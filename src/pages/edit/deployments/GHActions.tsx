@@ -180,7 +180,7 @@ const GHActions = ({ resource }: { resource: Deployment }) => {
             </Button>
 
             {showSecrets && (
-              <Box sx={{ overflowX: "auto", maxWidth: "100%" }}>
+              <Box component="div" sx={{ overflowX: "auto", maxWidth: "100%" }}>
                 <Stack
                   spacing={1}
                   useFlexGap

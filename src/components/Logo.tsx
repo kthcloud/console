@@ -17,7 +17,7 @@ export default function Logo({
   // get window.location.hostname
 
   const logo = (
-    <Box sx={{ width: 140, height: "auto", ...sx }}>
+    <Box component="div" sx={{ width: 140, height: "auto", ...sx }}>
       <img
         src={
           "/static/logo_" +

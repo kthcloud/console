@@ -26,7 +26,6 @@ import EnvManager from "./deployments/EnvManager";
 import GHActions from "./deployments/GHActions";
 import SSHString from "./vms/SSHString";
 import Specs from "./vms/Specs";
-import SnapshotManager from "./vms/SnapshotManager";
 import { GPUManager } from "./vms/GPUManager";
 import { PrivateMode } from "./deployments/PrivateMode";
 import { DeploymentCommands } from "./deployments/DeploymentCommands";
@@ -46,8 +45,8 @@ import { enqueueSnackbar } from "notistack";
 import { updateDeployment } from "../../api/deploy/deployments";
 import { updateVM } from "../../api/deploy/vms";
 import { errorHandler } from "../../utils/errorHandler";
-import { Job, Resource, Deployment, DeployApiError, Vm } from "../../types";
-import { Env, Volume } from "kthcloud-types/types/v1/body";
+import { Job, Resource, Deployment, Vm } from "../../types";
+import { Volume } from "kthcloud-types/types/v1/body";
 
 export function Edit() {
   const { t } = useTranslation();
@@ -112,7 +111,7 @@ export function Edit() {
         beginFastLoad();
         enqueueSnackbar(t("saving-name"), { variant: "info" });
       }
-    } catch (error: DeployApiError | any) {
+    } catch (error: any) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar(t("error-updating") + ": " + e, {
           variant: "error",
@@ -182,7 +181,7 @@ export function Edit() {
                 <Typography variant="h4">
                   {t("you-are-impersonating-user") + " " + resource.ownerId}
                 </Typography>
-                <Box sx={{ flexGrow: 1 }} />
+                <Box component="div" sx={{ flexGrow: 1 }} />
                 <Stack direction="row" alignItems={"center"} spacing={3}>
                   <Button
                     variant="outlined"
@@ -306,66 +305,66 @@ export function Edit() {
                 <div style={{ flexGrow: "1" }} />
 
                 {resource.type === "deployment" && (
-                  <DeploymentCommands deployment={resource} />
+                  <DeploymentCommands deployment={resource as Deployment} />
                 )}
 
-                {resource.type === "vm" && <VMCommands vm={resource} />}
+                {resource.type === "vm" && <VMCommands vm={resource as Vm} />}
               </Stack>
 
               <JobList />
 
-              {resource.type === "vm" && <SSHString resource={resource} />}
+              {resource.type === "vm" && <SSHString vm={resource as Vm} />}
 
-              {resource.type === "vm" && <GPUManager vm={resource} />}
+              {resource.type === "vm" && <GPUManager vm={resource as Vm} />}
 
-              {resource.type === "vm" && <SnapshotManager vm={resource} />}
+              {/* {resource.type === "vm" && <SnapshotManager vm={resource} />} */}
 
-              {resource.type === "vm" && <PortManager vm={resource} />}
+              {resource.type === "vm" && <PortManager vm={resource as Vm} />}
 
               {resource.type === "vm" && <ProxyManager vm={resource as Vm} />}
 
-              {resource.type === "vm" && <Specs vm={resource} />}
+              {resource.type === "vm" && <Specs vm={resource as Vm} />}
 
               {resource.type === "deployment" && (
-                <EnvManager deployment={resource} />
+                <EnvManager deployment={resource as Deployment} />
               )}
 
               {resource.type === "deployment" && (
                 <StorageManager
-                  deployment={resource}
+                  deployment={resource as Deployment}
                   persistent={persistent}
                   setPersistent={setPersistent}
                 />
               )}
 
               {resource.type === "deployment" && (
-                <PrivateMode deployment={resource} />
+                <PrivateMode deployment={resource as Deployment} />
               )}
 
               {resource.type === "deployment" &&
                 (resource as Deployment).deploymentType === "prebuilt" && (
-                  <ImageManager deployment={resource} />
+                  <ImageManager deployment={resource as Deployment} />
                 )}
 
               {resource.type === "deployment" &&
                 user?.role?.permissions.includes("useCustomDomains") && (
-                  <DomainManager deployment={resource} />
+                  <DomainManager deployment={resource as Deployment} />
                 )}
 
               {resource.type === "deployment" &&
                 (resource as Deployment).deploymentType !== "prebuilt" && (
-                  <GHActions resource={resource} />
+                  <GHActions resource={resource as Deployment} />
                 )}
 
               {resource.type === "deployment" && (
-                <ReplicaManager deployment={resource} />
+                <ReplicaManager deployment={resource as Deployment} />
               )}
               {resource.type === "deployment" && (
-                <LogsView deployment={resource} />
+                <LogsView deployment={resource as Deployment} />
               )}
 
               {resource.type === "deployment" && (
-                <HealthCheckRoute deployment={resource} />
+                <HealthCheckRoute deployment={resource as Deployment} />
               )}
 
               <DangerZone resource={resource} />

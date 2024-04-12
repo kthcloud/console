@@ -87,7 +87,7 @@ export default function DashboardLayout() {
                   <span style={{ whiteSpace: "nowrap" }}>{name}</span>
                 </p>
               </Stack>
-              <Box sx={{ flexGrow: 1 }} />
+              <Box component="div" sx={{ flexGrow: 1 }} />
               <Stack spacing={1} alignItems={"flex-start"}>
                 <p>{t("button-help")}</p>
                 <p>

@@ -25,7 +25,6 @@ import {
   Button,
   IconButton,
   Chip,
-  Tooltip,
   Link,
 } from "@mui/material";
 
@@ -39,20 +38,21 @@ import { errorHandler } from "../../utils/errorHandler";
 import JobList from "../../components/JobList";
 import { ResetOnboarding } from "./ResetOnboarding";
 import { useTranslation } from "react-i18next";
+import { User } from "../../types";
 
 export function Profile() {
   const { t } = useTranslation();
   const { keycloak, initialized } = useKeycloak();
 
-  const [user, setUser] = useState(null);
-  const [validationError, setValidationError] = useState({});
+  const [user, setUser] = useState<User | null>(null);
+  const [validationError, setValidationError] = useState<any>({});
 
   const [newKey, setNewKey] = useState("");
   const [newKeyName, setNewKeyName] = useState("");
   const [changeInKeys, setChangeInKeys] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
   const loadProfile = async () => {
-    if (!initialized) return -1;
+    if (!(initialized && keycloak.subject && keycloak.token)) return -1;
 
     try {
       const response = await getUser(keycloak.subject, keycloak.token);
@@ -81,8 +81,17 @@ export function Profile() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
-  const updateDetails = async (mode) => {
-    if (!(initialized && keycloak.authenticated)) return -1;
+  const updateDetails = async (mode: string) => {
+    if (
+      !(
+        initialized &&
+        keycloak.authenticated &&
+        keycloak.token &&
+        keycloak.subject &&
+        user
+      )
+    )
+      return -1;
 
     try {
       const data = mode === "keys" ? { publicKeys: user.publicKeys } : user;
@@ -106,7 +115,7 @@ export function Profile() {
   };
 
   // return 15 characters of the key
-  const renderKey = (key) => {
+  const renderKey = (key: string) => {
     let rawKey = key.replace("ssh-rsa ", "");
     rawKey = rawKey.replace("ssh-ed25519 ", "");
     rawKey = rawKey.replace("ssh-dss ", "");
@@ -124,7 +133,7 @@ export function Profile() {
         justifyContent={"flex-start"}
         useFlexGap={true}
       >
-        <Typography type={"body2"} sx={{ fontFamily: "monospace" }}>
+        <Typography variant={"body2"} sx={{ fontFamily: "monospace" }}>
           {"..." + rawKey.substring(rawKey.length - 20, rawKey.length - 1)}
         </Typography>
         <CopyButton content={key} />
@@ -132,14 +141,15 @@ export function Profile() {
     );
   };
 
-  const getKeyFromFile = (path) => {
+  const getKeyFromFile = (path: FileList) => {
     if (!path) return;
 
     const reader = new FileReader();
     reader.addEventListener("load", () => {
-      setNewKey(reader.result);
+      if (reader.result) setNewKey(reader.result.toString());
     });
-    reader.readAsText(path);
+
+    reader.readAsText(path[0]);
   };
 
   return (
@@ -183,16 +193,16 @@ export function Profile() {
                       alignItems={"center"}
                     >
                       <Chip
-                        m={1}
+                        sx={{ m: 1 }}
                         icon={<AccountCircle />}
                         label={user.username}
                       />
 
-                      <Chip m={1} icon={<Email />} label={user.email} />
+                      <Chip sx={{ m: 1 }} icon={<Email />} label={user.email} />
 
                       {user.role && (
                         <Chip
-                          m={1}
+                          sx={{ m: 1 }}
                           icon={
                             <Iconify
                               icon="eos-icons:admin"
@@ -206,7 +216,7 @@ export function Profile() {
 
                       {user.admin && (
                         <Chip
-                          m={1}
+                          sx={{ m: 1 }}
                           icon={
                             <Iconify
                               icon="eos-icons:admin"
@@ -357,9 +367,10 @@ export function Profile() {
                                 <input
                                   type="file"
                                   hidden
-                                  onChange={(e) =>
-                                    getKeyFromFile(e.target.files[0])
-                                  }
+                                  onChange={(e) => {
+                                    if (!e.target.files) return;
+                                    getKeyFromFile(e.target.files);
+                                  }}
                                 />
                               </Button>
                             </Stack>

@@ -7,7 +7,6 @@ import {
   Stack,
   CardHeader,
   Button,
-  useTheme,
 } from "@mui/material";
 
 //hooks
@@ -31,6 +30,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import ResourceTypeChat from "./ResourceTypeChat";
 import { useTranslation } from "react-i18next";
 import Iconify from "../../components/Iconify";
+import { Job } from "../../types";
 
 export const Create = () => {
   const { initialized } = useKeycloak();
@@ -38,26 +38,25 @@ export const Create = () => {
   const { enqueueSnackbar } = useSnackbar();
   const { queueJob } = useResource();
   const [alignment, _setAlignment] = useState("");
-  const setAlignment = (newAlignment) => {
+  const setAlignment = (newAlignment: string) => {
     _setAlignment(newAlignment);
-    let params = new URLSearchParams(searchParams);
+    const params = new URLSearchParams(searchParams);
     if (!newAlignment) params.delete("type");
     else params.set("type", newAlignment);
     setSearchParams(params);
   };
-  const theme = useTheme();
 
   const navigate = useNavigate();
   // eslint-disable-next-line no-unused-vars
-  let [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
     if (searchParams.has("type")) {
-      let type = searchParams.get("type");
+      const type = searchParams.get("type");
       if (type === "deployment" || type === "vm") {
         setAlignment(type);
       } else {
-        let params = new URLSearchParams(searchParams);
+        const params = new URLSearchParams(searchParams);
         params.delete("type");
         setSearchParams(params);
       }
@@ -65,7 +64,7 @@ export const Create = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const finished = (job, stay) => {
+  const finished = (job: Job, stay: boolean) => {
     queueJob(job);
     enqueueSnackbar(`Creating ${sentenceCase(alignment)}`, {
       variant: "info",

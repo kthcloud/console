@@ -7,7 +7,7 @@ export const GenAITooltip = ({ children }: { children: React.ReactNode }) => {
   const { t } = useTranslation();
 
   return (
-    <Box>
+    <Box component="div">
       {children}
       <Tooltip enterTouchDelay={10} title={t("this-content-is-ai-generated")}>
         <Typography variant="caption" sx={{ m: 1 }}>

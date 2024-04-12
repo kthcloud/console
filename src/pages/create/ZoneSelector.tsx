@@ -9,12 +9,22 @@ import {
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import useResource from "../../hooks/useResource";
+import { ZoneRead } from "kthcloud-types/types/v1/body";
 
-const ZoneSelector = ({ alignment, selectedZone, setSelectedZone }) => {
-  const [filteredZones, setFilteredZones] = useState([]);
+const ZoneSelector = ({
+  alignment,
+  selectedZone,
+  setSelectedZone,
+}: {
+  alignment: string;
+  selectedZone: string;
+  setSelectedZone: (zone: string) => void;
+}) => {
   const { user, zones } = useResource();
-  const [initialLoad, setInitialLoad] = useState(false);
   const { t } = useTranslation();
+
+  const [filteredZones, setFilteredZones] = useState<ZoneRead[]>([]);
+  const [initialLoad, setInitialLoad] = useState(false);
 
   useEffect(
     () => {
@@ -47,7 +57,7 @@ const ZoneSelector = ({ alignment, selectedZone, setSelectedZone }) => {
             color="primary"
             value={selectedZone}
             exclusive
-            onChange={(e) => setSelectedZone(e.target.value)}
+            onChange={(_, v) => setSelectedZone(v)}
             aria-label="zone"
           >
             {filteredZones.map((zone, index) => (

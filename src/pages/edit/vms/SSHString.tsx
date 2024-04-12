@@ -8,10 +8,11 @@ import {
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import CopyButton from "../../../components/CopyButton";
+import { Vm } from "../../../types";
 
-const SSHString = ({ resource }) => {
+const SSHString = ({ vm }: { vm: Vm }) => {
   const { t } = useTranslation();
-  const ssh = resource.connectionString;
+  const ssh = vm.connectionString;
 
   return (
     <Card sx={{ boxShadow: 20 }}>

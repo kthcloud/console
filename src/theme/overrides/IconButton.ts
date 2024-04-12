@@ -1,4 +1,6 @@
-export default function IconButton(theme) {
+import { CustomTheme } from "../types";
+
+export default function IconButton(theme: CustomTheme) {
   return {
     MuiIconButton: {
       variants: [

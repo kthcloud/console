@@ -9,8 +9,9 @@ import ConfirmButton from "../../../components/ConfirmButton";
 import Iconify from "../../../components/Iconify";
 import useResource from "../../../hooks/useResource";
 import { errorHandler } from "../../../utils/errorHandler";
+import { Vm } from "../../../types";
 
-export const VMCommands = ({ vm }) => {
+export const VMCommands = ({ vm }: { vm: Vm }) => {
   const { t } = useTranslation();
 
   const { initialized, keycloak } = useKeycloak();
@@ -18,7 +19,7 @@ export const VMCommands = ({ vm }) => {
   const navigate = useNavigate();
 
   const doDelete = async () => {
-    if (!(initialized && keycloak.authenticated)) return;
+    if (!(initialized && keycloak.authenticated && keycloak.token)) return;
 
     try {
       const res = await deleteVM(vm.id, keycloak.token);
@@ -37,8 +38,8 @@ export const VMCommands = ({ vm }) => {
     }
   };
 
-  const executeCommand = async (command) => {
-    if (!(initialized && keycloak.authenticated)) return;
+  const executeCommand = async (command: string) => {
+    if (!(initialized && keycloak.authenticated && keycloak.token)) return;
 
     try {
       await applyCommand(vm.id, command, keycloak.token);

@@ -14,7 +14,7 @@ export function Landing() {
   if (!initialized) {
     return (
       <Page>
-        <Box sx={{ minHeight: "100vh" }}></Box>
+        <Box component="div" sx={{ minHeight: "100vh" }}></Box>
       </Page>
     );
   } else if (initialized && keycloak.authenticated) {
@@ -23,7 +23,7 @@ export function Landing() {
   } else {
     return (
       <Page>
-        <Box mt={5}></Box>
+        <Box component="div" sx={{ mt: 5 }}></Box>
         <Hero />
         <Intro />
         <Funding />

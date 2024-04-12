@@ -34,21 +34,22 @@ import Page from "../../components/Page";
 import useResource from "../../hooks/useResource";
 import { errorHandler } from "../../utils/errorHandler";
 import { useTheme } from "@mui/material/styles";
+import { NotificationRead } from "kthcloud-types/types/v1/body";
 
 const Inbox = () => {
   const { user, notifications, unread } = useResource();
   const { t } = useTranslation();
   const { initialized, keycloak } = useKeycloak();
   const [expandedRead, setExpandedRead] = useState(false);
-  const [stale, setStale] = useState(null);
+  const [stale, setStale] = useState<string>("");
   const theme = useTheme();
 
   useEffect(() => {
-    setStale(null);
+    setStale("");
   }, [notifications]);
 
-  const accept = async (notification) => {
-    if (!initialized) return;
+  const accept = async (notification: NotificationRead) => {
+    if (!(initialized && keycloak.token)) return;
 
     try {
       if (notification.type === "teamInvite") {
@@ -81,8 +82,8 @@ const Inbox = () => {
     }
   };
 
-  const markAsRead = async (notification) => {
-    if (!initialized) return;
+  const markAsRead = async (notification: NotificationRead) => {
+    if (!(initialized && keycloak.token)) return;
 
     try {
       setStale(notification.id);
@@ -96,8 +97,8 @@ const Inbox = () => {
     }
   };
 
-  const handleDelete = async (notification) => {
-    if (!initialized) return;
+  const handleDelete = async (notification: NotificationRead) => {
+    if (!(initialized && keycloak.token)) return;
 
     try {
       setStale(notification.id);
@@ -111,7 +112,7 @@ const Inbox = () => {
     }
   };
 
-  const notificationAction = (type) => {
+  const notificationAction = (type: string) => {
     switch (type) {
       case "teamInvite":
         return t("invited-you-to-join-their-team");
@@ -173,7 +174,7 @@ const Inbox = () => {
                                         justifyContent={"space-between"}
                                         useFlexGap
                                       >
-                                        <Typography variant="body">
+                                        <Typography variant="body2">
                                           <span>
                                             {notification?.content?.email ||
                                               notification?.content?.name}
@@ -223,7 +224,9 @@ const Inbox = () => {
                                           onClick={() =>
                                             markAsRead(notification)
                                           }
-                                          disabled={notification.readAt}
+                                          disabled={
+                                            notification.readAt !== undefined
+                                          }
                                         >
                                           {t("read")}
                                         </Button>
@@ -256,8 +259,9 @@ const Inbox = () => {
                           {notifications.length - unread > 0 && (
                             <TableRow
                               sx={{
-                                background:
-                                  expandedRead && theme.palette.grey[300],
+                                background: expandedRead
+                                  ? theme.palette.grey[200]
+                                  : "transparent",
                                 cursor: "pointer",
                               }}
                               onClick={() => setExpandedRead(!expandedRead)}
@@ -302,7 +306,7 @@ const Inbox = () => {
                                                     }
                                                     useFlexGap
                                                   >
-                                                    <Typography variant="body">
+                                                    <Typography variant="body2">
                                                       <span>
                                                         {notification?.content
                                                           ?.email ||
@@ -403,7 +407,7 @@ const Inbox = () => {
                         <Typography gutterBottom variant="h2">
                           <Iconify icon="emojione-v1:sun-with-face" />
                         </Typography>
-                        <Typography gutterBottom variant="body">
+                        <Typography gutterBottom variant="body1">
                           {t("empty-inbox")}
                         </Typography>
                       </Stack>

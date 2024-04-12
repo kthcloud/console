@@ -12,6 +12,7 @@ import typography from "./typography";
 import componentsOverride from "./overrides";
 import { makeCustomShadows, makeShadows } from "./shadows";
 import { ThemeModeContext } from "../contexts/ThemeModeContext";
+import { CustomTheme } from "./types";
 
 export default function ThemeProvider({
   children,
@@ -31,8 +32,14 @@ export default function ThemeProvider({
     customShadows,
   });
 
-  const theme = useMemo(
-    () => createTheme(getDesignTokens(mode)),
+  const theme: CustomTheme = useMemo(
+    () => {
+      const base = createTheme(getDesignTokens(mode));
+      return {
+        ...getDesignTokens(mode),
+        ...base,
+      };
+    },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [mode]
   );

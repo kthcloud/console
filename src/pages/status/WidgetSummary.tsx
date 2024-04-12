@@ -2,6 +2,7 @@ import { alpha, styled, useTheme } from "@mui/material/styles";
 import { Card, Typography } from "@mui/material";
 import { fShortenNumber } from "../../utils/formatNumber";
 import Iconify from "../../components/Iconify";
+import { CustomTheme, ThemeColor } from "../../theme/types";
 
 const IconWrapperStyle = styled("div")(({ theme }) => ({
   margin: "auto",
@@ -15,7 +16,7 @@ const IconWrapperStyle = styled("div")(({ theme }) => ({
 }));
 
 interface WidgetSummaryProps {
-  color?: string;
+  color?: ThemeColor;
   icon?: string;
   title: string;
   total: number;
@@ -31,17 +32,17 @@ export default function WidgetSummary({
   sx,
   ...other
 }: WidgetSummaryProps) {
-  const theme = useTheme();
+  const theme: CustomTheme = useTheme();
 
-  let textColor =
+  const textColor =
     theme.palette.mode === "light"
       ? theme.palette[color].darker
       : theme.palette[color].lighter;
-  let backgroundColor =
+  const backgroundColor =
     theme.palette.mode === "light"
       ? theme.palette[color].lighter
       : theme.palette[color].darker;
-  let iconColor =
+  const iconColor =
     theme.palette.mode === "light"
       ? theme.palette[color].darker
       : theme.palette[color].lighter;
@@ -52,20 +53,19 @@ export default function WidgetSummary({
         py: 5,
         boxShadow: 20,
         textAlign: "center",
-        color: (theme) => textColor,
-        bgcolor: (theme) => backgroundColor,
+        color: textColor,
+        bgcolor: backgroundColor,
         ...sx,
       }}
       {...other}
     >
       <IconWrapperStyle
         sx={{
-          color: (theme) => iconColor,
-          backgroundImage: (theme) =>
-            `linear-gradient(135deg, ${alpha(iconColor, 0)} 0%, ${alpha(
-              iconColor,
-              0.24
-            )} 100%)`,
+          color: iconColor,
+          backgroundImage: `linear-gradient(135deg, ${alpha(iconColor, 0)} 0%, ${alpha(
+            iconColor,
+            0.24
+          )} 100%)`,
         }}
       >
         {icon && <Iconify icon={icon} width={24} height={24} />}

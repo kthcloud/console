@@ -1,0 +1,70 @@
+{
+    "version": "v1.0.0",
+    "roles": [
+        {
+            "name": "default",
+            "description": "Default",
+            "permissions": ["chooseZone", "useCustomDomains"],
+            "quota": {
+                "deployments": 10,
+                "cpuCores": 2,
+                "ram": 4,
+                "diskSize": 20,
+                "snapshots": 1,
+                "gpuLeaseDuration": 0
+            }
+        },
+        {
+            "name": "bronze",
+            "description": "Bronze",
+            "permissions": ["chooseZone", "useCustomDomains", "useGpus"],
+            "quota": {
+                "deployments": 10,
+                "cpuCores": 4,
+                "ram": 16,
+                "diskSize": 50,
+                "snapshots": 5,
+                "gpuLeaseDuration": 5
+            }
+        },
+        {
+            "name": "silver",
+            "description": "Silver",
+            "permissions": ["chooseGpu", "chooseZone", "useCustomDomains", "useGpus"],
+            "quota": {
+                "deployments": 10,
+                "cpuCores": 8,
+                "ram": 60,
+                "diskSize": 500,
+                "snapshots": 10,
+                "gpuLeaseDuration": 24
+            }
+        },
+        {
+            "name": "gold",
+            "description": "Gold",
+            "permissions": ["chooseGpu", "chooseZone", "useCustomDomains", "useGpus", "usePrivilegedGpus"],
+            "quota": {
+                "deployments": 10,
+                "cpuCores": 12,
+                "ram": 80,
+                "diskSize": 1000,
+                "snapshots": 10,
+                "gpuLeaseDuration": 24
+            }
+        },
+        {
+            "name": "platinum",
+            "description": "Platinum",
+            "permissions": ["chooseGpu", "chooseZone", "useCustomDomains", "useGpus", "usePrivilegedGpus"],
+            "quota": {
+                "deployments": 15,
+                "cpuCores": 40,
+                "ram": 160,
+                "diskSize": 2000,
+                "snapshots": 10,
+                "gpuLeaseDuration": 168
+            }
+        }
+    ]
+}

@@ -5,14 +5,18 @@ import {
   VmRead,
   JobRead,
   GpuRead,
+  PortRead,
 } from "kthcloud-types/types/v1/body/index";
 
 export type Uuid = string;
 export type Jwt = string;
 
+export type Port = PortRead;
+
 export interface Vm extends VmRead {
   type: string;
   gpu?: GpuRead;
+  ports: Port[];
 }
 
 export interface Deployment extends DeploymentRead {

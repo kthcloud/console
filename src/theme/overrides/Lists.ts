@@ -1,4 +1,6 @@
-export default function Lists(theme) {
+import { CustomTheme } from "../types";
+
+export default function Lists(theme: CustomTheme) {
   return {
     MuiListItemIcon: {
       styleOverrides: {

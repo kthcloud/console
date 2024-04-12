@@ -452,7 +452,7 @@ export const Admin = () => {
           >
             <Toolbar>
               <Typography variant="h4">{t("admin-title")}</Typography>
-              <Box sx={{ flexGrow: 1 }} />
+              <Box component="div" sx={{ flexGrow: 1 }} />
               <Stack direction="row" alignItems={"center"} spacing={3}>
                 <Button variant="contained" onClick={getResources}>
                   {t("admin-refresh-resources")}

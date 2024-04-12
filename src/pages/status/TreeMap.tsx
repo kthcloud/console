@@ -5,6 +5,7 @@ import { styled } from "@mui/material/styles";
 import { Card, CardHeader, CardContent } from "@mui/material";
 // components
 import { BaseOptionChart } from "../../components/chart";
+import { ChartDataPoint } from "./Status";
 
 const CHART_HEIGHT = 360;
 
@@ -28,7 +29,15 @@ const ChartWrapperStyle = styled("div")(({ theme }) => ({
   },
 }));
 
-export default function TreeMap({ title, subheader, chartData, chartColors }) {
+export default function TreeMap({
+  title,
+  chartData,
+  chartColors,
+}: {
+  title: string;
+  chartData: ChartDataPoint[];
+  chartColors: string[];
+}) {
   const chartOptions = merge(BaseOptionChart(), {
     plotOptions: { treemap: {} },
     legend: { floating: true, horizontalAlign: "center" },
@@ -39,7 +48,7 @@ export default function TreeMap({ title, subheader, chartData, chartColors }) {
   return (
     <Card sx={{ boxShadow: 20 }}>
       <CardContent>
-        <CardHeader title={title} subheader={subheader} />
+        <CardHeader title={title} />
         <ChartWrapperStyle dir="ltr">
           <ReactApexChart
             type="treemap"

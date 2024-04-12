@@ -46,7 +46,7 @@ export default function Scrollbar({ children, sx, ...other }: ScrollbarProps) {
 
   if (isMobile) {
     return (
-      <Box sx={{ overflowX: "auto", ...sx }} {...other}>
+      <Box component="div" sx={{ overflowX: "auto", ...sx }} {...other}>
         {children}
       </Box>
     );

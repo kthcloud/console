@@ -53,12 +53,12 @@ export default function Navbar() {
     <RootStyle>
       {renderContainer(
         <ToolbarStyle sx={{ px: 0 }}>
-          <Box sx={{ px: 0, py: 3, display: "inline-flex" }}>
+          <Box component="div" sx={{ px: 0, py: 3, display: "inline-flex" }}>
             <Logo />
           </Box>
-          <Box sx={{ flexGrow: 1 }} />
+          <Box component="div" sx={{ flexGrow: 1 }} />
 
-          <Box sx={{ pl: 0, py: 3, display: "inline-flex" }}>
+          <Box component="div" sx={{ pl: 0, py: 3, display: "inline-flex" }}>
             <Stack
               direction="row"
               alignItems="center"

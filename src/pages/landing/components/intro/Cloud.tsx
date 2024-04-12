@@ -1,18 +1,27 @@
+/* eslint-disable react/no-unknown-property */
 import { Canvas } from "@react-three/fiber";
 import { CloudMesh } from "./CloudMesh";
 import * as THREE from "three";
 
-export function Cloud({ mobile, position }) {
+export function Cloud({
+  mobile,
+  position,
+}: {
+  mobile: boolean;
+  position: number[];
+}) {
   return (
     <Canvas
-      height={mobile ? "250px" : "100%"}
-      width="100%"
       style={
-        !mobile && {
-          position: "absolute",
-          top: "0",
-          left: "0",
-        }
+        mobile
+          ? { height: "250px", width: "100%" }
+          : {
+              position: "absolute",
+              top: "0",
+              left: "0",
+              height: "100%",
+              width: "100%",
+            }
       }
     >
       <ambientLight intensity={0.5} />

@@ -16,10 +16,11 @@ const Intro = () => {
   const { t } = useTranslation();
 
   return (
-    <Box sx={{ overflow: "hidden" }}>
+    <Box component="div" sx={{ overflow: "hidden" }}>
       <Container maxWidth="lg">
         <Card sx={{ boxShadow: 20, background: "#1b2842", color: "#ffffff" }}>
           <Box
+            component="div"
             sx={{
               display: {
                 xs: "none",
@@ -28,7 +29,7 @@ const Intro = () => {
               },
             }}
           >
-            <Cloud position={[-3, 0, 0]} />
+            <Cloud position={[-3, 0, 0]} mobile={false} />
           </Box>
           <Grid
             container
@@ -45,6 +46,7 @@ const Intro = () => {
           >
             <Grid item xs={12} md={7}>
               <Box
+                component="div"
                 sx={{
                   display: {
                     xs: "block",

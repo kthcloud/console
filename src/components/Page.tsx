@@ -25,7 +25,7 @@ const Page = forwardRef((props: PageProps, ref: ForwardedRef<any>) => {
         {meta}
       </Helmet>
 
-      <Box ref={ref} {...other}>
+      <Box component="div" ref={ref} {...other}>
         {children}
       </Box>
     </>

@@ -1,16 +1,20 @@
 import { Avatar } from "@mui/material";
 import { MD5 } from "crypto-js";
 import { useEffect, useState } from "react";
-import { UserRead as User } from "kthcloud-types/types/v1/body/index";
+
+export type GravatarUser = {
+  email?: string;
+  username: string;
+};
 
 const Gravatar = ({
   user,
   fallback,
   ...props
 }: {
-  user: User;
-  fallback: any;
-  props?: any;
+  user: GravatarUser;
+  fallback?: any;
+  [x: string]: any;
 }) => {
   const [userAvatar, setUserAvatar] = useState("");
   const [hasFetched, setHasFetched] = useState(false);

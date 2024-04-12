@@ -21,7 +21,19 @@ import WidgetSummary from "./WidgetSummary";
 import ServerStats from "./ServerStats";
 import LineChart from "./LineChart";
 import { useTranslation } from "react-i18next";
-import { fShortenNumber } from "../../utils/formatNumber";
+
+type MastodonPost = {
+  id: string;
+};
+
+export type ChartDataPoint = {
+  x: number;
+  y: number;
+};
+export type ChartData = {
+  name: string;
+  data: ChartDataPoint[];
+};
 
 export function Status() {
   const { t } = useTranslation();
@@ -30,10 +42,10 @@ export function Status() {
   const [cpuCapacities, setCpuCapacities] = useState([]);
   const [ramCapacities, setRamCapacities] = useState([]);
   const [gpuCapacities, setGpuCapacities] = useState([]);
-  const [overviewData, _setOverviewData] = useState([]);
+  const [overviewData, _setOverviewData] = useState<ChartData[]>([]);
   const [statusLock, setStatusLock] = useState(false);
   const [capacitiesLock, setCapacitiesLock] = useState(false);
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState<MastodonPost[]>([]);
 
   // Capacities
   const [ram, setRam] = useState(0);
@@ -41,31 +53,31 @@ export function Status() {
   const [gpus, setGpus] = useState(0);
 
   const setOverviewData = (data) => {
-    let cpuTemp = [];
-    let cpuLoad = [];
-    let ramLoad = [];
-    let gpuTemp = [];
+    const cpuTemp: ChartDataPoint[] = [];
+    const cpuLoad: ChartDataPoint[] = [];
+    const ramLoad: ChartDataPoint[] = [];
+    const gpuTemp: ChartDataPoint[] = [];
 
     data.forEach((element) => {
-      let averageCpuTemp =
+      const averageCpuTemp =
         element.status.hosts
           .map((host) => {
             return host.cpu.temp.main;
           })
           .reduce((a, b) => a + b, 0) / element.status.hosts.length;
-      let averageCpuLoad =
+      const averageCpuLoad =
         element.status.hosts
           .map((host) => {
             return host.cpu.load.main;
           })
           .reduce((a, b) => a + b, 0) / element.status.hosts.length;
-      let averageRamLoad =
+      const averageRamLoad =
         element.status.hosts
           .map((host) => {
             return host.ram.load.main;
           })
           .reduce((a, b) => a + b, 0) / element.status.hosts.length;
-      let averageGpuTemp =
+      const averageGpuTemp =
         element.status.hosts
           .map((host) => {
             return host.gpu ? host.gpu.temp[0].main : 0;
@@ -208,12 +220,14 @@ export function Status() {
 
   const getMastodonPosts = async () => {
     try {
-      let res = await fetch(
+      const res = await fetch(
         "https://mastodon.social/api/v1/accounts/110213092906619761/statuses"
       );
-      let posts = await res.json();
+      const posts = await res.json();
       setPosts(posts.slice(0, 3));
-    } catch (_) {}
+    } catch (_) {
+      console.error();
+    }
   };
 
   useEffect(() => {
@@ -332,7 +346,7 @@ export function Status() {
                     useFlexGap
                     flexWrap="wrap"
                     justifyContent={"space-evenly"}
-                    sm={{ direction: "column" }}
+                    sx={{ direction: { md: "column", lg: "row" } }}
                   >
                     {posts.map((post) => (
                       <iframe
@@ -361,7 +375,7 @@ export function Status() {
           )}
         </Grid>
 
-        <script src="https://mastodon.social/embed.js" async="async"></script>
+        <script src="https://mastodon.social/embed.js" async></script>
       </Container>
     </Page>
   );

@@ -44,28 +44,35 @@ import useResource from "../../hooks/useResource";
 import { errorHandler } from "../../utils/errorHandler";
 import { Link as RouterLink } from "react-router-dom";
 import { useTheme } from "@mui/material/styles";
+import {
+  TeamMember,
+  TeamRead,
+  TeamResource,
+  UserRead,
+} from "kthcloud-types/types/v1/body";
 
 const Teams = () => {
   const { user, teams, beginFastLoad } = useResource();
   const { t } = useTranslation();
+  const theme = useTheme();
   const { initialized, keycloak } = useKeycloak();
 
-  const [loading, setLoading] = useState(false);
-  const [stale, setStale] = useState(null);
-  const [teamName, setTeamName] = useState("");
-  const [teamDescription, setTeamDescription] = useState("");
-  const [expandedTeam, setExpandedTeam] = useState(null);
-  const [results, setResults] = useState([]);
-  const [selected, setSelected] = useState("");
-  const [users, setUsers] = useState([]);
-  const theme = useTheme();
+  const [teamName, setTeamName] = useState<string>("");
+  const [teamDescription, setTeamDescription] = useState<string>("");
+
+  const [loading, setLoading] = useState<boolean>(false);
+  const [stale, setStale] = useState<string>("");
+  const [expandedTeam, setExpandedTeam] = useState<string>("");
+  const [results, setResults] = useState<string[]>([]);
+  const [selected, setSelected] = useState<string>("");
+  const [users, setUsers] = useState<UserRead[]>([]);
 
   useEffect(() => {
-    setStale(null);
+    setStale("");
   }, [teams]);
 
   const create = async () => {
-    if (!initialized) return;
+    if (!(initialized && keycloak.token)) return;
     setLoading(true);
 
     try {
@@ -85,8 +92,8 @@ const Teams = () => {
     }
   };
 
-  const handleDelete = async (team) => {
-    if (!initialized) return;
+  const handleDelete = async (team: TeamRead) => {
+    if (!(initialized && keycloak.token)) return;
 
     setStale("delete " + team.id);
     try {
@@ -101,11 +108,11 @@ const Teams = () => {
     }
   };
 
-  const search = async (query) => {
-    if (!initialized) return;
+  const search = async (query: string) => {
+    if (!(initialized && keycloak.token)) return;
     try {
-      let response = await searchUsers(keycloak.token, query);
-      let options = [];
+      const response = await searchUsers(keycloak.token, query);
+      let options: string[] = [];
 
       response.forEach((user) => {
         if (user.email) {
@@ -129,12 +136,18 @@ const Teams = () => {
     }
   };
 
-  const invite = async (team) => {
-    if (!initialized) return;
+  const invite = async (team: TeamRead) => {
+    if (!(initialized && keycloak.token)) return;
 
-    let member = users.find(
+    const member = users.find(
       (user) => user.email === selected || user.username === selected
     );
+    if (!member) {
+      enqueueSnackbar(t("update-error"), {
+        variant: "error",
+      });
+      return;
+    }
 
     try {
       await addMembers(keycloak.token, team.id, [...team.members, member]);
@@ -148,14 +161,17 @@ const Teams = () => {
     }
   };
 
-  const handleRemoveResource = async (team, resource) => {
-    if (!initialized) return;
+  const handleRemoveResource = async (
+    team: TeamRead,
+    resource: TeamResource
+  ) => {
+    if (!(initialized && keycloak.token)) return;
 
-    let currentIds = team.resources
+    const currentIds = team.resources
       .map((r) => r.id)
       .filter((id) => id !== resource.id);
 
-    let body = {
+    const body = {
       resources: currentIds,
     };
 
@@ -172,10 +188,10 @@ const Teams = () => {
     }
   };
 
-  const handleRemoveUser = async (team, user) => {
-    if (!initialized) return;
+  const handleRemoveUser = async (team: TeamRead, user: TeamMember) => {
+    if (!(initialized && keycloak.token)) return;
 
-    let body = {
+    const body = {
       members: team.members.filter((member) => member.id !== user.id),
     };
 
@@ -232,12 +248,13 @@ const Teams = () => {
                                   },
                                   cursor: "pointer",
                                   background:
-                                    expandedTeam === team.id &&
-                                    theme.palette.grey[300],
+                                    expandedTeam === team.id
+                                      ? theme.palette.grey[200]
+                                      : "transparent",
                                 }}
                                 onClick={() =>
                                   expandedTeam === team.id
-                                    ? setExpandedTeam(null)
+                                    ? setExpandedTeam("")
                                     : setExpandedTeam(team.id)
                                 }
                               >
@@ -262,7 +279,6 @@ const Teams = () => {
                                       {team.members.map((member) => (
                                         <Gravatar
                                           user={member}
-                                          alt={member.username}
                                           sx={{ width: 24, height: 24 }}
                                           key={"avatar" + member.id}
                                         />
@@ -448,7 +464,10 @@ const Teams = () => {
                                                   >
                                                     {t("invite")}
                                                   </Button>
-                                                  <Box sx={{ flexGrow: 1 }} />
+                                                  <Box
+                                                    component="div"
+                                                    sx={{ flexGrow: 1 }}
+                                                  />
                                                   <ConfirmButton
                                                     action={t("delete")}
                                                     actionText={
@@ -559,7 +578,7 @@ const Teams = () => {
                               )}
                             </Fragment>
                           ) : (
-                            <TableRow>
+                            <TableRow key={"loading-row-" + index}>
                               <TableCell colSpan={3}>
                                 <Skeleton animation="wave" height={64} />
                               </TableCell>

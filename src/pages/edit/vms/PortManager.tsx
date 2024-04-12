@@ -19,7 +19,6 @@ import {
   CardHeader,
   CardContent,
   CircularProgress,
-  Tooltip,
   Stack,
   useTheme,
 } from "@mui/material";
@@ -31,25 +30,26 @@ import { useKeycloak } from "@react-keycloak/web";
 import { errorHandler } from "../../../utils/errorHandler";
 import { useTranslation } from "react-i18next";
 import CopyButton from "../../../components/CopyButton";
+import { Port, Vm } from "../../../types";
 
-export default function PortManager({ vm }) {
+export default function PortManager({ vm }: { vm: Vm }) {
   const { t } = useTranslation();
 
   const theme = useTheme();
-  const [ports, setPorts] = useState([]);
+  const [ports, setPorts] = useState<Port[]>([]);
 
-  const [newPort, setNewPort] = useState("");
-  const [newPortName, setNewPortName] = useState("");
-  const [newPortProtocol, setNewPortProtocol] = useState("tcp");
+  const [newPort, setNewPort] = useState<string>("");
+  const [newPortName, setNewPortName] = useState<string>("");
+  const [newPortProtocol, setNewPortProtocol] = useState<string>("tcp");
   const { queueJob } = useResource();
   const { initialized, keycloak } = useKeycloak();
   const [loading, setLoading] = useState(false);
   const [publicIP, setPublicIP] = useState("");
-  const [deleting, setDeleting] = useState([]);
+  const [deleting, setDeleting] = useState<string[]>([]);
   const [publicDomain, setPublicDomain] = useState("");
 
-  const isSamePort = (p1, p2) => {
-    if (p1.internal !== p2.internal) return false;
+  const isSamePort = (p1: Port, p2: Port) => {
+    if (p1.port !== p2.port) return false;
     if (p1.name !== p2.name) return false;
     if (p1.protocol !== p2.protocol) return false;
 
@@ -84,8 +84,8 @@ export default function PortManager({ vm }) {
     }
   };
 
-  const applyChanges = async (newPorts) => {
-    if (!initialized) return;
+  const applyChanges = async (newPorts: Port[]) => {
+    if (!(initialized && keycloak.token)) return;
     setLoading(true);
     setPorts(newPorts);
 
@@ -104,22 +104,22 @@ export default function PortManager({ vm }) {
     }
   };
 
-  const deletePort = async (port) => {
-    if (!initialized) return;
+  const deletePort = async (port: Port) => {
+    if (!(initialized && keycloak.token)) return;
     setLoading(true);
     // remove externalport from port
     setPorts(
       ports.map((item) => {
         if (isSamePort(item, port)) {
-          item.externalPort = null;
+          item.externalPort = undefined;
         }
         return item;
       })
     );
 
-    setDeleting([...deleting, port.name]);
+    if (port.name) setDeleting([...deleting, port.name]);
 
-    let newPorts = ports.filter((item) => !isSamePort(item, port));
+    const newPorts = ports.filter((item) => !isSamePort(item, port));
 
     try {
       const res = await updateVM(vm.id, { ports: newPorts }, keycloak.token);
@@ -214,7 +214,9 @@ export default function PortManager({ vm }) {
                   <TableCell component="th" scope="row">
                     {port.name}
                   </TableCell>
-                  <TableCell>{port.protocol.toUpperCase()}</TableCell>
+                  {port.protocol && (
+                    <TableCell>{port.protocol.toUpperCase()}</TableCell>
+                  )}
                   <TableCell>{port.port}</TableCell>
                   <TableCell>
                     {port.externalPort ? (
@@ -240,9 +242,9 @@ export default function PortManager({ vm }) {
                         aria-label="edit port"
                         component="label"
                         onClick={() => {
-                          setNewPort(port.port);
-                          setNewPortName(port.name);
-                          setNewPortProtocol(port.protocol);
+                          setNewPort(port.port?.toString() || "");
+                          setNewPortName(port.name?.toString() || "");
+                          setNewPortProtocol(port.protocol || "");
                           setPorts(
                             ports.filter((item) => !isSamePort(item, port))
                           );
@@ -319,7 +321,8 @@ export default function PortManager({ vm }) {
                       component="label"
                       disabled={!newPort}
                       onClick={() => {
-                        if (!newPort) return;
+                        if (!(newPort && newPortName && newPortProtocol))
+                          return;
 
                         applyChanges([
                           ...ports,

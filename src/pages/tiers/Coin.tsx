@@ -1,13 +1,23 @@
+/* eslint-disable react/no-unknown-property */
 import { useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { MeshStandardMaterial } from "three";
 
-const CoinMesh = ({ radius, material, spin }) => {
-  const meshRef = useRef();
+const CoinMesh = ({
+  radius,
+  material,
+  spin,
+}: {
+  radius: number;
+  material: MeshStandardMaterial;
+  spin: boolean;
+}) => {
+  const meshRef = useRef<any>();
   const [direction, setDirection] = useState(Math.random() > 0.5 ? 1 : -1);
   const [goBack, setGoBack] = useState(false);
 
   useFrame((_, delta) => {
+    if (!meshRef.current?.rotation) return;
     if (spin && !goBack) {
       meshRef.current.rotation.z += direction * delta;
       if (meshRef.current.rotation.z >= 0.5) {
@@ -36,17 +46,14 @@ const CoinMesh = ({ radius, material, spin }) => {
   return (
     <group ref={meshRef} rotation={[Math.PI / 2, 0, 0]}>
       <mesh position={[0, 0, 0]}>
-        <cylinderGeometry
-          position={[0, 0, 0]}
-          args={[radius, radius, 0.5, 100]}
-        />
+        <cylinderGeometry args={[radius, radius, 0.5, 100]} />
         <primitive object={material} />
       </mesh>
     </group>
   );
 };
 
-export const Coin = ({ tier, spin }) => {
+export const Coin = ({ tier, spin }: { tier: string; spin: boolean }) => {
   let material;
 
   switch (tier) {
@@ -94,12 +101,7 @@ export const Coin = ({ tier, spin }) => {
       <directionalLight position={[-5, 5, 5]} intensity={1} color={"#aaf"} />
       <camera position={[0, 0, 5]} />
 
-      <CoinMesh
-        position={[0, 0, 0]}
-        radius={3}
-        material={material}
-        spin={spin}
-      />
+      <CoinMesh radius={3} material={material} spin={spin} />
     </Canvas>
   );
 };

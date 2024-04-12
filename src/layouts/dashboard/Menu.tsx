@@ -67,7 +67,7 @@ export default function Menu() {
       >
         {user && (
           <>
-            <Box sx={{ mt: 1.5, px: 2.5 }}>
+            <Box component="div" sx={{ mt: 1.5, px: 2.5 }}>
               <Typography
                 variant="body2"
                 sx={{ color: "text.secondary" }}
@@ -96,7 +96,7 @@ export default function Menu() {
 
             <Divider sx={{ borderStyle: "dashed" }} />
 
-            <Box sx={{ mt: 1.5, px: 2.5 }}>
+            <Box component="div" sx={{ mt: 1.5, px: 2.5 }}>
               <Typography
                 variant="body2"
                 sx={{ color: "text.secondary" }}
@@ -139,7 +139,7 @@ export default function Menu() {
           </>
         )}
 
-        <Box sx={{ mt: 1.5, px: 2.5 }}>
+        <Box component="div" sx={{ mt: 1.5, px: 2.5 }}>
           <Typography variant="body2" sx={{ color: "text.secondary" }} noWrap>
             {t("menu-kthcloud")}
           </Typography>
@@ -196,7 +196,7 @@ export default function Menu() {
         </Stack>
         <Divider sx={{ borderStyle: "dashed" }} />
 
-        <Box sx={{ mt: 1.5, px: 2.5 }}>
+        <Box component="div" sx={{ mt: 1.5, px: 2.5 }}>
           <Typography variant="body2" sx={{ color: "text.secondary" }} noWrap>
             {t("theme")}
           </Typography>
@@ -215,7 +215,7 @@ export default function Menu() {
           <>
             <Divider sx={{ borderStyle: "dashed" }} />
 
-            <Box sx={{ mt: 1.5, px: 2.5 }}>
+            <Box component="div" sx={{ mt: 1.5, px: 2.5 }}>
               <Typography
                 variant="body2"
                 sx={{ color: "text.secondary" }}

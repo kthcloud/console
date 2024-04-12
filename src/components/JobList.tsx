@@ -75,7 +75,7 @@ export default function JobList() {
       }}
     >
       <Toolbar>
-        <Box sx={{ flexGrow: 1 }} />
+        <Box sx={{ flexGrow: 1 }} component="div" />
         <Stack direction={"row"} flexWrap={"wrap"}>
           {jobs.map(
             (job) =>

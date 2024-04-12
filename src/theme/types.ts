@@ -23,6 +23,12 @@ export interface CustomColor extends Color {
   A200: string;
   A400: string;
   A700: string;
+  light: string;
+  lighter: string;
+  main: string;
+  dark: string;
+  darker: string;
+  contrastText: string;
 }
 
 type ColorArray = [string, string, string, string];
@@ -34,10 +40,19 @@ type ChartColors = {
 export interface CustomPalette extends Palette {
   grey: CustomColor;
   chart: ChartColors;
+  primary: CustomColor;
+  secondary: CustomColor;
+  error: CustomColor;
+  warning: CustomColor;
+  info: CustomColor;
+  success: CustomColor;
 }
 
 export interface CustomTheme extends Theme {
   customShadows: {
+    primary: string;
+    secondary: string;
+    z8: string;
     z20: string;
     z24: string;
   };

@@ -154,7 +154,7 @@ export const DomainManager = ({ deployment }) => {
           },
         }}
       >
-        <Box sx={{ p: 2, maxWidth: 700 }}>
+        <Box component="div" sx={{ p: 2, maxWidth: 700 }}>
           <Stack
             direction="row"
             alignItems="center"
@@ -294,7 +294,7 @@ export const DomainManager = ({ deployment }) => {
             )}
           </Stack>
         </Box>
-        <Box sx={{ flexGrow: 1 }} />
+        <Box component="div" sx={{ flexGrow: 1 }} />
         <Divider />
 
         <Stack
@@ -313,7 +313,7 @@ export const DomainManager = ({ deployment }) => {
           >
             {t("button-close")}
           </Button>
-          <Box sx={{ flexGrow: 1 }} />
+          <Box component="div" sx={{ flexGrow: 1 }} />
           {activeStep > 0 && (
             <Button
               variant="outlined"

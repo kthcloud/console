@@ -9,24 +9,17 @@ import {
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import Page from "../../components/Page";
-import tierConfig from "./tiers.json";
 import useResource from "../../hooks/useResource";
 import { Coin } from "./Coin";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useKeycloak } from "@react-keycloak/web";
-
-type Tier = {
+import { discover } from "../../api/deploy/discover";
+import Scrollbar from "../../components/Scrollbar";
+export type Tier = {
   name: string;
   description: string;
-  permissions: {
-    chooseZone: boolean;
-    chooseGpu: boolean;
-    useGpus: boolean;
-    usePrivilegedGpus: boolean;
-    useCustomDomains: boolean;
-    gpuLeaseDuration: number | string;
-  };
-  quotas: {
+  permissions: string[];
+  quota: {
     deployments: number;
     cpuCores: number;
     ram: number;
@@ -37,7 +30,7 @@ type Tier = {
 
 const TierCard = ({ tier }: { tier: Tier }) => {
   const { t } = useTranslation();
-  const [hovering, setHovering] = useState(false);
+  const [hovering, setHovering] = useState<boolean>(false);
   const { user } = useResource();
   const { keycloak } = useKeycloak();
 
@@ -74,14 +67,15 @@ const TierCard = ({ tier }: { tier: Tier }) => {
           gutterBottom
           sx={{ whiteSpace: "nowrap" }}
         >
-          {(tier.permissions.useGpus ? "✅ " : "❌ ") + t("landing-hero-gpu")}
+          {(tier.permissions.includes("useGpus") ? "✅ " : "❌ ") +
+            t("landing-hero-gpu")}
         </Typography>
         <Typography
           variant="subtitle2"
           gutterBottom
           sx={{ whiteSpace: "nowrap" }}
         >
-          {(tier.permissions.useCustomDomains ? "✅ " : "❌ ") +
+          {(tier.permissions.includes("useCustomDomains") ? "✅ " : "❌ ") +
             t("use-custom-domains")}
         </Typography>
         <Typography
@@ -89,39 +83,39 @@ const TierCard = ({ tier }: { tier: Tier }) => {
           gutterBottom
           sx={{ whiteSpace: "nowrap" }}
         >
-          {`🚀 ${t("resource-deployments")}: ${tier.quotas.deployments}`}
+          {`🚀 ${t("resource-deployments")}: ${tier.quota.deployments}`}
         </Typography>
         <Typography
           variant="subtitle2"
           gutterBottom
           sx={{ whiteSpace: "nowrap" }}
         >
-          {`💻 ${t("landing-hero-cpu")}: ${tier.quotas.cpuCores}`}
+          {`💻 ${t("landing-hero-cpu")}: ${tier.quota.cpuCores}`}
         </Typography>
         <Typography
           variant="subtitle2"
           gutterBottom
           sx={{ whiteSpace: "nowrap" }}
         >
-          {`🧠 ${t("memory")}: ${tier.quotas.ram} GB`}
+          {`🧠 ${t("memory")}: ${tier.quota.ram} GB`}
         </Typography>
         <Typography
           variant="subtitle2"
           gutterBottom
           sx={{ whiteSpace: "nowrap" }}
         >
-          {`💽 ${t("create-vm-disk-size")}: ${tier.quotas.diskSize} GB`}
+          {`💽 ${t("create-vm-disk-size")}: ${tier.quota.diskSize} GB`}
         </Typography>
         <Typography
           variant="subtitle2"
           gutterBottom
           sx={{ whiteSpace: "nowrap", mb: 3 }}
         >
-          {`📸 ${t("snapshots")}: ${tier.quotas.snapshots}`}
+          {`📸 ${t("snapshots")}: ${tier.quota.snapshots}`}
         </Typography>
 
         {user?.role?.name === tier.name ? (
-          <Button variant="contained" color="primary" fullWidth m={3} disabled>
+          <Button variant="contained" color="primary" fullWidth disabled>
             {t("current-plan")}
           </Button>
         ) : (
@@ -131,7 +125,6 @@ const TierCard = ({ tier }: { tier: Tier }) => {
                 variant="outlined"
                 color="primary"
                 fullWidth
-                m={3}
                 onClick={() =>
                   keycloak.login({
                     redirectUri: window.location.origin + "/deploy",
@@ -145,7 +138,6 @@ const TierCard = ({ tier }: { tier: Tier }) => {
                 variant="contained"
                 color="primary"
                 fullWidth
-                m={3}
                 href="https://discord.gg/MuHQd6QEtM"
               >
                 {t("contact-us")}
@@ -160,11 +152,19 @@ const TierCard = ({ tier }: { tier: Tier }) => {
 
 const Tiers = () => {
   const { t } = useTranslation();
-  const tiers = tierConfig;
+  // const tiers = tierConfig;
+
+  const [tiers, setTiers] = useState<Tier[]>([]);
+
+  useEffect(() => {
+    discover().then((response) => {
+      setTiers(response.roles);
+    });
+  }, []);
 
   return (
     <Page title={t("menu-tiers")}>
-      <Container maxWidth={false}>
+      <Container maxWidth="xl">
         <Stack spacing={3} alignItems={"center"}>
           <Typography variant="h2" gutterBottom>
             {t("menu-tiers")}
@@ -173,23 +173,24 @@ const Tiers = () => {
           <Typography variant="h4" gutterBottom sx={{ fontWeight: 200, pb: 5 }}>
             {t("menu-tiers-subheader")}
           </Typography>
-
-          <Box
-            sx={{
-              overflowX: "auto",
-              maxWidth: "100%",
-              display: "flex",
-              flexWrap: "nowrap",
-              paddingBottom: "16px",
-            }}
-          >
-            <Stack direction="row" spacing={5}>
-              <Box sx={{ minWidth: 20 }}></Box>
-              {tiers.map((tier) => (
-                <TierCard tier={tier} key={tier.name} />
-              ))}
-              <Box sx={{ minWidth: 20 }}></Box>
-            </Stack>
+          <Box component="div" sx={{ width: "100%", pb: 5 }}>
+            <Scrollbar>
+              <Stack
+                direction="row"
+                spacing={5}
+                sx={{
+                  overflowX: "visible",
+                  pb: 5,
+                  minWidth: "100%",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                {tiers.map((tier) => (
+                  <TierCard tier={tier} key={tier.name} />
+                ))}
+              </Stack>
+            </Scrollbar>
           </Box>
         </Stack>
       </Container>
