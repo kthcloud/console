@@ -21,6 +21,17 @@
   "overrides": [
     {
       "files": [
+        "*.ts",
+        "*.tsx"
+      ],
+      "options": {
+        "parser": "typescript",
+        "printWidth": 80,
+        "tabWidth": 2
+      }
+    },
+    {
+      "files": [
         "*.json",
         "*.jsonc",
         "*.json5"
@@ -86,7 +97,9 @@
       "files": "*.conf",
       "options": {
         "parser": "nginx",
-        "plugins": ["./node_modules/prettier-plugin-nginx/dist/index.js"]
+        "plugins": [
+          "./node_modules/prettier-plugin-nginx/dist/index.js"
+        ]
       }
     }
   ]

@@ -7,7 +7,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite --port 3000",
-    "build": "vite build"
+    "build": "vite build",
+    "format": "prettier --write ."
   },
   "dependencies": {
     "@emotion/react": "^11.11.3",
@@ -15,13 +16,16 @@
     "@iconify/react": "^4.1.1",
     "@mui/icons-material": "^5.15.6",
     "@mui/lab": "^5.0.0-alpha.162",
-    "@mui/material": "^5.15.6",
+    "@mui/material": "^5.15.15",
     "@mui/material-next": "^6.0.0-alpha.120",
-    "@mui/x-tree-view": "^6.17.0",
+    "@mui/x-tree-view": "^7.1.1",
     "@react-keycloak/web": "^3.4.0",
     "@react-three/fiber": "^8.15.15",
     "@sanity/eventsource": "^5.0.1",
-    "@types/three": "^0.160.0",
+    "@types/crypto-js": "^4.2.2",
+    "@types/numeral": "^2.0.5",
+    "@types/punycode": "^2.1.4",
+    "@types/three": "^0.163.0",
     "apexcharts": "^3.45.2",
     "change-case": "^5.4.2",
     "crypto-js": "^4.2.0",
@@ -29,12 +33,12 @@
     "i18next": "^23.7.19",
     "i18next-browser-languagedetector": "^7.2.0",
     "js-base64": "^3.7.6",
-    "keycloak-js": "^23.0.4",
+    "keycloak-js": "^24.0.2",
+    "kthcloud-types": "^1.0.0",
     "lodash": "^4.17.21",
     "million": "latest",
     "notistack": "^3.0.1",
     "numeral": "^2.0.6",
-    "prop-types": "^15.8.1",
     "punycode": "^2.3.1",
     "react": "^18.2.0",
     "react-apexcharts": "^1.4.1",
@@ -46,14 +50,26 @@
     "react-router-dom": "^6.21.3",
     "simplebar": "^6.2.5",
     "simplebar-react": "^3.2.4",
-    "three": "^0.160.1",
+    "three": "^0.163.0",
+    "three-stdlib": "^2.29.6",
     "yaml": "^2.3.4"
   },
   "devDependencies": {
     "@faker-js/faker": "^8.3.1",
+    "@types/react": "^18.2.73",
+    "@types/react-copy-to-clipboard": "^5.0.7",
+    "@types/react-dom": "^18.2.23",
+    "@typescript-eslint/eslint-plugin": "^7.4.0",
+    "@typescript-eslint/parser": "^7.4.0",
     "@vitejs/plugin-react": "^4.2.1",
+    "@vitejs/plugin-react-swc": "^3.5.0",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react": "^7.34.1",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.6",
     "prettier": "^3.2.4",
     "prettier-plugin-nginx": "^1.0.3",
-    "vite": "^5.0.12"
+    "typescript": "^5.4.3",
+    "vite": "^5.2.0"
   }
 }

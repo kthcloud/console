@@ -90,7 +90,7 @@ If you would like to add support for another language, please discuss this as an
 
 ## Formatting
 
-This project uses Prettier as the code formatter. We have a `.prettierrc` file in the repository that sets the formatting rules, so please make sure to format your code before submitting a pull request. You can format your code by using the appropriate extension or plugin in your IDE, or running `prettier --write .` in your terminal (You can install prettier with `bun install -g prettier`).
+This project uses Prettier as the code formatter. We have a `.prettierrc` file in the repository that sets the formatting rules, so please make sure to format your code before submitting a pull request. You can format your code by using the appropriate extension or plugin in your IDE, or running `bun run format` in your terminal (You can install prettier with `bun install -g prettier`).
 
 ## License
 
