@@ -3,8 +3,10 @@ import {
   CardContent,
   CardHeader,
   CircularProgress,
+  Stack,
   ToggleButton,
   ToggleButtonGroup,
+  Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -64,8 +66,16 @@ const ZoneSelector = ({
               <ToggleButton
                 value={zone.name}
                 key={`zones-toggle-${zone.name}-${index}`}
+                sx={{ textTransform: "none" }}
               >
-                {zone.description}
+                {
+                  <Stack direction="column">
+                    <Typography variant="caption">
+                      {zone.description}
+                    </Typography>
+                    <Typography variant="caption">{zone.name}</Typography>
+                  </Stack>
+                }
               </ToggleButton>
             ))}
           </ToggleButtonGroup>
