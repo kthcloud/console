@@ -14,16 +14,17 @@ import useResource from "../../../hooks/useResource";
 import { updateDeployment } from "../../../api/deploy/deployments";
 import { errorHandler } from "../../../utils/errorHandler";
 import { useTranslation } from "react-i18next";
+import { Deployment } from "../../../types";
 
-export const PrivateMode = ({ deployment }) => {
+export const PrivateMode = ({ deployment }: { deployment: Deployment }) => {
   const { t } = useTranslation();
-  const [privateMode, setPrivateMode] = useState(null);
+  const [privateMode, setPrivateMode] = useState<boolean>(false);
   const [loading, setLoading] = useState(false);
   const { initialized, keycloak } = useKeycloak();
   const { queueJob } = useResource();
 
-  const applyChanges = async (checked) => {
-    if (!initialized) return;
+  const applyChanges = async (checked: boolean) => {
+    if (!(initialized && keycloak.token)) return;
     setPrivateMode(checked);
     setLoading(true);
 

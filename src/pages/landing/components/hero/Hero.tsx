@@ -54,11 +54,11 @@ const Hero = () => {
 
   const getHeaderGenerated = async () => {
     try {
-      let res = await fetch(
+      const res = await fetch(
         "https://llama-prefetch.app.cloud.cbh.kth.se/query"
       );
 
-      let content = await res.json();
+      const content = await res.json();
 
       if (content.header) {
         setHeader(content.header);
@@ -67,6 +67,7 @@ const Hero = () => {
         setSubheader(content.sub);
       }
     } catch (_) {
+      console.error("Error fetching header");
     } finally {
       setHeaderLoading(false);
     }
@@ -100,10 +101,9 @@ const Hero = () => {
             variant="h1"
             sx={{
               fontSize: { xs: "38px", sm: "56px", md: "72px" },
-              opacity: headerLoading ? 0 : 1,
+              opacity: headerLoading ? 0 : 255,
+              pr: 5,
             }}
-            pr={5}
-            opacity={headerLoading ? 0 : 1}
           >
             {i18n.language !== "en" ? (
               t("onboarding-welcome")
@@ -113,7 +113,7 @@ const Hero = () => {
           </Typography>
           <div className="hero-p">
             <Typography
-              variant="body"
+              variant="body1"
               sx={{ fontSize: "1.4rem", opacity: headerLoading ? 0 : 1 }}
             >
               {i18n.language !== "en" ? (

@@ -6,19 +6,25 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import useResource from "../../hooks/useResource";
 import { updateUserData } from "../../api/deploy/userData";
+import { UserDataRead } from "kthcloud-types/types/v1/body";
 
 export const ResetOnboarding = () => {
   const { t } = useTranslation();
-  const { keycloak } = useKeycloak();
-  const { initialLoad, user, setUser } = useResource();
+  const { initialized, keycloak } = useKeycloak();
+  const { initialLoad } = useResource();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const reset = async () => {
+    if (!(initialized && keycloak.token)) return;
+
     setLoading(true);
 
-    const response = await updateUserData(keycloak.token, "onboarded", "false");
+    const response: UserDataRead = await updateUserData(
+      keycloak.token,
+      "onboarded",
+      "false"
+    );
     if (response) {
-      setUser(response);
       setTimeout(() => {
         navigate("/onboarding");
       }, 500);
@@ -27,7 +33,7 @@ export const ResetOnboarding = () => {
 
   return (
     <>
-      {!(initialLoad && user) ? (
+      {!initialLoad ? (
         <CircularProgress />
       ) : (
         <Card sx={{ boxShadow: 20 }}>

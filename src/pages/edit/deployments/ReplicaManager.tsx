@@ -16,15 +16,16 @@ import useResource from "../../../hooks/useResource";
 import { updateDeployment } from "../../../api/deploy/deployments";
 import { errorHandler } from "../../../utils/errorHandler";
 import { useTranslation } from "react-i18next";
+import { Deployment } from "../../../types";
 
-export const ReplicaManager = ({ deployment }) => {
+export const ReplicaManager = ({ deployment }: { deployment: Deployment }) => {
   const { t } = useTranslation();
   const { initialized, keycloak } = useKeycloak();
   const { queueJob, user } = useResource();
 
-  const [loading, setLoading] = useState(false);
-  const [max, setMax] = useState(0);
-  const [count, _setCount] = useState(deployment.replicas);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [max, setMax] = useState<number>(0);
+  const [count, _setCount] = useState<number>(deployment.replicas);
 
   useEffect(() => {
     if (!(initialized && user)) return;
@@ -38,8 +39,8 @@ export const ReplicaManager = ({ deployment }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const applyChanges = async (r) => {
-    if (!initialized) return;
+  const applyChanges = async (r: number) => {
+    if (!(initialized && keycloak.token)) return;
     setLoading(true);
 
     try {
@@ -62,7 +63,7 @@ export const ReplicaManager = ({ deployment }) => {
     }
   };
 
-  const setCount = (v) => {
+  const setCount = (v: any) => {
     navigator?.vibrate([0.1, 5, 0.1]);
 
     if (v > max) {
@@ -87,7 +88,7 @@ export const ReplicaManager = ({ deployment }) => {
             <Slider
               aria-labelledby="input-slider"
               value={count}
-              onChange={(e, v) => setCount(v)}
+              onChange={(_, v) => setCount(v)}
               min={0}
               max={max}
               step={1}

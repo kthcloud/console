@@ -1,8 +1,9 @@
 import { Card, CardContent, CardHeader, Chip, Stack } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import Iconify from "../../components/Iconify";
+import { User } from "../../types";
 
-export const UserQuotas = ({ user }) => {
+export const UserQuotas = ({ user }: { user: User }) => {
   const { t } = useTranslation();
 
   return (
@@ -16,7 +17,6 @@ export const UserQuotas = ({ user }) => {
           useFlexGap={true}
         >
           <Chip
-            m={1}
             icon={<Iconify icon="uil:processor" width={24} height={24} />}
             label={
               <span>
@@ -33,7 +33,6 @@ export const UserQuotas = ({ user }) => {
             }
           />
           <Chip
-            m={1}
             icon={<Iconify icon="bi:memory" width={24} height={24} />}
             label={
               <span>
@@ -52,7 +51,6 @@ export const UserQuotas = ({ user }) => {
             }
           />
           <Chip
-            m={1}
             icon={<Iconify icon="mdi:harddisk" width={24} height={24} />}
             label={
               <span>
@@ -71,7 +69,6 @@ export const UserQuotas = ({ user }) => {
             }
           />
           <Chip
-            m={1}
             icon={<Iconify icon="mdi:kubernetes" width={24} height={24} />}
             label={
               <span>
@@ -88,7 +85,6 @@ export const UserQuotas = ({ user }) => {
             }
           />
           <Chip
-            m={1}
             icon={
               <Iconify icon="material-symbols:save" width={24} height={24} />
             }

@@ -8,12 +8,13 @@ import { updateDeployment } from "../../../api/deploy/deployments";
 import Iconify from "../../../components/Iconify";
 import useResource from "../../../hooks/useResource";
 import { errorHandler } from "../../../utils/errorHandler";
+import { Deployment } from "../../../types";
 
-export const ImageManager = ({ deployment }) => {
+export const ImageManager = ({ deployment }: { deployment: Deployment }) => {
   const { t } = useTranslation();
-  const [image, setImage] = useState("");
+  const [image, setImage] = useState<string>("");
   const [loading, setLoading] = useState(false);
-  const { keycloak } = useKeycloak();
+  const { initialized, keycloak } = useKeycloak();
   const { queueJob } = useResource();
 
   useEffect(() => {
@@ -22,7 +23,8 @@ export const ImageManager = ({ deployment }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleSave = async (img) => {
+  const handleSave = async (img: string) => {
+    if (!(initialized && keycloak.token)) return;
     const newImage = img.trim();
     if (newImage === deployment.image) return;
 
@@ -71,7 +73,7 @@ export const ImageManager = ({ deployment }) => {
             onChange={(e) => setImage(e.target.value.trim())}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
-                handleSave(e.target.value);
+                handleSave(image);
               }
             }}
             fullWidth

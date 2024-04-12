@@ -37,20 +37,22 @@ import { errorHandler } from "../../../utils/errorHandler";
 import { toUnicode } from "punycode";
 import { useTranslation } from "react-i18next";
 import { sentenceCase } from "change-case";
+import { Deployment } from "../../../types";
 
-export const DomainManager = ({ deployment }) => {
+export const DomainManager = ({ deployment }: { deployment: Deployment }) => {
   const { t } = useTranslation();
-  const [domain, setDomain] = useState("");
-  const [loading, setLoading] = useState(false);
-  const { keycloak } = useKeycloak();
+  const { initialized, keycloak } = useKeycloak();
   const { queueJob } = useResource();
-  const [initialDomain, setInitialDomain] = useState("");
-  const [createDialogOpen, setCreateDialogOpen] = useState(false);
-  const [activeStep, setActiveStep] = useState(0);
-  const steps = t("setup-custom-domain-steps").split("|");
-
   const theme = useTheme();
   const md = useMediaQuery(theme.breakpoints.down("md"));
+
+  const [domain, setDomain] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const [initialDomain, setInitialDomain] = useState<string>("");
+  const [createDialogOpen, setCreateDialogOpen] = useState<boolean>(false);
+  const [activeStep, setActiveStep] = useState<number>(0);
+
+  const steps = t("setup-custom-domain-steps").split("|");
 
   useEffect(() => {
     if (!deployment.customDomainUrl) return;
@@ -63,7 +65,8 @@ export const DomainManager = ({ deployment }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleSave = async (d) => {
+  const handleSave = async (d: string): Promise<boolean> => {
+    if (!(initialized && keycloak.token)) return false;
     const newDomain = d.trim();
 
     setLoading(true);
@@ -87,11 +90,12 @@ export const DomainManager = ({ deployment }) => {
       success = false;
     } finally {
       setLoading(false);
-      return success;
     }
+    return success;
   };
 
   const handleClear = async () => {
+    if (!(initialized && keycloak.token)) return;
     setLoading(true);
     try {
       const res = await updateDeployment(
@@ -218,7 +222,7 @@ export const DomainManager = ({ deployment }) => {
                             }}
                             onKeyDown={(e) => {
                               if (e.key === "Enter") {
-                                handleSave(e.target.value);
+                                handleNext();
                               }
                             }}
                             sx={{ minWidth: 150 }}

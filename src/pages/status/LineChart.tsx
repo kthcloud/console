@@ -28,7 +28,15 @@ const ChartWrapperStyle = styled("div")(({ theme }) => ({
   },
 }));
 
-export default function LineChart({ title, chartData, chartColors }) {
+export default function LineChart({
+  title,
+  chartData,
+  chartColors,
+}: {
+  title: string;
+  chartData: any;
+  chartColors: string[];
+}) {
   const chartOptions = merge(BaseOptionChart(), {
     plotOptions: { treemap: {} },
     xaxis: {

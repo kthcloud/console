@@ -1,6 +1,7 @@
 import { alpha, useTheme } from "@mui/material/styles";
 import { GlobalStyles } from "@mui/material";
 import { CustomTheme } from "../../theme/types";
+import { ApexOptions } from "apexcharts";
 
 export function BaseOptionChartStyle() {
   const theme: CustomTheme = useTheme();
@@ -64,21 +65,21 @@ export function BaseOptionChartStyle() {
   );
 }
 
-export default function BaseOptionChart() {
+export default function BaseOptionChart(): ApexOptions {
   const theme: CustomTheme = useTheme();
 
-  const LABEL_TOTAL = {
-    show: true,
-    label: "Total",
-    color: theme.palette.text.secondary,
-    ...theme.typography.subtitle2,
-  };
+  // const LABEL_TOTAL = {
+  //   show: true,
+  //   label: "Total",
+  //   color: theme.palette.text.secondary,
+  //   ...theme.typography.subtitle2,
+  // };
 
-  const LABEL_VALUE = {
-    offsetY: 8,
-    color: theme.palette.text.primary,
-    ...theme.typography.h3,
-  };
+  // const LABEL_VALUE = {
+  //   offsetY: 8,
+  //   color: theme.palette.text.primary,
+  //   ...theme.typography.h3,
+  // };
 
   return {
     // Colors
@@ -167,7 +168,7 @@ export default function BaseOptionChart() {
     // Legend
     legend: {
       show: true,
-      fontSize: 13,
+      fontSize: "13px",
       position: "top",
       horizontalAlign: "right",
       markers: {
@@ -188,26 +189,26 @@ export default function BaseOptionChart() {
         borderRadius: 4,
       },
       // Pie + Donut
-      pie: {
-        donut: {
-          labels: {
-            show: true,
-            value: LABEL_VALUE,
-            total: LABEL_TOTAL,
-          },
-        },
-      },
-      // Radialbar
-      radialBar: {
-        track: {
-          strokeWidth: "100%",
-          background: theme.palette.grey[500_16],
-        },
-        dataLabels: {
-          value: LABEL_VALUE,
-          total: LABEL_TOTAL,
-        },
-      },
+      // pie: {
+      //   donut: {
+      //     labels: {
+      //       show: true,
+      //       value: LABEL_VALUE,
+      //       total: LABEL_TOTAL,
+      //     },
+      //   },
+      // },
+      // // Radialbar
+      // radialBar: {
+      //   track: {
+      //     strokeWidth: "100%",
+      //     background: theme.palette.grey[500_16],
+      //   },
+      //   dataLabels: {
+      //     value: LABEL_VALUE,
+      //     total: LABEL_TOTAL,
+      //   },
+      // },
       // Radar
       radar: {
         polygons: {

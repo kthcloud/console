@@ -31,12 +31,12 @@ const ResourceTypeChat = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const askLlama = async (question) => {
+  const askLlama = async (question: string) => {
     if (!question) return;
     setLastInput(question);
     setLoading(true);
 
-    let body = JSON.stringify({
+    const body = JSON.stringify({
       prompt:
         "This is a conversation between user and llama, a friendly chatbot. respond in simple markdown. you need to help the used determine whether they should use a kubernetes deployment or a virtual machine based on their specified use case. Here are the differences: Kubernetes Deployment - Used for stateless frontend and backend services. Allows for CI/CD through GitHub Actions and other pipelines. Your repo must have a Dockerfile. VM (Virtual Machine) - Provides the ability to run an operating system directly. More versatile but deployment and maintenance will be more difficult. Ideal for GPU compute and databases, anything that requires persistent storage. \n\nUser: mysql database \n\n\nllama: You should probably use a Virtual Machine for your MySQL database in order to keep the data persisted.\n\nUser: Machine learning\n\n\nllama: A Virtual Machine would be preferrable to utilize GPU\n\nUser: react frontend\n\n\nllama:A kubernetes deployments is favorable as it is lightweight and the perfect resource type to host your frontend app.\n\nUser: " +
         question +
@@ -55,17 +55,18 @@ const ResourceTypeChat = () => {
     });
 
     try {
-      let res = await fetch("https://llama.app.cloud.cbh.kth.se/completion", {
+      const res = await fetch("https://llama.app.cloud.cbh.kth.se/completion", {
         method: "POST",
         body: body,
       });
 
-      let data = await res.json();
+      const data = await res.json();
 
-      let content = data.content;
+      const content = data.content;
 
       setResponse(content);
     } catch (_) {
+      console.error("Failed to fetch from llama");
     } finally {
       setLoading(false);
     }
@@ -128,7 +129,7 @@ const ResourceTypeChat = () => {
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => {
             if (e.code === "Enter") {
-              askLlama(e.target.value);
+              askLlama(input);
               setInput("");
             }
           }}

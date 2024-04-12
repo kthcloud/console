@@ -250,7 +250,6 @@ export const ResourceContextProvider = ({
       const user = await getUser(keycloak.subject, keycloak.token);
       setUser(user);
       setConnectionError(false);
-
       loadNotifications();
       loadTeams();
       loadUserData();
@@ -276,6 +275,8 @@ export const ResourceContextProvider = ({
   };
 
   const loadUserData = async () => {
+    if (!user) return;
+
     try {
       if (
         !(
@@ -288,7 +289,7 @@ export const ResourceContextProvider = ({
         return;
 
       const userData = await getUserData(keycloak.token);
-      setUser((user) => ({ ...user, userData }));
+      setUser({ ...user, userData });
     } catch (error: any) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar("Error fetching user data: " + e, {

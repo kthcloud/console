@@ -192,17 +192,12 @@ export function Profile() {
                       justifyContent={"space-between"}
                       alignItems={"center"}
                     >
-                      <Chip
-                        sx={{ m: 1 }}
-                        icon={<AccountCircle />}
-                        label={user.username}
-                      />
+                      <Chip icon={<AccountCircle />} label={user.username} />
 
-                      <Chip sx={{ m: 1 }} icon={<Email />} label={user.email} />
+                      <Chip icon={<Email />} label={user.email} />
 
                       {user.role && (
                         <Chip
-                          sx={{ m: 1 }}
                           icon={
                             <Iconify
                               icon="eos-icons:admin"
@@ -216,7 +211,6 @@ export function Profile() {
 
                       {user.admin && (
                         <Chip
-                          sx={{ m: 1 }}
                           icon={
                             <Iconify
                               icon="eos-icons:admin"

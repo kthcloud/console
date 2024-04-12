@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { useRef, useEffect, useState } from "react";
 import { useFrame, useLoader } from "@react-three/fiber";
 import { GLTFLoader } from "three-stdlib";

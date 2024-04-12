@@ -25,8 +25,18 @@ import useResource from "../../../hooks/useResource";
 import { errorHandler } from "../../../utils/errorHandler";
 import { useTranslation } from "react-i18next";
 import RFC1035Input from "../../../components/RFC1035Input";
+import { Deployment } from "../../../types";
+import { Volume } from "kthcloud-types/types/v1/body";
 
-const StorageManager = ({ deployment, persistent, setPersistent }) => {
+const StorageManager = ({
+  deployment,
+  persistent,
+  setPersistent,
+}: {
+  deployment: Deployment;
+  persistent: Volume[];
+  setPersistent: (storage: Volume[]) => void;
+}) => {
   const { t } = useTranslation();
   const { queueJob } = useResource();
   const { initialized, keycloak } = useKeycloak();
@@ -35,8 +45,8 @@ const StorageManager = ({ deployment, persistent, setPersistent }) => {
   const [newPersistentServerPath, setNewPersistentServerPath] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const applyChanges = async (storage) => {
-    if (!initialized) return;
+  const applyChanges = async (storage: Volume[]) => {
+    if (!(initialized && keycloak.token)) return;
     setLoading(true);
 
     setPersistent(storage);
@@ -166,22 +176,13 @@ const StorageManager = ({ deployment, persistent, setPersistent }) => {
                     }}
                   >
                     <TableCell sx={{ verticalAlign: "top" }}>
-                      {/* <TextField
-                        label={t("admin-name")}
-                        variant="outlined"
-                        value={newPersistentName}
-                        onChange={(e) => {
-                          setNewPersistentName(e.target.value);
-                        }}
-                      /> */}
-
                       <RFC1035Input
                         cleaned={newPersistentName}
                         setCleaned={setNewPersistentName}
                         fullWidth={false}
-                        maxWidth={300}
                         label={t("admin-name")}
                         callToAction={t("admin-name") + ": "}
+                        maxWidth="300px"
                       />
                     </TableCell>
                     <TableCell sx={{ verticalAlign: "top", pt: 3 }}>

@@ -1,4 +1,4 @@
-import { useContext, useRef, useState } from "react";
+import { useContext, useState } from "react";
 import {
   Box,
   Divider,
@@ -16,7 +16,6 @@ import useResource from "../../hooks/useResource";
 import { ThemeModeContext } from "../../contexts/ThemeModeContext";
 
 export default function Menu() {
-  const anchorRef = useRef(null);
   const { t } = useTranslation();
 
   const { mode, toggleMode } = useContext(ThemeModeContext);
@@ -25,7 +24,7 @@ export default function Menu() {
 
   const { unread, user } = useResource();
 
-  const handleOpen = (event: MouseEvent) => {
+  const handleOpen = (event: any) => {
     if (event.currentTarget) setOpen(event.currentTarget);
   };
 
@@ -42,11 +41,7 @@ export default function Menu() {
 
   return (
     <>
-      <IconButton
-        ref={anchorRef}
-        onClick={handleOpen}
-        aria-label={t("menu-label")}
-      >
+      <IconButton onClick={handleOpen}>
         <Iconify icon="material-symbols:menu-rounded" width={20} height={20} />
       </IconButton>
 

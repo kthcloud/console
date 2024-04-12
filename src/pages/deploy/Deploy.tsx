@@ -387,18 +387,13 @@ export function Deploy() {
     );
   };
 
-  // Fix this when go-deploy#
   // useEffect(() => {
   //   if (
   //     user &&
   //     user.userData &&
   //     user.userData.find((d) => d.id === "onboarded")?.data !== "true"
   //   ) {
-  //     if (user.onboarded && initialized && keycloak.token) {
-  //       createUserData(keycloak.token, "onboarded", "true");
-  //     } else {
-  //       navigate("/onboarding");
-  //     }
+  //     navigate("/onboarding");
   //   }
 
   //   // eslint-disable-next-line react-hooks/exhaustive-deps

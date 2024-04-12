@@ -17,16 +17,25 @@ import {
   Tooltip,
   TextField,
 } from "@mui/material";
+import { Deployment } from "../../../types";
 
-export const HealthCheckRoute = ({ deployment }) => {
+export const HealthCheckRoute = ({
+  deployment,
+}: {
+  deployment: Deployment;
+}) => {
   const [editing, setEditing] = useState(false);
-  const { keycloak } = useKeycloak();
-  const [newPath, setNewPath] = useState(deployment.healthCheckPath);
+  const { initialized, keycloak } = useKeycloak();
+  const [newPath, setNewPath] = useState<string>(
+    deployment.healthCheckPath || ""
+  );
   const { queueJob } = useResource();
   const [loading, setLoading] = useState(false);
   const { t } = useTranslation();
 
   const save = async () => {
+    if (!(initialized && keycloak.token)) return;
+
     let newRoute = newPath.trim();
     if (!newRoute.startsWith("/")) newRoute = "/" + newRoute;
 
@@ -69,7 +78,7 @@ export const HealthCheckRoute = ({ deployment }) => {
           >
             <IconButton
               onClick={() => {
-                setNewPath(deployment.healthCheckPath);
+                setNewPath(deployment.healthCheckPath || "");
                 setEditing(!editing);
               }}
               color={editing ? "default" : "primary"}

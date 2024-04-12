@@ -1,4 +1,4 @@
-import { FC, ChangeEvent } from "react";
+import { FC } from "react";
 import { styled } from "@mui/material/styles";
 import {
   Toolbar,
@@ -13,7 +13,7 @@ import ConfirmButton from "../../components/ConfirmButton";
 import { useTranslation } from "react-i18next";
 import { CustomTheme } from "../../theme/types";
 
-const RootStyle = styled(Toolbar)(({ theme }: { theme: CustomTheme }) => ({
+const RootStyle = styled(Toolbar)(({ theme }) => ({
   height: 96,
   display: "flex",
   justifyContent: "space-between",
@@ -26,10 +26,13 @@ const SearchStyle = styled(OutlinedInput)(({ theme }) => ({
     easing: theme.transitions.easing.easeInOut,
     duration: theme.transitions.duration.shorter,
   }),
-  "&.Mui-focused": { width: 320, boxShadow: theme.customShadows.z8 },
+  "&.Mui-focused": {
+    width: 320,
+    boxShadow: (theme as CustomTheme).customShadows.z8,
+  },
   "& fieldset": {
     borderWidth: `1px !important`,
-    borderColor: `${theme.palette.grey[500_32]} !important`,
+    borderColor: `${(theme as CustomTheme).palette.grey[500_32]} !important`,
   },
 }));
 
@@ -79,7 +82,7 @@ const ListToolbar: FC<ListToolbarProps> = ({
         />
       )}
 
-      {numSelected > 0 ? (
+      {numSelected > 0 && onDelete ? (
         <ConfirmButton
           action={t("button-delete")}
           actionText={
