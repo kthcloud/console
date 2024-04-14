@@ -469,6 +469,9 @@
         "disclaimer": "Disclaimer",
         "genai-long": "AI generated content may be inaccurate or misleading, always verify the information. All AI generated content on this page is marked with the following symbol",
         "name-cannot-be-empty": "Name cannot be empty",
-        "saving-name": "Saving name..."
+        "saving-name": "Saving name...",
+        "rfc-1035-1": " must adhere to ",
+        "rfc-1035-2": ": only lowercase alphanumeric characters or '-', max 63 characters, start with a letter, and end with an alphanumeric character.",
+        "clear-on-reconnect": "Clear on reconnect"
     }
 }
