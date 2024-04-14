@@ -1,6 +1,6 @@
 # ☁️ kthcloud/console
 
-Welcome to the kthcloud/console repository! This project is the web console for kthcloud, a free cloud provider at KTH, created by students for students. It is built in JavaScript, leveraging React and MUI. We warmly welcome your contributions, and we hope this README helps you get started.
+Welcome to the kthcloud/console repository! This project is the web console for kthcloud, a free cloud provider at KTH, created by students for students. It is built in TypeScript, leveraging React and MUI. We warmly welcome your contributions, and we hope this README helps you get started.
 
 ## Table of Contents
 
@@ -75,7 +75,7 @@ Any strings added in the code should be created as entries in the `src/locales` 
 
 To add a new string, you can use the `t` function from `react-i18next`. For example:
 
-```jsx
+```tsx
 import { useTranslation } from "react-i18next";
 
 function MyComponent() {
