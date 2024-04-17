@@ -25,7 +25,7 @@ export const getJobs = async (
   page = 1,
   all = false
 ) => {
-  let allParam = all ? "&all=true" : "";
+  const allParam = all ? "&all=true" : "";
 
   const res = await fetch(
     import.meta.env.VITE_DEPLOY_API_URL +
