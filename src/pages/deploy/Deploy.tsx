@@ -42,7 +42,7 @@ import { deleteVM } from "../../api/deploy/vms";
 import { getReasonPhrase } from "http-status-codes";
 import { errorHandler } from "../../utils/errorHandler";
 import { useTranslation } from "react-i18next";
-import { Deployment, Resource, Uuid, Vm } from "../../types";
+import { Deployment, Resource, Uuid, Vm, VmV2 } from "../../types";
 import { ThemeColor } from "../../theme/types";
 
 const descendingComparator = (
@@ -177,6 +177,33 @@ export function Deploy() {
   };
 
   const renderResourceButtons = (resource: Resource) => {
+    if (resource.type === "vm")
+      return (
+        <Button
+          color="error"
+          startIcon={<Iconify icon="mdi:delete" />}
+          onClick={() => {
+            setLoading(true);
+            deleteVM(resource.id, keycloak.token!)
+              .then((res) => {
+                queueJob(res);
+                enqueueSnackbar("Deleting resource", { variant: "info" });
+              })
+              .catch((error: any) => {
+                errorHandler(error).forEach((e) =>
+                  enqueueSnackbar("Error deleting resource: " + e, {
+                    variant: "error",
+                  })
+                );
+              })
+              .finally(() => setLoading(false));
+          }}
+          variant="outlined"
+        >
+          {t("button-delete")}
+        </Button>
+      );
+
     if (
       resource.type === "deployment" &&
       Object.hasOwn(resource, "url") &&
@@ -220,7 +247,25 @@ export function Deploy() {
   };
 
   const renderResourceType = (resource: Resource) => {
-    if (resource.type === "vm" && (resource as Vm).gpu) {
+    if (resource.type === "vm")
+      return (
+        <Label
+          variant="ghost"
+          color="error"
+          startIcon={
+            <Iconify icon="mdi:warning-outline" sx={{ opacity: 0.65 }} />
+          }
+          sx={{
+            opacity: 1,
+            background: "#f22",
+            color: "black",
+          }}
+        >
+          <span>{("VM v1 - " + t("deprecated")).toUpperCase()}</span>
+        </Label>
+      );
+
+    if (resource.type === "vmv2" && (resource as VmV2).gpu) {
       return (
         <Stack direction="row" alignItems="center" spacing={1}>
           <Label
@@ -236,13 +281,13 @@ export function Deploy() {
             variant="ghost"
             startIcon={<Iconify icon="mdi:gpu" sx={{ opacity: 0.65 }} />}
           >
-            {"NVIDIA " + (resource as Vm).gpu!.name}
+            {"NVIDIA " + (resource as VmV2).gpu!.id}
           </Label>
         </Stack>
       );
     }
 
-    if (resource.type === "vm") {
+    if (resource.type === "vmv2") {
       return (
         <Stack direction="row" alignItems="center">
           <Label
@@ -280,11 +325,12 @@ export function Deploy() {
         </Stack>
       );
     }
-
-    return resource.type;
   };
 
   const renderResourceStatus = (row: Resource) => {
+    if (row.type === "vm")
+      return <Typography variant="body2">{t("vmv1-deprecation")}</Typography>;
+
     const color: ThemeColor =
       (row.status === "resourceError" && "error") ||
       (row.status === "resourceUnknown" && "error") ||
@@ -354,6 +400,8 @@ export function Deploy() {
   };
 
   const renderZone = (row: Resource) => {
+    if (row.type === "vm") return null;
+
     if (!row.zone || !zones) {
       return <></>;
     }
@@ -373,6 +421,8 @@ export function Deploy() {
   };
 
   const renderShared = (row: Resource) => {
+    if (row.type === "vm") return null;
+
     if (row?.teams?.length === 0) return <></>;
 
     return (
@@ -485,7 +535,10 @@ export function Deploy() {
                             <TableCell align="left">
                               {renderResourceType(row)}
                             </TableCell>
-                            <TableCell align="left">
+                            <TableCell
+                              align="left"
+                              colSpan={row.type === "vm" ? 2 : 1}
+                            >
                               <Stack
                                 direction="row"
                                 alignItems="center"
@@ -496,15 +549,17 @@ export function Deploy() {
                                 {renderShared(row)}
                               </Stack>
                             </TableCell>
-                            <TableCell align="left">
-                              <Stack
-                                direction="row"
-                                alignItems="center"
-                                spacing={1}
-                              >
-                                {row.zone && zones && renderZone(row)}
-                              </Stack>
-                            </TableCell>
+                            {row.type !== "vm" && (
+                              <TableCell align="left">
+                                <Stack
+                                  direction="row"
+                                  alignItems="center"
+                                  spacing={1}
+                                >
+                                  {row.zone && zones && renderZone(row)}
+                                </Stack>
+                              </TableCell>
+                            )}
 
                             <TableCell align="right">
                               {renderResourceButtons(row)}
