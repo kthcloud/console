@@ -10,16 +10,14 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20'
+    - name: Setup Bun
+      uses: oven-sh/setup-bun@v1
 
     - name: Install Prettier
-      run: npm install --save-dev prettier
-
-    - name: Install dependencies
-      run: npm install
+      run: bun install
 
     - name: Check for formatting errors
-      run: npx prettier --check .
+      run: bun run format-check
+    
+    - name: Check for TS errors
+      run: bun run tsc
