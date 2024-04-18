@@ -1,4 +1,4 @@
-name: Prettier Code Format Check
+name: TypeScript and Code Formatting Check
 
 on: [push, pull_request, workflow_dispatch]
 
