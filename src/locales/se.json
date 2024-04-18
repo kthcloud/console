@@ -471,6 +471,8 @@
         "saving-name": "Sparar namn...",
         "rfc-1035-1": " måste följa ",
         "rfc-1035-2": ": endast små bokstäver, siffror eller '-', max 63 tecken, börja med en bokstav och sluta med en alfanumerisk karaktär.",
-        "clear-on-reconnect": "Rensa vid anslutning"
+        "clear-on-reconnect": "Rensa vid anslutning",
+        "vmv1-deprecation": "Denna typ av VM är utfasad. Vänligen skapa om den för att använda de senaste funktionerna.",
+        "deprecated": "Utfasad"
     }
 }

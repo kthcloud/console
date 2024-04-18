@@ -14,6 +14,7 @@ import { getZones } from "../api/deploy/zones";
 import { getNotifications } from "../api/deploy/notifications";
 import { getTeams } from "../api/deploy/teams";
 import { getUserData } from "../api/deploy/userData";
+import { listVMs } from "../api/deploy/v2/vms";
 
 import {
   NotificationRead as Notification,
@@ -303,7 +304,11 @@ export const ResourceContextProvider = ({
     if (!(initialized && keycloak.authenticated && keycloak.token)) return;
 
     try {
-      const promises = [getVMs(keycloak.token), getDeployments(keycloak.token)];
+      const promises = [
+        getVMs(keycloak.token),
+        getDeployments(keycloak.token),
+        listVMs(keycloak.token),
+      ];
 
       if (user && user.admin) {
         if (impersonatingVm) {

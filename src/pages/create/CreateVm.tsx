@@ -11,7 +11,6 @@ import {
   Stack,
   Typography,
   FormHelperText,
-  InputAdornment,
   CircularProgress,
   Link as MuiLink,
 } from "@mui/material";
@@ -19,7 +18,7 @@ import { useEffect, useState } from "react";
 
 import { useKeycloak } from "@react-keycloak/web";
 import { useSnackbar } from "notistack";
-import { createVM } from "../../api/deploy/vms";
+import { createVM } from "../../api/deploy/v2/vms";
 import { Link } from "react-router-dom";
 import RFC1035Input from "../../components/RFC1035Input";
 import { faker } from "@faker-js/faker";
@@ -27,6 +26,7 @@ import { errorHandler } from "../../utils/errorHandler";
 import useResource from "../../hooks/useResource";
 import ZoneSelector from "./ZoneSelector";
 import { useTranslation } from "react-i18next";
+import { VmCreate } from "kthcloud-types/types/v2/body";
 
 export default function CreateVm({
   finished,
@@ -162,16 +162,18 @@ export default function CreateVm({
       return;
     }
 
+    const body: VmCreate = {
+      name: cleaned,
+      sshPublicKey: publicKey,
+      cpuCores: cpuCores,
+      diskSize: diskSize,
+      ram: ram,
+      ports: [],
+    };
+    // zone: selectedZone,
+
     try {
-      const job = await createVM(
-        cleaned,
-        selectedZone,
-        publicKey,
-        cpuCores,
-        diskSize,
-        ram,
-        keycloak.token
-      );
+      const job = await createVM(keycloak.token, body);
       finished(job, stay);
 
       if (stay) {
@@ -304,9 +306,6 @@ export default function CreateVm({
                     inputProps={{
                       inputMode: "numeric",
                       pattern: "[0-9]*",
-                      endAdornment: (
-                        <InputAdornment position="end">GB</InputAdornment>
-                      ),
                     }}
                     error={!user.admin && (ramError ? true : false)}
                     variant="outlined"
@@ -329,9 +328,6 @@ export default function CreateVm({
                     inputProps={{
                       inputMode: "numeric",
                       pattern: "[0-9]*",
-                      endAdornment: (
-                        <InputAdornment position="end">GB</InputAdornment>
-                      ),
                     }}
                     error={!user.admin && (diskError ? true : false)}
                     variant="outlined"
