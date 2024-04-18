@@ -25,12 +25,13 @@ import {
 import Iconify from "../../../components/Iconify";
 import { enqueueSnackbar } from "notistack";
 import useResource from "../../../hooks/useResource";
-import { updateVM } from "../../../api/deploy/vms";
+import { updateVM } from "../../../api/deploy/v2/vms";
 import { useKeycloak } from "@react-keycloak/web";
 import { errorHandler } from "../../../utils/errorHandler";
 import { useTranslation } from "react-i18next";
 import CopyButton from "../../../components/CopyButton";
 import { Port, Vm } from "../../../types";
+import { PortUpdate } from "kthcloud-types/types/v2/body";
 
 export default function PortManager({ vm }: { vm: Vm }) {
   const { t } = useTranslation();
@@ -72,9 +73,9 @@ export default function PortManager({ vm }: { vm: Vm }) {
   }, []);
 
   const loadPublicIP = async () => {
-    if (!vm?.connectionString) return;
+    if (!vm?.sshConnectionString) return;
 
-    const domain = vm.connectionString.split("@")[1].split(" ")[0];
+    const domain = vm.sshConnectionString.split("@")[1].split(" ")[0];
     setPublicDomain(domain);
 
     const res = await fetch(`https://dns.google/resolve?name=${domain}&type=A`);
@@ -90,7 +91,9 @@ export default function PortManager({ vm }: { vm: Vm }) {
     setPorts(newPorts);
 
     try {
-      const res = await updateVM(vm.id, { ports: newPorts }, keycloak.token);
+      const res = await updateVM(keycloak.token, vm.id, {
+        ports: newPorts as PortUpdate[],
+      });
       queueJob(res);
       enqueueSnackbar(t("port-changes-saving"), { variant: "info" });
     } catch (error: any) {
@@ -122,7 +125,9 @@ export default function PortManager({ vm }: { vm: Vm }) {
     const newPorts = ports.filter((item) => !isSamePort(item, port));
 
     try {
-      const res = await updateVM(vm.id, { ports: newPorts }, keycloak.token);
+      const res = await updateVM(keycloak.token, vm.id, {
+        ports: newPorts as PortUpdate[],
+      });
       queueJob(res);
       enqueueSnackbar(t("port-changes-saving"), { variant: "info" });
     } catch (error: any) {
@@ -148,26 +153,28 @@ export default function PortManager({ vm }: { vm: Vm }) {
             <br />
             {t("port-forwarding-subheader-3")}
 
-            <CopyButton content={publicDomain} />
-            <b
-              style={{
-                fontFamily: "monospace",
-                color: theme.palette.grey[700],
-              }}
-            >
-              {publicDomain}
-            </b>
-            <span
-              style={{
-                fontFamily: "monospace",
-                color: theme.palette.grey[700],
-              }}
-            >
-              {t("external_port")}
-            </span>
-            {publicIP && (
+            {!publicIP ? (
               <>
-                {" " + t("or") + " "}
+                <CopyButton content={publicDomain} />
+                <b
+                  style={{
+                    fontFamily: "monospace",
+                    color: theme.palette.grey[700],
+                  }}
+                >
+                  {publicDomain}
+                </b>
+                <span
+                  style={{
+                    fontFamily: "monospace",
+                    color: theme.palette.grey[700],
+                  }}
+                >
+                  {t("external_port")}
+                </span>
+              </>
+            ) : (
+              <>
                 <CopyButton content={publicIP} />
 
                 <b
@@ -204,69 +211,76 @@ export default function PortManager({ vm }: { vm: Vm }) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {ports.map((port, index) => (
-                <TableRow
-                  key={"port_" + index}
-                  sx={{
-                    "&:last-child td, &:last-child th": { border: 0 },
-                  }}
-                >
-                  <TableCell component="th" scope="row">
-                    {port.name}
-                  </TableCell>
-                  {port.protocol && (
-                    <TableCell>{port.protocol.toUpperCase()}</TableCell>
-                  )}
-                  <TableCell>{port.port}</TableCell>
-                  <TableCell>
-                    {port.externalPort ? (
-                      port.externalPort
-                    ) : (
-                      <Iconify
-                        icon="eos-icons:three-dots-loading"
-                        height={24}
-                        width={24}
-                      />
+              {ports
+                .sort((a, b) => {
+                  if (a.port && b.port) {
+                    return a.port - b.port;
+                  }
+                  return 0;
+                })
+                .map((port, index) => (
+                  <TableRow
+                    key={"port_" + index}
+                    sx={{
+                      "&:last-child td, &:last-child th": { border: 0 },
+                    }}
+                  >
+                    <TableCell component="th" scope="row">
+                      {port.name}
+                    </TableCell>
+                    {port.protocol && (
+                      <TableCell>{port.protocol.toUpperCase()}</TableCell>
                     )}
-                  </TableCell>
-                  <TableCell align="right">
-                    <Stack
-                      direction="row"
-                      spacing={1}
-                      useFlexGap
-                      alignItems={"center"}
-                      justifyContent={"flex-end"}
-                    >
-                      <IconButton
-                        color="primary"
-                        aria-label="edit port"
-                        component="label"
-                        onClick={() => {
-                          setNewPort(port.port?.toString() || "");
-                          setNewPortName(port.name?.toString() || "");
-                          setNewPortProtocol(port.protocol || "");
-                          setPorts(
-                            ports.filter((item) => !isSamePort(item, port))
-                          );
-                        }}
-                        disabled={loading}
+                    <TableCell>{port.port}</TableCell>
+                    <TableCell>
+                      {port.externalPort ? (
+                        port.externalPort
+                      ) : (
+                        <Iconify
+                          icon="eos-icons:three-dots-loading"
+                          height={24}
+                          width={24}
+                        />
+                      )}
+                    </TableCell>
+                    <TableCell align="right">
+                      <Stack
+                        direction="row"
+                        spacing={1}
+                        useFlexGap
+                        alignItems={"center"}
+                        justifyContent={"flex-end"}
                       >
-                        <Iconify icon="mdi:pencil" />
-                      </IconButton>
+                        <IconButton
+                          color="primary"
+                          aria-label="edit port"
+                          component="label"
+                          onClick={() => {
+                            setNewPort(port.port?.toString() || "");
+                            setNewPortName(port.name?.toString() || "");
+                            setNewPortProtocol(port.protocol || "");
+                            setPorts(
+                              ports.filter((item) => !isSamePort(item, port))
+                            );
+                          }}
+                          disabled={loading}
+                        >
+                          <Iconify icon="mdi:pencil" />
+                        </IconButton>
 
-                      <IconButton
-                        color="error"
-                        aria-label="delete port mapping"
-                        component="label"
-                        disabled={loading}
-                        onClick={() => deletePort(port)}
-                      >
-                        <Iconify icon="mdi:delete" />
-                      </IconButton>
-                    </Stack>
-                  </TableCell>
-                </TableRow>
-              ))}
+                        <IconButton
+                          color="error"
+                          aria-label="delete port mapping"
+                          component="label"
+                          disabled={loading}
+                          onClick={() => deletePort(port)}
+                        >
+                          <Iconify icon="mdi:delete" />
+                        </IconButton>
+                      </Stack>
+                    </TableCell>
+                  </TableRow>
+                ))}
 
               <TableRow
                 sx={{

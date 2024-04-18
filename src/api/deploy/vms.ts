@@ -12,7 +12,7 @@ export const getVM = async (token: string, id: string) => {
   if (!Array.isArray(result)) {
     throw new Error("Error getting VMs, response was not an array");
   }
-  return result.map((obj) => ({ ...obj, type: "vm" }));
+  return result.map((obj) => ({ ...obj, type: "vmv1" }));
 };
 
 export const getVMs = async (token: string, all: boolean = false) => {
@@ -28,7 +28,7 @@ export const getVMs = async (token: string, all: boolean = false) => {
   if (!Array.isArray(result)) {
     throw new Error("Error getting VMs, response was not an array");
   }
-  return result.map((obj) => ({ ...obj, type: "vm" }));
+  return result.map((obj) => ({ ...obj, type: "vmv1" }));
 };
 
 export const deleteVM = async (id: string, token: string) => {
@@ -97,7 +97,7 @@ export const attachGPUById = async (
   id: string,
   noLeaseEnd = false
 ) => {
-  let body: any = { gpuId: id };
+  const body: any = { gpuId: id };
 
   if (noLeaseEnd) {
     body.noLeaseEnd = true;

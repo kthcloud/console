@@ -479,12 +479,12 @@ export const GPUManager = ({ vm }) => {
                         paddingRight: "0.5rem",
                       }}
                     >
-                      apt install nvidia-driver-535-server
-                      nvidia-utils-535-server -y
+                      apt install nvidia-driver-550-server
+                      nvidia-utils-550-server -y
                     </span>
                     <CopyButton
                       content={
-                        "apt install nvidia-driver-535-server nvidia-utils-535-server -y"
+                        "apt install nvidia-driver-550-server nvidia-utils-550-server -y"
                       }
                     />
                     {t("gpu-drivers-3")}

@@ -4,12 +4,12 @@ import { sentenceCase } from "change-case";
 import { enqueueSnackbar } from "notistack";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { deleteVM, applyCommand } from "../../../api/deploy/vms";
 import ConfirmButton from "../../../components/ConfirmButton";
 import Iconify from "../../../components/Iconify";
 import useResource from "../../../hooks/useResource";
 import { errorHandler } from "../../../utils/errorHandler";
 import { Vm } from "../../../types";
+import { vmCommand, deleteVM } from "../../../api/deploy/v2/vms";
 
 export const VMCommands = ({ vm }: { vm: Vm }) => {
   const { t } = useTranslation();
@@ -22,7 +22,7 @@ export const VMCommands = ({ vm }: { vm: Vm }) => {
     if (!(initialized && keycloak.authenticated && keycloak.token)) return;
 
     try {
-      const res = await deleteVM(vm.id, keycloak.token);
+      const res = await deleteVM(keycloak.token, vm.id);
 
       if (res) {
         queueJob(res);
@@ -42,7 +42,7 @@ export const VMCommands = ({ vm }: { vm: Vm }) => {
     if (!(initialized && keycloak.authenticated && keycloak.token)) return;
 
     try {
-      await applyCommand(vm.id, command, keycloak.token);
+      await vmCommand(keycloak.token, vm.id, { action: command });
       enqueueSnackbar(sentenceCase(command) + t("vm-in-progress"), {
         variant: "info",
       });

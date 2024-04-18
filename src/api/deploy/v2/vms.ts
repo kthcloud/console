@@ -1,10 +1,14 @@
-import { VmCreate } from "kthcloud-types/types/v2/body";
+import {
+  VmActionCreate,
+  VmCreate,
+  VmUpdate,
+} from "kthcloud-types/types/v2/body";
 import { Jwt, Uuid } from "../../../types";
 
 export const listVMs = async (
   token: Jwt,
   all?: boolean,
-  userId?: string,
+  userId?: Uuid,
   page?: number,
   pageSize?: number
 ) => {
@@ -26,7 +30,7 @@ export const listVMs = async (
   if (!Array.isArray(result)) {
     return [];
   }
-  return result.map((obj) => ({ ...obj, type: "vmv2" }));
+  return result.map((obj) => ({ ...obj, type: "vm" }));
 };
 
 export const createVM = async (token: Jwt, body: VmCreate) => {
@@ -58,10 +62,10 @@ export const getVMById = async (token: Jwt, vmId: Uuid) => {
   if (typeof result !== "object") {
     throw new Error("Error getting VM by ID, response was not an object");
   }
-  return result;
+  return { ...result, type: "vm" };
 };
 
-export const updateVM = async (token: Jwt, vmId: string, body: any) => {
+export const updateVM = async (token: Jwt, vmId: Uuid, body: VmUpdate) => {
   const url = `${import.meta.env.VITE_DEPLOY_V2_API_URL}/vms/${vmId}`;
   const response = await fetch(url, {
     method: "POST",
@@ -78,7 +82,7 @@ export const updateVM = async (token: Jwt, vmId: string, body: any) => {
   return result;
 };
 
-export const deleteVM = async (token: Jwt, vmId: string) => {
+export const deleteVM = async (token: Jwt, vmId: Uuid) => {
   const url = `${import.meta.env.VITE_DEPLOY_V2_API_URL}/vms/${vmId}`;
   const response = await fetch(url, {
     method: "DELETE",
@@ -92,7 +96,11 @@ export const deleteVM = async (token: Jwt, vmId: string) => {
   return await response.json();
 };
 
-export const createVmAction = async (token: Jwt, vmId: string, body: any) => {
+export const vmCommand = async (
+  token: Jwt,
+  vmId: Uuid,
+  body: VmActionCreate
+) => {
   const url = `${import.meta.env.VITE_DEPLOY_V2_API_URL}/vms/${vmId}/command`;
   const response = await fetch(url, {
     method: "POST",

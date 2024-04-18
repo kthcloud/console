@@ -43,6 +43,8 @@ const ZoneSelector = ({
     [zones, alignment]
   );
 
+  if (alignment === "vm") return null;
+
   if (!filteredZones) return <CircularProgress />;
 
   if (user?.role?.permissions?.includes("chooseZone")) {

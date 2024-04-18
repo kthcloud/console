@@ -33,7 +33,7 @@ import {
 import { useKeycloak } from "@react-keycloak/web";
 import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
-import { updateVM } from "../../../api/deploy/vms";
+import { updateVM } from "../../../api/deploy/v2/vms";
 import Iconify from "../../../components/Iconify";
 import RFC1035Input from "../../../components/RFC1035Input";
 import useResource from "../../../hooks/useResource";
@@ -42,7 +42,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useTranslation } from "react-i18next";
 import { sentenceCase } from "change-case";
 import { Vm } from "../../../types";
-import { HttpProxyRead, PortRead } from "kthcloud-types/types/v1/body";
+import { HttpProxyRead, PortRead } from "kthcloud-types/types/v2/body";
 
 interface Proxy extends HttpProxyRead {
   port?: number;
@@ -61,7 +61,7 @@ const ProxyManager = ({ vm }: { vm: Vm }) => {
 
   const [newProxy, setNewProxy] = useState<Proxy>({
     name: "",
-    customDomain: "",
+    customDomain: undefined,
   });
   const [createDialogOpen, setCreateDialogOpen] = useState<boolean>(false);
   const [expanded, setExpanded] = useState<boolean>(false);

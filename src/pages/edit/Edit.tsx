@@ -285,7 +285,7 @@ export function Edit() {
                           (zone) =>
                             zone.name === resource.zone &&
                             zone.type === resource.type
-                        )?.description
+                        )?.description || resource.zone
                       }
                       icon={<Iconify icon="mdi:earth" sx={{ opacity: 0.75 }} />}
                     />
@@ -315,15 +315,15 @@ export function Edit() {
 
               {resource.type === "vm" && <SSHString vm={resource as Vm} />}
 
-              {resource.type === "vm" && <GPUManager vm={resource as Vm} />}
+              {/* {resource.type === "vm" && <GPUManager vm={resource as Vm} />} */}
 
               {/* {resource.type === "vm" && <SnapshotManager vm={resource} />} */}
 
               {resource.type === "vm" && <PortManager vm={resource as Vm} />}
 
-              {resource.type === "vm" && <ProxyManager vm={resource as Vm} />}
+              {/* {resource.type === "vm" && <ProxyManager vm={resource as Vm} />} */}
 
-              {resource.type === "vm" && <Specs vm={resource as Vm} />}
+              {/* {resource.type === "vm" && <Specs vm={resource as Vm} />} */}
 
               {resource.type === "deployment" && (
                 <EnvManager deployment={resource as Deployment} />
