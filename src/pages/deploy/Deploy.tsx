@@ -14,6 +14,7 @@ import {
   Button,
   Tooltip,
   Alert,
+  Box,
 } from "@mui/material";
 
 // hooks
@@ -472,9 +473,18 @@ export function Deploy() {
               justifyContent="space-between"
               useFlexGap
               mb={3}
+              spacing={5}
             >
               <Typography variant="h4">{t("menu-dashboard")}</Typography>
 
+              <Box component="div" flexGrow={1} />
+              <Button
+                component={RouterLink}
+                to={"/gpu"}
+                startIcon={<Iconify icon={"mdi:gpu"} />}
+              >
+                {t("gpu-leases")}
+              </Button>
               <Button
                 component={RouterLink}
                 to="/create"

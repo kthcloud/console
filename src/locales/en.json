@@ -474,6 +474,21 @@
         "rfc-1035-2": ": only lowercase alphanumeric characters or '-', max 63 characters, start with a letter, and end with an alphanumeric character.",
         "clear-on-reconnect": "Clear on reconnect",
         "vmv1-deprecation": "This VM is using an unsupported hypervisor. Please recreate it to use the latest features.",
-        "deprecated": "Deprecated"
+        "deprecated": "Deprecated",
+        "wait-in-line": "Wait in line",
+        "available": "Available",
+        "total": "Total",
+        "gpu-types": "GPU types",
+        "gpu-leases": "GPU leases",
+        "nothing-to-see-here": "Nothing to see here 🌞",
+        "already-active": "Already active",
+        "activate": "Activate",
+        "create-a-vm-first": "Create a VM first",
+        "position-in-line": "Position in line",
+        "lease-duration": "Lease duration",
+        "created-at": "Created at",
+        "select-vm": "Select VM",
+        "relax-and-enjoy-the-sun": "Relax and enjoy the sun 🌞",
+        "waiting-for-gpu-lease": "You are in line for a GPU lease. You will be notified when it is your turn."
     }
 }

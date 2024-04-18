@@ -473,6 +473,21 @@
         "rfc-1035-2": ": endast små bokstäver, siffror eller '-', max 63 tecken, börja med en bokstav och sluta med en alfanumerisk karaktär.",
         "clear-on-reconnect": "Rensa vid anslutning",
         "vmv1-deprecation": "Denna typ av VM är utfasad. Vänligen skapa om den för att använda de senaste funktionerna.",
-        "deprecated": "Utfasad"
+        "deprecated": "Utfasad",
+        "wait-in-line": "Stå i kö",
+        "available": "Tillänglig",
+        "total": "Total",
+        "gpu-types": "GPU typer",
+        "gpu-leases": "GPU lån",
+        "nothing-to-see-here": "Inget att se här 🌞",
+        "already-active": "Redan aktiverad",
+        "activate": "Aktivera",
+        "create-a-vm-first": "Skapa en VM först",
+        "position-in-line": "Plats i kön",
+        "lease-duration": "Lånets längd",
+        "created-at": "Skapades",
+        "select-vm": "Välj VM",
+        "relax-and-enjoy-the-sun": "Ta det lugnt och njut av solen 🌞",
+        "waiting-for-gpu-lease": "Du står i kö för att låna ett grafikkort. Du kommer att bli meddelad när det är din tur."
     }
 }

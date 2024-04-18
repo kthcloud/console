@@ -315,7 +315,7 @@ export function Edit() {
 
               {resource.type === "vm" && <SSHString vm={resource as Vm} />}
 
-              {/* {resource.type === "vm" && <GPUManager vm={resource as Vm} />} */}
+              {resource.type === "vm" && <GPUManager vm={resource as Vm} />}
 
               {/* {resource.type === "vm" && <SnapshotManager vm={resource} />} */}
 

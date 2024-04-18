@@ -30,8 +30,9 @@ import { errorHandler } from "../../../utils/errorHandler";
 import { hashGPUId } from "../../../utils/helpers";
 import { useTranslation } from "react-i18next";
 import CopyButton from "../../../components/CopyButton";
+import { Vm } from "../../../types";
 
-export const GPUManager = ({ vm }) => {
+export const GPUManager = ({ vm }: { vm: Vm }) => {
   const { t } = useTranslation();
   const { keycloak } = useKeycloak();
   const { enqueueSnackbar } = useSnackbar();

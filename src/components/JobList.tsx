@@ -42,22 +42,20 @@ export default function JobList() {
   };
 
   const renderText = (job: Job) => {
+    if (!job.name) {
+      return <span>{fixAbbr(sentenceCase(job.type))}</span>;
+    }
+
     if (job.status !== "running" && job.status !== "finished") {
       return (
-        <>
-          <span>
-            {fixAbbr(sentenceCase(job.type)) + " " + job.name + "  "}
-            <b>{" " + fixAbbr(sentenceCase(job.status.replace("job", "")))}</b>
-          </span>
-        </>
+        <span>
+          {fixAbbr(sentenceCase(job.type)) + " " + job.name + "  "}
+          <b>{" " + fixAbbr(sentenceCase(job.status.replace("job", "")))}</b>
+        </span>
       );
     }
 
-    return (
-      <>
-        <span>{fixAbbr(sentenceCase(job.type)) + " " + job.name}</span>
-      </>
-    );
+    return <span>{fixAbbr(sentenceCase(job.type)) + " " + job.name}</span>;
   };
 
   if (jobs.length === 0) {
@@ -80,8 +78,7 @@ export default function JobList() {
           {jobs.map(
             (job) =>
               Object.hasOwn(job, "type") &&
-              Object.hasOwn(job, "status") &&
-              Object.hasOwn(job, "name") && (
+              Object.hasOwn(job, "status") && (
                 <Chip
                   key={job.jobId}
                   icon={
