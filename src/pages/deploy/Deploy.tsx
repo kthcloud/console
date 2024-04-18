@@ -13,6 +13,7 @@ import {
   Link,
   Button,
   Tooltip,
+  Alert,
 } from "@mui/material";
 
 // hooks
@@ -482,6 +483,16 @@ export function Deploy() {
                 {t("menu-create-new")}
               </Button>
             </Stack>
+
+            {(window.location.href.includes("beta") ||
+              window.location.href.includes("localhost")) && (
+              <Alert severity="warning" sx={{ width: "100%", my: 5 }}>
+                <Typography variant="body1">
+                  Beta version - VM v2 featues are still being implemented.
+                  Please report bugs
+                </Typography>
+              </Alert>
+            )}
 
             <JobList />
 
