@@ -321,9 +321,9 @@ export function Edit() {
 
               {resource.type === "vm" && <PortManager vm={resource as Vm} />}
 
-              {/* {resource.type === "vm" && <ProxyManager vm={resource as Vm} />} */}
+              {resource.type === "vm" && <ProxyManager vm={resource as Vm} />}
 
-              {/* {resource.type === "vm" && <Specs vm={resource as Vm} />} */}
+              {resource.type === "vm" && <Specs vm={resource as Vm} />}
 
               {resource.type === "deployment" && (
                 <EnvManager deployment={resource as Deployment} />
