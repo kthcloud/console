@@ -1,4 +1,4 @@
-import { GpuLeaseCreate, GpuLeaseUpdate } from "kthcloud-types/types/v2/body";
+import { GpuLeaseCreate, GpuLeaseUpdate } from "go-deploy-types/types/v2/body";
 import { Jwt, Uuid } from "../../../types";
 
 export const listGpuLeases = async (token: Jwt, vmId?: Uuid) => {

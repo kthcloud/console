@@ -28,7 +28,7 @@ import { useNavigate } from "react-router-dom";
 import useResource from "../../hooks/useResource";
 import { useTranslation } from "react-i18next";
 import { updateUserData } from "../../api/deploy/userData";
-import { UserDataRead } from "kthcloud-types/types/v1/body";
+import { UserDataRead } from "go-deploy-types/types/v1/body";
 
 export const Onboarding = () => {
   const navigate = useNavigate();

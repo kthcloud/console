@@ -20,9 +20,9 @@ import {
   NotificationRead as Notification,
   TeamRead as Team,
   ZoneRead as Zone,
-} from "kthcloud-types/types/v1/body/index";
+} from "go-deploy-types/types/v1/body/index";
 import { Job, Resource, User, Uuid } from "../types";
-import { GpuGroupRead, GpuLeaseRead } from "kthcloud-types/types/v2/body";
+import { GpuGroupRead, GpuLeaseRead } from "go-deploy-types/types/v2/body";
 import { listGpuGroups } from "../api/deploy/v2/gpuGroups";
 import { listGpuLeases } from "../api/deploy/v2/gpuLeases";
 

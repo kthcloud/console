@@ -31,7 +31,7 @@ import { errorHandler } from "../../utils/errorHandler";
 import { enqueueSnackbar } from "notistack";
 import { createGpuLease, updateGpuLease } from "../../api/deploy/v2/gpuLeases";
 import JobList from "../../components/JobList";
-import { GpuLeaseRead } from "kthcloud-types/types/v2/body";
+import { GpuLeaseRead } from "go-deploy-types/types/v2/body";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 

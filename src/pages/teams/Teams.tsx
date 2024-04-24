@@ -49,7 +49,7 @@ import {
   TeamRead,
   TeamResource,
   UserRead,
-} from "kthcloud-types/types/v1/body";
+} from "go-deploy-types/types/v1/body";
 
 const Teams = () => {
   const { user, teams, beginFastLoad } = useResource();

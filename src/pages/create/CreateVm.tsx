@@ -26,7 +26,7 @@ import { errorHandler } from "../../utils/errorHandler";
 import useResource from "../../hooks/useResource";
 import ZoneSelector from "./ZoneSelector";
 import { useTranslation } from "react-i18next";
-import { VmCreate } from "kthcloud-types/types/v2/body";
+import { VmCreate } from "go-deploy-types/types/v2/body";
 
 export default function CreateVm({
   finished,
