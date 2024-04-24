@@ -489,6 +489,8 @@
         "created-at": "Created at",
         "select-vm": "Select VM",
         "relax-and-enjoy-the-sun": "Relax and enjoy the sun 🌞",
-        "waiting-for-gpu-lease": "You are in line for a GPU lease. You will be notified when it is your turn."
+        "waiting-for-gpu-lease": "You are in line for a GPU lease. You will be notified when it is your turn.",
+        "gpu-groups-subheader": "These are all the GPUs on kthcloud. You can wait in line and receive access once it becomes available.",
+        "gpu-leases-subheader": "The currents GPU leases at your disposal. Use it or give it back, it's up to you."
     }
 }

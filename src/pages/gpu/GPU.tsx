@@ -129,63 +129,9 @@ export const GPU = () => {
             <Stack spacing={3}>
               <JobList />
               <Typography variant="h4">{t("resource-gpu")}</Typography>
-              <Card>
-                <CardHeader title={t("gpu-types")} />
-                <CardContent>
-                  <TableContainer>
-                    <Table>
-                      <TableHead>
-                        <TableRow>
-                          <TableCell>{t("admin-name")}</TableCell>
-                          <TableCell>{t("zone")}</TableCell>
-                          <TableCell>
-                            {t("available") + " / " + t("total")}
-                          </TableCell>
-                          <TableCell>{t("admin-actions")}</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {gpuGroups.map((group) => (
-                          <TableRow key={group.id}>
-                            <TableCell>{`${group.vendor
-                              .replace("Corporation", "")
-                              .trim()} ${group.displayName}`}</TableCell>
-                            <TableCell>{group.zone}</TableCell>
-                            <TableCell>
-                              {group.available + " / " + group.total}
-                            </TableCell>
-                            <TableCell>
-                              <Stack
-                                direction="row"
-                                useFlexGap
-                                alignItems={"center"}
-                                spacing={1}
-                                justifyContent={"flex-start"}
-                              >
-                                <Button
-                                  startIcon={<Iconify icon="mdi:human-queue" />}
-                                  variant="outlined"
-                                  onClick={() => leaseGPU(group.id)}
-                                >
-                                  {t("wait-in-line")}
-                                </Button>
-                              </Stack>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                        {gpuGroups.length === 0 && (
-                          <TableRow>
-                            <TableCell>{t("nothing-to-see-here")}</TableCell>
-                          </TableRow>
-                        )}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                </CardContent>
-              </Card>
 
               <Card>
-                <CardHeader title={t("gpu-leases")} />
+                <CardHeader title={t("gpu-leases")} subheader={t("gpu-lease-subheader")} />
                 <CardContent>
                   <TableContainer>
                     <Table>
@@ -257,6 +203,61 @@ export const GPU = () => {
                           );
                         })}
                         {gpuLeases.length === 0 && (
+                          <TableRow>
+                            <TableCell>{t("nothing-to-see-here")}</TableCell>
+                          </TableRow>
+                        )}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader title={t("gpu-types")} subheader={t("gpu-groups-subheader")} />
+                <CardContent>
+                  <TableContainer>
+                    <Table>
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>{t("admin-name")}</TableCell>
+                          <TableCell>{t("zone")}</TableCell>
+                          <TableCell>
+                            {t("available") + " / " + t("total")}
+                          </TableCell>
+                          <TableCell>{t("admin-actions")}</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {gpuGroups.map((group) => (
+                          <TableRow key={group.id}>
+                            <TableCell>{`${group.vendor
+                              .replace("Corporation", "")
+                              .trim()} ${group.displayName}`}</TableCell>
+                            <TableCell>{group.zone}</TableCell>
+                            <TableCell>
+                              {group.available + " / " + group.total}
+                            </TableCell>
+                            <TableCell>
+                              <Stack
+                                direction="row"
+                                useFlexGap
+                                alignItems={"center"}
+                                spacing={1}
+                                justifyContent={"flex-start"}
+                              >
+                                <Button
+                                  startIcon={<Iconify icon="mdi:human-queue" />}
+                                  variant="outlined"
+                                  onClick={() => leaseGPU(group.id)}
+                                >
+                                  {t("wait-in-line")}
+                                </Button>
+                              </Stack>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                        {gpuGroups.length === 0 && (
                           <TableRow>
                             <TableCell>{t("nothing-to-see-here")}</TableCell>
                           </TableRow>

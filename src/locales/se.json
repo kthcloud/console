@@ -87,7 +87,7 @@
         "internal": "Intern",
         "deploy-with-github-actions-subheader": "Lägg till GitHub Actions-filen i ditt projekt för att publicera din app automatiskt.",
         "no-deployments-found": "Inga resurser hittades",
-        "admin-loaded-gpus": "hämtade GPUer",
+        "admin-loaded-gpus": "hämtade grafikkort",
         "admin-loaded-teams": "hämtade grupper",
         "admin-loaded-jobs": "hämtade jobb",
         "menu-dashboard": "Översikt",
@@ -488,6 +488,8 @@
         "created-at": "Skapades",
         "select-vm": "Välj VM",
         "relax-and-enjoy-the-sun": "Ta det lugnt och njut av solen 🌞",
-        "waiting-for-gpu-lease": "Du står i kö för att låna ett grafikkort. Du kommer att bli meddelad när det är din tur."
+        "waiting-for-gpu-lease": "Du står i kö för att låna ett grafikkort. Du kommer att bli meddelad när det är din tur.",
+        "gpu-groups-subheader": "Här är alla grafikkort på kthcloud. Du kan stå i kö och få tillgång när det blir tillgängligt.",
+        "gpu-leases-subheader": "Dina aktiva GPU-lån. Använd det eller ge tillbaka det, det är upp till dig."
     }
 }

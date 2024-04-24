@@ -9,10 +9,17 @@ export const listGpuGroups = async (token: Jwt, vmId?: string) => {
       Authorization: `Bearer ${token}`,
     },
   });
+
   const result = await response.json();
+
   if (!Array.isArray(result)) {
     throw new Error("Error listing GPU groups, response was not an array");
   }
+
+  result.sort((a: any, b: any) => {
+    return a.id < b.id ? -1 : 1;
+  });
+
   return result;
 };
 
