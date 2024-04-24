@@ -131,7 +131,10 @@ export const GPU = () => {
               <Typography variant="h4">{t("resource-gpu")}</Typography>
 
               <Card>
-                <CardHeader title={t("gpu-leases")} subheader={t("gpu-lease-subheader")} />
+                <CardHeader
+                  title={t("gpu-leases")}
+                  subheader={t("gpu-lease-subheader")}
+                />
                 <CardContent>
                   <TableContainer>
                     <Table>
@@ -214,7 +217,10 @@ export const GPU = () => {
               </Card>
 
               <Card>
-                <CardHeader title={t("gpu-types")} subheader={t("gpu-groups-subheader")} />
+                <CardHeader
+                  title={t("gpu-types")}
+                  subheader={t("gpu-groups-subheader")}
+                />
                 <CardContent>
                   <TableContainer>
                     <Table>
