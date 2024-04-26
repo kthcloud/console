@@ -29,7 +29,11 @@ import { useKeycloak } from "@react-keycloak/web";
 import { Uuid } from "../../types";
 import { errorHandler } from "../../utils/errorHandler";
 import { enqueueSnackbar } from "notistack";
-import { createGpuLease, updateGpuLease } from "../../api/deploy/v2/gpuLeases";
+import {
+  createGpuLease,
+  deleteGpuLease,
+  updateGpuLease,
+} from "../../api/deploy/v2/gpuLeases";
 import JobList from "../../components/JobList";
 import { GpuLeaseRead } from "go-deploy-types/types/v2/body";
 import { useState } from "react";
@@ -163,7 +167,12 @@ export const GPU = () => {
                                   gpuGroup.displayName}
                               </TableCell>
                               <TableCell>{lease.queuePosition}</TableCell>
-                              <TableCell>{/*lease.LeaseDuration*/}</TableCell>
+                              <TableCell>
+                                {
+                                  //@ts-ignore
+                                  lease.leaseDuration + " h"
+                                }
+                              </TableCell>
                               <TableCell>
                                 {new Date(lease.createdAt).toLocaleString(
                                   navigator.language
@@ -171,36 +180,57 @@ export const GPU = () => {
                               </TableCell>
 
                               <TableCell>
-                                {lease.assignedAt ? (
-                                  lease.active ? (
-                                    <Typography variant="body2">
-                                      {t("already-active")}
-                                    </Typography>
-                                  ) : vms().length === 0 ? (
-                                    <Button
-                                      component={Link}
-                                      to="/create?type=vm"
-                                    >
-                                      {t("create-a-vm-first")}
-                                    </Button>
+                                <Stack
+                                  direction="row"
+                                  spacing={1}
+                                  alignItems={"center"}
+                                  justifyContent={"space-between"}
+                                >
+                                  {lease.assignedAt ? (
+                                    lease.active ? (
+                                      <Typography variant="body2">
+                                        {t("already-active")}
+                                      </Typography>
+                                    ) : vms().length === 0 ? (
+                                      <Button
+                                        component={Link}
+                                        to="/create?type=vm"
+                                      >
+                                        {t("create-a-vm-first")}
+                                      </Button>
+                                    ) : (
+                                      <Button
+                                        onClick={() => {
+                                          setSelectedLease(lease);
+                                          setSelectVmDialogOpen(true);
+                                          setSelectedVmId(vms()[0].id || "");
+                                        }}
+                                      >
+                                        {t("activate")}
+                                      </Button>
+                                    )
                                   ) : (
-                                    <Button
-                                      onClick={() => {
-                                        setSelectedLease(lease);
-                                        setSelectVmDialogOpen(true);
-                                        setSelectedVmId(vms()[0].id || "");
-                                      }}
-                                    >
-                                      {t("activate")}
-                                    </Button>
-                                  )
-                                ) : (
-                                  <Tooltip title={t("waiting-for-gpu-lease")}>
-                                    <Typography variant="body2">
-                                      {t("relax-and-enjoy-the-sun")}
-                                    </Typography>
-                                  </Tooltip>
-                                )}
+                                    <Tooltip title={t("waiting-for-gpu-lease")}>
+                                      <Typography variant="body2">
+                                        {t("relax-and-enjoy-the-sun")}
+                                      </Typography>
+                                    </Tooltip>
+                                  )}
+                                  <Button
+                                    onClick={() => {
+                                      if (!keycloak.token) return;
+                                      deleteGpuLease(
+                                        keycloak.token,
+                                        lease.id
+                                      ).then((job) => {
+                                        queueJob(job);
+                                      });
+                                    }}
+                                    color="error"
+                                  >
+                                    {t("delete")}
+                                  </Button>
+                                </Stack>
                               </TableCell>
                             </TableRow>
                           );

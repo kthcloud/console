@@ -96,7 +96,7 @@ export function Deploy() {
   const [selected, setSelected] = useState<Uuid[]>([]);
   const [orderBy, setOrderBy] = useState<string>("name");
   const [filterName, setFilterName] = useState<string>("");
-  const { userRows, initialLoad, queueJob, zones } = useResource();
+  const { userRows, initialLoad, queueJob, zones, gpuGroups } = useResource();
   const [filteredRows, setFilteredRows] = useState<Resource[]>(userRows);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -276,6 +276,10 @@ export function Deploy() {
       );
 
     if (resource.type === "vm" && (resource as Vm).gpu) {
+      const group = gpuGroups?.find(
+        (x) => x.id === (resource as Vm).gpu!.gpuGroupId
+      );
+
       return (
         <Stack direction="row" alignItems="center" spacing={1}>
           <Label
@@ -286,13 +290,23 @@ export function Deploy() {
           >
             VM
           </Label>
-
-          <Label
-            variant="ghost"
-            startIcon={<Iconify icon="mdi:gpu" sx={{ opacity: 0.65 }} />}
-          >
-            {"NVIDIA " + (resource as Vm).gpu!.id}
-          </Label>
+          {group ? (
+            <Label
+              variant="ghost"
+              startIcon={<Iconify icon="mdi:gpu" sx={{ opacity: 0.65 }} />}
+            >
+              {`${group.vendor
+                .replace("Corporation", "")
+                .trim()} ${group.displayName}`}
+            </Label>
+          ) : (
+            <Label
+              variant="ghost"
+              startIcon={<Iconify icon="mdi:gpu" sx={{ opacity: 0.65 }} />}
+            >
+              {"GPU"}
+            </Label>
+          )}
         </Stack>
       );
     }
