@@ -42,7 +42,11 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useTranslation } from "react-i18next";
 import { sentenceCase } from "change-case";
 import { Vm } from "../../../types";
-import { HttpProxyRead, PortRead } from "kthcloud-types/types/v2/body";
+import {
+  HttpProxyRead,
+  PortRead,
+  PortUpdate,
+} from "go-deploy-types/types/v2/body";
 
 interface Proxy extends HttpProxyRead {
   port?: number;
@@ -118,7 +122,9 @@ const ProxyManager = ({ vm }: { vm: Vm }) => {
     });
 
     try {
-      const res = await updateVM(vm.id, { ports: portsList }, keycloak.token);
+      const res = await updateVM(keycloak.token, vm.id, {
+        ports: portsList as PortUpdate[],
+      });
       queueJob(res);
 
       enqueueSnackbar(`${t("creating-proxy")} ${newProxy.name}...`, {
@@ -153,7 +159,9 @@ const ProxyManager = ({ vm }: { vm: Vm }) => {
     });
 
     try {
-      const res = await updateVM(vm.id, { ports: portsList }, keycloak.token);
+      const res = await updateVM(keycloak.token, vm.id, {
+        ports: portsList as PortUpdate[],
+      });
       queueJob(res);
       enqueueSnackbar(`${t("deleting-proxy")} ${proxy.name}...`, {
         variant: "info",

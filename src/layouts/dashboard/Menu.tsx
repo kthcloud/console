@@ -81,6 +81,13 @@ export default function Menu() {
                 {t("menu-dashboard")}
               </MenuItem>
               <MenuItem
+                to={"/gpu"}
+                component={RouterLink}
+                onClick={handleClose}
+              >
+                {t("gpu-leases")}
+              </MenuItem>
+              <MenuItem
                 to={"/create"}
                 component={RouterLink}
                 onClick={handleClose}

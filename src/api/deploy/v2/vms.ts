@@ -2,7 +2,7 @@ import {
   VmActionCreate,
   VmCreate,
   VmUpdate,
-} from "kthcloud-types/types/v2/body";
+} from "go-deploy-types/types/v2/body";
 import { Jwt, Uuid } from "../../../types";
 
 export const listVMs = async (
@@ -96,12 +96,12 @@ export const deleteVM = async (token: Jwt, vmId: Uuid) => {
   return await response.json();
 };
 
-export const vmCommand = async (
+export const vmAction = async (
   token: Jwt,
   vmId: Uuid,
   body: VmActionCreate
 ) => {
-  const url = `${import.meta.env.VITE_DEPLOY_V2_API_URL}/vms/${vmId}/command`;
+  const url = `${import.meta.env.VITE_DEPLOY_V2_API_URL}/vmActions?vmId=${vmId}`;
   const response = await fetch(url, {
     method: "POST",
     headers: {

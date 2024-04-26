@@ -9,7 +9,7 @@ import Iconify from "../../../components/Iconify";
 import useResource from "../../../hooks/useResource";
 import { errorHandler } from "../../../utils/errorHandler";
 import { Vm } from "../../../types";
-import { vmCommand, deleteVM } from "../../../api/deploy/v2/vms";
+import { vmAction, deleteVM } from "../../../api/deploy/v2/vms";
 
 export const VMCommands = ({ vm }: { vm: Vm }) => {
   const { t } = useTranslation();
@@ -42,7 +42,7 @@ export const VMCommands = ({ vm }: { vm: Vm }) => {
     if (!(initialized && keycloak.authenticated && keycloak.token)) return;
 
     try {
-      await vmCommand(keycloak.token, vm.id, { action: command });
+      await vmAction(keycloak.token, vm.id, { action: command });
       enqueueSnackbar(sentenceCase(command) + t("vm-in-progress"), {
         variant: "info",
       });
@@ -75,7 +75,7 @@ export const VMCommands = ({ vm }: { vm: Vm }) => {
       )}
       {vm.status === "resourceRunning" && (
         <Button
-          onClick={() => executeCommand("reboot")}
+          onClick={() => executeCommand("restart")}
           variant="contained"
           startIcon={<Iconify icon="mdi:restart" />}
           color="warning"

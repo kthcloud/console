@@ -31,7 +31,7 @@ import { errorHandler } from "../../../utils/errorHandler";
 import { useTranslation } from "react-i18next";
 import CopyButton from "../../../components/CopyButton";
 import { Port, Vm } from "../../../types";
-import { PortUpdate } from "kthcloud-types/types/v2/body";
+import { PortUpdate } from "go-deploy-types/types/v2/body";
 
 export default function PortManager({ vm }: { vm: Vm }) {
   const { t } = useTranslation();

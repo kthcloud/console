@@ -5,7 +5,7 @@ import { searchUsers } from "../../api/deploy/users";
 import { errorHandler } from "../../utils/errorHandler";
 import { useKeycloak } from "@react-keycloak/web";
 import ConfirmButton from "../../components/ConfirmButton";
-import { updateVM } from "../../api/deploy/vms";
+import { updateVM } from "../../api/deploy/v2/vms";
 import { Link } from "react-router-dom";
 import { updateDeployment } from "../../api/deploy/deployments";
 import useResource from "../../hooks/useResource";
@@ -21,7 +21,7 @@ import {
   Stack,
 } from "@mui/material";
 import { Resource, User, Uuid } from "../../types";
-import { TeamRead } from "kthcloud-types/types/v1/body";
+import { TeamRead } from "go-deploy-types/types/v1/body";
 
 const DangerZone = ({ resource }: { resource: Resource }) => {
   const { t } = useTranslation();
@@ -103,7 +103,7 @@ const DangerZone = ({ resource }: { resource: Resource }) => {
     try {
       let response;
       if (resource.type === "vm") {
-        response = await updateVM(resource.id, body, keycloak.token);
+        response = await updateVM(keycloak.token, resource.id, body);
       } else if (resource.type === "deployment") {
         response = await updateDeployment(resource.id, body, keycloak.token);
       }

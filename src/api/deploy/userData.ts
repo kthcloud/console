@@ -1,4 +1,4 @@
-import { UserDataRead } from "kthcloud-types/types/v1/body";
+import { UserDataRead } from "go-deploy-types/types/v1/body";
 import { Jwt } from "../../types";
 
 export const getUserData = async (token: Jwt): Promise<UserDataRead[]> => {

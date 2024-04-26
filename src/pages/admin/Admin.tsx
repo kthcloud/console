@@ -38,7 +38,7 @@ import useResource from "../../hooks/useResource";
 import { errorHandler } from "../../utils/errorHandler";
 import { hashGPUId } from "../../utils/helpers";
 import { Deployment, Job, User, Uuid, Vm } from "../../types";
-import { GpuRead, TeamRead } from "kthcloud-types/types/v1/body";
+import { GpuRead, TeamRead } from "go-deploy-types/types/v1/body";
 
 export const Admin = () => {
   const { t } = useTranslation();

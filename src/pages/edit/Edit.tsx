@@ -46,7 +46,7 @@ import { updateDeployment } from "../../api/deploy/deployments";
 import { updateVM } from "../../api/deploy/vms";
 import { errorHandler } from "../../utils/errorHandler";
 import { Job, Resource, Deployment, Vm } from "../../types";
-import { Volume } from "kthcloud-types/types/v1/body";
+import { Volume } from "go-deploy-types/types/v1/body";
 
 export function Edit() {
   const { t } = useTranslation();
@@ -315,7 +315,7 @@ export function Edit() {
 
               {resource.type === "vm" && <SSHString vm={resource as Vm} />}
 
-              {/* {resource.type === "vm" && <GPUManager vm={resource as Vm} />} */}
+              {resource.type === "vm" && <GPUManager vm={resource as Vm} />}
 
               {/* {resource.type === "vm" && <SnapshotManager vm={resource} />} */}
 
@@ -323,7 +323,7 @@ export function Edit() {
 
               {/* {resource.type === "vm" && <ProxyManager vm={resource as Vm} />} */}
 
-              {/* {resource.type === "vm" && <Specs vm={resource as Vm} />} */}
+              {resource.type === "vm" && <Specs vm={resource as Vm} />}
 
               {resource.type === "deployment" && (
                 <EnvManager deployment={resource as Deployment} />

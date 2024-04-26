@@ -26,7 +26,7 @@ import { errorHandler } from "../../../utils/errorHandler";
 import { useTranslation } from "react-i18next";
 import RFC1035Input from "../../../components/RFC1035Input";
 import { Deployment } from "../../../types";
-import { Volume } from "kthcloud-types/types/v1/body";
+import { Volume } from "go-deploy-types/types/v1/body";
 
 const StorageManager = ({
   deployment,
