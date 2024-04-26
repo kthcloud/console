@@ -47,6 +47,7 @@ import { Deployment, Resource, Uuid, Vm } from "../../types";
 import { ThemeColor } from "../../theme/types";
 import { deleteVM } from "../../api/deploy/v2/vms";
 import { deleteVM as deleteVmV1 } from "../../api/deploy/vms";
+import useAlert from "../../hooks/useAlert";
 
 const descendingComparator = (
   a: Record<string, any>,
@@ -97,6 +98,7 @@ export function Deploy() {
   const [orderBy, setOrderBy] = useState<string>("name");
   const [filterName, setFilterName] = useState<string>("");
   const { userRows, initialLoad, queueJob, zones, gpuGroups } = useResource();
+  const { alerts } = useAlert();
   const [filteredRows, setFilteredRows] = useState<Resource[]>(userRows);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -508,18 +510,17 @@ export function Deploy() {
               </Button>
             </Stack>
 
-            {(window.location.href.includes("beta") ||
-              window.location.href.includes("localhost")) && (
-              <Alert severity="warning" sx={{ width: "100%", my: 5 }}>
-                <Typography variant="body1">
-                  Beta version - VM v2 featues are still being implemented.
-                  Please report bugs
-                </Typography>
+            {alerts.map((alert, index) => (
+              <Alert
+                severity={alert.severity || "info"}
+                sx={{ width: "100%", my: 5 }}
+                key={"alert-" + index}
+              >
+                <Typography variant="body1">{alert.title}</Typography>
               </Alert>
-            )}
+            ))}
 
             <JobList />
-
             <Card sx={{ boxShadow: 20 }}>
               <ListToolbar
                 numSelected={selected.length}
