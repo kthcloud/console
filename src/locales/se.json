@@ -491,6 +491,8 @@
         "waiting-for-gpu-lease": "Du står i kö för att låna ett grafikkort. Du kommer att bli meddelad när det är din tur.",
         "gpu-groups-subheader": "Här är alla grafikkort på kthcloud. Du kan stå i kö och få tillgång när det blir tillgängligt.",
         "gpu-leases-subheader": "Dina aktiva GPU-lån. Använd det eller ge tillbaka det, det är upp till dig.",
-        "manage-gpu-leases": "Hantera GPU-lån"
+        "manage-gpu-leases": "Hantera GPU-lån",
+        "switch-to-beta": "Byt till beta",
+        "switch-to-release": "Byt till release"
     }
 }
