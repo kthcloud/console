@@ -43,7 +43,7 @@ export const AlertList = () => {
         severity={alert.severity || "info"}
         sx={{ width: "100%", my: 5 }}
         key={"alert-" + index}
-        variant={alert.variant || "outlined"}
+        variant={alert.variant}
         action={
           alert.link ? (
             <IconButton color="inherit" size="small" href={alert.link}>
