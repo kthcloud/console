@@ -96,7 +96,8 @@ export function Deploy() {
   const [selected, setSelected] = useState<Uuid[]>([]);
   const [orderBy, setOrderBy] = useState<string>("name");
   const [filterName, setFilterName] = useState<string>("");
-  const { userRows, initialLoad, queueJob, zones, gpuGroups } = useResource();
+  const { userRows, initialLoad, queueJob, zones, gpuGroups, user } =
+    useResource();
   const [filteredRows, setFilteredRows] = useState<Resource[]>(userRows);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -461,17 +462,17 @@ export function Deploy() {
     );
   };
 
-  // useEffect(() => {
-  //   if (
-  //     user &&
-  //     user.userData &&
-  //     user.userData.find((d) => d.id === "onboarded")?.data !== "true"
-  //   ) {
-  //     navigate("/onboarding");
-  //   }
+  useEffect(() => {
+    if (
+      user &&
+      user.userData &&
+      user.userData.find((d) => d.id === "onboarded")?.data !== "true"
+    ) {
+      navigate("/onboarding");
+    }
 
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [user]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
 
   return (
     <>
