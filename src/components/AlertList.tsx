@@ -46,7 +46,13 @@ export const AlertList = () => {
         variant={alert.variant}
         action={
           alert.link ? (
-            <IconButton color="inherit" size="small" href={alert.link}>
+            <IconButton
+              color="inherit"
+              size="small"
+              href={alert.link}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <Iconify icon="mdi:external-link" />
             </IconButton>
           ) : null
