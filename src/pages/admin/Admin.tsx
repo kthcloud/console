@@ -30,15 +30,16 @@ import { deleteDeployment, getDeployments } from "../../api/deploy/deployments";
 import { getJobs, restartJob } from "../../api/deploy/jobs";
 import { getTeams } from "../../api/deploy/teams";
 import { getAllUsers } from "../../api/deploy/users";
-import { deleteVM, detachGPU, getGPUs, getVMs } from "../../api/deploy/vms";
 import LoadingPage from "../../components/LoadingPage";
 import Page from "../../components/Page";
 import useInterval from "../../hooks/useInterval";
 import useResource from "../../hooks/useResource";
 import { errorHandler } from "../../utils/errorHandler";
-import { hashGPUId } from "../../utils/helpers";
 import { Deployment, Job, User, Uuid, Vm } from "../../types";
-import { GpuRead, TeamRead } from "go-deploy-types/types/v1/body";
+import { TeamRead } from "go-deploy-types/types/v1/body";
+import { deleteVM, listVMs } from "../../api/deploy/v2/vms";
+import { GpuLeaseRead } from "go-deploy-types/types/v2/body";
+import { deleteGpuLease, listGpuLeases } from "../../api/deploy/v2/gpuLeases";
 
 export const Admin = () => {
   const { t } = useTranslation();
@@ -48,7 +49,7 @@ export const Admin = () => {
   // Keycloak/user session
 
   const { initialized, keycloak } = useKeycloak();
-  const { user, setImpersonatingDeployment, setImpersonatingVm } =
+  const { user, setImpersonatingDeployment, setImpersonatingVm, gpuGroups } =
     useResource();
   const navigate = useNavigate();
 
@@ -89,7 +90,7 @@ export const Admin = () => {
 
       async () => {
         try {
-          const response = await getVMs(keycloak.token!, true);
+          const response = await listVMs(keycloak.token!, true);
           setDbVMs(response);
         } catch (error: any) {
           errorHandler(error).forEach((e) =>
@@ -113,7 +114,7 @@ export const Admin = () => {
       },
       async () => {
         try {
-          const response = await getGPUs(keycloak.token!);
+          const response = await listGpuLeases(keycloak.token!);
           setDbGPUs(response);
         } catch (error: any) {
           errorHandler(error).forEach((e) =>
@@ -170,6 +171,15 @@ export const Admin = () => {
   }, [initialized]);
 
   // ==================================================
+  // Helpers
+  const renderGpuName = (gpuLeaseId: Uuid) => {
+    const group = gpuGroups.find((g) => g.id === gpuLeaseId);
+    if (!group) return "";
+
+    return `${group.vendor.replace("Corporation", "").trim()} ${group.displayName}`;
+  };
+
+  // ==================================================
   // Users
   const [dbUsers, setDbUsers] = useState<User[]>([]);
   const [users, setUsers] = useState<User[]>([]);
@@ -209,25 +219,22 @@ export const Admin = () => {
     );
   };
 
-  const renderGpuLeaser = (gpuId: string) => {
-    const vm = dbVMs.find((vm) => vm.gpu?.id === gpuId);
+  const renderGpuLeaser = (gpu: GpuLeaseRead) => {
+    const vm = dbVMs.find((vm) => gpu.vmId === vm.id);
 
-    if (!vm)
-      return (
-        <>
-          <TableCell></TableCell>
-          <TableCell></TableCell>
-        </>
-      );
     return (
       <>
-        <TableCell>{renderUsername(vm?.ownerId)}</TableCell>
-        <TableCell>
-          <Stack direction={"column"}>
-            <Typography variant="caption">{vm.id}</Typography>
-            {user && <Typography variant="caption">{vm.name}</Typography>}
-          </Stack>
-        </TableCell>
+        <TableCell>{renderUsername(gpu.userId)}</TableCell>
+        {vm ? (
+          <TableCell>
+            <Stack direction={"column"}>
+              <Typography variant="caption">{vm.id}</Typography>
+              {user && <Typography variant="caption">{vm.name}</Typography>}
+            </Stack>
+          </TableCell>
+        ) : (
+          <TableCell></TableCell>
+        )}
       </>
     );
   };
@@ -310,8 +317,8 @@ export const Admin = () => {
 
   // ==================================================
   // GPUs
-  const [dbGPUs, setDbGPUs] = useState<GpuRead[]>([]);
-  const [gpus, setGPUs] = useState<GpuRead[]>([]);
+  const [dbGPUs, setDbGPUs] = useState<GpuLeaseRead[]>([]);
+  const [gpus, setGPUs] = useState<GpuLeaseRead[]>([]);
   const [gpusFilter, setGPUsFilter] = useState<string>("");
   const [loadedGPUs, setLoadedGPUs] = useState<boolean>(false);
 
@@ -323,7 +330,6 @@ export const Admin = () => {
       const gpu = dbGPUs[i];
       if (
         gpu.id?.toLowerCase().includes(gpusFilter.toLowerCase()) ||
-        gpu.name?.toLowerCase().includes(gpusFilter.toLowerCase()) ||
         decode(gpu.id)?.toLowerCase().includes(gpusFilter.toLowerCase()) ||
         gpusFilter === ""
       ) {
@@ -711,17 +717,15 @@ export const Admin = () => {
                               {vm.gpu && (
                                 <Stack direction={"column"}>
                                   <Typography variant="caption">
-                                    {`${decode(vm.gpu.id)} ${hashGPUId(
-                                      vm.gpu.id
-                                    )}`}
+                                    {renderGpuName(vm.gpu.gpuGroupId)}
                                   </Typography>
-                                  {vm.gpu?.lease?.end && (
+                                  {vm.gpu?.expiresAt && (
                                     <Typography variant="caption">
-                                      {vm.gpu.lease.end}
+                                      {vm.gpu.expiresAt}
                                     </Typography>
                                   )}
                                   <Typography variant="caption">
-                                    {vm.gpu?.lease?.expired ? (
+                                    {vm.gpu?.isExpired ? (
                                       <b>{t("admin-gpu-expired")}</b>
                                     ) : (
                                       t("admin-gpu-active")
@@ -744,7 +748,10 @@ export const Admin = () => {
                                     color="error"
                                     onClick={() => {
                                       if (keycloak.token)
-                                        detachGPU(vm, keycloak.token);
+                                        deleteGpuLease(
+                                          keycloak.token,
+                                          vm.gpu!.id
+                                        );
                                     }}
                                   >
                                     {t("button-detach-gpu")}
@@ -755,7 +762,7 @@ export const Admin = () => {
                                   color="error"
                                   onClick={() => {
                                     if (keycloak.token)
-                                      deleteVM(vm.id, keycloak.token);
+                                      deleteVM(keycloak.token, vm.id);
                                   }}
                                 >
                                   {t("button-delete")}
@@ -980,20 +987,21 @@ export const Admin = () => {
                       <TableBody>
                         {gpus.map((gpu) => (
                           <TableRow key={gpu.id}>
+                            <TableCell>{gpu.id}</TableCell>
                             <TableCell>
-                              {`${decode(gpu.id)} ${hashGPUId(gpu.id)}`}
+                              {renderGpuName(gpu.gpuGroupId)}
                             </TableCell>
-                            <TableCell>{gpu.name}</TableCell>
-                            {renderGpuLeaser(gpu.id)}
+                            {renderGpuLeaser(gpu)}
                             <TableCell>
-                              {gpu.lease &&
-                                gpu.lease.end
-                                  .replace("Z", "")
-                                  .replace("T", " ")
-                                  .split(".")[0] + " UTC"}
+                              {gpu.expiresAt
+                                ? gpu.expiresAt
+                                    .replace("Z", "")
+                                    .replace("T", " ")
+                                    .split(".")[0] + " UTC"
+                                : ""}
                             </TableCell>
                             <TableCell>
-                              {gpu.lease && gpu.lease.expired
+                              {gpu && gpu.expiredAt
                                 ? t("admin-gpu-expired")
                                 : ""}
                             </TableCell>

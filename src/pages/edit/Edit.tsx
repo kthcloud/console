@@ -35,7 +35,6 @@ import { getReasonPhrase } from "http-status-codes";
 import StorageManager from "./deployments/StorageManager";
 import { ImageManager } from "./deployments/ImageManager";
 import { DomainManager } from "./deployments/DomainManager";
-import ProxyManager from "./vms/ProxyManager";
 import { HealthCheckRoute } from "./deployments/HealthCheckRoute";
 import { useTranslation } from "react-i18next";
 import DangerZone from "./DangerZone";
@@ -284,7 +283,7 @@ export function Edit() {
                         zones.find(
                           (zone) =>
                             zone.name === resource.zone &&
-                            zone.type === resource.type
+                            zone.capabilities.includes(resource.type)
                         )?.description || resource.zone
                       }
                       icon={<Iconify icon="mdi:earth" sx={{ opacity: 0.75 }} />}
