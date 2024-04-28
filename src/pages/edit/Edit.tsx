@@ -35,7 +35,6 @@ import { getReasonPhrase } from "http-status-codes";
 import StorageManager from "./deployments/StorageManager";
 import { ImageManager } from "./deployments/ImageManager";
 import { DomainManager } from "./deployments/DomainManager";
-import ProxyManager from "./vms/ProxyManager";
 import { HealthCheckRoute } from "./deployments/HealthCheckRoute";
 import { useTranslation } from "react-i18next";
 import DangerZone from "./DangerZone";
@@ -321,7 +320,7 @@ export function Edit() {
 
               {resource.type === "vm" && <PortManager vm={resource as Vm} />}
 
-              {resource.type === "vm" && <ProxyManager vm={resource as Vm} />}
+              {/* {resource.type === "vm" && <ProxyManager vm={resource as Vm} />} */}
 
               {resource.type === "vm" && <Specs vm={resource as Vm} />}
 
