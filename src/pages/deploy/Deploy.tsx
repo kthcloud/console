@@ -431,7 +431,7 @@ export function Deploy() {
     }
 
     const zone = zones.find(
-      (zone) => zone.name === row.zone && zone.type === row.type
+      (zone) => zone.name === row.zone && zone.capabilities.includes(row.type)
     );
 
     return (

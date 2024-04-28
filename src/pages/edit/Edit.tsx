@@ -283,7 +283,7 @@ export function Edit() {
                         zones.find(
                           (zone) =>
                             zone.name === resource.zone &&
-                            zone.type === resource.type
+                            zone.capabilities.includes(resource.type)
                         )?.description || resource.zone
                       }
                       icon={<Iconify icon="mdi:earth" sx={{ opacity: 0.75 }} />}
