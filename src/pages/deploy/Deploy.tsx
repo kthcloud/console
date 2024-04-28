@@ -13,7 +13,6 @@ import {
   Link,
   Button,
   Tooltip,
-  Alert,
   Box,
 } from "@mui/material";
 
@@ -47,7 +46,7 @@ import { Deployment, Resource, Uuid, Vm } from "../../types";
 import { ThemeColor } from "../../theme/types";
 import { deleteVM } from "../../api/deploy/v2/vms";
 import { deleteVM as deleteVmV1 } from "../../api/deploy/vms";
-import useAlert from "../../hooks/useAlert";
+import { AlertList } from "../../components/AlertList";
 
 const descendingComparator = (
   a: Record<string, any>,
@@ -98,7 +97,6 @@ export function Deploy() {
   const [orderBy, setOrderBy] = useState<string>("name");
   const [filterName, setFilterName] = useState<string>("");
   const { userRows, initialLoad, queueJob, zones, gpuGroups } = useResource();
-  const { alerts } = useAlert();
   const [filteredRows, setFilteredRows] = useState<Resource[]>(userRows);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -510,15 +508,7 @@ export function Deploy() {
               </Button>
             </Stack>
 
-            {alerts.map((alert, index) => (
-              <Alert
-                severity={alert.severity || "info"}
-                sx={{ width: "100%", my: 5 }}
-                key={"alert-" + index}
-              >
-                <Typography variant="body1">{alert.title}</Typography>
-              </Alert>
-            ))}
+            <AlertList />
 
             <JobList />
             <Card sx={{ boxShadow: 20 }}>
