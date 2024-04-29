@@ -1,4 +1,4 @@
-import { UserRead } from "go-deploy-types/types/v1/body";
+import { UserRead, UserUpdate } from "go-deploy-types/types/v1/body";
 import { Uuid } from "../../types";
 
 export const getUser = async (
@@ -49,7 +49,7 @@ export const getAllUsers = async (token: Uuid): Promise<UserRead[]> => {
 export const updateUser = async (
   userId: string,
   token: string,
-  data: any
+  data: UserUpdate
 ): Promise<UserRead> => {
   const res = await fetch(
     import.meta.env.VITE_DEPLOY_API_URL + "/users/" + userId,

@@ -1,6 +1,5 @@
 import {
   UserRead,
-  UserDataRead as UserData,
   DeploymentRead,
   VmRead,
   JobRead,
@@ -30,9 +29,7 @@ export interface Deployment extends DeploymentRead {
 
 export type Resource = Vm | Deployment | VmV1;
 
-export interface User extends UserRead {
-  userData?: UserData[];
-}
+export type User = UserRead;
 
 export interface Job extends JobRead {
   jobId: Uuid;
