@@ -96,8 +96,7 @@ export function Deploy() {
   const [selected, setSelected] = useState<Uuid[]>([]);
   const [orderBy, setOrderBy] = useState<string>("name");
   const [filterName, setFilterName] = useState<string>("");
-  const { userRows, initialLoad, queueJob, zones, gpuGroups } =
-    useResource();
+  const { userRows, initialLoad, queueJob, zones, gpuGroups } = useResource();
   const [filteredRows, setFilteredRows] = useState<Resource[]>(userRows);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -296,9 +295,9 @@ export function Deploy() {
               variant="ghost"
               startIcon={<Iconify icon="mdi:gpu" sx={{ opacity: 0.65 }} />}
             >
-              {`${group.vendor
-                .replace("Corporation", "")
-                .trim()} ${group.displayName}`}
+              {`${group.vendor.replace("Corporation", "").trim()} ${
+                group.displayName
+              }`}
             </Label>
           ) : (
             <Label
