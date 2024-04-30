@@ -498,6 +498,7 @@
         "gpu-leases-subheader": "The currents GPU leases at your disposal. Use it or give it back, it's up to you.",
         "manage-gpu-leases": "Manage GPU leases",
         "switch-to-beta": "Switch to beta",
-        "switch-to-release": "Switch to release"
+        "switch-to-release": "Switch to release",
+        "secrets-are-redacted": "Secrets are redacted"
     }
 }

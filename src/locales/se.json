@@ -497,6 +497,7 @@
         "gpu-leases-subheader": "Dina aktiva GPU-lån. Använd det eller ge tillbaka det, det är upp till dig.",
         "manage-gpu-leases": "Hantera GPU-lån",
         "switch-to-beta": "Byt till beta",
-        "switch-to-release": "Byt till release"
+        "switch-to-release": "Byt till release",
+        "secrets-are-redacted": "Hemligheter är dolda"
     }
 }

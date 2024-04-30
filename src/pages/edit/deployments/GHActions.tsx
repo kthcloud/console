@@ -39,8 +39,10 @@ const GHActions = ({ resource }: { resource: Deployment }) => {
   const { keycloak, initialized } = useKeycloak();
   const [actionsFile, setActionsFile] = useState<string>("");
   const [cliCommands, setCliCommands] = useState<string>("");
+  const [redacted, setRedacted] = useState<string>("");
   const [secrets, setSecrets] = useState<Secret[]>([]);
   const [showSecrets, setShowSecrets] = useState(false);
+  const [showCliSecrets, setShowCliSecrets] = useState(false);
   const theme: CustomTheme = useTheme();
 
   const loadYaml = async () => {
@@ -65,6 +67,13 @@ const GHActions = ({ resource }: { resource: Deployment }) => {
       // escape $ for bash
       const commandString = commands.join("\n").replace(/\$/g, "\\$");
       setCliCommands(commandString);
+      setRedacted(
+        commandString
+          .replace(password, "********")
+          .replace(username, "********")
+          .replace(registry, "********")
+          .replace(tag, "********")
+      );
 
       // Get the secrets
       const secrets = [
@@ -116,7 +125,13 @@ const GHActions = ({ resource }: { resource: Deployment }) => {
         />
         <CardContent>
           <TextareaAutosize
-            value={cliCommands ? cliCommands : t("loading")}
+            value={
+              cliCommands
+                ? showCliSecrets
+                  ? cliCommands
+                  : redacted
+                : t("loading")
+            }
             style={{
               width: "100%",
               border: 0,
@@ -127,6 +142,22 @@ const GHActions = ({ resource }: { resource: Deployment }) => {
         </CardContent>
         <CardActions>
           <CopyButton content={cliCommands} />
+
+          <Button
+            onClick={() => setShowCliSecrets(!showCliSecrets)}
+            startIcon={
+              <Iconify icon={showCliSecrets ? "mdi:eye-off" : "mdi:eye"} />
+            }
+            color={showCliSecrets ? "primary" : "error"}
+          >
+            {`${showCliSecrets ? t("hide") : t("show")} ${t("secrets")}`}
+          </Button>
+
+          {!showCliSecrets && (
+            <Typography variant="caption">
+              {t("secrets-are-redacted")}
+            </Typography>
+          )}
         </CardActions>
       </Card>
 
@@ -149,11 +180,21 @@ const GHActions = ({ resource }: { resource: Deployment }) => {
 
             <Stack
               direction={"row"}
-              spacing={1}
+              spacing={2}
               useFlexGap
               alignItems={"center"}
             >
               <CopyButton content={actionsFile} />
+
+              <Button
+                onClick={() => setShowSecrets(!showSecrets)}
+                startIcon={
+                  <Iconify icon={showSecrets ? "mdi:eye-off" : "mdi:eye"} />
+                }
+                color={showSecrets ? "primary" : "error"}
+              >
+                {`${showSecrets ? t("hide") : t("show")} ${t("secrets")}`}
+              </Button>
 
               <Typography variant="body2">
                 {t("unsure-where-to-paste-this")}
@@ -167,17 +208,6 @@ const GHActions = ({ resource }: { resource: Deployment }) => {
                 </Link>
               </Typography>
             </Stack>
-
-            <Button
-              variant={"contained"}
-              onClick={() => setShowSecrets(!showSecrets)}
-              startIcon={
-                <Iconify icon={showSecrets ? "mdi:eye-off" : "mdi:eye"} />
-              }
-              color={showSecrets ? "primary" : "error"}
-            >
-              {`${showSecrets ? t("hide") : t("show")} ${t("secrets")}`}
-            </Button>
 
             {showSecrets && (
               <Box component="div" sx={{ overflowX: "auto", maxWidth: "100%" }}>
