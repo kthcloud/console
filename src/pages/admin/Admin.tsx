@@ -725,7 +725,7 @@ export const Admin = () => {
                                     </Typography>
                                   )}
                                   <Typography variant="caption">
-                                    {vm.gpu?.isExpired ? (
+                                    {vm.gpu?.expiredAt ? (
                                       <b>{t("admin-gpu-expired")}</b>
                                     ) : (
                                       t("admin-gpu-active")
