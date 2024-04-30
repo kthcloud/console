@@ -3,11 +3,11 @@ import {
   DeploymentRead,
   VmRead,
   JobRead,
-} from "go-deploy-types/types/v1/body/index";
+} from "@kthcloud/go-deploy-types/types/v1/body/index";
 import {
   VmRead as V2VmRead,
   PortRead,
-} from "go-deploy-types/types/v2/body/index";
+} from "@kthcloud/go-deploy-types/types/v2/body/index";
 
 export type Uuid = string;
 export type Jwt = string;

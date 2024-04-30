@@ -45,7 +45,7 @@ import { updateDeployment } from "../../api/deploy/deployments";
 import { updateVM } from "../../api/deploy/vms";
 import { errorHandler } from "../../utils/errorHandler";
 import { Job, Resource, Deployment, Vm } from "../../types";
-import { Volume } from "go-deploy-types/types/v1/body";
+import { Volume } from "@kthcloud/go-deploy-types/types/v1/body";
 
 export function Edit() {
   const { t } = useTranslation();

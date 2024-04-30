@@ -18,7 +18,7 @@ import Iconify from "../../../components/Iconify";
 import useResource from "../../../hooks/useResource";
 import { errorHandler } from "../../../utils/errorHandler";
 import { Vm } from "../../../types";
-import { Specs as SpecsType } from "go-deploy-types/types/v1/body";
+import { Specs as SpecsType } from "@kthcloud/go-deploy-types/types/v1/body";
 
 export default function Specs({ vm }: { vm: Vm }) {
   const { t } = useTranslation();

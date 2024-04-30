@@ -1,4 +1,4 @@
-import { UserRead, UserUpdate } from "go-deploy-types/types/v1/body";
+import { UserRead, UserUpdate } from "@kthcloud/go-deploy-types/types/v1/body";
 import { Uuid } from "../../types";
 
 export const getUser = async (

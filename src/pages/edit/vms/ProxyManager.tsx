@@ -48,7 +48,7 @@ import {
   HttpProxyRead,
   PortRead,
   PortUpdate,
-} from "go-deploy-types/types/v2/body";
+} from "@kthcloud/go-deploy-types/types/v2/body";
 
 interface Proxy extends HttpProxyRead {
   port?: number;

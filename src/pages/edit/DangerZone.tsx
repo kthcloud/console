@@ -21,7 +21,7 @@ import {
   Stack,
 } from "@mui/material";
 import { Resource, User, Uuid } from "../../types";
-import { TeamRead } from "go-deploy-types/types/v1/body";
+import { TeamRead } from "@kthcloud/go-deploy-types/types/v1/body";
 
 const DangerZone = ({ resource }: { resource: Resource }) => {
   const { t } = useTranslation();

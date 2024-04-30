@@ -34,7 +34,7 @@ import Page from "../../components/Page";
 import useResource from "../../hooks/useResource";
 import { errorHandler } from "../../utils/errorHandler";
 import { useTheme } from "@mui/material/styles";
-import { NotificationRead } from "go-deploy-types/types/v1/body";
+import { NotificationRead } from "@kthcloud/go-deploy-types/types/v1/body";
 
 const Inbox = () => {
   const { user, notifications, unread } = useResource();

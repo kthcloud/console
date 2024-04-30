@@ -36,9 +36,9 @@ import useInterval from "../../hooks/useInterval";
 import useResource from "../../hooks/useResource";
 import { errorHandler } from "../../utils/errorHandler";
 import { Deployment, Job, User, Uuid, Vm } from "../../types";
-import { TeamRead } from "go-deploy-types/types/v1/body";
+import { TeamRead } from "@kthcloud/go-deploy-types/types/v1/body";
 import { deleteVM, listVMs } from "../../api/deploy/v2/vms";
-import { GpuLeaseRead } from "go-deploy-types/types/v2/body";
+import { GpuLeaseRead } from "@kthcloud/go-deploy-types/types/v2/body";
 import { deleteGpuLease, listGpuLeases } from "../../api/deploy/v2/gpuLeases";
 
 export const Admin = () => {

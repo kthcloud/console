@@ -2,7 +2,7 @@ import {
   VmActionCreate,
   VmCreate,
   VmUpdate,
-} from "go-deploy-types/types/v2/body";
+} from "@kthcloud/go-deploy-types/types/v2/body";
 import { Jwt, Uuid } from "../../../types";
 
 export const listVMs = async (

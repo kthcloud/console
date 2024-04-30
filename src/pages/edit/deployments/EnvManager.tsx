@@ -25,7 +25,7 @@ import { useKeycloak } from "@react-keycloak/web";
 import { errorHandler } from "../../../utils/errorHandler";
 import { useTranslation } from "react-i18next";
 import { Deployment } from "../../../types";
-import { Env } from "go-deploy-types/types/v1/body";
+import { Env } from "@kthcloud/go-deploy-types/types/v1/body";
 
 export default function EnvManager({ deployment }: { deployment: Deployment }) {
   const { t } = useTranslation();
