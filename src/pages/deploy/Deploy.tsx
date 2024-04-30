@@ -360,10 +360,6 @@ export function Deploy() {
       (row.status === "resourceError" && "error") ||
       (row.status === "resourceUnknown" && "error") ||
       (row.status === "resourceStopped" && "warning") ||
-      (row.status === "resourceBeingCreated" && "info") ||
-      (row.status === "resourceBeingDeleted" && "info") ||
-      (row.status === "resourceStarting" && "info") ||
-      (row.status === "resourceStopping" && "info") ||
       (row.status === "resourceRunning" && "success") ||
       "info";
 
@@ -377,8 +373,12 @@ export function Deploy() {
         sx={
           row.status === "resourceStopping" ||
           row.status === "resourceStarting" ||
+          row.status === "resourceProvisioning" ||
+          row.status === "resourceScaling" ||
           row.status === "resourceBeingCreated" ||
+          row.status === "resourceCreating" ||
           row.status === "resourceBeingDeleted" ||
+          row.status === "resourceDeleting" ||
           row.status === "resourceRestarting"
             ? {
                 animation: "pulse 2s cubic-bezier(.4,0,.6,1) infinite",
