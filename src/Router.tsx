@@ -12,7 +12,7 @@ import Admin from "./pages/admin";
 import Tiers from "./pages/tiers/Tiers";
 
 import NotFound from "./pages/404";
-import Status from "./pages/status";
+import { Status } from "./pages/status/Status";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Onboarding from "./pages/onboarding";
 import Inbox from "./pages/inbox/Inbox";

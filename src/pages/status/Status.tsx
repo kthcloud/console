@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 // mui
 import { useTheme } from "@mui/material/styles";
 import {
@@ -23,6 +21,10 @@ import WidgetSummary from "./WidgetSummary";
 import ServerStats from "./ServerStats";
 import LineChart from "./LineChart";
 import { useTranslation } from "react-i18next";
+import {
+  TimestampedCapacities,
+  TimestampedStatus,
+} from "@kthcloud/sys-api-types/types/body";
 
 type MastodonPost = {
   id: string;
@@ -37,16 +39,26 @@ export type ChartData = {
   data: ChartDataPoint[];
 };
 
-export function Status() {
+export const Status = () => {
   const { t } = useTranslation();
 
-  const [statusData, setStatusData] = useState([]);
-  const [cpuCapacities, setCpuCapacities] = useState([]);
-  const [ramCapacities, setRamCapacities] = useState([]);
-  const [gpuCapacities, setGpuCapacities] = useState([]);
+  type ChartStatusData = {
+    name: string;
+    data: number[];
+  };
+  const [statusData, setStatusData] = useState<ChartStatusData[]>([]);
+
+  type ChartCapacitiesData = {
+    x: string;
+    y: number;
+  };
+  const [cpuCapacities, setCpuCapacities] = useState<ChartCapacitiesData[]>([]);
+  const [ramCapacities, setRamCapacities] = useState<ChartCapacitiesData[]>([]);
+  const [gpuCapacities, setGpuCapacities] = useState<ChartCapacitiesData[]>([]);
+
   const [overviewData, _setOverviewData] = useState<ChartData[]>([]);
-  const [statusLock, setStatusLock] = useState(false);
-  const [capacitiesLock, setCapacitiesLock] = useState(false);
+  const [statusLock, setStatusLock] = useState<boolean>(false);
+  const [capacitiesLock, setCapacitiesLock] = useState<boolean>(false);
   const [posts, setPosts] = useState<MastodonPost[]>([]);
 
   // Capacities
@@ -131,8 +143,8 @@ export function Status() {
       method: "GET",
     })
       .then((response) => response.json())
-      .then((result) => {
-        let statusData = result[0].status.hosts.map((host) => {
+      .then((result: TimestampedStatus[]) => {
+        const statusData = result[0].status.hosts.map((host) => {
           const gpuTemp = host.gpu ? host.gpu.temp[0].main : null;
           return {
             name: host.displayName,
@@ -189,7 +201,7 @@ export function Status() {
       method: "GET",
     })
       .then((response) => response.json())
-      .then((result) => {
+      .then((result: TimestampedCapacities[]) => {
         setRam(result[0].capacities.ram.total);
         setCpuCores(result[0].capacities.cpuCore.total);
         setGpus(result[0].capacities.gpu.total);
@@ -381,4 +393,4 @@ export function Status() {
       </Container>
     </Page>
   );
-}
+};
