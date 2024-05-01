@@ -10,7 +10,6 @@ import {
   IconButton,
   FormControl,
   OutlinedInput,
-  InputAdornment,
   useTheme,
 } from "@mui/material";
 import { useState, useEffect, ReactNode } from "react";
@@ -119,6 +118,11 @@ export function Edit() {
     }
   };
 
+  const handleCloseChange = () => {
+    setEditingName(false);
+    setNameFieldValue(resource?.name || "");
+  };
+
   const loadResource = () => {
     const row = rows.find((row) => row.id === id);
     if (!row) {
@@ -204,7 +208,7 @@ export function Edit() {
                 spacing={3}
                 useFlexGap={true}
               >
-                {!editingName && (
+                {!editingName ? (
                   <Stack direction="row" alignItems="center" spacing={1}>
                     <Typography variant="h4">{resource.name}</Typography>
                     <IconButton
@@ -217,22 +221,9 @@ export function Edit() {
                       <Iconify icon="mdi:pencil" />
                     </IconButton>
                   </Stack>
-                )}
-                {editingName && (
+                ) : (
                   <FormControl sx={{ m: 1, width: "25ch" }} variant="outlined">
                     <OutlinedInput
-                      id="outlined-adornment-weight"
-                      endAdornment={
-                        <InputAdornment position="end">
-                          <IconButton onClick={handleNameChange}>
-                            <Iconify icon="mdi:content-save" />
-                          </IconButton>
-                        </InputAdornment>
-                      }
-                      aria-describedby="outlined-weight-helper-text"
-                      inputProps={{
-                        "aria-label": "weight",
-                      }}
                       value={nameFieldValue}
                       onChange={(e) => {
                         setNameFieldValue(e.target.value.trim());
@@ -252,53 +243,69 @@ export function Edit() {
                   spacing={3}
                   useFlexGap={true}
                 >
-                  {resource.status && (
-                    <Chip
-                      label={sentenceCase(
-                        resource.status.replace("resource", "").trim()
+                  {editingName ? (
+                    <>
+                      <IconButton onClick={handleNameChange}>
+                        <Iconify icon="mdi:content-save" />
+                      </IconButton>
+                      <IconButton onClick={handleCloseChange}>
+                        <Iconify icon="mdi:close" />
+                      </IconButton>
+                    </>
+                  ) : (
+                    <>
+                      {resource.status && (
+                        <Chip
+                          label={sentenceCase(
+                            resource.status.replace("resource", "").trim()
+                          )}
+                          icon={
+                            <Iconify
+                              icon="tabler:heartbeat"
+                              sx={{ opacity: 0.75 }}
+                            />
+                          }
+                          sx={
+                            resource.status === "resourceStopping" ||
+                            resource.status === "resourceStarting" ||
+                            resource.status === "resourceRestarting"
+                              ? {
+                                  animation:
+                                    "pulse 2s cubic-bezier(.4,0,.6,1) infinite",
+                                }
+                              : null
+                          }
+                        />
                       )}
-                      icon={
-                        <Iconify
-                          icon="tabler:heartbeat"
-                          sx={{ opacity: 0.75 }}
+
+                      {resource.type === "deployment" &&
+                        renderPingResult(resource as Deployment)}
+                      {resource.zone && zones && (
+                        <Chip
+                          label={
+                            zones.find(
+                              (zone) =>
+                                zone.name === resource.zone &&
+                                zone.capabilities.includes(resource.type)
+                            )?.description || resource.zone
+                          }
+                          icon={
+                            <Iconify icon="mdi:earth" sx={{ opacity: 0.75 }} />
+                          }
                         />
-                      }
-                      sx={
-                        resource.status === "resourceStopping" ||
-                        resource.status === "resourceStarting" ||
-                        resource.status === "resourceRestarting"
-                          ? {
-                              animation:
-                                "pulse 2s cubic-bezier(.4,0,.6,1) infinite",
-                            }
-                          : null
-                      }
-                    />
-                  )}
-                  {resource.type === "deployment" &&
-                    renderPingResult(resource as Deployment)}
-                  {resource.zone && zones && (
-                    <Chip
-                      label={
-                        zones.find(
-                          (zone) =>
-                            zone.name === resource.zone &&
-                            zone.capabilities.includes(resource.type)
-                        )?.description || resource.zone
-                      }
-                      icon={<Iconify icon="mdi:earth" sx={{ opacity: 0.75 }} />}
-                    />
-                  )}
-                  {resource?.teams?.length > 0 && (
-                    <Chip
-                      label={t("shared")}
-                      icon={
-                        <Iconify
-                          icon="mdi:account-multiple"
-                          sx={{ opacity: 0.75 }}
+                      )}
+                      {resource?.teams?.length > 0 && (
+                        <Chip
+                          label={t("shared")}
+                          icon={
+                            <Iconify
+                              icon="mdi:account-multiple"
+                              sx={{ opacity: 0.75 }}
+                            />
+                          }
                         />
-                      }
-                    />
+                      )}
+                    </>
                   )}
                 </Stack>
                 <div style={{ flexGrow: "1" }} />
