@@ -41,7 +41,7 @@ import { ReplicaManager } from "./deployments/ReplicaManager";
 import Iconify from "../../components/Iconify";
 import { enqueueSnackbar } from "notistack";
 import { updateDeployment } from "../../api/deploy/deployments";
-import { updateVM } from "../../api/deploy/vms";
+import { updateVM } from "../../api/deploy/v2/vms";
 import { errorHandler } from "../../utils/errorHandler";
 import { Job, Resource, Deployment, Vm } from "../../types";
 import { Volume } from "@kthcloud/go-deploy-types/types/v1/body";
@@ -97,11 +97,9 @@ export function Edit() {
           keycloak.token
         );
       } else if (resource.type === "vm") {
-        result = await updateVM(
-          resource.id,
-          { name: nameFieldValue },
-          keycloak.token
-        );
+        result = await updateVM(keycloak.token, resource.id, {
+          name: nameFieldValue,
+        });
       }
 
       if (result) {
