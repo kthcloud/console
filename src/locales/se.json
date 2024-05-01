@@ -498,6 +498,7 @@
         "manage-gpu-leases": "Hantera GPU-lån",
         "switch-to-beta": "Byt till beta",
         "switch-to-release": "Byt till release",
-        "secrets-are-redacted": "Hemligheter är dolda"
+        "secrets-are-redacted": "Hemligheter är dolda",
+        "max-replicas": "Max antal kopior: "
     }
 }

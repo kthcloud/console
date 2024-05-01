@@ -419,6 +419,7 @@
         "replicas-saving": "Saving replicas...",
         "could-not-save-replicas": "Could not save replicas: ",
         "replicas-shutdown-warning": "This will shut down your deployment. Are you sure?",
+        "max-replicas": "Maximum replicas: ",
         "members": "Members",
         "share-with-team-description": "Share with team",
         "share-with-team-action": "share with team",
