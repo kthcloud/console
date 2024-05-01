@@ -195,7 +195,7 @@ export default function EnvManager({ deployment }: { deployment: Deployment }) {
                           setNewEnvValue("");
                         }}
                       >
-                        <Iconify icon="mdi:plus" />
+                        <Iconify icon="mdi:content-save" />
                       </IconButton>
                     )}
                   </TableCell>

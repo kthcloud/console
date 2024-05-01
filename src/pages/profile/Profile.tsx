@@ -391,7 +391,7 @@ export function Profile() {
                                 setChangeInKeys(true);
                               }}
                             >
-                              <Iconify icon="mdi:plus" />
+                              <Iconify icon="mdi:content-save" />
                             </IconButton>
                           </TableCell>
                         </TableRow>

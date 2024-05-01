@@ -301,7 +301,7 @@ export default function CreateDeployment({
                         setNewEnvValue("");
                       }}
                     >
-                      <Iconify icon="mdi:plus" />
+                      <Iconify icon="mdi:content-save" />
                     </IconButton>
                   </TableCell>
                 </TableRow>
@@ -480,7 +480,7 @@ export default function CreateDeployment({
                           setNewPersistentServerPath("");
                         }}
                       >
-                        <Iconify icon="mdi:plus" />
+                        <Iconify icon="mdi:content-save" />
                       </IconButton>
                     </TableCell>
                   </TableRow>

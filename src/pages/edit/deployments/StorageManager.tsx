@@ -243,7 +243,7 @@ const StorageManager = ({
                           setNewPersistentServerPath("");
                         }}
                       >
-                        <Iconify icon="mdi:plus" />
+                        <Iconify icon="mdi:content-save" />
                       </IconButton>
                     </TableCell>
                   </TableRow>
