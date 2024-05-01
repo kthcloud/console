@@ -30,10 +30,16 @@ type MastodonPost = {
   id: string;
 };
 
+export type ChartStatusData = {
+  name: string;
+  data: number[];
+};
+
 export type ChartDataPoint = {
-  x: number;
+  x: string;
   y: number;
 };
+
 export type ChartData = {
   name: string;
   data: ChartDataPoint[];
@@ -41,20 +47,11 @@ export type ChartData = {
 
 export const Status = () => {
   const { t } = useTranslation();
-
-  type ChartStatusData = {
-    name: string;
-    data: number[];
-  };
   const [statusData, setStatusData] = useState<ChartStatusData[]>([]);
 
-  type ChartCapacitiesData = {
-    x: string;
-    y: number;
-  };
-  const [cpuCapacities, setCpuCapacities] = useState<ChartCapacitiesData[]>([]);
-  const [ramCapacities, setRamCapacities] = useState<ChartCapacitiesData[]>([]);
-  const [gpuCapacities, setGpuCapacities] = useState<ChartCapacitiesData[]>([]);
+  const [cpuCapacities, setCpuCapacities] = useState<ChartDataPoint[]>([]);
+  const [ramCapacities, setRamCapacities] = useState<ChartDataPoint[]>([]);
+  const [gpuCapacities, setGpuCapacities] = useState<ChartDataPoint[]>([]);
 
   const [overviewData, _setOverviewData] = useState<ChartData[]>([]);
   const [statusLock, setStatusLock] = useState<boolean>(false);
@@ -66,7 +63,7 @@ export const Status = () => {
   const [cpuCores, setCpuCores] = useState(0);
   const [gpus, setGpus] = useState(0);
 
-  const setOverviewData = (data) => {
+  const setOverviewData = (data: TimestampedStatus[]) => {
     const cpuTemp: ChartDataPoint[] = [];
     const cpuLoad: ChartDataPoint[] = [];
     const ramLoad: ChartDataPoint[] = [];
