@@ -359,11 +359,14 @@ export function Deploy() {
     const color: ThemeColor =
       (row.status === "resourceError" && "error") ||
       (row.status === "resourceUnknown" && "error") ||
+      (row.status === "resourceMountFailed" && "error") ||
+      (row.status === "resourceImagePullFailed" && "error") ||
+      (row.status === "resourceCrashLoop" && "error") ||
       (row.status === "resourceStopped" && "warning") ||
       (row.status === "resourceRunning" && "success") ||
       "info";
 
-    const statusMessage = t(row.status);
+    const statusMessage = sentenceCase(t(row.status).replace("resource", ""));
 
     return (
       <Label
@@ -386,7 +389,13 @@ export function Deploy() {
             : null
         }
       >
-        {sentenceCase(statusMessage)}
+        {row.type === "deployment" && row.error ? (
+          <Tooltip enterTouchDelay={10} title={row.error}>
+            <span>{statusMessage}</span>
+          </Tooltip>
+        ) : (
+          statusMessage
+        )}
       </Label>
     );
   };

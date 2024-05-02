@@ -395,6 +395,9 @@
         "resourceRunning": "Running",
         "resourceProvisioning": "Provisioning",
         "resourceScaling": "Scaling",
+        "resourceMountFailed": "Mount failed",
+        "resourceImagePullFailed": "Image pull failed",
+        "resourceCrashLoop": "Crash loop",
         "connectionError": "Unable to connect to server",
         "retrying-in": "Retrying in",
         "seconds": "seconds",
@@ -508,6 +511,7 @@
         "only-once": "API keys are only shown once. Make sure to save it somewhere safe and do not share it with anyone.",
         "days": "days",
         "year": "year",
-        "security-details": "Security details"
+        "security-details": "Security details",
+        "kubernetes-error": "Kubernetes error"
     }
 }

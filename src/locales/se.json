@@ -394,6 +394,9 @@
         "resourceProvisioning": "Förbereder",
         "resourceScaling": "Ändrar storlek",
         "resourceRunning": "OK",
+        "resourceMountFailed": "Montering misslyckades",
+        "resourceImagePullFailed": "Bildhämtning misslyckades",
+        "resourceCrashLoop": "Kraschloop",
         "connectionError": "Kunde inte ansluta till servern",
         "retrying-in": "Försöker igen om",
         "seconds": "sekunder",
@@ -507,6 +510,7 @@
         "only-once": "API-nycklar visas endast en gång. Spara den på en säker plats och dela den inte med någon.",
         "days": "dagar",
         "year": "år",
-        "security-details": "Säkerhetsuppgifter"
+        "security-details": "Säkerhetsuppgifter",
+        "kubernetes-error": "Fel från Kubernetes"
     }
 }
