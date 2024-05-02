@@ -73,7 +73,10 @@ const ProfileButton = () => {
           }}
         >
           {user.gravatarUrl ? (
-            <Avatar src={user.gravatarUrl} sx={{ width: 20, height: 20 }} />
+            <Avatar
+              src={user.gravatarUrl + "?s=32"}
+              sx={{ width: 20, height: 20 }}
+            />
           ) : (
             <Avatar sx={{ width: 20, height: 20 }}>
               <Iconify

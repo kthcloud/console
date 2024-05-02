@@ -208,7 +208,7 @@ export function Profile() {
                       >
                         {user.gravatarUrl ? (
                           <Avatar
-                            src={user.gravatarUrl}
+                            src={user.gravatarUrl + "?s=200"}
                             sx={{ width: 100, height: 100 }}
                           />
                         ) : (
