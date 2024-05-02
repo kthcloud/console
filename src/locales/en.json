@@ -500,6 +500,13 @@
         "manage-gpu-leases": "Manage GPU leases",
         "switch-to-beta": "Switch to beta",
         "switch-to-release": "Switch to release",
-        "secrets-are-redacted": "Secrets are redacted"
+        "secrets-are-redacted": "Secrets are redacted",
+        "api-keys": "API keys",
+        "api-keys-subheader": "API keys allow you to interact with our API through scripts or other applications. Keep them secret!",
+        "expires": "Expires",
+        "your-new-key": "Your new key",
+        "only-once": "API keys are only shown once. Make sure to save it somewhere safe and do not share it with anyone.",
+        "days": "days",
+        "year": "year"
     }
 }

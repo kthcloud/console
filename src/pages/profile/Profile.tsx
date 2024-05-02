@@ -39,6 +39,7 @@ import JobList from "../../components/JobList";
 import { ResetOnboarding } from "./ResetOnboarding";
 import { useTranslation } from "react-i18next";
 import { User } from "../../types";
+import { ApiKeys } from "./ApiKeys";
 
 export function Profile() {
   const { t } = useTranslation();
@@ -350,12 +351,12 @@ export function Profile() {
                                 error={Boolean(validationError.key)}
                                 helperText={validationError.key}
                               />
-                              <span>{t("or")}</span>
+                              <Typography sx={{ px: 1 }}>{t("or")}</Typography>
 
                               <Button
-                                variant="contained"
-                                component="label"
+                                component={"label"}
                                 sx={{ whiteSpace: "nowrap", px: 3 }}
+                                startIcon={<Iconify icon="mdi:key" />}
                               >
                                 {t("select-key-file")}
                                 <input
@@ -400,6 +401,8 @@ export function Profile() {
                   </TableContainer>
                 </CardContent>
               </Card>
+
+              <ApiKeys />
 
               <ResetOnboarding />
             </Stack>

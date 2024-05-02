@@ -499,6 +499,13 @@
         "switch-to-beta": "Byt till beta",
         "switch-to-release": "Byt till release",
         "secrets-are-redacted": "Hemligheter är dolda",
-        "max-replicas": "Max antal kopior: "
+        "max-replicas": "Max antal kopior: ",
+        "api-keys": "API-nycklar",
+        "api-keys-subheader": "API-nycklar låter dig interagera med vår API genom skript eller andra applikationer. Håll dem hemliga!",
+        "expires": "Utgår",
+        "your-new-key": "Din nya nyckel",
+        "only-once": "API-nycklar visas endast en gång. Spara den på en säker plats och dela den inte med någon.",
+        "days": "dagar",
+        "year": "år"
     }
 }
