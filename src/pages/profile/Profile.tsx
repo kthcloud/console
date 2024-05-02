@@ -26,6 +26,10 @@ import {
   IconButton,
   Chip,
   Link,
+  Avatar,
+  Badge,
+  Box,
+  Tooltip,
 } from "@mui/material";
 
 // components
@@ -168,23 +172,50 @@ export function Profile() {
               <JobList />
 
               <Card sx={{ boxShadow: 20 }}>
-                <CardHeader
-                  title={t("details")}
-                  subheader={
-                    <>
-                      {t("gravatar")}
-                      <Link
-                        href="https://gravatar.com/connect/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        gravatar.com
-                      </Link>
-                    </>
-                  }
-                />
+                <CardHeader title={t("details")} />
                 <CardContent>
                   <Stack spacing={3}>
+                    <Box component="div">
+                      <Badge
+                        overlap="circular"
+                        anchorOrigin={{
+                          vertical: "bottom",
+                          horizontal: "right",
+                        }}
+                        badgeContent={
+                          <Tooltip enterTouchDelay={10} title={t("gravatar")}>
+                            <IconButton
+                              sx={{
+                                background: "rgba(0,0,0,0.5)",
+                                backdropFilter: "blur(5px)",
+                                transition: "background-color 0.1s ease-in-out",
+                                ":hover": {
+                                  backdropFilter: "blur(15px)",
+                                  background: "rgba(0,0,0,0.75)",
+                                },
+                              }}
+                              component={Link}
+                              href="https://gravatar.com/connect/"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <Iconify icon="mdi:pencil" />
+                            </IconButton>
+                          </Tooltip>
+                        }
+                      >
+                        {user.gravatarUrl ? (
+                          <Avatar
+                            src={user.gravatarUrl}
+                            sx={{ width: 100, height: 100 }}
+                          />
+                        ) : (
+                          <Avatar sx={{ width: 100, height: 100 }}>
+                            {user.username[0].toUpperCase()}
+                          </Avatar>
+                        )}
+                      </Badge>
+                    </Box>
                     <Stack
                       spacing={3}
                       direction={"row"}
@@ -222,6 +253,17 @@ export function Profile() {
                           label={"Admin"}
                         />
                       )}
+
+                      <Button
+                        startIcon={<Iconify icon="mdi-lock" />}
+                        component={Link}
+                        href="https://iam.cloud.cbh.kth.se/realms/cloud/account/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        variant="outlined"
+                      >
+                        {t("security-details")}
+                      </Button>
 
                       <div style={{ flexGrow: "1" }} />
                     </Stack>

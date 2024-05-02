@@ -91,7 +91,7 @@
         "admin-loaded-teams": "hämtade grupper",
         "admin-loaded-jobs": "hämtade jobb",
         "menu-dashboard": "Översikt",
-        "gravatar": "Vi använder Gravatar för profilbilder. Byt på ",
+        "gravatar": "Byt profilbild på Gravatar",
         "admin-visibility": "Synlighet",
         "create-vm-max-disk-size": "Max tillgänglig diskutrymme",
         "latest": "Senaste",
@@ -506,6 +506,7 @@
         "your-new-key": "Din nya nyckel",
         "only-once": "API-nycklar visas endast en gång. Spara den på en säker plats och dela den inte med någon.",
         "days": "dagar",
-        "year": "år"
+        "year": "år",
+        "security-details": "Säkerhetsuppgifter"
     }
 }

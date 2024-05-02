@@ -311,7 +311,7 @@
         "copy-key": "Copy key",
         "could-not-fetch-profile": "Could not fetch profile: ",
         "successfully-updated": "Successfully updated",
-        "gravatar": "We use Gravatar for profile pictures. Change it at ",
+        "gravatar": "Change profile picture on Gravatar",
         "ssh-public-keys": "SSH public keys",
         "ssh-public-keys-subheader-1": "Your public keys will be installed when creating a VM. Changes will not apply to existing resources",
         "ssh-public-keys-subheader-2": "Please ensure you are uploading your public SSH key",
@@ -507,6 +507,7 @@
         "your-new-key": "Your new key",
         "only-once": "API keys are only shown once. Make sure to save it somewhere safe and do not share it with anyone.",
         "days": "days",
-        "year": "year"
+        "year": "year",
+        "security-details": "Security details"
     }
 }
