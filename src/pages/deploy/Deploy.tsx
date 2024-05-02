@@ -476,7 +476,7 @@ export function Deploy() {
 
   return (
     <>
-      {!initialLoad ? (
+      {!(initialLoad && user) ? (
         <LoadingPage />
       ) : (
         <Page title={t("menu-dashboard")}>
@@ -493,6 +493,17 @@ export function Deploy() {
               <Typography variant="h4">{t("menu-dashboard")}</Typography>
 
               <Box component="div" flexGrow={1} />
+              {user.storageUrl && (
+                <Button
+                  component={Link}
+                  href={user.storageUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  startIcon={<Iconify icon="mdi:folder" />}
+                >
+                  {t("storage-manager")}
+                </Button>
+              )}
               <Button
                 component={RouterLink}
                 to={"/gpu"}
