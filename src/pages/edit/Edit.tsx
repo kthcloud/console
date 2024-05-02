@@ -45,6 +45,7 @@ import { updateVM } from "../../api/deploy/v2/vms";
 import { errorHandler } from "../../utils/errorHandler";
 import { Job, Resource, Deployment, Vm } from "../../types";
 import { Volume } from "@kthcloud/go-deploy-types/types/v1/body";
+import { AlertList } from "../../components/AlertList";
 
 export function Edit() {
   const { t } = useTranslation();
@@ -315,6 +316,7 @@ export function Edit() {
                 {resource.type === "vm" && <VMCommands vm={resource as Vm} />}
               </Stack>
 
+              <AlertList />
               <JobList />
 
               {resource.type === "vm" && <SSHString vm={resource as Vm} />}

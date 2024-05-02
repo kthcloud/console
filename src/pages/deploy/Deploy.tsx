@@ -510,8 +510,8 @@ export function Deploy() {
             </Stack>
 
             <AlertList />
-
             <JobList />
+
             <Card sx={{ boxShadow: 20 }}>
               <ListToolbar
                 numSelected={selected.length}

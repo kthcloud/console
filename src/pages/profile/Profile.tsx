@@ -44,6 +44,7 @@ import { ResetOnboarding } from "./ResetOnboarding";
 import { useTranslation } from "react-i18next";
 import { User } from "../../types";
 import { ApiKeys } from "./ApiKeys";
+import { AlertList } from "../../components/AlertList";
 
 export function Profile() {
   const { t } = useTranslation();
@@ -169,6 +170,7 @@ export function Profile() {
                 {t("profile")}
               </Typography>
 
+              <AlertList />
               <JobList />
 
               <Card sx={{ boxShadow: 20 }}>

@@ -15,6 +15,7 @@ import { useEffect, useState } from "react";
 import { useKeycloak } from "@react-keycloak/web";
 import { discover } from "../../api/deploy/discover";
 import Scrollbar from "../../components/Scrollbar";
+import { AlertList } from "../../components/AlertList";
 export type Tier = {
   name: string;
   description: string;
@@ -165,6 +166,8 @@ const Tiers = () => {
   return (
     <Page title={t("menu-tiers")}>
       <Container maxWidth="xl">
+        <AlertList />
+
         <Stack spacing={3} alignItems={"center"}>
           <Typography variant="h2" gutterBottom>
             {t("menu-tiers")}

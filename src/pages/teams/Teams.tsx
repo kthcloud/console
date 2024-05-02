@@ -50,6 +50,7 @@ import {
   TeamResource,
   UserRead,
 } from "@kthcloud/go-deploy-types/types/v1/body";
+import { AlertList } from "../../components/AlertList";
 
 const Teams = () => {
   const { user, teams, beginFastLoad } = useResource();
@@ -220,6 +221,7 @@ const Teams = () => {
                 {t("teams")}
               </Typography>
 
+              <AlertList />
               <JobList />
 
               <Card sx={{ boxShadow: 20 }}>

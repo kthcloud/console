@@ -31,6 +31,7 @@ import ResourceTypeChat from "./ResourceTypeChat";
 import { useTranslation } from "react-i18next";
 import Iconify from "../../components/Iconify";
 import { Job } from "../../types";
+import { AlertList } from "../../components/AlertList";
 
 export const Create = () => {
   const { initialized } = useKeycloak();
@@ -84,6 +85,7 @@ export const Create = () => {
                 {t("create-title")}
               </Typography>
 
+              <AlertList />
               <JobList />
 
               <Card sx={{ boxShadow: 20 }}>

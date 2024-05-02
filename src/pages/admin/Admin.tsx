@@ -485,6 +485,10 @@ export const Admin = () => {
 
           <Container maxWidth="xl">
             <Stack spacing={3}>
+              <Typography variant="h4" gutterBottom>
+                {t("menu-admin-panel")}
+              </Typography>
+
               <Card sx={{ boxShadow: 20 }}>
                 <CardHeader title={t("resource-deployments")} />
 

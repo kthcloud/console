@@ -1,10 +1,11 @@
 import Hero from "./components/hero/Hero";
 import Intro from "./components/intro/Intro";
 import Page from "../../components/Page";
-import { Box } from "@mui/material";
+import { Box, Container } from "@mui/material";
 import { useKeycloak } from "@react-keycloak/web";
 import LoadingPage from "../../components/LoadingPage";
 import Funding from "./components/funding/Funding";
+import { AlertList } from "../../components/AlertList";
 
 export function Landing() {
   const { keycloak, initialized } = useKeycloak();
@@ -21,7 +22,10 @@ export function Landing() {
   } else {
     return (
       <Page>
-        <Box component="div" sx={{ mt: 5 }}></Box>
+        <Container maxWidth="lg" sx={{ pb: 2 }}>
+          <AlertList />
+        </Container>
+
         <Hero />
         <Intro />
         <Funding />
