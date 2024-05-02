@@ -72,16 +72,14 @@ export const DeploymentCommands = ({
       spacing={3}
       useFlexGap={true}
     >
-      {deployment.status === "resourceRunning" && (
-        <Button
-          onClick={() => executeCommand("restart")}
-          variant="contained"
-          startIcon={<Iconify icon="mdi:restart" />}
-          color="warning"
-        >
-          {t("button-restart")}
-        </Button>
-      )}
+      <Button
+        onClick={() => executeCommand("restart")}
+        variant="contained"
+        startIcon={<Iconify icon="mdi:restart" />}
+        color="warning"
+      >
+        {t("button-restart")}
+      </Button>
       {deployment.type === "deployment" &&
         Object.hasOwn(deployment, "url") &&
         deployment.url !== "" &&
