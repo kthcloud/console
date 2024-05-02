@@ -244,6 +244,7 @@ export const ApiKeys = () => {
                         setNewKeyExpires(e.target.value);
                       }}
                       variant="outlined"
+                      sx={{ minWidth: 130 }}
                     >
                       {dateOptions.map((option) => (
                         <MenuItem key={option} value={option}>
