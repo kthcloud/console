@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 // mui
 import { useTheme } from "@mui/material/styles";
 import {

@@ -17,6 +17,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Onboarding from "./pages/onboarding";
 import Inbox from "./pages/inbox/Inbox";
 import Teams from "./pages/teams/Teams";
+import { GPU } from "./pages/gpu/GPU";
 
 export default function Router() {
   return useRoutes([
@@ -64,6 +65,14 @@ export default function Router() {
           element: (
             <ProtectedRoute>
               <Edit />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "gpu",
+          element: (
+            <ProtectedRoute>
+              <GPU />
             </ProtectedRoute>
           ),
         },

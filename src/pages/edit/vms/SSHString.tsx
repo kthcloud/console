@@ -12,7 +12,7 @@ import { Vm } from "../../../types";
 
 const SSHString = ({ vm }: { vm: Vm }) => {
   const { t } = useTranslation();
-  const ssh = vm.connectionString;
+  const ssh = vm.sshConnectionString;
 
   return (
     <Card sx={{ boxShadow: 20 }}>

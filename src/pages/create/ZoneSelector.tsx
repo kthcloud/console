@@ -11,7 +11,7 @@ import {
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import useResource from "../../hooks/useResource";
-import { ZoneRead } from "kthcloud-types/types/v1/body";
+import { ZoneRead } from "@kthcloud/go-deploy-types/types/v1/body";
 
 const ZoneSelector = ({
   alignment,
@@ -42,6 +42,8 @@ const ZoneSelector = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [zones, alignment]
   );
+
+  if (alignment === "vm") return null;
 
   if (!filteredZones) return <CircularProgress />;
 

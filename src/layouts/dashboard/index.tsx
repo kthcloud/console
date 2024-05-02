@@ -39,6 +39,28 @@ const name =
 export default function DashboardLayout() {
   const { t } = useTranslation();
 
+  const renderChannelSwitcher = () => {
+    let targetChannel = "release";
+    let targetUrl = "cloud.cbh.kth.se";
+
+    if (releaseBranch === "release") {
+      targetChannel = "beta";
+      targetUrl = "beta.app.cloud.cbh.kth.se";
+    }
+
+    return (
+      <a
+        style={{
+          color: "inherit",
+          whiteSpace: "nowrap",
+        }}
+        href={"https://" + targetUrl}
+      >
+        {t("switch-to-" + targetChannel)}
+      </a>
+    );
+  };
+
   return (
     <RootStyle>
       <Navbar />
@@ -70,26 +92,26 @@ export default function DashboardLayout() {
                     {t("report-a-bug")}
                   </a>
                 </p>
-                <p>
-                  <a
-                    style={{
-                      color: "inherit",
-                      whiteSpace: "nowrap",
-                    }}
-                    href="https://github.com/kthcloud/console"
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    kthcloud/console
-                  </a>
-                </p>
+                <p>{renderChannelSwitcher()}</p>
                 <p>
                   <span style={{ whiteSpace: "nowrap" }}>{name}</span>
                 </p>
               </Stack>
               <Box component="div" sx={{ flexGrow: 1 }} />
               <Stack spacing={1} alignItems={"flex-start"}>
-                <p>{t("button-help")}</p>
+                <p>
+                  <a
+                    style={{
+                      color: "inherit",
+                      whiteSpace: "nowrap",
+                    }}
+                    href="https://docs.cloud.cbh.kth.se"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {t("menu-docs")}
+                  </a>
+                </p>
                 <p>
                   <a
                     style={{
@@ -109,11 +131,11 @@ export default function DashboardLayout() {
                       color: "inherit",
                       whiteSpace: "nowrap",
                     }}
-                    href="https://docs.cloud.cbh.kth.se"
+                    href="https://github.com/kthcloud/console"
                     target="_blank"
                     rel="noreferrer"
                   >
-                    {t("menu-docs")}
+                    GitHub
                   </a>
                 </p>
               </Stack>

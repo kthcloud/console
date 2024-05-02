@@ -28,3 +28,6 @@ yarn-error.log*
 
 # ide
 .vscode
+
+# npm package-lock.json (we use Bun)
+package-lock.json

@@ -1,34 +1,35 @@
 import {
   UserRead,
-  UserDataRead as UserData,
   DeploymentRead,
   VmRead,
   JobRead,
-  GpuRead,
+} from "@kthcloud/go-deploy-types/types/v1/body/index";
+import {
+  VmRead as V2VmRead,
   PortRead,
-} from "kthcloud-types/types/v1/body/index";
+} from "@kthcloud/go-deploy-types/types/v2/body/index";
 
 export type Uuid = string;
 export type Jwt = string;
 
 export type Port = PortRead;
 
-export interface Vm extends VmRead {
-  type: string;
-  gpu?: GpuRead;
-  ports: Port[];
+export interface VmV1 extends VmRead {
+  type: "vmv1";
+}
+
+export interface Vm extends V2VmRead {
+  type: "vm";
 }
 
 export interface Deployment extends DeploymentRead {
-  type: string;
+  type: "deployment";
   deploymentType?: string;
 }
 
-export type Resource = Vm | Deployment;
+export type Resource = Vm | Deployment | VmV1;
 
-export interface User extends UserRead {
-  userData?: UserData[];
-}
+export type User = UserRead;
 
 export interface Job extends JobRead {
   jobId: Uuid;

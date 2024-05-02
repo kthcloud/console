@@ -13,12 +13,12 @@ import { useKeycloak } from "@react-keycloak/web";
 import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { updateVM } from "../../../api/deploy/vms";
+import { updateVM } from "../../../api/deploy/v2/vms";
 import Iconify from "../../../components/Iconify";
 import useResource from "../../../hooks/useResource";
 import { errorHandler } from "../../../utils/errorHandler";
 import { Vm } from "../../../types";
-import { Specs as SpecsType } from "kthcloud-types/types/v1/body";
+import { Specs as SpecsType } from "@kthcloud/go-deploy-types/types/v1/body";
 
 export default function Specs({ vm }: { vm: Vm }) {
   const { t } = useTranslation();
@@ -117,11 +117,10 @@ export default function Specs({ vm }: { vm: Vm }) {
     setEditing(false);
 
     try {
-      const res = await updateVM(
-        vm.id,
-        { cpuCores: specs.cpuCores, ram: specs.ram },
-        keycloak.token
-      );
+      const res = await updateVM(keycloak.token, vm.id, {
+        cpuCores: specs.cpuCores,
+        ram: specs.ram,
+      });
       queueJob(res);
       enqueueSnackbar(t("specs-saving"), { variant: "info" });
     } catch (error: any) {

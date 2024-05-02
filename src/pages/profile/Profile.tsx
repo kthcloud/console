@@ -237,7 +237,7 @@ export function Profile() {
                     <span>
                       {t("ssh-public-keys-subheader-1")}
                       <br />
-                      {t("ssh-public-keys-subheader-2")}({t("e-g") + " "}
+                      {t("ssh-public-keys-subheader-2") + " "}({t("e-g") + " "}
                       <span style={{ fontFamily: "monospace" }}>
                         id_rsa.pub
                       </span>
@@ -391,7 +391,7 @@ export function Profile() {
                                 setChangeInKeys(true);
                               }}
                             >
-                              <Iconify icon="mdi:plus" />
+                              <Iconify icon="mdi:content-save" />
                             </IconButton>
                           </TableCell>
                         </TableRow>

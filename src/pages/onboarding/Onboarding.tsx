@@ -27,14 +27,12 @@ import CreateVm from "../create/CreateVm";
 import { useNavigate } from "react-router-dom";
 import useResource from "../../hooks/useResource";
 import { useTranslation } from "react-i18next";
-import { updateUserData } from "../../api/deploy/userData";
-import { UserDataRead } from "kthcloud-types/types/v1/body";
+import { updateUser } from "../../api/deploy/users";
 
 export const Onboarding = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
-  // user profile
   const { initialized, keycloak } = useKeycloak();
   const { initialLoad, user, setUser } = useResource();
 
@@ -72,25 +70,15 @@ export const Onboarding = () => {
   const onboard = async () => {
     if (!(initialized && keycloak.token && user)) return;
     try {
-      const response: UserDataRead = await updateUserData(
-        keycloak.token,
-        "onboarded",
-        "true"
-      );
+      const response = await updateUser(user.id, keycloak.token, {
+        userData: [{ key: "onboarded", value: "true" }],
+      });
+
       if (response) {
-        let data: UserDataRead[];
-        if (user && user.userData && user.userData.length > 0) {
-          data = user.userData.map((data) => {
-            if (data.id === "onboarded") {
-              return response;
-            }
-            return data;
-          });
-        } else {
-          data = [response];
-        }
-        setUser({ ...user, userData: data });
-        navigate("/deploy", { replace: true });
+        setUser(response);
+        setTimeout(() => {
+          navigate("/deploy", { replace: true });
+        }, 500);
       }
     } catch (error: any) {
       errorHandler(error).forEach((e) =>

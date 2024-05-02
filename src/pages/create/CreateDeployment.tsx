@@ -28,7 +28,7 @@ import { errorHandler } from "../../utils/errorHandler";
 import useResource from "../../hooks/useResource";
 import ZoneSelector from "./ZoneSelector";
 import { useTranslation } from "react-i18next";
-import { Volume } from "kthcloud-types/types/v1/body";
+import { Volume } from "@kthcloud/go-deploy-types/types/v1/body";
 
 export default function CreateDeployment({
   finished,
@@ -301,7 +301,7 @@ export default function CreateDeployment({
                         setNewEnvValue("");
                       }}
                     >
-                      <Iconify icon="mdi:plus" />
+                      <Iconify icon="mdi:content-save" />
                     </IconButton>
                   </TableCell>
                 </TableRow>
@@ -480,7 +480,7 @@ export default function CreateDeployment({
                           setNewPersistentServerPath("");
                         }}
                       >
-                        <Iconify icon="mdi:plus" />
+                        <Iconify icon="mdi:content-save" />
                       </IconButton>
                     </TableCell>
                   </TableRow>

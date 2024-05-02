@@ -13,14 +13,20 @@ import { getUser } from "../api/deploy/users";
 import { getZones } from "../api/deploy/zones";
 import { getNotifications } from "../api/deploy/notifications";
 import { getTeams } from "../api/deploy/teams";
-import { getUserData } from "../api/deploy/userData";
+import { listVMs } from "../api/deploy/v2/vms";
 
 import {
   NotificationRead as Notification,
   TeamRead as Team,
   ZoneRead as Zone,
-} from "kthcloud-types/types/v1/body/index";
+} from "@kthcloud/go-deploy-types/types/v1/body/index";
 import { Job, Resource, User, Uuid } from "../types";
+import {
+  GpuGroupRead,
+  GpuLeaseRead,
+} from "@kthcloud/go-deploy-types/types/v2/body";
+import { listGpuGroups } from "../api/deploy/v2/gpuGroups";
+import { listGpuLeases } from "../api/deploy/v2/gpuLeases";
 
 type ResourceContextType = {
   rows: Resource[];
@@ -41,6 +47,10 @@ type ResourceContextType = {
   setTeams: (teams: Team[]) => void;
   zones: Zone[];
   setZones: (zones: Zone[]) => void;
+  gpuGroups: GpuGroupRead[];
+  setGpuGroups: (gpuGroups: GpuGroupRead[]) => void;
+  gpuLeases: GpuLeaseRead[];
+  setGpuLeases: (gpuLeases: GpuLeaseRead[]) => void;
   queueJob: (job: Job) => void;
   beginFastLoad: () => void;
   initialLoad: boolean;
@@ -70,6 +80,10 @@ const initialState: ResourceContextType = {
   setTeams: () => {},
   zones: new Array<Zone>(),
   setZones: () => {},
+  gpuGroups: new Array<GpuGroupRead>(),
+  setGpuGroups: () => {},
+  gpuLeases: new Array<GpuLeaseRead>(),
+  setGpuLeases: () => {},
   queueJob: () => {},
   initialLoad: false,
   setInitialLoad: () => {},
@@ -103,6 +117,8 @@ export const ResourceContextProvider = ({
   const [unread, setUnread] = useState<number>(0);
   const [teams, setTeams] = useState<Team[]>([]);
   const [zones, setZones] = useState<Zone[]>([]);
+  const [gpuGroups, setGpuGroups] = useState<GpuGroupRead[]>([]);
+  const [gpuLeases, setGpuLeases] = useState<GpuLeaseRead[]>([]);
 
   // Loading and connection error handler
   const [initialLoad, setInitialLoad] = useState<boolean>(false);
@@ -199,6 +215,34 @@ export const ResourceContextProvider = ({
     }
   };
 
+  const loadGpuGroups = async () => {
+    if (!(initialized && keycloak.authenticated && keycloak.token)) return;
+    try {
+      const gpuGroups = await listGpuGroups(keycloak.token);
+      setGpuGroups(gpuGroups);
+    } catch (error: any) {
+      errorHandler(error).forEach((e) =>
+        enqueueSnackbar("Error fetching GPU groups: " + e, {
+          variant: "error",
+        })
+      );
+    }
+  };
+
+  const loadGpuLeases = async () => {
+    if (!(initialized && keycloak.authenticated && keycloak.token)) return;
+    try {
+      const gpuLeases = await listGpuLeases(keycloak.token);
+      setGpuLeases(gpuLeases);
+    } catch (error: any) {
+      errorHandler(error).forEach((e) =>
+        enqueueSnackbar("Error fetching GPU leases: " + e, {
+          variant: "error",
+        })
+      );
+    }
+  };
+
   const loadNotifications = async () => {
     if (!(initialized && keycloak.authenticated && keycloak.token)) return;
     try {
@@ -252,7 +296,6 @@ export const ResourceContextProvider = ({
       setConnectionError(false);
       loadNotifications();
       loadTeams();
-      loadUserData();
 
       if (loadInterval < 5000) {
         let newInterval = loadInterval + 100;
@@ -274,36 +317,15 @@ export const ResourceContextProvider = ({
     }
   };
 
-  const loadUserData = async () => {
-    if (!user) return;
-
-    try {
-      if (
-        !(
-          initialized &&
-          keycloak.authenticated &&
-          keycloak.token &&
-          keycloak.subject
-        )
-      )
-        return;
-
-      const userData = await getUserData(keycloak.token);
-      setUser({ ...user, userData });
-    } catch (error: any) {
-      errorHandler(error).forEach((e) =>
-        enqueueSnackbar("Error fetching user data: " + e, {
-          variant: "error",
-        })
-      );
-    }
-  };
-
   const loadResources = async () => {
     if (!(initialized && keycloak.authenticated && keycloak.token)) return;
 
     try {
-      const promises = [getVMs(keycloak.token), getDeployments(keycloak.token)];
+      const promises = [
+        getVMs(keycloak.token),
+        getDeployments(keycloak.token),
+        listVMs(keycloak.token),
+      ];
 
       if (user && user.admin) {
         if (impersonatingVm) {
@@ -341,7 +363,11 @@ export const ResourceContextProvider = ({
   }, [user]);
 
   useEffect(() => {
-    user && loadZones();
+    if (!user) return;
+    loadZones();
+    loadGpuGroups();
+    loadGpuLeases();
+
     // eslint-disable-next-line
   }, [user]);
 
@@ -381,6 +407,10 @@ export const ResourceContextProvider = ({
         setTeams,
         zones,
         setZones,
+        gpuGroups,
+        setGpuGroups,
+        gpuLeases,
+        setGpuLeases,
         queueJob,
         beginFastLoad,
         initialLoad,

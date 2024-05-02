@@ -16,7 +16,7 @@ export const joinTeam = async (token: string, teamId: string, code: string) => {
 };
 
 export const getTeams = async (token: string, all = false) => {
-  let allParam = all ? "?all=true" : "";
+  const allParam = all ? "?all=true" : "";
   const url = `${import.meta.env.VITE_DEPLOY_API_URL}/teams${allParam}`;
 
   const response = await fetch(url, {
@@ -26,7 +26,7 @@ export const getTeams = async (token: string, all = false) => {
     },
   });
 
-  let result = await response.json();
+  const result = await response.json();
   result.sort((a: any, b: any) => {
     return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
   });
@@ -52,7 +52,7 @@ export const createTeam = async (
 ) => {
   const url = `${import.meta.env.VITE_DEPLOY_API_URL}/teams`;
 
-  let res = await fetch(url, {
+  const res = await fetch(url, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -90,7 +90,7 @@ export const addMembers = async (
   const url = `${import.meta.env.VITE_DEPLOY_API_URL}/teams/${teamId}`;
   const body = { members: members };
 
-  let res = await fetch(url, {
+  const res = await fetch(url, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -112,7 +112,7 @@ export const addMembers = async (
 export const updateTeam = async (token: string, teamId: string, body: any) => {
   const url = `${import.meta.env.VITE_DEPLOY_API_URL}/teams/${teamId}`;
 
-  let res = await fetch(url, {
+  const res = await fetch(url, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,

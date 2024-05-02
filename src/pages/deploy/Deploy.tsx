@@ -13,6 +13,7 @@ import {
   Link,
   Button,
   Tooltip,
+  Box,
 } from "@mui/material";
 
 // hooks
@@ -38,12 +39,14 @@ import { Link as RouterLink } from "react-router-dom";
 import LoadingPage from "../../components/LoadingPage";
 import Iconify from "../../components/Iconify";
 import { deleteDeployment } from "../../api/deploy/deployments";
-import { deleteVM } from "../../api/deploy/vms";
 import { getReasonPhrase } from "http-status-codes";
 import { errorHandler } from "../../utils/errorHandler";
 import { useTranslation } from "react-i18next";
 import { Deployment, Resource, Uuid, Vm } from "../../types";
 import { ThemeColor } from "../../theme/types";
+import { deleteVM } from "../../api/deploy/v2/vms";
+import { deleteVM as deleteVmV1 } from "../../api/deploy/vms";
+import { AlertList } from "../../components/AlertList";
 
 const descendingComparator = (
   a: Record<string, any>,
@@ -93,7 +96,8 @@ export function Deploy() {
   const [selected, setSelected] = useState<Uuid[]>([]);
   const [orderBy, setOrderBy] = useState<string>("name");
   const [filterName, setFilterName] = useState<string>("");
-  const { userRows, initialLoad, queueJob, zones } = useResource();
+  const { userRows, initialLoad, queueJob, zones, gpuGroups, user } =
+    useResource();
   const [filteredRows, setFilteredRows] = useState<Resource[]>(userRows);
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -118,10 +122,17 @@ export function Deploy() {
     try {
       const promises = selected.map(async (id) => {
         if (userRows.find((row) => row.id === id)?.type === "vm") {
-          const res = await deleteVM(id, keycloak.token!);
+          const res = await deleteVM(keycloak.token!, id);
           queueJob(res);
           return;
         }
+
+        if (userRows.find((row) => row.id === id)?.type === "vmv1") {
+          const res = await deleteVmV1(id, keycloak.token!);
+          queueJob(res);
+          return;
+        }
+
         if (userRows.find((row) => row.id === id)?.type === "deployment") {
           const res = await deleteDeployment(id, keycloak.token!);
           queueJob(res);
@@ -177,6 +188,33 @@ export function Deploy() {
   };
 
   const renderResourceButtons = (resource: Resource) => {
+    if (resource.type === "vmv1")
+      return (
+        <Button
+          color="error"
+          startIcon={<Iconify icon="mdi:delete" />}
+          onClick={() => {
+            setLoading(true);
+            deleteVmV1(resource.id, keycloak.token!)
+              .then((res) => {
+                queueJob(res);
+                enqueueSnackbar("Deleting resource", { variant: "info" });
+              })
+              .catch((error: any) => {
+                errorHandler(error).forEach((e) =>
+                  enqueueSnackbar("Error deleting resource: " + e, {
+                    variant: "error",
+                  })
+                );
+              })
+              .finally(() => setLoading(false));
+          }}
+          variant="outlined"
+        >
+          {t("button-delete")}
+        </Button>
+      );
+
     if (
       resource.type === "deployment" &&
       Object.hasOwn(resource, "url") &&
@@ -220,7 +258,29 @@ export function Deploy() {
   };
 
   const renderResourceType = (resource: Resource) => {
+    if (resource.type === "vmv1")
+      return (
+        <Label
+          variant="ghost"
+          color="error"
+          startIcon={
+            <Iconify icon="mdi:warning-outline" sx={{ opacity: 0.65 }} />
+          }
+          sx={{
+            opacity: 1,
+            background: "#f22",
+            color: "black",
+          }}
+        >
+          <span>{("VM v1 - " + t("deprecated")).toUpperCase()}</span>
+        </Label>
+      );
+
     if (resource.type === "vm" && (resource as Vm).gpu) {
+      const group = gpuGroups?.find(
+        (x) => x.id === (resource as Vm).gpu!.gpuGroupId
+      );
+
       return (
         <Stack direction="row" alignItems="center" spacing={1}>
           <Label
@@ -231,13 +291,23 @@ export function Deploy() {
           >
             VM
           </Label>
-
-          <Label
-            variant="ghost"
-            startIcon={<Iconify icon="mdi:gpu" sx={{ opacity: 0.65 }} />}
-          >
-            {"NVIDIA " + (resource as Vm).gpu!.name}
-          </Label>
+          {group ? (
+            <Label
+              variant="ghost"
+              startIcon={<Iconify icon="mdi:gpu" sx={{ opacity: 0.65 }} />}
+            >
+              {`${group.vendor.replace("Corporation", "").trim()} ${
+                group.displayName
+              }`}
+            </Label>
+          ) : (
+            <Label
+              variant="ghost"
+              startIcon={<Iconify icon="mdi:gpu" sx={{ opacity: 0.65 }} />}
+            >
+              {"GPU"}
+            </Label>
+          )}
         </Stack>
       );
     }
@@ -280,19 +350,16 @@ export function Deploy() {
         </Stack>
       );
     }
-
-    return resource.type;
   };
 
   const renderResourceStatus = (row: Resource) => {
+    if (row.type === "vmv1")
+      return <Typography variant="body2">{t("vmv1-deprecation")}</Typography>;
+
     const color: ThemeColor =
       (row.status === "resourceError" && "error") ||
       (row.status === "resourceUnknown" && "error") ||
       (row.status === "resourceStopped" && "warning") ||
-      (row.status === "resourceBeingCreated" && "info") ||
-      (row.status === "resourceBeingDeleted" && "info") ||
-      (row.status === "resourceStarting" && "info") ||
-      (row.status === "resourceStopping" && "info") ||
       (row.status === "resourceRunning" && "success") ||
       "info";
 
@@ -306,8 +373,12 @@ export function Deploy() {
         sx={
           row.status === "resourceStopping" ||
           row.status === "resourceStarting" ||
+          row.status === "resourceProvisioning" ||
+          row.status === "resourceScaling" ||
           row.status === "resourceBeingCreated" ||
+          row.status === "resourceCreating" ||
           row.status === "resourceBeingDeleted" ||
+          row.status === "resourceDeleting" ||
           row.status === "resourceRestarting"
             ? {
                 animation: "pulse 2s cubic-bezier(.4,0,.6,1) infinite",
@@ -354,12 +425,14 @@ export function Deploy() {
   };
 
   const renderZone = (row: Resource) => {
+    if (row.type === "vmv1") return null;
+
     if (!row.zone || !zones) {
       return <></>;
     }
 
     const zone = zones.find(
-      (zone) => zone.name === row.zone && zone.type === row.type
+      (zone) => zone.name === row.zone && zone.capabilities.includes(row.type)
     );
 
     return (
@@ -367,12 +440,14 @@ export function Deploy() {
         variant="ghost"
         startIcon={<Iconify icon="mdi:earth" sx={{ opacity: 0.65 }} />}
       >
-        {zone?.description}
+        {zone?.description || row.zone}
       </Label>
     );
   };
 
   const renderShared = (row: Resource) => {
+    if (row.type === "vmv1") return null;
+
     if (row?.teams?.length === 0) return <></>;
 
     return (
@@ -387,17 +462,17 @@ export function Deploy() {
     );
   };
 
-  // useEffect(() => {
-  //   if (
-  //     user &&
-  //     user.userData &&
-  //     user.userData.find((d) => d.id === "onboarded")?.data !== "true"
-  //   ) {
-  //     navigate("/onboarding");
-  //   }
+  useEffect(() => {
+    if (
+      user &&
+      user.userData &&
+      user.userData.find((d) => d.key === "onboarded")?.value !== "true"
+    ) {
+      navigate("/onboarding");
+    }
 
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [user]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
 
   return (
     <>
@@ -413,9 +488,18 @@ export function Deploy() {
               justifyContent="space-between"
               useFlexGap
               mb={3}
+              spacing={5}
             >
               <Typography variant="h4">{t("menu-dashboard")}</Typography>
 
+              <Box component="div" flexGrow={1} />
+              <Button
+                component={RouterLink}
+                to={"/gpu"}
+                startIcon={<Iconify icon={"mdi:gpu"} />}
+              >
+                {t("gpu-leases")}
+              </Button>
               <Button
                 component={RouterLink}
                 to="/create"
@@ -425,8 +509,9 @@ export function Deploy() {
               </Button>
             </Stack>
 
-            <JobList />
+            <AlertList />
 
+            <JobList />
             <Card sx={{ boxShadow: 20 }}>
               <ListToolbar
                 numSelected={selected.length}
@@ -452,6 +537,12 @@ export function Deploy() {
                       {filteredRows.map((row) => {
                         const isItemSelected = selected.indexOf(row.id) !== -1;
 
+                        if (
+                          row.ownerId !== keycloak.subject &&
+                          row.type === "vmv1"
+                        )
+                          return null;
+
                         return (
                           <TableRow
                             hover
@@ -461,6 +552,7 @@ export function Deploy() {
                             selected={isItemSelected}
                             aria-checked={isItemSelected}
                             onDoubleClick={() =>
+                              row.type !== "vmv1" &&
                               navigate(`/edit/${row.type}/${row.id}`)
                             }
                           >
@@ -471,21 +563,30 @@ export function Deploy() {
                               />
                             </TableCell>
                             <TableCell align="left">
-                              <Link
-                                component={RouterLink}
-                                to={`/edit/${row.type}/${row.id}`}
-                                sx={{
-                                  textDecoration: "none",
-                                  whiteSpace: "nowrap",
-                                }}
-                              >
-                                {row.name}
-                              </Link>
+                              {row.type !== "vmv1" ? (
+                                <Link
+                                  component={RouterLink}
+                                  to={`/edit/${row.type}/${row.id}`}
+                                  sx={{
+                                    textDecoration: "none",
+                                    whiteSpace: "nowrap",
+                                  }}
+                                >
+                                  {row.name}
+                                </Link>
+                              ) : (
+                                <Typography variant="body2">
+                                  {row.name}
+                                </Typography>
+                              )}
                             </TableCell>
                             <TableCell align="left">
                               {renderResourceType(row)}
                             </TableCell>
-                            <TableCell align="left">
+                            <TableCell
+                              align="left"
+                              colSpan={row.type === "vmv1" ? 2 : 1}
+                            >
                               <Stack
                                 direction="row"
                                 alignItems="center"
@@ -496,15 +597,17 @@ export function Deploy() {
                                 {renderShared(row)}
                               </Stack>
                             </TableCell>
-                            <TableCell align="left">
-                              <Stack
-                                direction="row"
-                                alignItems="center"
-                                spacing={1}
-                              >
-                                {row.zone && zones && renderZone(row)}
-                              </Stack>
-                            </TableCell>
+                            {row.type !== "vmv1" && (
+                              <TableCell align="left">
+                                <Stack
+                                  direction="row"
+                                  alignItems="center"
+                                  spacing={1}
+                                >
+                                  {row.zone && zones && renderZone(row)}
+                                </Stack>
+                              </TableCell>
+                            )}
 
                             <TableCell align="right">
                               {renderResourceButtons(row)}
