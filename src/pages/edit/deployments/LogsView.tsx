@@ -323,7 +323,7 @@ export const LogsView = ({ deployment }: { deployment: Deployment }) => {
               content={logs
                 .map((log) => `${log.createdAt} ${log.prefix} ${log.line}`)
                 .join("\n")}
-              variant="button"
+              variant="contained"
             />
 
             <Button
