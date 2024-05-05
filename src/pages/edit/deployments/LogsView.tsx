@@ -153,9 +153,28 @@ export const LogsView = ({ deployment }: { deployment: Deployment }) => {
 
   return (
     <Card sx={{ boxShadow: 20 }}>
-      <CardHeader
-        title={t("logs")}
-        subheader={
+      <CardHeader title={t("logs")} />
+
+      {deployment.error && (
+        <CardContent>
+          <Stack spacing={2}>
+            <Typography variant="body2">{t("kubernetes-error")}</Typography>
+            <pre
+              style={{
+                whiteSpace: lineWrap ? "normal" : "nowrap",
+                backgroundColor: "#000",
+                padding: compactMode ? "0.5rem" : "1rem",
+                fontSize: "0.8rem",
+              }}
+            >
+              {deployment.error}
+            </pre>
+          </Stack>
+        </CardContent>
+      )}
+
+      <CardContent>
+        <Stack direction="column" spacing={2}>
           <Stack
             direction={"row"}
             justifyContent={"space-between"}
@@ -184,11 +203,7 @@ export const LogsView = ({ deployment }: { deployment: Deployment }) => {
               {t("connection-status")}: {t(connection)}
             </Typography>
           </Stack>
-        }
-      />
 
-      <CardContent>
-        <Stack direction="column" spacing={2}>
           <Stack
             direction="column"
             sx={{
@@ -308,7 +323,7 @@ export const LogsView = ({ deployment }: { deployment: Deployment }) => {
               content={logs
                 .map((log) => `${log.createdAt} ${log.prefix} ${log.line}`)
                 .join("\n")}
-              variant="button"
+              variant="contained"
             />
 
             <Button

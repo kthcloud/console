@@ -359,11 +359,14 @@ export function Deploy() {
     const color: ThemeColor =
       (row.status === "resourceError" && "error") ||
       (row.status === "resourceUnknown" && "error") ||
+      (row.status === "resourceMountFailed" && "error") ||
+      (row.status === "resourceImagePullFailed" && "error") ||
+      (row.status === "resourceCrashLoop" && "error") ||
       (row.status === "resourceStopped" && "warning") ||
       (row.status === "resourceRunning" && "success") ||
       "info";
 
-    const statusMessage = t(row.status);
+    const statusMessage = sentenceCase(t(row.status).replace("resource", ""));
 
     return (
       <Label
@@ -386,7 +389,13 @@ export function Deploy() {
             : null
         }
       >
-        {sentenceCase(statusMessage)}
+        {row.type === "deployment" && row.error ? (
+          <Tooltip enterTouchDelay={10} title={row.error}>
+            <span>{statusMessage}</span>
+          </Tooltip>
+        ) : (
+          statusMessage
+        )}
       </Label>
     );
   };
@@ -476,7 +485,7 @@ export function Deploy() {
 
   return (
     <>
-      {!initialLoad ? (
+      {!(initialLoad && user) ? (
         <LoadingPage />
       ) : (
         <Page title={t("menu-dashboard")}>
@@ -493,6 +502,17 @@ export function Deploy() {
               <Typography variant="h4">{t("menu-dashboard")}</Typography>
 
               <Box component="div" flexGrow={1} />
+              {user.storageUrl && (
+                <Button
+                  component={Link}
+                  href={user.storageUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  startIcon={<Iconify icon="mdi:folder" />}
+                >
+                  {t("storage-manager")}
+                </Button>
+              )}
               <Button
                 component={RouterLink}
                 to={"/gpu"}
@@ -510,8 +530,8 @@ export function Deploy() {
             </Stack>
 
             <AlertList />
-
             <JobList />
+
             <Card sx={{ boxShadow: 20 }}>
               <ListToolbar
                 numSelected={selected.length}

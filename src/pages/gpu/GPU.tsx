@@ -38,6 +38,7 @@ import JobList from "../../components/JobList";
 import { GpuLeaseRead } from "@kthcloud/go-deploy-types/types/v2/body";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { AlertList } from "../../components/AlertList";
 
 export const GPU = () => {
   const { t } = useTranslation();
@@ -131,8 +132,10 @@ export const GPU = () => {
         <Page title={t("resource-gpu")}>
           <Container>
             <Stack spacing={3}>
-              <JobList />
               <Typography variant="h4">{t("resource-gpu")}</Typography>
+
+              <AlertList />
+              <JobList />
 
               <Card>
                 <CardHeader

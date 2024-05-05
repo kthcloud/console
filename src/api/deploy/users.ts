@@ -1,5 +1,9 @@
-import { UserRead, UserUpdate } from "@kthcloud/go-deploy-types/types/v1/body";
-import { Uuid } from "../../types";
+import {
+  ApiKeyCreated,
+  UserRead,
+  UserUpdate,
+} from "@kthcloud/go-deploy-types/types/v1/body";
+import { Jwt, Uuid } from "../../types";
 
 export const getUser = async (
   userId: string,
@@ -85,6 +89,33 @@ export const searchUsers = async (
       headers: {
         Authorization: "Bearer " + token,
       },
+    }
+  );
+
+  if (!res.ok) {
+    const body = await res.json();
+    if (body) {
+      throw body;
+    }
+    throw res;
+  }
+  return await res.json();
+};
+
+export const createApiKey = async (
+  token: Jwt,
+  userId: string,
+  name: string,
+  expiresAt: string
+): Promise<ApiKeyCreated> => {
+  const res = await fetch(
+    import.meta.env.VITE_DEPLOY_API_URL + "/users/" + userId + "/apiKeys",
+    {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+      body: JSON.stringify({ expiresAt, name }),
     }
   );
 

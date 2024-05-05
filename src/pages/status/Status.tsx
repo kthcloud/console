@@ -23,6 +23,7 @@ import WidgetSummary from "./WidgetSummary";
 import ServerStats from "./ServerStats";
 import LineChart from "./LineChart";
 import { useTranslation } from "react-i18next";
+import { AlertList } from "../../components/AlertList";
 
 type MastodonPost = {
   id: string;
@@ -246,9 +247,8 @@ export function Status() {
   return (
     <Page title={t("menu-status")}>
       <Container maxWidth="xl">
-        <Typography variant="h4" gutterBottom mb={5}>
-          {t("menu-status")}
-        </Typography>
+        <Typography variant="h4">{t("menu-status")}</Typography>
+        <AlertList />
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={3}>
             <WidgetSummary

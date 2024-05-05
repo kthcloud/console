@@ -11,6 +11,7 @@ import {
   FormControl,
   OutlinedInput,
   useTheme,
+  Tooltip,
 } from "@mui/material";
 import { useState, useEffect, ReactNode } from "react";
 import { useKeycloak } from "@react-keycloak/web";
@@ -45,6 +46,7 @@ import { updateVM } from "../../api/deploy/v2/vms";
 import { errorHandler } from "../../utils/errorHandler";
 import { Job, Resource, Deployment, Vm } from "../../types";
 import { Volume } from "@kthcloud/go-deploy-types/types/v1/body";
+import { AlertList } from "../../components/AlertList";
 
 export function Edit() {
   const { t } = useTranslation();
@@ -161,6 +163,34 @@ export function Edit() {
       />
     );
   };
+  const renderResourceStatus = (resource: Resource) => {
+    if (!resource.status) return null;
+    return (
+      <Chip
+        label={
+          resource.type === "deployment" && resource.error ? (
+            <Tooltip enterTouchDelay={10} title={resource.error}>
+              <span>
+                {sentenceCase(resource.status.replace("resource", "").trim())}
+              </span>
+            </Tooltip>
+          ) : (
+            sentenceCase(resource.status.replace("resource", "").trim())
+          )
+        }
+        icon={<Iconify icon="tabler:heartbeat" sx={{ opacity: 0.75 }} />}
+        sx={
+          resource.status === "resourceStopping" ||
+          resource.status === "resourceStarting" ||
+          resource.status === "resourceRestarting"
+            ? {
+                animation: "pulse 2s cubic-bezier(.4,0,.6,1) infinite",
+              }
+            : null
+        }
+      />
+    );
+  };
 
   return (
     <>
@@ -252,29 +282,7 @@ export function Edit() {
                     </>
                   ) : (
                     <>
-                      {resource.status && (
-                        <Chip
-                          label={sentenceCase(
-                            resource.status.replace("resource", "").trim()
-                          )}
-                          icon={
-                            <Iconify
-                              icon="tabler:heartbeat"
-                              sx={{ opacity: 0.75 }}
-                            />
-                          }
-                          sx={
-                            resource.status === "resourceStopping" ||
-                            resource.status === "resourceStarting" ||
-                            resource.status === "resourceRestarting"
-                              ? {
-                                  animation:
-                                    "pulse 2s cubic-bezier(.4,0,.6,1) infinite",
-                                }
-                              : null
-                          }
-                        />
-                      )}
+                      {renderResourceStatus(resource)}
 
                       {resource.type === "deployment" &&
                         renderPingResult(resource as Deployment)}
@@ -315,6 +323,7 @@ export function Edit() {
                 {resource.type === "vm" && <VMCommands vm={resource as Vm} />}
               </Stack>
 
+              <AlertList />
               <JobList />
 
               {resource.type === "vm" && <SSHString vm={resource as Vm} />}

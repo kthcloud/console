@@ -26,6 +26,10 @@ import {
   IconButton,
   Chip,
   Link,
+  Avatar,
+  Badge,
+  Box,
+  Tooltip,
 } from "@mui/material";
 
 // components
@@ -39,6 +43,8 @@ import JobList from "../../components/JobList";
 import { ResetOnboarding } from "./ResetOnboarding";
 import { useTranslation } from "react-i18next";
 import { User } from "../../types";
+import { ApiKeys } from "./ApiKeys";
+import { AlertList } from "../../components/AlertList";
 
 export function Profile() {
   const { t } = useTranslation();
@@ -164,26 +170,54 @@ export function Profile() {
                 {t("profile")}
               </Typography>
 
+              <AlertList />
               <JobList />
 
               <Card sx={{ boxShadow: 20 }}>
-                <CardHeader
-                  title={t("details")}
-                  subheader={
-                    <>
-                      {t("gravatar")}
-                      <Link
-                        href="https://gravatar.com/connect/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        gravatar.com
-                      </Link>
-                    </>
-                  }
-                />
+                <CardHeader title={t("details")} />
                 <CardContent>
                   <Stack spacing={3}>
+                    <Box component="div">
+                      <Badge
+                        overlap="circular"
+                        anchorOrigin={{
+                          vertical: "bottom",
+                          horizontal: "right",
+                        }}
+                        badgeContent={
+                          <Tooltip enterTouchDelay={10} title={t("gravatar")}>
+                            <IconButton
+                              sx={{
+                                background: "rgba(0,0,0,0.5)",
+                                backdropFilter: "blur(5px)",
+                                transition: "background-color 0.1s ease-in-out",
+                                ":hover": {
+                                  backdropFilter: "blur(15px)",
+                                  background: "rgba(0,0,0,0.75)",
+                                },
+                              }}
+                              component={Link}
+                              href="https://gravatar.com/connect/"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <Iconify icon="mdi:pencil" />
+                            </IconButton>
+                          </Tooltip>
+                        }
+                      >
+                        {user.gravatarUrl ? (
+                          <Avatar
+                            src={user.gravatarUrl + "?s=200"}
+                            sx={{ width: 100, height: 100 }}
+                          />
+                        ) : (
+                          <Avatar sx={{ width: 100, height: 100 }}>
+                            {user.username[0].toUpperCase()}
+                          </Avatar>
+                        )}
+                      </Badge>
+                    </Box>
                     <Stack
                       spacing={3}
                       direction={"row"}
@@ -221,6 +255,17 @@ export function Profile() {
                           label={"Admin"}
                         />
                       )}
+
+                      <Button
+                        startIcon={<Iconify icon="mdi-lock" />}
+                        component={Link}
+                        href="https://iam.cloud.cbh.kth.se/realms/cloud/account/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        variant="outlined"
+                      >
+                        {t("security-details")}
+                      </Button>
 
                       <div style={{ flexGrow: "1" }} />
                     </Stack>
@@ -350,12 +395,12 @@ export function Profile() {
                                 error={Boolean(validationError.key)}
                                 helperText={validationError.key}
                               />
-                              <span>{t("or")}</span>
+                              <Typography sx={{ px: 1 }}>{t("or")}</Typography>
 
                               <Button
-                                variant="contained"
-                                component="label"
+                                component={"label"}
                                 sx={{ whiteSpace: "nowrap", px: 3 }}
+                                startIcon={<Iconify icon="mdi:key" />}
                               >
                                 {t("select-key-file")}
                                 <input
@@ -400,6 +445,8 @@ export function Profile() {
                   </TableContainer>
                 </CardContent>
               </Card>
+
+              <ApiKeys />
 
               <ResetOnboarding />
             </Stack>

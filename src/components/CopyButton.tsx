@@ -30,7 +30,13 @@ const CopyButton = ({
           </IconButton>
         ) : (
           <Button
-            variant="contained"
+            variant={
+              variant === "text" ||
+              variant === "outlined" ||
+              variant === "contained"
+                ? variant
+                : "text"
+            }
             startIcon={
               <Iconify icon={"material-symbols:content-copy-outline"} />
             }

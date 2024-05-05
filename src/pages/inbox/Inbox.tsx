@@ -35,6 +35,7 @@ import useResource from "../../hooks/useResource";
 import { errorHandler } from "../../utils/errorHandler";
 import { useTheme } from "@mui/material/styles";
 import { NotificationRead } from "@kthcloud/go-deploy-types/types/v1/body";
+import { AlertList } from "../../components/AlertList";
 
 const Inbox = () => {
   const { user, notifications, unread } = useResource();
@@ -137,6 +138,7 @@ const Inbox = () => {
                 {t("inbox")}
               </Typography>
 
+              <AlertList />
               <JobList />
 
               <Card sx={{ boxShadow: 20 }}>

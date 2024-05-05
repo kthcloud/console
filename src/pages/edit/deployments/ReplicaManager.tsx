@@ -34,7 +34,9 @@ export const ReplicaManager = ({ deployment }: { deployment: Deployment }) => {
       return;
     }
 
-    setMax(user.quota.deployments - user.usage.deployments);
+    setMax(
+      user.quota.deployments - (user.usage.deployments - deployment.replicas)
+    );
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

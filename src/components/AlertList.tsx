@@ -23,9 +23,11 @@ export const AlertList = () => {
       if (domain !== "localhost") return null;
     }
 
-    if (!alert.pages?.includes(window.location.pathname)) {
+    if (alert.pages && !alert.pages?.includes(window.location.pathname)) {
       console.log("page not in pages", window.location.pathname, alert.pages);
       return null;
+    } else {
+      if ("/deploy" !== window.location.pathname) return null;
     }
 
     if (alert.showFrom && new Date(alert.showFrom) > new Date()) {

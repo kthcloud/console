@@ -1,5 +1,6 @@
 import useResource from "../../hooks/useResource";
 import {
+  Avatar,
   Badge,
   IconButton,
   ListItemIcon,
@@ -11,7 +12,6 @@ import {
 import Iconify from "../../components/Iconify";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import Gravatar from "../../components/Gravatar";
 
 const ProfileButton = () => {
   const { user, unread } = useResource();
@@ -72,16 +72,20 @@ const ProfileButton = () => {
             },
           }}
         >
-          <Gravatar
-            user={user}
-            fallback={
+          {user.gravatarUrl ? (
+            <Avatar
+              src={user.gravatarUrl + "?s=32"}
+              sx={{ width: 20, height: 20 }}
+            />
+          ) : (
+            <Avatar sx={{ width: 20, height: 20 }}>
               <Iconify
                 icon="mdi:account"
                 sx={{ width: 16, height: 16 }}
                 title="Profile"
               />
-            }
-          />
+            </Avatar>
+          )}
         </IconButton>
       </Badge>
     </Tooltip>
