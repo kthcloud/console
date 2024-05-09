@@ -35,7 +35,6 @@ import {
 } from "../../api/deploy/teams";
 import { searchUsers } from "../../api/deploy/users";
 import ConfirmButton from "../../components/ConfirmButton";
-import Gravatar from "../../components/Gravatar";
 import Iconify from "../../components/Iconify";
 import JobList from "../../components/JobList";
 import LoadingPage from "../../components/LoadingPage";
@@ -278,13 +277,26 @@ const Teams = () => {
                                     useFlexGap
                                   >
                                     <AvatarGroup max={4}>
-                                      {team.members.map((member) => (
-                                        <Gravatar
-                                          user={member}
-                                          sx={{ width: 24, height: 24 }}
-                                          key={"avatar" + member.id}
-                                        />
-                                      ))}
+                                      {team.members.map((member) =>
+                                        member.gravatarUrl ? (
+                                          <Avatar
+                                            src={member.gravatarUrl + "?s=32"}
+                                            sx={{ width: 24, height: 24 }}
+                                            key={"avatar" + member.id}
+                                          />
+                                        ) : (
+                                          <Avatar
+                                            sx={{ width: 24, height: 24 }}
+                                            key={"avatar" + member.id}
+                                          >
+                                            <Iconify
+                                              icon="mdi:account"
+                                              sx={{ width: 16, height: 16 }}
+                                              title="Profile"
+                                            />
+                                          </Avatar>
+                                        )
+                                      )}
                                       {team.members.length === 0 && (
                                         <Tooltip title={"Boo!"}>
                                           <Avatar
