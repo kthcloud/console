@@ -15,7 +15,6 @@ export const AlertList = () => {
     const domain = window.location.hostname;
 
     if (alert.active === false) {
-      console.log("alert is inactive", alert);
       return null;
     }
 
@@ -24,19 +23,16 @@ export const AlertList = () => {
     }
 
     if (alert.pages && !alert.pages?.includes(window.location.pathname)) {
-      console.log("page not in pages", window.location.pathname, alert.pages);
       return null;
     } else {
       if ("/deploy" !== window.location.pathname) return null;
     }
 
     if (alert.showFrom && new Date(alert.showFrom) > new Date()) {
-      console.log("showFrom is in the future", alert.showFrom);
       return null;
     }
 
     if (alert.showUntil && new Date(alert.showUntil) < new Date()) {
-      console.log("showUntil is in the past", alert.showUntil);
       return null;
     }
 
