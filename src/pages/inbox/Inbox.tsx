@@ -38,7 +38,7 @@ import { NotificationRead } from "@kthcloud/go-deploy-types/types/v1/body";
 import { AlertList } from "../../components/AlertList";
 
 const Inbox = () => {
-  const { user, notifications, unread } = useResource();
+  const { user, notifications, unread, beginFastLoad } = useResource();
   const { t } = useTranslation();
   const { initialized, keycloak } = useKeycloak();
   const [expandedRead, setExpandedRead] = useState(false);
@@ -53,6 +53,7 @@ const Inbox = () => {
     if (!(initialized && keycloak.token)) return;
 
     try {
+      beginFastLoad();
       if (notification.type === "teamInvite") {
         await joinTeam(
           keycloak.token,
@@ -88,6 +89,7 @@ const Inbox = () => {
 
     try {
       setStale(notification.id);
+      beginFastLoad();
       await markNotificationAsRead(keycloak.token, notification.id);
     } catch (error: any) {
       errorHandler(error).forEach((e) =>
@@ -103,6 +105,7 @@ const Inbox = () => {
 
     try {
       setStale(notification.id);
+      beginFastLoad();
       await deleteNotification(keycloak.token, notification.id);
     } catch (error: any) {
       errorHandler(error).forEach((e) =>

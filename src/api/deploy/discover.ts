@@ -1,11 +1,6 @@
-import { Tier } from "../../pages/tiers/Tiers";
+import { DiscoverRead } from "@kthcloud/go-deploy-types/types/v1/body";
 
-export type DiscoverResponse = {
-  version: string;
-  roles: Tier[];
-};
-
-export const discover = async (): Promise<DiscoverResponse> => {
+export const discover = async (): Promise<DiscoverRead> => {
   const res = await fetch(import.meta.env.VITE_DEPLOY_API_URL + "/discover", {
     method: "GET",
   });

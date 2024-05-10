@@ -511,6 +511,8 @@
         "days": "dagar",
         "year": "år",
         "security-details": "Säkerhetsuppgifter",
-        "kubernetes-error": "Fel från Kubernetes"
+        "kubernetes-error": "Fel från Kubernetes",
+        "owner": "Ägare",
+        "member": "Medlem"
     }
 }

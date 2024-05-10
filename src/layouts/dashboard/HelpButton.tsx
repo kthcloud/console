@@ -17,6 +17,7 @@ const resolveURL = () => {
   if (path.startsWith("/profile")) return base_url + "/usage/profile";
   if (path.startsWith("/teams")) return base_url + "/usage/teams";
   if (path.startsWith("/inbox")) return base_url + "/usage/inbox";
+  if (path.startsWith("/gpu")) return base_url + "/usage/gpu";
 
   return base_url;
 };

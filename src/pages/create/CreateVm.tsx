@@ -42,9 +42,9 @@ export default function CreateVm({
   const [selectedZone, setSelectedZone] = useState<string>("");
   const [publicKey, setPublicKey] = useState<string>("");
 
-  const [cpuCores, setCpuCores] = useState<number>(2);
+  const [cpuCores, setCpuCores] = useState<number>(1);
   const [diskSize, setDiskSize] = useState<number>(20);
-  const [ram, setRam] = useState<number>(4);
+  const [ram, setRam] = useState<number>(2);
 
   const [cpuError, setCpuError] = useState<string | null>(null);
   const [ramError, setRamError] = useState<string | null>(null);
@@ -86,8 +86,8 @@ export default function CreateVm({
       return;
     }
 
-    if (value < 2) {
-      setCpuError(t("create-vm-minimum-cpu") + ": 2");
+    if (value < 1) {
+      setCpuError(t("create-vm-minimum-cpu") + ": 1");
       setCpuCores(value);
 
       return;
@@ -101,7 +101,7 @@ export default function CreateVm({
     const value = parseInt(raw);
     if (!value) {
       setRam(0);
-      setRamError(t("create-vm-input-number") + ", 4-" + availableRAM);
+      setRamError(t("create-vm-input-number") + ", 1-" + availableRAM);
       return;
     }
 
@@ -111,8 +111,8 @@ export default function CreateVm({
       return;
     }
 
-    if (value < 4) {
-      setRamError(t("create-vm-minimum-ram") + ": 4 GB");
+    if (value < 1) {
+      setRamError(t("create-vm-minimum-ram") + ": 1 GB");
       setRam(value);
       return;
     }
@@ -148,8 +148,8 @@ export default function CreateVm({
   const verifyUserCanCreate = () => {
     if (!user) return false;
     if (user.admin) return true;
-    if (availableCPU < 2) return false;
-    if (availableRAM < 4) return false;
+    if (availableCPU < 1) return false;
+    if (availableRAM < 1) return false;
     if (availableDisk < 20) return false;
     return true;
   };
@@ -182,9 +182,9 @@ export default function CreateVm({
             faker.word.words(3).replace(/[^a-z0-9]|\s+|\r?\n|\r/gim, "-")
           );
         setCleaned("");
-        setCpuCores(2);
+        setCpuCores(1);
         setDiskSize(20);
-        setRam(4);
+        setRam(2);
       }
     } catch (error: any) {
       errorHandler(error).forEach((e) =>
@@ -283,8 +283,8 @@ export default function CreateVm({
                         : cpuError
                           ? cpuError
                           : t("create-vm-number-of-cpu-cores") +
-                            ", 2-" +
-                            availableCPU
+                            ", 1-" +
+                            Math.floor(availableCPU)
                     }
                     inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
                     error={!user.admin && (cpuError ? true : false)}
@@ -301,7 +301,9 @@ export default function CreateVm({
                         ? ""
                         : ramError
                           ? ramError
-                          : t("create-vm-amount-of-ram") + ", 4-" + availableRAM
+                          : t("create-vm-amount-of-ram") +
+                            ", 1-" +
+                            Math.floor(availableRAM)
                     }
                     inputProps={{
                       inputMode: "numeric",
@@ -323,7 +325,7 @@ export default function CreateVm({
                           ? diskError
                           : t("create-vm-disk-size-helper") +
                             ", 20-" +
-                            availableDisk
+                            Math.floor(availableDisk)
                     }
                     inputProps={{
                       inputMode: "numeric",

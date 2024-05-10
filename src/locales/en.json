@@ -512,6 +512,8 @@
         "days": "days",
         "year": "year",
         "security-details": "Security details",
-        "kubernetes-error": "Kubernetes error"
+        "kubernetes-error": "Kubernetes error",
+        "owner": "Owner",
+        "member": "Member"
     }
 }
