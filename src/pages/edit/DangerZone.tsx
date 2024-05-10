@@ -19,17 +19,23 @@ import {
   TextField,
   Button,
   Stack,
+  Grid,
+  Avatar,
 } from "@mui/material";
 import { Resource, User, Uuid } from "../../types";
-import { TeamRead } from "@kthcloud/go-deploy-types/types/v1/body";
+import {
+  TeamRead,
+  UserReadDiscovery,
+} from "@kthcloud/go-deploy-types/types/v1/body";
+import Iconify from "../../components/Iconify";
 
 const DangerZone = ({ resource }: { resource: Resource }) => {
   const { t } = useTranslation();
   const { initialized, keycloak } = useKeycloak();
   const { teams } = useResource();
 
-  const [users, setUsers] = useState<User[]>([]);
-  const [resultsUser, setResultsUser] = useState<string[]>([]);
+  const [users, setUsers] = useState<UserReadDiscovery[]>([]);
+  const [resultsUser, setResultsUser] = useState<UserReadDiscovery[]>([]);
   const [selectedUser, setSelectedUser] = useState("");
 
   const [teamsList, setTeamsList] = useState<TeamRead[]>([]);
@@ -42,7 +48,7 @@ const DangerZone = ({ resource }: { resource: Resource }) => {
     if (!(initialized && keycloak.token)) return;
     try {
       const response = await searchUsers(keycloak.token, query);
-      let options: string[] = [];
+      let options: UserReadDiscovery[] = [];
 
       response.forEach((user: User) => {
         if (user.email) {
@@ -51,11 +57,11 @@ const DangerZone = ({ resource }: { resource: Resource }) => {
         if (!users.find((u) => u.username === user.username)) {
           setUsers((users) => [...users, user]);
         }
-        options.push(user.username);
+        options.push(user);
       });
 
       options = [...new Set(options)];
-      options.sort((a, b) => a.localeCompare(b));
+      options.sort((a, b) => a.username.localeCompare(b.username));
       setResultsUser(options);
     } catch (error: any) {
       errorHandler(error).forEach((e) =>
@@ -249,6 +255,47 @@ const DangerZone = ({ resource }: { resource: Resource }) => {
                 onInputChange={(_, value) => {
                   setSelectedUser(value);
                   userSearch(value);
+                }}
+                getOptionLabel={(option) => {
+                  return option.username;
+                }}
+                isOptionEqualToValue={(option, value) => {
+                  return option.id === value.id;
+                }}
+                renderOption={(props, option) => {
+                  return (
+                    <li {...props} key={option.id}>
+                      <Grid container alignItems="center">
+                        <Grid item sx={{ display: "flex", width: 44 }}>
+                          {option.gravatarUrl ? (
+                            <Avatar
+                              src={option.gravatarUrl + "?s=32"}
+                              sx={{ width: 20, height: 20 }}
+                            />
+                          ) : (
+                            <Avatar sx={{ width: 20, height: 20 }}>
+                              <Iconify
+                                icon="mdi:account"
+                                sx={{ width: 16, height: 16 }}
+                                title="Profile"
+                              />
+                            </Avatar>
+                          )}
+                          <Grid
+                            item
+                            sx={{
+                              width: "calc(100% - 44px)",
+                              wordWrap: "break-word",
+                              paddingLeft: 1,
+                            }}
+                          ></Grid>
+                          <Typography variant="body2" color="text.secondary">
+                            {option.username}
+                          </Typography>
+                        </Grid>
+                      </Grid>
+                    </li>
+                  );
                 }}
                 renderInput={(params) => (
                   <TextField
