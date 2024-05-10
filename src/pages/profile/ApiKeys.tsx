@@ -9,6 +9,7 @@ import {
   DialogContent,
   DialogTitle,
   IconButton,
+  Link,
   MenuItem,
   Paper,
   Select,
@@ -171,7 +172,22 @@ export const ApiKeys = () => {
         </DialogActions>
       </Dialog>
       <Card sx={{ boxShadow: 20 }}>
-        <CardHeader title={t("api-keys")} subheader={t("api-keys-subheader")} />
+        <CardHeader
+          title={t("api-keys")}
+          subheader={
+            <>
+              <span>{t("api-keys-subheader")}</span>
+              <Link
+                href="https://docs.cloud.cbh.kth.se/usage/api/"
+                target="_blank"
+                rel="noreferrer"
+                sx={{ ml: 1 }}
+              >
+                {t("learn-more")}
+              </Link>
+            </>
+          }
+        />
         <CardContent>
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
