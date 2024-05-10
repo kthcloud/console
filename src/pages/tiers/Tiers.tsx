@@ -16,24 +16,15 @@ import { useKeycloak } from "@react-keycloak/web";
 import { discover } from "../../api/deploy/discover";
 import Scrollbar from "../../components/Scrollbar";
 import { AlertList } from "../../components/AlertList";
-export type Tier = {
-  name: string;
-  description: string;
-  permissions: string[];
-  quota: {
-    deployments: number;
-    cpuCores: number;
-    ram: number;
-    diskSize: number;
-    snapshots: number;
-  };
-};
+import { Role } from "@kthcloud/go-deploy-types/types/v1/body";
 
-const TierCard = ({ tier }: { tier: Tier }) => {
+const TierCard = ({ tier }: { tier: Role }) => {
   const { t } = useTranslation();
   const [hovering, setHovering] = useState<boolean>(false);
   const { user } = useResource();
   const { keycloak } = useKeycloak();
+
+  if (!tier.quota) return null;
 
   return (
     <Card
@@ -78,13 +69,6 @@ const TierCard = ({ tier }: { tier: Tier }) => {
         >
           {(tier.permissions.includes("useCustomDomains") ? "✅ " : "❌ ") +
             t("use-custom-domains")}
-        </Typography>
-        <Typography
-          variant="subtitle2"
-          gutterBottom
-          sx={{ whiteSpace: "nowrap" }}
-        >
-          {`🚀 ${t("resource-deployments")}: ${tier.quota.deployments}`}
         </Typography>
         <Typography
           variant="subtitle2"
@@ -153,9 +137,7 @@ const TierCard = ({ tier }: { tier: Tier }) => {
 
 const Tiers = () => {
   const { t } = useTranslation();
-  // const tiers = tierConfig;
-
-  const [tiers, setTiers] = useState<Tier[]>([]);
+  const [tiers, setTiers] = useState<Role[]>([]);
 
   useEffect(() => {
     discover().then((response) => {
