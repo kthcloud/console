@@ -872,15 +872,6 @@ export const Admin = () => {
                               <Stack direction={"column"}>
                                 <Typography
                                   variant="caption"
-                                  key={user.id + "deployments"}
-                                >
-                                  {"deployments: " +
-                                    user.usage.deployments +
-                                    "/" +
-                                    user.quota.deployments}
-                                </Typography>
-                                <Typography
-                                  variant="caption"
                                   key={user.id + "cpuCores"}
                                 >
                                   {"cpuCores: " +

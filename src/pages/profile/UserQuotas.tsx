@@ -69,22 +69,6 @@ export const UserQuotas = ({ user }: { user: User }) => {
             }
           />
           <Chip
-            icon={<Iconify icon="mdi:kubernetes" width={24} height={24} />}
-            label={
-              <span>
-                {t("resource-kubernetes-deployment")}
-                <b
-                  style={{
-                    fontFamily: "monospace",
-                    marginLeft: ".75em",
-                  }}
-                >
-                  {user.usage.deployments + "/" + user.quota.deployments}
-                </b>
-              </span>
-            }
-          />
-          <Chip
             icon={
               <Iconify icon="material-symbols:save" width={24} height={24} />
             }
