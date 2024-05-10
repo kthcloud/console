@@ -379,7 +379,10 @@ const Teams = () => {
                                                     </TableCell>
                                                     <TableCell>
                                                       {sentenceCase(
-                                                        member.teamRole
+                                                        member.id ===
+                                                          team.ownerId
+                                                          ? t("owner")
+                                                          : t("member")
                                                       )}
                                                     </TableCell>
                                                     <TableCell>
@@ -399,31 +402,34 @@ const Teams = () => {
                                                       }
                                                     </TableCell>
                                                     <TableCell align="right">
-                                                      <ConfirmButton
-                                                        action={t("remove")}
-                                                        actionText={
-                                                          t(
-                                                            "remove"
-                                                          ).toLowerCase() +
-                                                          " " +
-                                                          (member.email ||
-                                                            member.username) +
-                                                          " " +
-                                                          t("from-team")
-                                                        }
-                                                        callback={() =>
-                                                          handleRemoveUser(
-                                                            team,
-                                                            member
-                                                          )
-                                                        }
-                                                        props={{
-                                                          color: "error",
-                                                          startIcon: (
-                                                            <Iconify icon="mdi:account-multiple-remove" />
-                                                          ),
-                                                        }}
-                                                      />
+                                                      {member.id !==
+                                                        team.ownerId && (
+                                                        <ConfirmButton
+                                                          action={t("remove")}
+                                                          actionText={
+                                                            t(
+                                                              "remove"
+                                                            ).toLowerCase() +
+                                                            " " +
+                                                            (member.email ||
+                                                              member.username) +
+                                                            " " +
+                                                            t("from-team")
+                                                          }
+                                                          callback={() =>
+                                                            handleRemoveUser(
+                                                              team,
+                                                              member
+                                                            )
+                                                          }
+                                                          props={{
+                                                            color: "error",
+                                                            startIcon: (
+                                                              <Iconify icon="mdi:account-multiple-remove" />
+                                                            ),
+                                                          }}
+                                                        />
+                                                      )}
                                                     </TableCell>
                                                   </>
                                                 )}
@@ -482,23 +488,25 @@ const Teams = () => {
                                                     component="div"
                                                     sx={{ flexGrow: 1 }}
                                                   />
-                                                  <ConfirmButton
-                                                    action={t("delete")}
-                                                    actionText={
-                                                      t("delete") +
-                                                      " " +
-                                                      team.name
-                                                    }
-                                                    callback={() =>
-                                                      handleDelete(team)
-                                                    }
-                                                    props={{
-                                                      color: "error",
-                                                      startIcon: (
-                                                        <Iconify icon="mdi:delete" />
-                                                      ),
-                                                    }}
-                                                  />
+                                                  {user.id === team.ownerId && (
+                                                    <ConfirmButton
+                                                      action={t("delete")}
+                                                      actionText={
+                                                        t("delete") +
+                                                        " " +
+                                                        team.name
+                                                      }
+                                                      callback={() =>
+                                                        handleDelete(team)
+                                                      }
+                                                      props={{
+                                                        color: "error",
+                                                        startIcon: (
+                                                          <Iconify icon="mdi:delete" />
+                                                        ),
+                                                      }}
+                                                    />
+                                                  )}
                                                 </Stack>
                                               </TableCell>
                                             </TableRow>
