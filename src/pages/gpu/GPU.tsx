@@ -35,8 +35,11 @@ import {
   updateGpuLease,
 } from "../../api/deploy/v2/gpuLeases";
 import JobList from "../../components/JobList";
-import { GpuLeaseRead } from "@kthcloud/go-deploy-types/types/v2/body";
-import { useState } from "react";
+import {
+  GpuGroupRead,
+  GpuLeaseRead,
+} from "@kthcloud/go-deploy-types/types/v2/body";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { AlertList } from "../../components/AlertList";
 
@@ -48,6 +51,35 @@ export const GPU = () => {
   const [selectedLease, setSelectedLease] = useState<GpuLeaseRead | null>(null);
   const [selectedVmId, setSelectedVmId] = useState<Uuid | "">("");
 
+  const [selectZoneDialogOpen, setSelectZoneDialogOpen] =
+    useState<boolean>(false);
+  const [selectedGpuName, setSelectedGpuName] = useState<string>("");
+  const [selectedZoneId, setSelectedZoneId] = useState<string>("");
+
+  interface GPUGroup extends GpuGroupRead {
+    zones?: string[];
+  }
+  const [groupedGpus, setGroupedGpus] = useState<GPUGroup[]>([]);
+
+  useEffect(() => {
+    const grouped: GPUGroup[] = [];
+    gpuGroups.forEach((group: GPUGroup) => {
+      const existing: GPUGroup | undefined = grouped.find(
+        (g) => g.name === group.name
+      );
+      if (existing) {
+        if (!existing.zones) existing.zones = [];
+        existing.zones.push(group.zone);
+        existing.available += group.available;
+        existing.total += group.total;
+      } else {
+        group.zones = [group.zone];
+        grouped.push(group);
+      }
+    });
+    setGroupedGpus(grouped);
+  }, [gpuGroups]);
+
   const vms = () => rows.filter((r) => r.type === "vm");
 
   const leaseGPU = async (gpuGroupId: Uuid) => {
@@ -58,15 +90,14 @@ export const GPU = () => {
         gpuGroupId,
         leaseForever: false,
       });
-      if (res) {
-        queueJob(res);
-      } else {
-        enqueueSnackbar(t("error-updating") + t("gpu-lease"), {
+      queueJob(res);
+    } catch (error: any) {
+      console.log(error);
+      errorHandler(error).forEach((e) =>
+        enqueueSnackbar("Error leasing: " + e, {
           variant: "error",
-        });
-      }
-    } catch (e: any) {
-      enqueueSnackbar(errorHandler(e), { variant: "error" });
+        })
+      );
     }
   };
 
@@ -110,20 +141,79 @@ export const GPU = () => {
       >
         <DialogTitle>{t("select-vm")}</DialogTitle>
         <DialogContent>
-          <Select
-            value={selectedVmId}
-            onChange={(e) => setSelectedVmId(e.target.value as Uuid)}
+          <Stack
+            direction="column"
+            spacing={2}
+            useFlexGap
+            alignItems="flex-start"
           >
-            {rows
-              .filter((r) => r.type === "vm")
-              .map((row) => (
-                <MenuItem key={row.id} value={row.id}>
-                  {row.name}
-                </MenuItem>
-              ))}
-          </Select>
+            <Typography variant="body2">{t("select-vm-gpu")}</Typography>
+            <Stack direction="row" spacing={2} useFlexGap alignItems="center">
+              <Select
+                value={selectedVmId}
+                onChange={(e) => setSelectedVmId(e.target.value as Uuid)}
+              >
+                {rows
+                  .filter((r) => r.type === "vm")
+                  .map((row) => (
+                    <MenuItem key={row.id} value={row.id}>
+                      {row.name}
+                    </MenuItem>
+                  ))}
+              </Select>
 
-          <Button onClick={() => activateLease()}>{t("activate")}</Button>
+              <Button onClick={() => activateLease()}>{t("activate")}</Button>
+            </Stack>
+          </Stack>
+        </DialogContent>
+      </Dialog>
+      <Dialog
+        slots={{ backdrop: Backdrop }}
+        slotProps={{
+          backdrop: {
+            sx: {
+              background: "rgba(0, 0, 0, 0.4)",
+              backdropFilter: "blur(3px)",
+            },
+          },
+        }}
+        open={selectZoneDialogOpen}
+        onClose={() => setSelectZoneDialogOpen(false)}
+      >
+        <DialogTitle>{t("select-zone")}</DialogTitle>
+        <DialogContent>
+          <Stack
+            direction="column"
+            spacing={2}
+            useFlexGap
+            alignItems="flex-start"
+          >
+            <Typography variant="body2">{t("gpu-zone-subheader")}</Typography>
+
+            <Stack direction="row" spacing={2} useFlexGap alignItems="center">
+              <Select
+                value={selectedZoneId}
+                onChange={(e) => setSelectedZoneId(e.target.value as Uuid)}
+              >
+                {gpuGroups
+                  .filter((g) => g.name === selectedGpuName)
+                  .map((row) => (
+                    <MenuItem key={row.id} value={row.id}>
+                      {row.zone}
+                    </MenuItem>
+                  ))}
+              </Select>
+
+              <Button
+                onClick={() => {
+                  leaseGPU(selectedZoneId);
+                  setSelectZoneDialogOpen(false);
+                }}
+              >
+                {t("apply")}
+              </Button>
+            </Stack>
+          </Stack>
         </DialogContent>
       </Dialog>
       {!initialLoad ? (
@@ -268,12 +358,12 @@ export const GPU = () => {
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {gpuGroups.map((group) => (
+                        {groupedGpus.map((group) => (
                           <TableRow key={group.id}>
                             <TableCell>{`${group.vendor
                               .replace("Corporation", "")
                               .trim()} ${group.displayName}`}</TableCell>
-                            <TableCell>{group.zone}</TableCell>
+                            <TableCell>{group.zones?.join(", ")}</TableCell>
                             <TableCell>
                               {group.available + " / " + group.total}
                             </TableCell>
@@ -288,7 +378,15 @@ export const GPU = () => {
                                 <Button
                                   startIcon={<Iconify icon="mdi:human-queue" />}
                                   variant="outlined"
-                                  onClick={() => leaseGPU(group.id)}
+                                  onClick={() => {
+                                    if (group.zones?.length === 1) {
+                                      leaseGPU(group.id);
+                                      return;
+                                    }
+                                    setSelectedZoneId(group.id);
+                                    setSelectedGpuName(group.name);
+                                    setSelectZoneDialogOpen(true);
+                                  }}
                                 >
                                   {t("wait-in-line")}
                                 </Button>

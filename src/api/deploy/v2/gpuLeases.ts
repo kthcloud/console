@@ -28,8 +28,8 @@ export const createGpuLease = async (token: Jwt, body: GpuLeaseCreate) => {
     body: JSON.stringify(body),
   });
   const result = await response.json();
-  if (typeof result !== "object") {
-    throw new Error("Error creating GPU lease, response was not an object");
+  if (!response.ok) {
+    throw result;
   }
   return result;
 };
@@ -43,8 +43,8 @@ export const getGpuLease = async (token: Jwt, gpuLeaseId: Uuid) => {
     },
   });
   const result = await response.json();
-  if (typeof result !== "object") {
-    throw new Error("Error getting GPU lease, response was not an object");
+  if (!response.ok) {
+    throw result;
   }
   return result;
 };
@@ -64,8 +64,8 @@ export const updateGpuLease = async (
     body: JSON.stringify(body),
   });
   const result = await response.json();
-  if (typeof result !== "object") {
-    throw new Error("Error updating GPU lease, response was not an object");
+  if (!response.ok) {
+    throw result;
   }
   return result;
 };
@@ -79,7 +79,7 @@ export const deleteGpuLease = async (token: Jwt, gpuLeaseId: Uuid) => {
     },
   });
   if (response.status !== 200) {
-    throw new Error("Error deleting GPU lease");
+    throw "Error deleting GPU lease";
   }
   return await response.json();
 };

@@ -514,6 +514,9 @@
         "security-details": "Security details",
         "kubernetes-error": "Kubernetes error",
         "owner": "Owner",
-        "member": "Member"
+        "member": "Member",
+        "select-zone": "Select zone",
+        "gpu-zone-subheader": "This GPU is available in the following zones, choose the same zone as your desired VM destination.",
+        "select-vm-gpu": "Select a VM to attach this GPU to."
     }
 }
