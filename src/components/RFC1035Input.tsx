@@ -1,6 +1,15 @@
-import { Link, Stack, TextField, Typography } from "@mui/material";
+import {
+  IconButton,
+  InputAdornment,
+  Link,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { faker } from "@faker-js/faker";
+import Iconify from "./Iconify";
 
 export type RFC1035InputProps = {
   label: string;
@@ -13,6 +22,7 @@ export type RFC1035InputProps = {
   setCleaned: (val: string) => void;
   initialValue?: string;
   maxWidth?: string;
+  enableRandomize?: boolean;
 };
 
 export default function RFC1035Input({
@@ -26,6 +36,7 @@ export default function RFC1035Input({
   setCleaned,
   initialValue = "",
   maxWidth = "100%",
+  enableRandomize = false,
 }: RFC1035InputProps) {
   const [value, setValue] = useState("");
   const { t } = useTranslation();
@@ -50,6 +61,14 @@ export default function RFC1035Input({
     val = val.replace(/^-|-$/g, "");
 
     setCleaned(val);
+  };
+
+  const randomizeName = () => {
+    const newRandomName = faker.word
+      .words(3)
+      .replace(/[^a-z0-9]|\s+|\r?\n|\r/gim, "-");
+    setValue(newRandomName);
+    clean(newRandomName);
   };
 
   return (
@@ -78,6 +97,15 @@ export default function RFC1035Input({
         onChange={(e) => {
           setValue(e.target.value);
           clean(e.target.value);
+        }}
+        InputProps={{
+          endAdornment: enableRandomize ? (
+            <InputAdornment position="end">
+              <IconButton onClick={randomizeName} size="large">
+                <Iconify icon="mdi:dice-3-outline" />
+              </IconButton>
+            </InputAdornment>
+          ) : null,
         }}
       />
       {cleaned && (
