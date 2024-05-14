@@ -1,5 +1,4 @@
 import {
-  IconButton,
   InputAdornment,
   Link,
   Stack,
@@ -9,7 +8,7 @@ import {
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { faker } from "@faker-js/faker";
-import Iconify from "./Iconify";
+import RandomizeButton from "./RandomizeButton";
 
 export type RFC1035InputProps = {
   label: string;
@@ -101,9 +100,7 @@ export default function RFC1035Input({
         InputProps={{
           endAdornment: enableRandomize ? (
             <InputAdornment position="end">
-              <IconButton onClick={randomizeName} size="large">
-                <Iconify icon="mdi:dice-3-outline" />
-              </IconButton>
+              <RandomizeButton onClick={randomizeName} />
             </InputAdornment>
           ) : null,
         }}
