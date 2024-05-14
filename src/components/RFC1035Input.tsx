@@ -100,7 +100,7 @@ export default function RFC1035Input({
         InputProps={{
           endAdornment: enableRandomize ? (
             <InputAdornment position="end">
-              <RandomizeButton onClick={randomizeName} />
+              <RandomizeButton onClick={randomizeName} size="large" />
             </InputAdornment>
           ) : null,
         }}
