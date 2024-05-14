@@ -383,7 +383,6 @@ export const ResourceContextProvider = ({
     loadUser();
 
     setNextLoad(Date.now() + loadInterval);
-    console.log(loadInterval);
   }, loadInterval);
 
   useInterval(async () => {
