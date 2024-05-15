@@ -17,6 +17,7 @@ import {
   TableRow,
   TextField,
   Toolbar,
+  Tooltip,
   Typography,
   useTheme,
 } from "@mui/material";
@@ -40,6 +41,9 @@ import { TeamRead } from "@kthcloud/go-deploy-types/types/v1/body";
 import { deleteVM, listVMs } from "../../api/deploy/v2/vms";
 import { GpuLeaseRead } from "@kthcloud/go-deploy-types/types/v2/body";
 import { deleteGpuLease, listGpuLeases } from "../../api/deploy/v2/gpuLeases";
+import { sentenceCase } from "change-case";
+import { getReasonPhrase } from "http-status-codes";
+import ConfirmButton from "../../components/ConfirmButton";
 
 export const Admin = () => {
   const { t } = useTranslation();
@@ -315,6 +319,36 @@ export const Admin = () => {
     setDeployments(filtered);
   };
 
+  const renderCustomDomain = (deployment: Deployment) => {
+    if (!(deployment.customDomain && deployment.customDomainStatus)) return "";
+
+    if (deployment.customDomainStatus === "active") {
+      return (
+        <Stack direction={"column"}>
+          <Link
+            href={deployment.customDomainUrl ? deployment.customDomainUrl : "#"}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {deployment.customDomain}
+          </Link>
+          <Typography variant="caption" sx={{ color: "#37be5f" }}>
+            {sentenceCase(deployment.customDomainStatus)}
+          </Typography>
+        </Stack>
+      );
+    }
+
+    return (
+      <Stack direction={"column"}>
+        <Typography variant="body2">{deployment.customDomain}</Typography>
+        <Typography variant="caption" sx={{ color: "orange" }}>
+          {sentenceCase(deployment.customDomainStatus)}
+        </Typography>
+      </Stack>
+    );
+  };
+
   // ==================================================
   // GPUs
   const [dbGPUs, setDbGPUs] = useState<GpuLeaseRead[]>([]);
@@ -547,7 +581,7 @@ export const Admin = () => {
                           <TableCell>{t("admin-name")}</TableCell>
                           <TableCell>{t("admin-user")}</TableCell>
                           <TableCell>{t("admin-visibility")}</TableCell>
-                          <TableCell>{t("admin-integrations")}</TableCell>
+                          <TableCell>{t("create-deployment-domain")}</TableCell>
                           <TableCell>{t("admin-status")}</TableCell>
                           <TableCell>{t("admin-actions")}</TableCell>
                         </TableRow>
@@ -574,10 +608,32 @@ export const Admin = () => {
                                 : t("admin-visibility-public")}
                             </TableCell>
                             <TableCell>
-                              {deployment.integrations &&
-                                deployment.integrations.join(", ")}
+                              {renderCustomDomain(deployment)}
                             </TableCell>
-                            <TableCell>{deployment.status}</TableCell>
+                            <TableCell>
+                              <Stack direction={"column"}>
+                                <Typography variant="caption">
+                                  {sentenceCase(
+                                    deployment.status.replace("resource", "")
+                                  )}
+                                </Typography>
+                                {deployment.pingResult && (
+                                  <Tooltip
+                                    title={
+                                      "HTTP " +
+                                      deployment.pingResult +
+                                      " " +
+                                      getReasonPhrase(deployment.pingResult)
+                                    }
+                                    placement="bottom-start"
+                                  >
+                                    <Typography variant="caption">
+                                      {deployment.pingResult}
+                                    </Typography>
+                                  </Tooltip>
+                                )}
+                              </Stack>
+                            </TableCell>
                             <TableCell>
                               <Stack direction="row">
                                 <Button
@@ -588,18 +644,22 @@ export const Admin = () => {
                                 >
                                   {t("button-edit")}
                                 </Button>
-                                <Button
-                                  color="error"
-                                  onClick={() => {
+                                <ConfirmButton
+                                  action={t("button-delete")}
+                                  actionText={
+                                    t("button-delete") + " deployment"
+                                  }
+                                  callback={() => {
                                     if (keycloak.token)
                                       deleteDeployment(
                                         deployment.id,
                                         keycloak.token
                                       );
                                   }}
-                                >
-                                  {t("button-delete")}
-                                </Button>
+                                  props={{
+                                    color: "error",
+                                  }}
+                                />
                               </Stack>
                             </TableCell>
                           </TableRow>
@@ -762,15 +822,17 @@ export const Admin = () => {
                                   </Button>
                                 )}
 
-                                <Button
-                                  color="error"
-                                  onClick={() => {
+                                <ConfirmButton
+                                  action={t("button-delete")}
+                                  actionText={t("button-delete") + " vm"}
+                                  callback={() => {
                                     if (keycloak.token)
                                       deleteVM(keycloak.token, vm.id);
                                   }}
-                                >
-                                  {t("button-delete")}
-                                </Button>
+                                  props={{
+                                    color: "error",
+                                  }}
+                                />
                               </Stack>
                             </TableCell>
                           </TableRow>
