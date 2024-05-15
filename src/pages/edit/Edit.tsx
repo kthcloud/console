@@ -25,7 +25,7 @@ import JobList from "../../components/JobList";
 import EnvManager from "./deployments/EnvManager";
 import GHActions from "./deployments/GHActions";
 import SSHString from "./vms/SSHString";
-import Specs from "./vms/Specs";
+import { Specs as VmSpecs } from "./vms/Specs";
 import { GPUManager } from "./vms/GPUManager";
 import { PrivateMode } from "./deployments/PrivateMode";
 import { DeploymentCommands } from "./deployments/DeploymentCommands";
@@ -47,6 +47,7 @@ import { errorHandler } from "../../utils/errorHandler";
 import { Job, Resource, Deployment, Vm } from "../../types";
 import { Volume } from "@kthcloud/go-deploy-types/types/v1/body";
 import { AlertList } from "../../components/AlertList";
+import { Specs } from "./Specs";
 
 export function Edit() {
   const { t } = useTranslation();
@@ -336,7 +337,7 @@ export function Edit() {
 
               {/* {resource.type === "vm" && <ProxyManager vm={resource as Vm} />} */}
 
-              {resource.type === "vm" && <Specs vm={resource as Vm} />}
+              {resource.type === "vm" && <VmSpecs vm={resource as Vm} />}
 
               {resource.type === "deployment" && (
                 <EnvManager deployment={resource as Deployment} />
@@ -372,6 +373,9 @@ export function Edit() {
               {resource.type === "deployment" && (
                 <ReplicaManager deployment={resource as Deployment} />
               )}
+
+              <Specs resource={resource} />
+              
               {resource.type === "deployment" && (
                 <LogsView deployment={resource as Deployment} />
               )}

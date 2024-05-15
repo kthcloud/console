@@ -267,7 +267,7 @@
         "your-snapshot-will-be-created-as": "Your snapshot will be created as",
         "specs-saving": "Saving specs...",
         "could-not-save-specs": "Could not save specs: ",
-        "specs-subheader": "Grow or shrink your VM to match your use case",
+        "specs-subheader": "Grow or shrink to match your use case",
         "memory": "Memory",
         "network-speed": "Network speed",
         "ssh-string": "SSH Connection string",

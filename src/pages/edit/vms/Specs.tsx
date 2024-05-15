@@ -20,7 +20,7 @@ import { errorHandler } from "../../../utils/errorHandler";
 import { Vm } from "../../../types";
 import { Specs as SpecsType } from "@kthcloud/go-deploy-types/types/v1/body";
 
-export default function Specs({ vm }: { vm: Vm }) {
+export const Specs = ({ vm }: { vm: Vm }) => {
   const { t } = useTranslation();
 
   const [specs, setSpecs] = useState<SpecsType | null>(null);
@@ -311,4 +311,4 @@ export default function Specs({ vm }: { vm: Vm }) {
       )}
     </>
   );
-}
+};

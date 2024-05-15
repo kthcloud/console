@@ -86,7 +86,6 @@ export const ReplicaManager = ({ deployment }: { deployment: Deployment }) => {
         <Grid container spacing={2}>
           <Grid item xs>
             <Slider
-              aria-labelledby="input-slider"
               value={count}
               onChange={(_, v) => setCount(v)}
               min={0}
