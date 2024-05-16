@@ -261,7 +261,7 @@
         "copied": "Kopierat!",
         "select-port": "Välj port för proxy till",
         "admin-leased-until": "Lånat till",
-        "specs-subheader": "Ändra storlek av maskinen utifrån dina behov",
+        "specs-subheader": "Ändra storlek utifrån dina behov",
         "onboarding-deployments": "Resurstyp: Deployments",
         "resource-kubernetes-deployment": "Kubernetes deployment",
         "tcp-first": "Exponera en TCP port först",
@@ -516,6 +516,8 @@
         "member": "Medlem",
         "select-zone": "Välj zon",
         "gpu-zone-subheader": "Det här grafikkortet finns i flera zoner. Välj samma zon som virtuella maskinen du vill installera grafikkortet på.",
-        "select-vm-gpu": "Välj en virtuell maskin att installera grafikkortet på."
+        "select-vm-gpu": "Välj en virtuell maskin att installera grafikkortet på.",
+        "replica-quota": "Ökning av kopior kommer att multiplicera CPU- och RAM-användningen för denna deployment.",
+        "per-replica": "per kopia"
     }
 }

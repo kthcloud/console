@@ -25,7 +25,6 @@ import JobList from "../../components/JobList";
 import EnvManager from "./deployments/EnvManager";
 import GHActions from "./deployments/GHActions";
 import SSHString from "./vms/SSHString";
-import Specs from "./vms/Specs";
 import { GPUManager } from "./vms/GPUManager";
 import { PrivateMode } from "./deployments/PrivateMode";
 import { DeploymentCommands } from "./deployments/DeploymentCommands";
@@ -38,7 +37,6 @@ import { DomainManager } from "./deployments/DomainManager";
 import { HealthCheckRoute } from "./deployments/HealthCheckRoute";
 import { useTranslation } from "react-i18next";
 import DangerZone from "./DangerZone";
-import { ReplicaManager } from "./deployments/ReplicaManager";
 import Iconify from "../../components/Iconify";
 import { enqueueSnackbar } from "notistack";
 import { updateDeployment } from "../../api/deploy/deployments";
@@ -47,6 +45,7 @@ import { errorHandler } from "../../utils/errorHandler";
 import { Job, Resource, Deployment, Vm } from "../../types";
 import { Volume } from "@kthcloud/go-deploy-types/types/v1/body";
 import { AlertList } from "../../components/AlertList";
+import { Specs } from "./Specs";
 
 export function Edit() {
   const { t } = useTranslation();
@@ -330,13 +329,9 @@ export function Edit() {
 
               {resource.type === "vm" && <GPUManager vm={resource as Vm} />}
 
-              {/* {resource.type === "vm" && <SnapshotManager vm={resource} />} */}
-
               {resource.type === "vm" && <PortManager vm={resource as Vm} />}
 
               {/* {resource.type === "vm" && <ProxyManager vm={resource as Vm} />} */}
-
-              {resource.type === "vm" && <Specs vm={resource as Vm} />}
 
               {resource.type === "deployment" && (
                 <EnvManager deployment={resource as Deployment} />
@@ -369,9 +364,8 @@ export function Edit() {
                   <GHActions resource={resource as Deployment} />
                 )}
 
-              {resource.type === "deployment" && (
-                <ReplicaManager deployment={resource as Deployment} />
-              )}
+              <Specs resource={resource} />
+
               {resource.type === "deployment" && (
                 <LogsView deployment={resource as Deployment} />
               )}
