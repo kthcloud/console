@@ -2,7 +2,7 @@ name: Build and deploy to beta.app.cloud.cbh.kth.se
 on:
   push:
     branches:
-      - "beta"
+      - "main"
   workflow_dispatch:
 jobs:
   kthcloud-ci-beta:

@@ -54,8 +54,8 @@ We are thrilled you are considering contributing to the kthcloud project! We wel
 
 You can find our current issues in the [Issues](https://github.com/kthcloud/console/issues) tab. If you have any questions, feel free to discuss in the issue thread.
 
-The `beta` branch is the main development branch, so all pull requests should be created against `beta`.
-You can find a CI/CD build of the `beta` branch at [beta.app.cloud.cbh.kth.se](https://beta.app.cloud.cbh.kth.se/).
+The `main` branch is the main development branch, so all pull requests should be created against `main`.
+You can find a CI/CD build of the `main` branch at [beta.app.cloud.cbh.kth.se](https://beta.app.cloud.cbh.kth.se/).
 
 Before you start coding:
 
@@ -66,7 +66,7 @@ Before you start coding:
 After you've made your changes:
 
 1. Push your changes to your fork.
-2. Open a pull request in the original repository, from your fork's branch to `beta`.
+2. Open a pull request in the original repository, from your fork's branch to `main`.
 
 Please include a detailed description of your changes in your pull request.
 
