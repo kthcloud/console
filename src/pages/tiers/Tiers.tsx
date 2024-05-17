@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Card,
+  CardActions,
   CardContent,
   Container,
   Stack,
@@ -54,51 +55,52 @@ const TierCard = ({ tier }: { tier: Role }) => {
         >
           {t(tier.name)}
         </Typography>
-        <Typography
-          variant="subtitle2"
-          gutterBottom
-          sx={{ whiteSpace: "nowrap" }}
+        <Stack
+          direction="column"
+          spacing={1}
+          alignItems="flex-start"
+          justifyContent={"flex-start"}
         >
-          {(tier.permissions.includes("useGpus") ? "✅ " : "❌ ") +
-            t("landing-hero-gpu")}
-        </Typography>
-        <Typography
-          variant="subtitle2"
-          gutterBottom
-          sx={{ whiteSpace: "nowrap" }}
-        >
-          {(tier.permissions.includes("useCustomDomains") ? "✅ " : "❌ ") +
-            t("use-custom-domains")}
-        </Typography>
-        <Typography
-          variant="subtitle2"
-          gutterBottom
-          sx={{ whiteSpace: "nowrap" }}
-        >
-          {`💻 ${t("landing-hero-cpu")}: ${tier.quota.cpuCores}`}
-        </Typography>
-        <Typography
-          variant="subtitle2"
-          gutterBottom
-          sx={{ whiteSpace: "nowrap" }}
-        >
-          {`🧠 ${t("memory")}: ${tier.quota.ram} GB`}
-        </Typography>
-        <Typography
-          variant="subtitle2"
-          gutterBottom
-          sx={{ whiteSpace: "nowrap" }}
-        >
-          {`💽 ${t("create-vm-disk-size")}: ${tier.quota.diskSize} GB`}
-        </Typography>
-        <Typography
-          variant="subtitle2"
-          gutterBottom
-          sx={{ whiteSpace: "nowrap", mb: 3 }}
-        >
-          {`📸 ${t("snapshots")}: ${tier.quota.snapshots}`}
-        </Typography>
-
+          <Typography
+            variant="subtitle2"
+            gutterBottom
+            sx={{ whiteSpace: "nowrap" }}
+          >
+            {(tier.permissions.includes("useGpus") ? "✅ " : "❌ ") +
+              t("landing-hero-gpu")}
+          </Typography>
+          <Typography
+            variant="subtitle2"
+            gutterBottom
+            sx={{ whiteSpace: "nowrap" }}
+          >
+            {(tier.permissions.includes("useCustomDomains") ? "✅ " : "❌ ") +
+              t("use-custom-domains")}
+          </Typography>
+          <Typography
+            variant="subtitle2"
+            gutterBottom
+            sx={{ whiteSpace: "nowrap" }}
+          >
+            {`💻 ${t("landing-hero-cpu")}: ${tier.quota.cpuCores}`}
+          </Typography>
+          <Typography
+            variant="subtitle2"
+            gutterBottom
+            sx={{ whiteSpace: "nowrap" }}
+          >
+            {`🧠 ${t("memory")}: ${tier.quota.ram} GB`}
+          </Typography>
+          <Typography
+            variant="subtitle2"
+            gutterBottom
+            sx={{ whiteSpace: "nowrap" }}
+          >
+            {`💽 ${t("create-vm-disk-size")}: ${tier.quota.diskSize} GB`}
+          </Typography>
+        </Stack>
+      </CardContent>
+      <CardActions>
         {user?.role?.name === tier.name ? (
           <Button variant="contained" color="primary" fullWidth disabled>
             {t("current-plan")}
@@ -115,6 +117,7 @@ const TierCard = ({ tier }: { tier: Role }) => {
                     redirectUri: window.location.origin + "/deploy",
                   })
                 }
+                sx={{ m: 1 }}
               >
                 {t("button-login")}
               </Button>
@@ -124,13 +127,14 @@ const TierCard = ({ tier }: { tier: Role }) => {
                 color="primary"
                 fullWidth
                 href="https://discord.gg/MuHQd6QEtM"
+                sx={{ m: 1 }}
               >
                 {t("contact-us")}
               </Button>
             )}
           </>
         )}
-      </CardContent>
+      </CardActions>
     </Card>
   );
 };

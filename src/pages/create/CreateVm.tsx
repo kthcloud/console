@@ -223,6 +223,7 @@ export default function CreateVm({
                 setCleaned={setCleaned}
                 initialValue={initialName}
                 autofocus={!window.location.pathname.includes("onboarding")}
+                enableRandomize={true}
               />
 
               {user && (

@@ -17,14 +17,15 @@ export const UserQuotas = ({ user }: { user: User }) => {
           useFlexGap={true}
         >
           <Chip
+            sx={{ p: 1 }}
             icon={<Iconify icon="uil:processor" width={24} height={24} />}
             label={
-              <span>
+              <span style={{ marginLeft: ".5rem" }}>
                 {t("landing-hero-cpu")}
                 <b
                   style={{
                     fontFamily: "monospace",
-                    marginLeft: ".75em",
+                    marginLeft: "1rem",
                   }}
                 >
                   {user.usage.cpuCores + "/" + user.quota.cpuCores}
@@ -33,14 +34,15 @@ export const UserQuotas = ({ user }: { user: User }) => {
             }
           />
           <Chip
+            sx={{ p: 1 }}
             icon={<Iconify icon="bi:memory" width={24} height={24} />}
             label={
-              <span>
+              <span style={{ marginLeft: ".5rem" }}>
                 {t("memory")}
                 <b
                   style={{
                     fontFamily: "monospace",
-                    marginLeft: ".75em",
+                    marginLeft: "1rem",
                     marginRight: ".75em",
                   }}
                 >
@@ -51,38 +53,21 @@ export const UserQuotas = ({ user }: { user: User }) => {
             }
           />
           <Chip
+            sx={{ p: 1 }}
             icon={<Iconify icon="mdi:harddisk" width={24} height={24} />}
             label={
-              <span>
+              <span style={{ marginLeft: ".5rem" }}>
                 {t("create-vm-disk-size")}
                 <b
                   style={{
                     fontFamily: "monospace",
-                    marginLeft: ".75em",
+                    marginLeft: "1rem",
                     marginRight: ".75em",
                   }}
                 >
                   {user.usage.diskSize + "/" + user.quota.diskSize}
                 </b>{" "}
                 GB
-              </span>
-            }
-          />
-          <Chip
-            icon={
-              <Iconify icon="material-symbols:save" width={24} height={24} />
-            }
-            label={
-              <span>
-                {t("snapshots")}
-                <b
-                  style={{
-                    fontFamily: "monospace",
-                    marginLeft: ".75em",
-                  }}
-                >
-                  {user.usage.snapshots + "/" + user.quota.snapshots}
-                </b>
               </span>
             }
           />

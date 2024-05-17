@@ -5,9 +5,7 @@ import { searchUsers } from "../../api/deploy/users";
 import { errorHandler } from "../../utils/errorHandler";
 import { useKeycloak } from "@react-keycloak/web";
 import ConfirmButton from "../../components/ConfirmButton";
-import { updateVM } from "../../api/deploy/v2/vms";
 import { Link } from "react-router-dom";
-import { updateDeployment } from "../../api/deploy/deployments";
 import useResource from "../../hooks/useResource";
 import { updateTeam } from "../../api/deploy/teams";
 import {
@@ -24,10 +22,12 @@ import {
 } from "@mui/material";
 import { Resource, User, Uuid } from "../../types";
 import {
+  ResourceMigrationCreate,
   TeamRead,
   UserReadDiscovery,
 } from "@kthcloud/go-deploy-types/types/v1/body";
 import Iconify from "../../components/Iconify";
+import { createResourceMigration } from "../../api/deploy/resourceMigrations";
 
 const DangerZone = ({ resource }: { resource: Resource }) => {
   const { t } = useTranslation();
@@ -103,17 +103,17 @@ const DangerZone = ({ resource }: { resource: Resource }) => {
     const ownerId = selected.id;
 
     // update resource with body containing new owner id
-    const body = {
-      ownerId: ownerId,
+    const body: ResourceMigrationCreate = {
+      type: "updateOwner",
+      resourceID: resource.id,
+      updateOwner: {
+        ownerId: ownerId,
+      },
     };
+
     try {
       let response;
-      if (resource.type === "vm") {
-        response = await updateVM(keycloak.token, resource.id, body);
-      } else if (resource.type === "deployment") {
-        response = await updateDeployment(resource.id, body, keycloak.token);
-      }
-
+      response = await createResourceMigration(keycloak.token, body);
       if (response) {
         setTransferred(true);
         enqueueSnackbar(t("successfully-transferred"), {

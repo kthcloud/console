@@ -267,7 +267,7 @@
         "your-snapshot-will-be-created-as": "Your snapshot will be created as",
         "specs-saving": "Saving specs...",
         "could-not-save-specs": "Could not save specs: ",
-        "specs-subheader": "Grow or shrink your VM to match your use case",
+        "specs-subheader": "Grow or shrink to match your use case",
         "memory": "Memory",
         "network-speed": "Network speed",
         "ssh-string": "SSH Connection string",
@@ -339,7 +339,7 @@
         "previous": "Previous",
         "next": "Next",
         "finish": "Finish",
-        "landing-hero-gpu": "GPUs",
+        "landing-hero-gpu": "GPU",
         "landing-hero-cpu": "CPU cores",
         "landing-hero-ram": "Terabytes of memory",
         "landing-intro-header": "Welcome to",
@@ -514,6 +514,11 @@
         "security-details": "Security details",
         "kubernetes-error": "Kubernetes error",
         "owner": "Owner",
-        "member": "Member"
+        "member": "Member",
+        "select-zone": "Select zone",
+        "gpu-zone-subheader": "This GPU is available in the following zones, choose the same zone as your desired VM destination.",
+        "select-vm-gpu": "Select a VM to attach this GPU to.",
+        "replica-quota": "Increasing replicas will multiply the CPU and RAM usage of this deployment.",
+        "per-replica": "per replica"
     }
 }

@@ -6,14 +6,14 @@ import { useKeycloak } from "@react-keycloak/web";
 
 // api
 import { getJob } from "../api/deploy/jobs";
-import { getVM, getVMs } from "../api/deploy/vms";
+import { getVMs } from "../api/deploy/vms";
 import { getDeployment, getDeployments } from "../api/deploy/deployments";
 import { errorHandler } from "../utils/errorHandler";
 import { getUser } from "../api/deploy/users";
 import { getZones } from "../api/deploy/zones";
 import { getNotifications } from "../api/deploy/notifications";
 import { getTeams } from "../api/deploy/teams";
-import { listVMs } from "../api/deploy/v2/vms";
+import { getVMById, listVMs } from "../api/deploy/v2/vms";
 
 import {
   NotificationRead as Notification,
@@ -125,6 +125,7 @@ export const ResourceContextProvider = ({
   const [nextLoad, setNextLoad] = useState<number>(0);
   const [loadInterval, setLoadInterval] = useState<number>(5000);
   const [connectionError, setConnectionError] = useState<boolean>(false);
+  const [fastLoading, setFastLoading] = useState<boolean>(false);
 
   // Dynamic reload interval
   const [rtt, setRtt] = useState<number>(0);
@@ -185,6 +186,7 @@ export const ResourceContextProvider = ({
   };
 
   const beginFastLoad = () => {
+    setFastLoading(true);
     setLoadInterval(rtt + 100);
   };
 
@@ -302,6 +304,7 @@ export const ResourceContextProvider = ({
         if (newInterval > 5000) {
           newInterval = 5000;
         }
+        setFastLoading(true);
         setLoadInterval(newInterval);
       }
     } catch (error: any) {
@@ -330,7 +333,7 @@ export const ResourceContextProvider = ({
       if (user && user.admin) {
         if (impersonatingVm) {
           console.log("Getting impersonation vm");
-          promises.push(getVM(keycloak.token, impersonatingVm));
+          promises.push(getVMById(keycloak.token, impersonatingVm));
         }
 
         if (impersonatingDeployment) {
@@ -372,6 +375,10 @@ export const ResourceContextProvider = ({
   }, [user]);
 
   useInterval(() => {
+    if (fastLoading) {
+      setFastLoading(false);
+      return;
+    }
     setLoadStart(Date.now());
     loadUser();
 

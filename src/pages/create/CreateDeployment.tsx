@@ -157,6 +157,7 @@ export default function CreateDeployment({
             setCleaned={setCleaned}
             initialValue={initialName}
             autofocus={!window.location.pathname.includes("onboarding")}
+            enableRandomize={true}
           />
         </CardContent>
       </Card>
