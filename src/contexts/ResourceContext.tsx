@@ -6,7 +6,6 @@ import { useKeycloak } from "@react-keycloak/web";
 
 // api
 import { getJob } from "../api/deploy/jobs";
-import { getVMs } from "../api/deploy/vms";
 import { getDeployment, getDeployments } from "../api/deploy/deployments";
 import { errorHandler } from "../utils/errorHandler";
 import { getUser } from "../api/deploy/users";
@@ -325,7 +324,6 @@ export const ResourceContextProvider = ({
 
     try {
       const promises = [
-        getVMs(keycloak.token),
         getDeployments(keycloak.token),
         listVMs(keycloak.token),
       ];
