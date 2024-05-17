@@ -31,7 +31,9 @@ const ZoneSelector = ({
   useEffect(
     () => {
       if (!(zones && alignment)) return;
-      const filtered = zones.filter((zone) => zone.type === alignment);
+      const filtered = zones.filter((zone) =>
+        zone.capabilities.includes(alignment)
+      );
       setFilteredZones(filtered);
 
       if (!initialLoad && filtered.length > 0) {
