@@ -25,7 +25,7 @@ const Hero = () => {
   const [gpus, setGpus] = useState(0);
 
   const getCapacities = () => {
-    fetch(import.meta.env.VITE_API_URL + "/landing/v2/capacities?n=1", {
+    fetch(import.meta.env.VITE_API_URL + "/sys/v2/capacities?n=1", {
       method: "GET",
     })
       .then((response) => response.json())
