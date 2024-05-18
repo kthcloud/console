@@ -89,11 +89,11 @@ function ReplicaDisplay({
   gapInRem?: number;
 }) {
   const baseStyle = {
-    width: `${2/amount}rem`,
+    width: `${2 / amount}rem`,
     height: `2rem`,
-    maxWidth: `${(2/amount - amount) - (gapInRem*amount-gapInRem)} rem`,
+    maxWidth: `${2 / amount - amount - (gapInRem * amount - gapInRem)} rem`,
     borderRadius: borderRadius,
-    color: "rgba(0, 0, 0, 0)"
+    color: "rgba(0, 0, 0, 0)",
   };
 
   const styles = {
@@ -133,7 +133,9 @@ function ReplicaDisplay({
                 ? firstStyles
                 : styles[status]
           }
-        >.</div>
+        >
+          .
+        </div>
       ))}
     </>
   );
