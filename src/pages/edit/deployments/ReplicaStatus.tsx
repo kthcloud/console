@@ -14,40 +14,44 @@ export enum ReplicaStatusEnum {
   UNAVAILABLE,
   WANTED,
 }
-/*
-TODO: Work on width calculation so it doesnt end up janky
-current borderRadius gets wierd once there are alot, make the border radius on an outside div or element of some sort.
- */
+
 export function ReplicaStatus({ deployment }: ReplicaProps) {
   if (deployment.replicaStatus == undefined) return <></>;
   const [expanded, setExpanded] = useState<boolean>(false);
   const theme = useTheme();
   deployment.replicaStatus.availableReplicas = 3;
-  deployment.replicaStatus.unavailableReplicas = 5;
-  deployment.replicaStatus.desiredReplicas = 10;
-  const replicas = [];
-  for (let i in Array.from({
-    length: deployment.replicaStatus.readyReplicas,
-  })) {
-    replicas.push(ReplicaStatusEnum.READY);
-  }
-  for (let i in Array.from({
-    length:
-      deployment.replicaStatus.availableReplicas -
-      deployment.replicaStatus.readyReplicas,
-  })) {
-    replicas.push(ReplicaStatusEnum.OCCUPIED);
-  }
-  for (let i in Array.from({
-    length: deployment.replicaStatus.unavailableReplicas,
-  })) {
-    replicas.push(ReplicaStatusEnum.UNAVAILABLE);
-  }
-  for (let i in Array.from({
-    length: deployment.replicaStatus.desiredReplicas - replicas.length,
-  })) {
-    replicas.push(ReplicaStatusEnum.WANTED);
-  }
+  deployment.replicaStatus.unavailableReplicas = 2;
+  deployment.replicaStatus.desiredReplicas = 7;
+  const replicas = [
+    ...Array.from(
+      { length: deployment.replicaStatus.readyReplicas },
+      () => ReplicaStatusEnum.READY
+    ),
+    ...Array.from(
+      {
+        length:
+          deployment.replicaStatus.availableReplicas -
+          deployment.replicaStatus.readyReplicas,
+      },
+      () => ReplicaStatusEnum.OCCUPIED
+    ),
+    ...Array.from(
+      {
+        length: deployment.replicaStatus.unavailableReplicas,
+      },
+      () => ReplicaStatusEnum.UNAVAILABLE
+    ),
+    ...Array.from(
+      {
+        length:
+          deployment.replicaStatus.desiredReplicas -
+          (deployment.replicaStatus.availableReplicas +
+            deployment.replicaStatus.unavailableReplicas),
+      },
+      () => ReplicaStatusEnum.WANTED
+    ),
+  ];
+
   return (
     <div style={{ position: "relative" }}>
       <Stack
@@ -120,31 +124,41 @@ function ReplicaDetails({ deployment }: { deployment: DeploymentRead }) {
     justifyContent: "space-between",
     gap: "1rem",
   };
+  const amountReady = deployment.replicaStatus.readyReplicas;
+  const amountOccupied =
+    deployment.replicaStatus.availableReplicas -
+    deployment.replicaStatus.readyReplicas;
+  const amountUnavailable = deployment.replicaStatus.unavailableReplicas;
+  const amountWanted =
+    deployment.replicaStatus.desiredReplicas -
+    (deployment.replicaStatus.unavailableReplicas +
+      deployment.replicaStatus.availableReplicas);
   return (
     <ul style={{ listStyle: "none" }}>
-      <li style={listElementStyle}>
-        <span>{t("ready") + ":"}</span>
-        <span>{deployment.replicaStatus.readyReplicas}</span>
-      </li>
-      <li style={listElementStyle}>
-        <span>{t("occupied") + ":"}</span>
-        <span>
-          {deployment.replicaStatus.availableReplicas -
-            deployment.replicaStatus.readyReplicas}
-        </span>
-      </li>
-      <li style={listElementStyle}>
-        <span>{t("unavailable") + ":"}</span>
-        <span>{deployment.replicaStatus.unavailableReplicas}</span>
-      </li>
-      <li style={listElementStyle}>
-        <span>{t("wanted") + ":"}</span>
-        <span>
-          {deployment.replicaStatus.desiredReplicas -
-            (deployment.replicaStatus.unavailableReplicas +
-              deployment.replicaStatus.availableReplicas)}
-        </span>
-      </li>
+      {amountReady > 0 && (
+        <li style={listElementStyle}>
+          <span>{t("ready") + ":"}</span>
+          <span>{amountReady}</span>
+        </li>
+      )}
+      {amountOccupied > 0 && (
+        <li style={listElementStyle}>
+          <span>{t("occupied") + ":"}</span>
+          <span>{amountOccupied}</span>
+        </li>
+      )}
+      {amountUnavailable > 0 && (
+        <li style={listElementStyle}>
+          <span>{t("unavailable") + ":"}</span>
+          <span>{amountUnavailable}</span>
+        </li>
+      )}
+      {amountWanted > 0 && (
+        <li style={listElementStyle}>
+          <span>{t("wanted") + ":"}</span>
+          <span>{amountWanted}</span>
+        </li>
+      )}
     </ul>
   );
 }
