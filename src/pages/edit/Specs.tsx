@@ -38,43 +38,83 @@ export const Specs = ({ resource }: { resource: Resource }) => {
   const MIN_RAM_DEPLOYMENT = 0.5;
   const MIN_REPLICAS = 0;
 
+  const MAX_CPU_DEPLOYMENT = 20;
+  const MAX_RAM_DEPLOYMENT = 20;
+  const MAX_REPLICAS = 20;
+
   const STEP_VM = 1;
   const MIN_CPU_VM = 1;
   const MIN_RAM_VM = 2;
 
+  const MAX_CPU_VM = 20;
+  const MAX_RAM_VM = 20;
+  
+
   const [maxCpu, setMaxCpu] = useState<number>(
-    resource.type === "vm" ? MIN_CPU_VM : MIN_CPU_DEPLOYMENT
+    resource.type === "vm" ? MAX_CPU_VM : MAX_CPU_DEPLOYMENT
   );
   const [maxRam, setMaxRam] = useState<number>(
-    resource.type === "vm" ? MIN_RAM_VM : MIN_RAM_DEPLOYMENT
+    resource.type === "vm" ? MAX_RAM_VM : MAX_RAM_DEPLOYMENT
   );
-  const [maxReplicas, setMaxReplicas] = useState<number>(MIN_REPLICAS);
+  const [maxReplicas, setMaxReplicas] = useState<number>(MAX_REPLICAS);
 
-  const [cpu, setCpu] = useState<number>(0);
-  const [ram, setRam] = useState<number>(0);
+  const getInitialCpu = () => {
+    if (resource.type === "deployment") {
+      return (resource as Deployment).cpuCores;
+    } else if (resource.type === "vm") {
+      const vm = resource as Vm;
+      if (vm.specs === undefined || vm.specs.cpuCores === undefined) return 0;
+      return vm.specs.cpuCores;
+    } else {
+      return 0;
+    }
+  };
+
+  const getInitialRam = () => {
+    if (resource.type === "deployment") {
+      return (resource as Deployment).ram;
+    } else if (resource.type === "vm") {
+      const vm = resource as Vm;
+      if (vm.specs === undefined || vm.specs.ram === undefined) return 0;
+      return vm.specs.ram;
+    } else {
+      return 0;
+    }
+  };
+
+  const [cpu, setCpu] = useState<number>(getInitialCpu()); 
+  const [ram, setRam] = useState<number>(getInitialRam());
   const [replicas, setReplicas] = useState<number>(0);
 
   const [loading, setLoading] = useState<boolean>(false);
   const [editing, setEditing] = useState<boolean>(false);
 
+  const updateSpecs = () => {
+    if (resource.type === "deployment") {
+      const d = resource as Deployment;
+      setCpu(d.cpuCores);
+      setRam(d.ram);
+      setReplicas(d.replicas);
+      return;
+    }
+    if (resource.type === "vm" && resource.specs) {
+      const v = resource as Vm;
+      resource.specs.cpuCores != undefined &&
+        setCpu(v.specs?.cpuCores ? v.specs.cpuCores : MIN_CPU_VM);
+      resource.specs.ram != undefined &&
+        setRam(v.specs?.ram ? v.specs.ram : MIN_RAM_VM);
+      return;
+    }
+  };
+
   useEffect(
     () => {
-      if (resource.type === "deployment") {
-        const d = resource as Deployment;
-        setCpu(d.cpuCores);
-        setRam(d.ram);
-        setReplicas(d.replicas);
-        return;
-      }
-      if (resource.type === "vm" && resource.specs) {
-        const v = resource as Vm;
-        resource.specs.cpuCores && setCpu(v.specs!.cpuCores!);
-        resource.specs.ram && setRam(v.specs!.ram!);
-        return;
+      if (!editing && !loading) {
+        updateSpecs();
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [resource]
   );
 
   // Cap values to max/min
