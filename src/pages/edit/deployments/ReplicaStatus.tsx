@@ -22,16 +22,25 @@ export function ReplicaStatus({ deployment }: ReplicaProps) {
   const [expanded, setExpanded] = useState<boolean>(false);
   const theme = useTheme();
   deployment.replicaStatus.availableReplicas = 3;
-  deployment.replicaStatus.unavailableReplicas = 3;
-  const amountVisible =
-    (deployment.replicaStatus.availableReplicas > 0 ? 1 : 0) +
-    (deployment.replicaStatus.availableReplicas -
-      deployment.replicaStatus.readyReplicas >
-    0
-      ? 1
-      : 0) +
-    (deployment.replicaStatus.unavailableReplicas > 0 ? 1 : 0);
-  console.log(amountVisible);
+  deployment.replicaStatus.unavailableReplicas = 5;
+  const replicas = [];
+  for (let i in Array.from({
+    length: deployment.replicaStatus.readyReplicas,
+  })) {
+    replicas.push(ReplicaStatusEnum.READY);
+  }
+  for (let i in Array.from({
+    length:
+      deployment.replicaStatus.availableReplicas -
+      deployment.replicaStatus.readyReplicas,
+  })) {
+    replicas.push(ReplicaStatusEnum.OCCUPIED);
+  }
+  for (let i in Array.from({
+    length: deployment.replicaStatus.unavailableReplicas,
+  })) {
+    replicas.push(ReplicaStatusEnum.UNAVAILABLE);
+  }
   return (
     <div style={{ position: "relative" }}>
       <Stack
@@ -50,42 +59,7 @@ export function ReplicaStatus({ deployment }: ReplicaProps) {
           gap={"0.1rem"}
           width={"6rem"}
         >
-          <ReplicaDisplay
-            amount={deployment.replicaStatus.readyReplicas}
-            status={ReplicaStatusEnum.READY}
-            isFirst={true}
-            isLast={
-              deployment.replicaStatus.unavailableReplicas === 0 &&
-              deployment.replicaStatus.availableReplicas -
-                deployment.replicaStatus.readyReplicas ===
-                0
-            }
-            width={100 / amountVisible}
-            theme={theme}
-          />
-          <ReplicaDisplay
-            amount={
-              deployment.replicaStatus.availableReplicas -
-              deployment.replicaStatus.readyReplicas
-            }
-            status={ReplicaStatusEnum.OCCUPIED}
-            isFirst={deployment.replicaStatus.readyReplicas === 0}
-            isLast={deployment.replicaStatus.unavailableReplicas === 0}
-            width={100 / amountVisible}
-            theme={theme}
-          />
-          <ReplicaDisplay
-            amount={deployment.replicaStatus.unavailableReplicas}
-            status={ReplicaStatusEnum.UNAVAILABLE}
-            isLast={true}
-            isFirst={
-              deployment.replicaStatus.availableReplicas -
-                deployment.replicaStatus.readyReplicas ===
-                0 && deployment.replicaStatus.readyReplicas === 0
-            }
-            width={100 / amountVisible}
-            theme={theme}
-          />
+          <ReplicaDisplay replicas={replicas} theme={theme} />
         </Stack>
         <ExpandButton toggle={setExpanded} expanded={expanded} />
       </Stack>
@@ -95,84 +69,6 @@ export function ReplicaStatus({ deployment }: ReplicaProps) {
         </Dropdown>
       )}
     </div>
-  );
-}
-
-function ReplicaDisplay({
-  amount,
-  status,
-  borderRadius = undefined,
-  isFirst = false,
-  isLast = false,
-  width = 100,
-  theme,
-}: {
-  amount: number;
-  status: ReplicaStatusEnum;
-  borderRadius?: string;
-  isLast?: boolean;
-  isFirst?: boolean;
-  width?: number;
-  theme?: Theme;
-}) {
-  let calcMWidth =
-    width / amount -
-    amount -
-    (amount - 1) * (0.2 / 6) -
-    (100 / width - 1) * (0.2 / 6);
-  if (calcMWidth < 0) calcMWidth = 0;
-  const baseStyle = {
-    width: "100%",
-    maxWidth: `${calcMWidth}%`,
-    height: `1rem`,
-    borderRadius: borderRadius,
-    color: "rgba(0, 0, 0, 0)",
-  };
-
-  const styles = {
-    [ReplicaStatusEnum.UNAVAILABLE]: {
-      ...baseStyle,
-      backgroundColor: theme?.palette["error"].main,
-    },
-    [ReplicaStatusEnum.READY]: {
-      ...baseStyle,
-      backgroundColor: theme?.palette["success"].main,
-    },
-    [ReplicaStatusEnum.OCCUPIED]: {
-      ...baseStyle,
-      backgroundColor: theme?.palette["info"].main,
-    },
-  };
-
-  const firstStyles = {
-    ...styles[status],
-    borderRadius: "0.5rem 0 0 0.5rem",
-  };
-
-  const lastStyles = {
-    ...styles[status],
-    borderRadius: "0 0.5rem 0.5rem 0",
-  };
-
-  return (
-    <>
-      {Array.from({ length: amount }).map((_, index) => (
-        <div
-          key={`${index}`}
-          style={
-            index === amount - 1 && isLast
-              ? index === 0 && isFirst
-                ? { ...lastStyles, borderRadius: "0.5rem" }
-                : lastStyles
-              : index === 0 && isFirst
-                ? firstStyles
-                : styles[status]
-          }
-        >
-          .
-        </div>
-      ))}
-    </>
   );
 }
 
@@ -235,5 +131,51 @@ function ReplicaDetails({ deployment }: { deployment: DeploymentRead }) {
         <span>{deployment.replicaStatus.unavailableReplicas}</span>
       </li>
     </ul>
+  );
+}
+
+function ReplicaDisplay({
+  replicas,
+  theme,
+}: {
+  replicas: ReplicaStatusEnum[];
+  theme?: Theme;
+}) {
+  const baseStyle = {
+    width: "100%",
+    height: `1rem`,
+    color: "rgba(0, 0, 0, 0)",
+  };
+
+  const styles = {
+    [ReplicaStatusEnum.UNAVAILABLE]: {
+      ...baseStyle,
+      backgroundColor: theme?.palette["error"].main,
+    },
+    [ReplicaStatusEnum.READY]: {
+      ...baseStyle,
+      backgroundColor: theme?.palette["success"].main,
+    },
+    [ReplicaStatusEnum.OCCUPIED]: {
+      ...baseStyle,
+      backgroundColor: theme?.palette["info"].main,
+    },
+  };
+
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        gap: "1%",
+        width: "100%",
+        borderRadius: "0.5rem",
+        overflow: "hidden",
+      }}
+    >
+      {replicas.map((replica, index) => (
+        <div key={`${index}`} style={styles[replica]}></div>
+      ))}
+    </div>
   );
 }
