@@ -1,20 +1,23 @@
 import { DeploymentRead } from "@kthcloud/go-deploy-types/types/v1/body";
-import { IconButton, Stack, Theme, useTheme } from "@mui/material";
-import Iconify from "../../../components/Iconify";
 import {
-  CSSProperties,
-  Dispatch,
-  ReactNode,
-  SetStateAction,
-  useState,
-} from "react";
+  Fade,
+  IconButton,
+  IconButtonProps,
+  Menu,
+  MenuItem,
+  Stack,
+  Theme,
+  useTheme,
+} from "@mui/material";
+import Iconify from "../../../components/Iconify";
+import { CSSProperties, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 export interface ReplicaProps {
   deployment: DeploymentRead;
 }
 
-export enum ReplicaStatusEnum {
+enum ReplicaStatusEnum {
   READY,
   OCCUPIED,
   UNAVAILABLE,
@@ -25,6 +28,19 @@ export function ReplicaStatus({ deployment }: ReplicaProps) {
   if (deployment.replicaStatus == undefined) return <></>;
   const [expanded, setExpanded] = useState<boolean>(false);
   const theme = useTheme();
+  const { t } = useTranslation();
+
+  const [anchorElement, setAnchorElement] = useState<null | HTMLElement>(null);
+
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorElement(event.currentTarget.parentElement);
+    setExpanded(true);
+  };
+  const handleClose = () => {
+    setExpanded(false); // shows up d
+    setAnchorElement(null);
+  };
+
   deployment.replicaStatus.availableReplicas = 3; // Todo: Change b4 PR
   const replicas = [
     ...Array.from(
@@ -56,6 +72,20 @@ export function ReplicaStatus({ deployment }: ReplicaProps) {
     ),
   ];
 
+  const amountReady = deployment.replicaStatus.readyReplicas;
+  const amountOccupied =
+    deployment.replicaStatus.availableReplicas -
+    deployment.replicaStatus.readyReplicas;
+  const amountUnavailable = deployment.replicaStatus.unavailableReplicas;
+  const amountWanted =
+    deployment.replicaStatus.desiredReplicas -
+    (deployment.replicaStatus.unavailableReplicas +
+      deployment.replicaStatus.availableReplicas);
+  const menuElementStyle = {
+    display: "flex",
+    justifyContent: "space-between",
+    gap: "1rem",
+  };
   return (
     <div style={{ position: "relative" }}>
       <Stack
@@ -66,94 +96,68 @@ export function ReplicaStatus({ deployment }: ReplicaProps) {
         useFlexGap={true}
       >
         <ReplicaDisplay replicas={replicas} theme={theme} />
-        <ExpandButton toggle={setExpanded} expanded={expanded} />
+        <ExpandReplicaStatusButton
+          id="expand-button"
+          onClick={handleClick}
+          expanded={expanded}
+        />
       </Stack>
-      {expanded && (
-        <Dropdown theme={theme}>
-          <ReplicaDetails deployment={deployment} />
-        </Dropdown>
-      )}
+      <Menu
+        MenuListProps={{
+          "aria-labelledby": "expand-button",
+        }}
+        anchorEl={anchorElement}
+        open={expanded}
+        onClose={handleClose}
+        TransitionComponent={Fade}
+      >
+        {amountReady > 0 && (
+          <MenuItem sx={menuElementStyle}>
+            <span>{t("ready") + ":"}</span>
+            <span>{amountReady}</span>
+          </MenuItem>
+        )}
+        {amountOccupied > 0 && (
+          <MenuItem sx={menuElementStyle}>
+            <span>{t("occupied") + ":"}</span>
+            <span>{amountOccupied}</span>
+          </MenuItem>
+        )}
+        {amountUnavailable > 0 && (
+          <MenuItem sx={menuElementStyle}>
+            <span>{t("unavailable") + ":"}</span>
+            <span>{amountUnavailable}</span>
+          </MenuItem>
+        )}
+        {amountWanted > 0 && (
+          <MenuItem sx={menuElementStyle}>
+            <span>{t("wanted") + ":"}</span>
+            <span>{amountWanted}</span>
+          </MenuItem>
+        )}
+      </Menu>
     </div>
   );
 }
 
-function ExpandButton({
-  toggle,
-  expanded,
-}: {
-  toggle: Dispatch<SetStateAction<boolean>>;
+export interface ExpandReplicaStatusButtonProps extends IconButtonProps {
   expanded: boolean;
-}) {
+}
+
+function ExpandReplicaStatusButton({
+  id,
+  onClick,
+  expanded,
+}: ExpandReplicaStatusButtonProps) {
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    if (onClick) {
+      onClick(e);
+    }
+  };
   return (
-    <IconButton onClick={() => toggle(!expanded)}>
+    <IconButton id={id} onClick={handleClick}>
       <Iconify icon={expanded ? "mdi-chevron-up" : "mdi-chevron-down"} />
     </IconButton>
-  );
-}
-
-function Dropdown({ children, theme }: { children: ReactNode; theme: Theme }) {
-  return (
-    <div
-      style={{
-        position: "absolute",
-        top: "100%",
-        left: 0,
-        width: "100%",
-        backgroundColor: theme.palette["background"].default,
-        borderRadius: "0.5rem",
-        padding: "0.5rem",
-        zIndex: "1",
-      }}
-    >
-      {children}
-    </div>
-  );
-}
-
-function ReplicaDetails({ deployment }: { deployment: DeploymentRead }) {
-  if (deployment.replicaStatus == undefined) return <></>;
-  const { t } = useTranslation();
-  const listElementStyle = {
-    display: "flex",
-    justifyContent: "space-between",
-    gap: "1rem",
-  };
-  const amountReady = deployment.replicaStatus.readyReplicas;
-  const amountOccupied =
-    deployment.replicaStatus.availableReplicas -
-    deployment.replicaStatus.readyReplicas;
-  const amountUnavailable = deployment.replicaStatus.unavailableReplicas;
-  const amountWanted =
-    deployment.replicaStatus.desiredReplicas -
-    (deployment.replicaStatus.unavailableReplicas +
-      deployment.replicaStatus.availableReplicas);
-  return (
-    <ul style={{ listStyle: "none" }}>
-      {amountReady > 0 && (
-        <li style={listElementStyle}>
-          <span>{t("ready") + ":"}</span>
-          <span>{amountReady}</span>
-        </li>
-      )}
-      {amountOccupied > 0 && (
-        <li style={listElementStyle}>
-          <span>{t("occupied") + ":"}</span>
-          <span>{amountOccupied}</span>
-        </li>
-      )}
-      {amountUnavailable > 0 && (
-        <li style={listElementStyle}>
-          <span>{t("unavailable") + ":"}</span>
-          <span>{amountUnavailable}</span>
-        </li>
-      )}
-      {amountWanted > 0 && (
-        <li style={listElementStyle}>
-          <span>{t("wanted") + ":"}</span>
-          <span>{amountWanted}</span>
-        </li>
-      )}
-    </ul>
   );
 }
 
@@ -210,9 +214,11 @@ function ReplicaDisplay({
     >
       <div style={style}>
         {replicas.map((replica, index) => (
-          <div key={`${index}`} style={styles[replica]}></div>
+          <div key={index} style={styles[replica]}></div>
         ))}
       </div>
     </Stack>
   );
 }
+
+export default ReplicaStatus;
