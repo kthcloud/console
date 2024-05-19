@@ -1,5 +1,5 @@
 import { DeploymentRead } from "@kthcloud/go-deploy-types/types/v1/body";
-import { IconButton, Stack } from "@mui/material";
+import { IconButton, Stack, Theme, useTheme } from "@mui/material";
 import Iconify from "../../../components/Iconify";
 import { Dispatch, ReactNode, SetStateAction, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -13,12 +13,25 @@ export enum ReplicaStatusEnum {
   OCCUPIED,
   UNAVAILABLE,
 }
-
+/*
+TODO: Work on width calculation so it doesnt end up janky
+current borderRadius gets wierd once there are alot, make the border radius on an outside div or element of some sort.
+ */
 export function ReplicaStatus({ deployment }: ReplicaProps) {
   if (deployment.replicaStatus == undefined) return <></>;
   const [expanded, setExpanded] = useState<boolean>(false);
-  deployment.replicaStatus.availableReplicas = 2;
-  deployment.replicaStatus.unavailableReplicas = 2;
+  const theme = useTheme();
+  deployment.replicaStatus.availableReplicas = 3;
+  deployment.replicaStatus.unavailableReplicas = 3;
+  const amountVisible =
+    (deployment.replicaStatus.availableReplicas > 0 ? 1 : 0) +
+    (deployment.replicaStatus.availableReplicas -
+      deployment.replicaStatus.readyReplicas >
+    0
+      ? 1
+      : 0) +
+    (deployment.replicaStatus.unavailableReplicas > 0 ? 1 : 0);
+  console.log(amountVisible);
   return (
     <div style={{ position: "relative" }}>
       <Stack
@@ -27,45 +40,57 @@ export function ReplicaStatus({ deployment }: ReplicaProps) {
         alignItems={"center"}
         spacing={deployment.replicas}
         useFlexGap={true}
-        gap={"0.2rem"}
       >
-        <ReplicaDisplay
-          amount={deployment.replicaStatus.readyReplicas}
-          status={ReplicaStatusEnum.READY}
-          isFirst={true}
-          isLast={
-            deployment.replicaStatus.unavailableReplicas === 0 &&
-            deployment.replicaStatus.availableReplicas -
-              deployment.replicaStatus.readyReplicas ===
-              0
-          }
-          gapInRem={0.2}
-        />
-        <ReplicaDisplay
-          amount={
-            deployment.replicaStatus.availableReplicas -
-            deployment.replicaStatus.readyReplicas
-          }
-          status={ReplicaStatusEnum.OCCUPIED}
-          isFirst={deployment.replicaStatus.readyReplicas === 0}
-          isLast={deployment.replicaStatus.unavailableReplicas === 0}
-          gapInRem={0.2}
-        />
-        <ReplicaDisplay
-          amount={deployment.replicaStatus.unavailableReplicas}
-          status={ReplicaStatusEnum.UNAVAILABLE}
-          isLast={true}
-          isFirst={
-            deployment.replicaStatus.availableReplicas -
-              deployment.replicaStatus.readyReplicas ===
-              0 && deployment.replicaStatus.readyReplicas === 0
-          }
-          gapInRem={0.2}
-        />
+        <Stack
+          direction="row"
+          flexWrap={"wrap"}
+          alignItems={"center"}
+          spacing={deployment.replicas}
+          useFlexGap={true}
+          gap={"0.1rem"}
+          width={"6rem"}
+        >
+          <ReplicaDisplay
+            amount={deployment.replicaStatus.readyReplicas}
+            status={ReplicaStatusEnum.READY}
+            isFirst={true}
+            isLast={
+              deployment.replicaStatus.unavailableReplicas === 0 &&
+              deployment.replicaStatus.availableReplicas -
+                deployment.replicaStatus.readyReplicas ===
+                0
+            }
+            width={100 / amountVisible}
+            theme={theme}
+          />
+          <ReplicaDisplay
+            amount={
+              deployment.replicaStatus.availableReplicas -
+              deployment.replicaStatus.readyReplicas
+            }
+            status={ReplicaStatusEnum.OCCUPIED}
+            isFirst={deployment.replicaStatus.readyReplicas === 0}
+            isLast={deployment.replicaStatus.unavailableReplicas === 0}
+            width={100 / amountVisible}
+            theme={theme}
+          />
+          <ReplicaDisplay
+            amount={deployment.replicaStatus.unavailableReplicas}
+            status={ReplicaStatusEnum.UNAVAILABLE}
+            isLast={true}
+            isFirst={
+              deployment.replicaStatus.availableReplicas -
+                deployment.replicaStatus.readyReplicas ===
+                0 && deployment.replicaStatus.readyReplicas === 0
+            }
+            width={100 / amountVisible}
+            theme={theme}
+          />
+        </Stack>
         <ExpandButton toggle={setExpanded} expanded={expanded} />
       </Stack>
       {expanded && (
-        <Dropdown>
+        <Dropdown theme={theme}>
           <ReplicaDetails deployment={deployment} />
         </Dropdown>
       )}
@@ -79,19 +104,27 @@ function ReplicaDisplay({
   borderRadius = undefined,
   isFirst = false,
   isLast = false,
-  gapInRem = 0.5,
+  width = 100,
+  theme,
 }: {
   amount: number;
   status: ReplicaStatusEnum;
   borderRadius?: string;
   isLast?: boolean;
   isFirst?: boolean;
-  gapInRem?: number;
+  width?: number;
+  theme?: Theme;
 }) {
+  let calcMWidth =
+    width / amount -
+    amount -
+    (amount - 1) * (0.2 / 6) -
+    (100 / width - 1) * (0.2 / 6);
+  if (calcMWidth < 0) calcMWidth = 0;
   const baseStyle = {
-    width: `${2 / amount}rem`,
-    height: `2rem`,
-    maxWidth: `${2 / amount - amount - (gapInRem * amount - gapInRem)} rem`,
+    width: "100%",
+    maxWidth: `${calcMWidth}%`,
+    height: `1rem`,
     borderRadius: borderRadius,
     color: "rgba(0, 0, 0, 0)",
   };
@@ -99,15 +132,15 @@ function ReplicaDisplay({
   const styles = {
     [ReplicaStatusEnum.UNAVAILABLE]: {
       ...baseStyle,
-      backgroundColor: "red",
+      backgroundColor: theme?.palette["error"].main,
     },
     [ReplicaStatusEnum.READY]: {
       ...baseStyle,
-      backgroundColor: "green",
+      backgroundColor: theme?.palette["success"].main,
     },
     [ReplicaStatusEnum.OCCUPIED]: {
       ...baseStyle,
-      backgroundColor: "blue",
+      backgroundColor: theme?.palette["info"].main,
     },
   };
 
@@ -128,7 +161,9 @@ function ReplicaDisplay({
           key={`${index}`}
           style={
             index === amount - 1 && isLast
-              ? lastStyles
+              ? index === 0 && isFirst
+                ? { ...lastStyles, borderRadius: "0.5rem" }
+                : lastStyles
               : index === 0 && isFirst
                 ? firstStyles
                 : styles[status]
@@ -155,7 +190,7 @@ function ExpandButton({
   );
 }
 
-function Dropdown({ children }: { children: ReactNode }) {
+function Dropdown({ children, theme }: { children: ReactNode; theme: Theme }) {
   return (
     <div
       style={{
@@ -163,7 +198,7 @@ function Dropdown({ children }: { children: ReactNode }) {
         top: "100%",
         left: 0,
         width: "100%",
-        backgroundColor: "rgba(0, 0, 0, 0.5",
+        backgroundColor: theme.palette["background"].default,
         borderRadius: "0.5rem",
         padding: "0.5rem",
         zIndex: "1",
