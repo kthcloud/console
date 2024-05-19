@@ -521,6 +521,7 @@
         "per-replica": "per kopia",
         "ready": "Redo",
         "occupied": "Upptagna",
-        "unavailable": "Otillgängliga"
+        "unavailable": "Otillgängliga",
+        "wanted": "Önskade"
     }
 }

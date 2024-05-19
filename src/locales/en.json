@@ -522,6 +522,7 @@
         "per-replica": "per replica",
         "ready": "Ready",
         "occupied": "Occupied",
-        "unavailable": "Unavailable"
+        "unavailable": "Unavailable",
+        "wanted": "Wanted"
     }
 }

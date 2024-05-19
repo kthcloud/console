@@ -12,6 +12,7 @@ export enum ReplicaStatusEnum {
   READY,
   OCCUPIED,
   UNAVAILABLE,
+  WANTED,
 }
 /*
 TODO: Work on width calculation so it doesnt end up janky
@@ -23,6 +24,7 @@ export function ReplicaStatus({ deployment }: ReplicaProps) {
   const theme = useTheme();
   deployment.replicaStatus.availableReplicas = 3;
   deployment.replicaStatus.unavailableReplicas = 5;
+  deployment.replicaStatus.desiredReplicas = 10;
   const replicas = [];
   for (let i in Array.from({
     length: deployment.replicaStatus.readyReplicas,
@@ -40,6 +42,11 @@ export function ReplicaStatus({ deployment }: ReplicaProps) {
     length: deployment.replicaStatus.unavailableReplicas,
   })) {
     replicas.push(ReplicaStatusEnum.UNAVAILABLE);
+  }
+  for (let i in Array.from({
+    length: deployment.replicaStatus.desiredReplicas - replicas.length,
+  })) {
+    replicas.push(ReplicaStatusEnum.WANTED);
   }
   return (
     <div style={{ position: "relative" }}>
@@ -130,6 +137,14 @@ function ReplicaDetails({ deployment }: { deployment: DeploymentRead }) {
         <span>{t("unavailable") + ":"}</span>
         <span>{deployment.replicaStatus.unavailableReplicas}</span>
       </li>
+      <li style={listElementStyle}>
+        <span>{t("wanted") + ":"}</span>
+        <span>
+          {deployment.replicaStatus.desiredReplicas -
+            (deployment.replicaStatus.unavailableReplicas +
+              deployment.replicaStatus.availableReplicas)}
+        </span>
+      </li>
     </ul>
   );
 }
@@ -159,6 +174,10 @@ function ReplicaDisplay({
     [ReplicaStatusEnum.OCCUPIED]: {
       ...baseStyle,
       backgroundColor: theme?.palette["info"].main,
+    },
+    [ReplicaStatusEnum.WANTED]: {
+      ...baseStyle,
+      backgroundColor: theme?.palette.grey[800],
     },
   };
 
