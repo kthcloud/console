@@ -48,7 +48,6 @@ export const Specs = ({ resource }: { resource: Resource }) => {
 
   const MAX_CPU_VM = 20;
   const MAX_RAM_VM = 20;
-  
 
   const [maxCpu, setMaxCpu] = useState<number>(
     resource.type === "vm" ? MAX_CPU_VM : MAX_CPU_DEPLOYMENT
@@ -82,7 +81,7 @@ export const Specs = ({ resource }: { resource: Resource }) => {
     }
   };
 
-  const [cpu, setCpu] = useState<number>(getInitialCpu()); 
+  const [cpu, setCpu] = useState<number>(getInitialCpu());
   const [ram, setRam] = useState<number>(getInitialRam());
   const [replicas, setReplicas] = useState<number>(0);
 
