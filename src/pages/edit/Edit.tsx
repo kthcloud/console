@@ -318,7 +318,7 @@ export function Edit() {
 
                 {resource.type === "deployment" && (
                   <>
-                    {resource.replicas > 1 && ( // Todo: change to 1 b4 PR
+                    {resource.replicas > 1 && (
                       <ReplicaStatus deployment={resource as Deployment} />
                     )}
                     <DeploymentCommands deployment={resource as Deployment} />
