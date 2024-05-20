@@ -37,11 +37,10 @@ export function ReplicaStatus({ deployment }: ReplicaProps) {
     setExpanded(true);
   };
   const handleClose = () => {
-    setExpanded(false); // shows up d
+    setExpanded(false);
     setAnchorElement(null);
   };
 
-  //deployment.replicaStatus.availableReplicas = 3; // Todo: Change b4 PR
   const replicas = [
     ...Array.from(
       { length: deployment.replicaStatus.readyReplicas },
@@ -85,7 +84,7 @@ export function ReplicaStatus({ deployment }: ReplicaProps) {
     display: "flex",
     justifyContent: "space-between",
     gap: "1rem",
-    width: "inherit"
+    width: "inherit",
   };
   return (
     <div style={{ position: "relative" }}>
@@ -109,18 +108,18 @@ export function ReplicaStatus({ deployment }: ReplicaProps) {
         }}
         anchorEl={anchorElement}
         anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'right',
+          vertical: "bottom",
+          horizontal: "right",
         }}
         transformOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
+          vertical: "top",
+          horizontal: "right",
         }}
         open={expanded}
         onClose={handleClose}
         TransitionComponent={Fade}
         disableScrollLock={true}
-        sx={{zIndex:1}}
+        sx={{ zIndex: 1 }}
       >
         {amountReady > 0 && (
           <MenuItem sx={menuElementStyle}>
