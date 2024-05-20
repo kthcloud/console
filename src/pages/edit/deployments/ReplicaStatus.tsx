@@ -21,7 +21,7 @@ enum ReplicaStatusEnum {
   READY,
   OCCUPIED,
   UNAVAILABLE,
-  WANTED,
+  DESIRED,
 }
 
 export function ReplicaStatus({ deployment }: ReplicaProps) {
@@ -33,7 +33,7 @@ export function ReplicaStatus({ deployment }: ReplicaProps) {
   const [anchorElement, setAnchorElement] = useState<null | HTMLElement>(null);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElement(event.currentTarget.parentElement);
+    setAnchorElement(event.currentTarget);
     setExpanded(true);
   };
   const handleClose = () => {
@@ -41,7 +41,7 @@ export function ReplicaStatus({ deployment }: ReplicaProps) {
     setAnchorElement(null);
   };
 
-  deployment.replicaStatus.availableReplicas = 3; // Todo: Change b4 PR
+  //deployment.replicaStatus.availableReplicas = 3; // Todo: Change b4 PR
   const replicas = [
     ...Array.from(
       { length: deployment.replicaStatus.readyReplicas },
@@ -68,7 +68,7 @@ export function ReplicaStatus({ deployment }: ReplicaProps) {
           (deployment.replicaStatus.availableReplicas +
             deployment.replicaStatus.unavailableReplicas),
       },
-      () => ReplicaStatusEnum.WANTED
+      () => ReplicaStatusEnum.DESIRED
     ),
   ];
 
@@ -77,7 +77,7 @@ export function ReplicaStatus({ deployment }: ReplicaProps) {
     deployment.replicaStatus.availableReplicas -
     deployment.replicaStatus.readyReplicas;
   const amountUnavailable = deployment.replicaStatus.unavailableReplicas;
-  const amountWanted =
+  const amountDesired =
     deployment.replicaStatus.desiredReplicas -
     (deployment.replicaStatus.unavailableReplicas +
       deployment.replicaStatus.availableReplicas);
@@ -85,6 +85,7 @@ export function ReplicaStatus({ deployment }: ReplicaProps) {
     display: "flex",
     justifyContent: "space-between",
     gap: "1rem",
+    width: "inherit"
   };
   return (
     <div style={{ position: "relative" }}>
@@ -107,9 +108,19 @@ export function ReplicaStatus({ deployment }: ReplicaProps) {
           "aria-labelledby": "expand-button",
         }}
         anchorEl={anchorElement}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
         open={expanded}
         onClose={handleClose}
         TransitionComponent={Fade}
+        disableScrollLock={true}
+        sx={{zIndex:1}}
       >
         {amountReady > 0 && (
           <MenuItem sx={menuElementStyle}>
@@ -129,10 +140,10 @@ export function ReplicaStatus({ deployment }: ReplicaProps) {
             <span>{amountUnavailable}</span>
           </MenuItem>
         )}
-        {amountWanted > 0 && (
+        {amountDesired > 0 && (
           <MenuItem sx={menuElementStyle}>
-            <span>{t("wanted") + ":"}</span>
-            <span>{amountWanted}</span>
+            <span>{t("desired") + ":"}</span>
+            <span>{amountDesired}</span>
           </MenuItem>
         )}
       </Menu>
@@ -149,13 +160,8 @@ function ExpandReplicaStatusButton({
   onClick,
   expanded,
 }: ExpandReplicaStatusButtonProps) {
-  const handleClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    if (onClick) {
-      onClick(e);
-    }
-  };
   return (
-    <IconButton id={id} onClick={handleClick}>
+    <IconButton id={id} onClick={onClick}>
       <Iconify icon={expanded ? "mdi-chevron-up" : "mdi-chevron-down"} />
     </IconButton>
   );
@@ -187,7 +193,7 @@ function ReplicaDisplay({
       ...baseStyle,
       backgroundColor: theme.palette["info"].main,
     },
-    [ReplicaStatusEnum.WANTED]: {
+    [ReplicaStatusEnum.DESIRED]: {
       ...baseStyle,
       backgroundColor: theme.palette.grey[800],
     },
@@ -196,7 +202,7 @@ function ReplicaDisplay({
   const style: CSSProperties = {
     display: "flex",
     flexDirection: "row",
-    gap: "1%",
+    gap: "max(2px, 1%)",
     width: "100%",
     borderRadius: "0.5rem",
     overflow: "hidden",

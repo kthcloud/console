@@ -523,6 +523,6 @@
         "ready": "Ready",
         "occupied": "Occupied",
         "unavailable": "Unavailable",
-        "wanted": "Wanted"
+        "desired": "Desired"
     }
 }

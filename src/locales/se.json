@@ -522,6 +522,6 @@
         "ready": "Redo",
         "occupied": "Upptagna",
         "unavailable": "Otillgängliga",
-        "wanted": "Önskade"
+        "desired": "Önskade"
     }
 }
