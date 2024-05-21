@@ -117,9 +117,9 @@ export function ReplicaStatus({ deployment }: ReplicaProps) {
         <Typography
           sx={{
             ...menuElementStyle,
-            borderBottom: `1px dashed ${theme.palette.text.primary}`,
+            borderBottom: `1px dashed ${theme.palette.grey[300]}`,
             paddingBottom: "0.2rem",
-            marginBottom: "0.5rem",
+            marginBottom: "0.7rem",
           }}
         >
           {t("replica-status")}
