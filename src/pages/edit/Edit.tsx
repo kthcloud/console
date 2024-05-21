@@ -46,6 +46,7 @@ import { Job, Resource, Deployment, Vm } from "../../types";
 import { Volume } from "@kthcloud/go-deploy-types/types/v1/body";
 import { AlertList } from "../../components/AlertList";
 import { Specs } from "./Specs";
+import { ReplicaStatus } from "./deployments/ReplicaStatus";
 
 export function Edit() {
   const { t } = useTranslation();
@@ -316,7 +317,12 @@ export function Edit() {
                 <div style={{ flexGrow: "1" }} />
 
                 {resource.type === "deployment" && (
-                  <DeploymentCommands deployment={resource as Deployment} />
+                  <>
+                    {resource.replicas > 1 && (
+                      <ReplicaStatus deployment={resource as Deployment} />
+                    )}
+                    <DeploymentCommands deployment={resource as Deployment} />
+                  </>
                 )}
 
                 {resource.type === "vm" && <VMCommands vm={resource as Vm} />}
