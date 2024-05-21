@@ -523,6 +523,10 @@
         "occupied": "Upptagna",
         "unavailable": "Otillgängliga",
         "desired": "Önskade",
-        "replica-status": "Status på kopior"
+        "replica-status": "Status på kopior",
+        "copy-user-id": "Användar ID",
+        "error-copying-user-id": "Kunde inte kopiera användar ID",
+        "copied-user-id": "Kopierade användar ID",
+        "error-copying-user-id-user-is-null": "Kunde inte kopiera användar ID eftersom användaren är null"
     }
 }
