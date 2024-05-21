@@ -4,15 +4,14 @@ import {
   IconButton,
   IconButtonProps,
   Menu,
-  MenuItem,
   Stack,
   Theme,
+  Typography,
   useTheme,
 } from "@mui/material";
 import Iconify from "../../../components/Iconify";
 import { CSSProperties, useState } from "react";
 import { useTranslation } from "react-i18next";
-
 export interface ReplicaProps {
   deployment: DeploymentRead;
 }
@@ -41,36 +40,6 @@ export function ReplicaStatus({ deployment }: ReplicaProps) {
     setAnchorElement(null);
   };
 
-  const replicas = [
-    ...Array.from(
-      { length: deployment.replicaStatus.readyReplicas },
-      () => ReplicaStatusEnum.READY
-    ),
-    ...Array.from(
-      {
-        length:
-          deployment.replicaStatus.availableReplicas -
-          deployment.replicaStatus.readyReplicas,
-      },
-      () => ReplicaStatusEnum.OCCUPIED
-    ),
-    ...Array.from(
-      {
-        length: deployment.replicaStatus.unavailableReplicas,
-      },
-      () => ReplicaStatusEnum.UNAVAILABLE
-    ),
-    ...Array.from(
-      {
-        length:
-          deployment.replicaStatus.desiredReplicas -
-          (deployment.replicaStatus.availableReplicas +
-            deployment.replicaStatus.unavailableReplicas),
-      },
-      () => ReplicaStatusEnum.DESIRED
-    ),
-  ];
-
   const amountReady = deployment.replicaStatus.readyReplicas;
   const amountOccupied =
     deployment.replicaStatus.availableReplicas -
@@ -80,11 +49,35 @@ export function ReplicaStatus({ deployment }: ReplicaProps) {
     deployment.replicaStatus.desiredReplicas -
     (deployment.replicaStatus.unavailableReplicas +
       deployment.replicaStatus.availableReplicas);
+
+  const replicas = [
+    ...Array.from({ length: amountReady }, () => ReplicaStatusEnum.READY),
+    ...Array.from(
+      {
+        length: amountOccupied,
+      },
+      () => ReplicaStatusEnum.OCCUPIED
+    ),
+    ...Array.from(
+      {
+        length: amountUnavailable,
+      },
+      () => ReplicaStatusEnum.UNAVAILABLE
+    ),
+    ...Array.from(
+      {
+        length: amountDesired,
+      },
+      () => ReplicaStatusEnum.DESIRED
+    ),
+  ];
+
   const menuElementStyle = {
     display: "flex",
     justifyContent: "space-between",
     gap: "1rem",
     width: "inherit",
+    padding: "0 0.7rem 0 0.7rem",
   };
   return (
     <div style={{ position: "relative" }}>
@@ -92,7 +85,7 @@ export function ReplicaStatus({ deployment }: ReplicaProps) {
         direction="row"
         flexWrap={"wrap"}
         alignItems={"center"}
-        spacing={3}
+        spacing={1}
         useFlexGap={true}
       >
         <ReplicaDisplay replicas={replicas} theme={theme} />
@@ -121,29 +114,39 @@ export function ReplicaStatus({ deployment }: ReplicaProps) {
         disableScrollLock={true}
         sx={{ zIndex: 1 }}
       >
+        <Typography
+          sx={{
+            ...menuElementStyle,
+            borderBottom: `1px dashed ${theme.palette.text.primary}`,
+            paddingBottom: "0.2rem",
+            marginBottom: "0.5rem",
+          }}
+        >
+          {t("replica-status")}
+        </Typography>
         {amountReady > 0 && (
-          <MenuItem sx={menuElementStyle}>
+          <Typography style={menuElementStyle}>
             <span>{t("ready") + ":"}</span>
             <span>{amountReady}</span>
-          </MenuItem>
+          </Typography>
         )}
         {amountOccupied > 0 && (
-          <MenuItem sx={menuElementStyle}>
+          <Typography sx={menuElementStyle}>
             <span>{t("occupied") + ":"}</span>
             <span>{amountOccupied}</span>
-          </MenuItem>
+          </Typography>
         )}
         {amountUnavailable > 0 && (
-          <MenuItem sx={menuElementStyle}>
+          <Typography sx={menuElementStyle}>
             <span>{t("unavailable") + ":"}</span>
             <span>{amountUnavailable}</span>
-          </MenuItem>
+          </Typography>
         )}
         {amountDesired > 0 && (
-          <MenuItem sx={menuElementStyle}>
+          <Typography sx={menuElementStyle}>
             <span>{t("desired") + ":"}</span>
             <span>{amountDesired}</span>
-          </MenuItem>
+          </Typography>
         )}
       </Menu>
     </div>
@@ -160,7 +163,7 @@ function ExpandReplicaStatusButton({
   expanded,
 }: ExpandReplicaStatusButtonProps) {
   return (
-    <IconButton id={id} onClick={onClick}>
+    <IconButton id={id} onClick={onClick} size="small">
       <Iconify icon={expanded ? "mdi-chevron-up" : "mdi-chevron-down"} />
     </IconButton>
   );
@@ -201,7 +204,7 @@ function ReplicaDisplay({
   const style: CSSProperties = {
     display: "flex",
     flexDirection: "row",
-    gap: "max(2px, 1%)",
+    gap: replicas.length < 20 ? "max(2px, 1%)" : "0",
     width: "100%",
     borderRadius: "0.5rem",
     overflow: "hidden",

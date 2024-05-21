@@ -522,6 +522,7 @@
         "ready": "Redo",
         "occupied": "Upptagna",
         "unavailable": "Otillgängliga",
-        "desired": "Önskade"
+        "desired": "Önskade",
+        "replica-status": "Status på kopior"
     }
 }

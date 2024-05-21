@@ -523,6 +523,7 @@
         "ready": "Ready",
         "occupied": "Occupied",
         "unavailable": "Unavailable",
-        "desired": "Desired"
+        "desired": "Desired",
+        "replica-status": "Replica status"
     }
 }
