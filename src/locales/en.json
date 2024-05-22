@@ -524,6 +524,10 @@
         "occupied": "Occupied",
         "unavailable": "Unavailable",
         "desired": "Desired",
-        "replica-status": "Replica status"
+        "replica-status": "Replica status",
+        "copy-user-id": "User ID",
+        "error-copying-user-id": "Could not copy user ID",
+        "copied-user-id": "Copied user ID",
+        "error-copying-user-id-user-is-null": "Could not copy user ID from user since user is null"
     }
 }

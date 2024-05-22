@@ -267,6 +267,12 @@ export function Profile() {
                         {t("security-details")}
                       </Button>
 
+                      <CopyButton
+                        content={user.id}
+                        textContent={t("copy-user-id")}
+                        variant="text"
+                      />
+
                       <div style={{ flexGrow: "1" }} />
                     </Stack>
                   </Stack>
