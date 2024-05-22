@@ -158,35 +158,6 @@ export function Profile() {
     reader.readAsText(path[0]);
   };
 
-  const [copyIcon, setCopyIcon] = useState<string>("ic:round-content-copy");
-
-  const copyUserIDToClipBoard = () => {
-    if (user === null) {
-      enqueueSnackbar(t("error-copying-user-id-user-is-null"), {
-        variant: "error",
-      });
-      return;
-    }
-    navigator.clipboard
-      .writeText(user?.id)
-      .then(() => {
-        setCopyIcon("ic:round-check");
-        setTimeout(() => {
-          setCopyIcon("ic:round-content-copy");
-        }, 1500);
-      })
-      .then(() => {
-        enqueueSnackbar(t("copied-user-id"), {
-          variant: "success",
-        });
-      })
-      .catch((error) => {
-        enqueueSnackbar(t("error-copying-user-id") + ", " + error, {
-          variant: "error",
-        });
-      });
-  };
-
   return (
     <>
       {!user ? (
@@ -296,12 +267,11 @@ export function Profile() {
                         {t("security-details")}
                       </Button>
 
-                      <Button
-                        startIcon={<Iconify icon={copyIcon} />}
-                        onClick={copyUserIDToClipBoard}
-                      >
-                        {t("copy-user-id")}
-                      </Button>
+                      <CopyButton
+                        content={user.id}
+                        textContent={t("copy-user-id")}
+                        variant="text"
+                      />
 
                       <div style={{ flexGrow: "1" }} />
                     </Stack>

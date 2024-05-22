@@ -7,16 +7,21 @@ import { useTranslation } from "react-i18next";
 const CopyButton = ({
   content,
   variant = "icon",
+  textContent,
 }: {
   content: string;
   variant?: string;
+  textContent?: string;
 }) => {
   const [tooltipLabel, setTooltipLabel] = useState("copy-to-clipboard");
+  const [icon, setIcon] = useState<string>("ic:round-content-copy");
   const { t } = useTranslation();
 
   const handleCopy = () => {
+    setIcon("ic:round-check");
     setTooltipLabel("copied");
     setTimeout(() => {
+      setIcon("ic:round-content-copy");
       setTooltipLabel("copy-to-clipboard");
     }, 2000);
   };
@@ -26,7 +31,7 @@ const CopyButton = ({
       <Tooltip enterTouchDelay={10} title={t(tooltipLabel)}>
         {variant === "icon" ? (
           <IconButton>
-            <Iconify icon={"ic:round-content-copy"} width={24} height={24} />
+            <Iconify icon={icon} width={24} height={24} />
           </IconButton>
         ) : (
           <Button
@@ -37,11 +42,9 @@ const CopyButton = ({
                 ? variant
                 : "text"
             }
-            startIcon={
-              <Iconify icon={"material-symbols:content-copy-outline"} />
-            }
+            startIcon={<Iconify icon={icon} />}
           >
-            {t("copy")}
+            {textContent ? textContent : t("copy")}
           </Button>
         )}
       </Tooltip>
