@@ -102,7 +102,7 @@ export const GPUManager = ({ vm }: { vm: Vm }) => {
                     {t("gpu-drivers-3")}
 
                     <Link
-                      href="https://help.ubuntu.com/community/NvidiaDriversInstallation"
+                      href="https://docs.cloud.cbh.kth.se/usage/virtualMachines/#attach-a-gpu"
                       target="_blank"
                       rel="noreferrer"
                       ml={1}
