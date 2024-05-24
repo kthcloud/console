@@ -518,6 +518,15 @@
         "gpu-zone-subheader": "Det här grafikkortet finns i flera zoner. Välj samma zon som virtuella maskinen du vill installera grafikkortet på.",
         "select-vm-gpu": "Välj en virtuell maskin att installera grafikkortet på.",
         "replica-quota": "Ökning av kopior kommer att multiplicera CPU- och RAM-användningen för denna deployment.",
-        "per-replica": "per kopia"
+        "per-replica": "per kopia",
+        "ready": "Redo",
+        "occupied": "Upptagna",
+        "unavailable": "Otillgängliga",
+        "desired": "Önskade",
+        "replica-status": "Status på kopior",
+        "copy-user-id": "Användar ID",
+        "error-copying-user-id": "Kunde inte kopiera användar ID",
+        "copied-user-id": "Kopierade användar ID",
+        "error-copying-user-id-user-is-null": "Kunde inte kopiera användar ID eftersom användaren är null"
     }
 }

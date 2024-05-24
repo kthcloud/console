@@ -6,6 +6,7 @@ on:
   workflow_dispatch:
 jobs:
   kthcloud-ci-beta:
+    if: github.repository_owner == 'kthcloud'
     runs-on: ubuntu-latest
     steps:
       - name: Set release env

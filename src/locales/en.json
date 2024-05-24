@@ -519,6 +519,15 @@
         "gpu-zone-subheader": "This GPU is available in the following zones, choose the same zone as your desired VM destination.",
         "select-vm-gpu": "Select a VM to attach this GPU to.",
         "replica-quota": "Increasing replicas will multiply the CPU and RAM usage of this deployment.",
-        "per-replica": "per replica"
+        "per-replica": "per replica",
+        "ready": "Ready",
+        "occupied": "Occupied",
+        "unavailable": "Unavailable",
+        "desired": "Desired",
+        "replica-status": "Replica status",
+        "copy-user-id": "User ID",
+        "error-copying-user-id": "Could not copy user ID",
+        "copied-user-id": "Copied user ID",
+        "error-copying-user-id-user-is-null": "Could not copy user ID from user since user is null"
     }
 }
