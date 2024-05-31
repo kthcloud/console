@@ -26,7 +26,6 @@ import {
   markNotificationAsRead,
 } from "../../api/deploy/notifications";
 import { joinTeam } from "../../api/deploy/teams";
-import { acceptVmTransfer } from "../../api/deploy/vms";
 import Iconify from "../../components/Iconify";
 import JobList from "../../components/JobList";
 import LoadingPage from "../../components/LoadingPage";
@@ -62,12 +61,6 @@ const Inbox = () => {
         );
       } else if (notification.type === "deploymentTransfer") {
         await acceptDeploymentTransfer(
-          keycloak.token,
-          notification.content.id,
-          notification.content.code
-        );
-      } else if (notification.type === "vmTransfer") {
-        await acceptVmTransfer(
           keycloak.token,
           notification.content.id,
           notification.content.code

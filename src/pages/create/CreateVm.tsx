@@ -18,7 +18,7 @@ import { useEffect, useState } from "react";
 
 import { useKeycloak } from "@react-keycloak/web";
 import { useSnackbar } from "notistack";
-import { createVM } from "../../api/deploy/v2/vms";
+import { createVM } from "../../api/deploy/vms";
 import { Link } from "react-router-dom";
 import RFC1035Input from "../../components/RFC1035Input";
 import { faker } from "@faker-js/faker";

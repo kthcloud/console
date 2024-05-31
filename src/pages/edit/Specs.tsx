@@ -23,7 +23,7 @@ import { useKeycloak } from "@react-keycloak/web";
 import { updateDeployment } from "../../api/deploy/deployments";
 import { enqueueSnackbar } from "notistack";
 import { errorHandler } from "../../utils/errorHandler";
-import { updateVM } from "../../api/deploy/v2/vms";
+import { updateVM } from "../../api/deploy/vms";
 import { LoadingButton } from "@mui/lab";
 
 export const Specs = ({ resource }: { resource: Resource }) => {

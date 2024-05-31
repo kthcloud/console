@@ -44,7 +44,7 @@ import { errorHandler } from "../../utils/errorHandler";
 import { useTranslation } from "react-i18next";
 import { Deployment, Resource, Uuid, Vm } from "../../types";
 import { ThemeColor } from "../../theme/types";
-import { deleteVM } from "../../api/deploy/v2/vms";
+import { deleteVM } from "../../api/deploy/vms";
 import { AlertList } from "../../components/AlertList";
 
 const descendingComparator = (

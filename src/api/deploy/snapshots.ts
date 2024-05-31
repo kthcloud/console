@@ -1,4 +1,4 @@
-import { Jwt } from "../../../types";
+import { Jwt } from "../../types";
 
 export const listVMSnapshots = async (token: Jwt, vmId: string) => {
   const url = `${import.meta.env.VITE_DEPLOY_API_URL}/vms/${vmId}/snapshots`;

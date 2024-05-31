@@ -1,4 +1,4 @@
-import { Jwt } from "../../../types";
+import { Jwt } from "../../types";
 
 export const listGpuGroups = async (token: Jwt, vmId?: string) => {
   const vmIdQuery = vmId ? `?vmId=${encodeURIComponent(vmId)}` : "";
