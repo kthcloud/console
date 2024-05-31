@@ -1,7 +1,7 @@
 import { Jwt } from "../../../types";
 
 export const listVMSnapshots = async (token: Jwt, vmId: string) => {
-  const url = `${import.meta.env.VITE_DEPLOY_V2_API_URL}/vms/${vmId}/snapshots`;
+  const url = `${import.meta.env.VITE_DEPLOY_API_URL}/vms/${vmId}/snapshots`;
   const response = await fetch(url, {
     method: "GET",
     headers: {
@@ -16,7 +16,7 @@ export const listVMSnapshots = async (token: Jwt, vmId: string) => {
 };
 
 export const createVMSnapshot = async (token: Jwt, vmId: string) => {
-  const url = `${import.meta.env.VITE_DEPLOY_V2_API_URL}/vms/${vmId}/snapshots`;
+  const url = `${import.meta.env.VITE_DEPLOY_API_URL}/vms/${vmId}/snapshots`;
   const response = await fetch(url, {
     method: "POST",
     headers: {
@@ -35,7 +35,7 @@ export const getVMSnapshot = async (
   vmId: string,
   snapshotId: string
 ) => {
-  const url = `${import.meta.env.VITE_DEPLOY_V2_API_URL}/vms/${vmId}/snapshot/${snapshotId}`;
+  const url = `${import.meta.env.VITE_DEPLOY_API_URL}/vms/${vmId}/snapshot/${snapshotId}`;
   const response = await fetch(url, {
     method: "POST",
     headers: {
@@ -54,7 +54,7 @@ export const deleteVMSnapshot = async (
   vmId: string,
   snapshotId: string
 ) => {
-  const url = `${import.meta.env.VITE_DEPLOY_V2_API_URL}/vms/${vmId}/snapshot/${snapshotId}`;
+  const url = `${import.meta.env.VITE_DEPLOY_API_URL}/vms/${vmId}/snapshot/${snapshotId}`;
   const response = await fetch(url, {
     method: "DELETE",
     headers: {

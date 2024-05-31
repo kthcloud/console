@@ -19,7 +19,7 @@ export const listVMs = async (
   if (pageSize) queryParams.set("pageSize", String(pageSize));
 
   const queryString = queryParams.toString() ? `?${queryParams}` : "";
-  const url = `${import.meta.env.VITE_DEPLOY_V2_API_URL}/vms${queryString}`;
+  const url = `${import.meta.env.VITE_DEPLOY_API_URL}/vms${queryString}`;
   const response = await fetch(url, {
     method: "GET",
     headers: {
@@ -34,7 +34,7 @@ export const listVMs = async (
 };
 
 export const createVM = async (token: Jwt, body: VmCreate) => {
-  const url = `${import.meta.env.VITE_DEPLOY_V2_API_URL}/vms`;
+  const url = `${import.meta.env.VITE_DEPLOY_API_URL}/vms`;
   const response = await fetch(url, {
     method: "POST",
     headers: {
@@ -51,7 +51,7 @@ export const createVM = async (token: Jwt, body: VmCreate) => {
 };
 
 export const getVMById = async (token: Jwt, vmId: Uuid) => {
-  const url = `${import.meta.env.VITE_DEPLOY_V2_API_URL}/vms/${vmId}`;
+  const url = `${import.meta.env.VITE_DEPLOY_API_URL}/vms/${vmId}`;
   const response = await fetch(url, {
     method: "GET",
     headers: {
@@ -66,7 +66,7 @@ export const getVMById = async (token: Jwt, vmId: Uuid) => {
 };
 
 export const updateVM = async (token: Jwt, vmId: Uuid, body: VmUpdate) => {
-  const url = `${import.meta.env.VITE_DEPLOY_V2_API_URL}/vms/${vmId}`;
+  const url = `${import.meta.env.VITE_DEPLOY_API_URL}/vms/${vmId}`;
   const response = await fetch(url, {
     method: "POST",
     headers: {
@@ -83,7 +83,7 @@ export const updateVM = async (token: Jwt, vmId: Uuid, body: VmUpdate) => {
 };
 
 export const deleteVM = async (token: Jwt, vmId: Uuid) => {
-  const url = `${import.meta.env.VITE_DEPLOY_V2_API_URL}/vms/${vmId}`;
+  const url = `${import.meta.env.VITE_DEPLOY_API_URL}/vms/${vmId}`;
   const response = await fetch(url, {
     method: "DELETE",
     headers: {
@@ -101,7 +101,7 @@ export const vmAction = async (
   vmId: Uuid,
   body: VmActionCreate
 ) => {
-  const url = `${import.meta.env.VITE_DEPLOY_V2_API_URL}/vmActions?vmId=${vmId}`;
+  const url = `${import.meta.env.VITE_DEPLOY_API_URL}/vmActions?vmId=${vmId}`;
   const response = await fetch(url, {
     method: "POST",
     headers: {
