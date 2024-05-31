@@ -44,8 +44,7 @@ import { errorHandler } from "../../utils/errorHandler";
 import { useTranslation } from "react-i18next";
 import { Deployment, Resource, Uuid, Vm } from "../../types";
 import { ThemeColor } from "../../theme/types";
-import { deleteVM } from "../../api/deploy/v2/vms";
-import { deleteVM as deleteVmV1 } from "../../api/deploy/vms";
+import { deleteVM } from "../../api/deploy/vms";
 import { AlertList } from "../../components/AlertList";
 
 const descendingComparator = (
@@ -127,12 +126,6 @@ export function Deploy() {
           return;
         }
 
-        if (userRows.find((row) => row.id === id)?.type === "vmv1") {
-          const res = await deleteVmV1(id, keycloak.token!);
-          queueJob(res);
-          return;
-        }
-
         if (userRows.find((row) => row.id === id)?.type === "deployment") {
           const res = await deleteDeployment(id, keycloak.token!);
           queueJob(res);
@@ -188,33 +181,6 @@ export function Deploy() {
   };
 
   const renderResourceButtons = (resource: Resource) => {
-    if (resource.type === "vmv1")
-      return (
-        <Button
-          color="error"
-          startIcon={<Iconify icon="mdi:delete" />}
-          onClick={() => {
-            setLoading(true);
-            deleteVmV1(resource.id, keycloak.token!)
-              .then((res) => {
-                queueJob(res);
-                enqueueSnackbar("Deleting resource", { variant: "info" });
-              })
-              .catch((error: any) => {
-                errorHandler(error).forEach((e) =>
-                  enqueueSnackbar("Error deleting resource: " + e, {
-                    variant: "error",
-                  })
-                );
-              })
-              .finally(() => setLoading(false));
-          }}
-          variant="outlined"
-        >
-          {t("button-delete")}
-        </Button>
-      );
-
     if (
       resource.type === "deployment" &&
       Object.hasOwn(resource, "url") &&
@@ -258,24 +224,6 @@ export function Deploy() {
   };
 
   const renderResourceType = (resource: Resource) => {
-    if (resource.type === "vmv1")
-      return (
-        <Label
-          variant="ghost"
-          color="error"
-          startIcon={
-            <Iconify icon="mdi:warning-outline" sx={{ opacity: 0.65 }} />
-          }
-          sx={{
-            opacity: 1,
-            background: "#f22",
-            color: "black",
-          }}
-        >
-          <span>{("VM v1 - " + t("deprecated")).toUpperCase()}</span>
-        </Label>
-      );
-
     if (resource.type === "vm" && (resource as Vm).gpu) {
       const group = gpuGroups?.find(
         (x) => x.id === (resource as Vm).gpu!.gpuGroupId
@@ -353,9 +301,6 @@ export function Deploy() {
   };
 
   const renderResourceStatus = (row: Resource) => {
-    if (row.type === "vmv1")
-      return <Typography variant="body2">{t("vmv1-deprecation")}</Typography>;
-
     const color: ThemeColor =
       (row.status === "resourceError" && "error") ||
       (row.status === "resourceUnknown" && "error") ||
@@ -434,8 +379,6 @@ export function Deploy() {
   };
 
   const renderZone = (row: Resource) => {
-    if (row.type === "vmv1") return null;
-
     if (!row.zone || !zones) {
       return <></>;
     }
@@ -455,8 +398,6 @@ export function Deploy() {
   };
 
   const renderShared = (row: Resource) => {
-    if (row.type === "vmv1") return null;
-
     if (row?.teams?.length === 0) return <></>;
 
     return (
@@ -557,12 +498,6 @@ export function Deploy() {
                       {filteredRows.map((row) => {
                         const isItemSelected = selected.indexOf(row.id) !== -1;
 
-                        if (
-                          row.ownerId !== keycloak.subject &&
-                          row.type === "vmv1"
-                        )
-                          return null;
-
                         return (
                           <TableRow
                             hover
@@ -572,7 +507,6 @@ export function Deploy() {
                             selected={isItemSelected}
                             aria-checked={isItemSelected}
                             onDoubleClick={() =>
-                              row.type !== "vmv1" &&
                               navigate(`/edit/${row.type}/${row.id}`)
                             }
                           >
@@ -583,30 +517,21 @@ export function Deploy() {
                               />
                             </TableCell>
                             <TableCell align="left">
-                              {row.type !== "vmv1" ? (
-                                <Link
-                                  component={RouterLink}
-                                  to={`/edit/${row.type}/${row.id}`}
-                                  sx={{
-                                    textDecoration: "none",
-                                    whiteSpace: "nowrap",
-                                  }}
-                                >
-                                  {row.name}
-                                </Link>
-                              ) : (
-                                <Typography variant="body2">
-                                  {row.name}
-                                </Typography>
-                              )}
+                              <Link
+                                component={RouterLink}
+                                to={`/edit/${row.type}/${row.id}`}
+                                sx={{
+                                  textDecoration: "none",
+                                  whiteSpace: "nowrap",
+                                }}
+                              >
+                                {row.name}
+                              </Link>
                             </TableCell>
                             <TableCell align="left">
                               {renderResourceType(row)}
                             </TableCell>
-                            <TableCell
-                              align="left"
-                              colSpan={row.type === "vmv1" ? 2 : 1}
-                            >
+                            <TableCell align="left">
                               <Stack
                                 direction="row"
                                 alignItems="center"
@@ -617,17 +542,15 @@ export function Deploy() {
                                 {renderShared(row)}
                               </Stack>
                             </TableCell>
-                            {row.type !== "vmv1" && (
-                              <TableCell align="left">
-                                <Stack
-                                  direction="row"
-                                  alignItems="center"
-                                  spacing={1}
-                                >
-                                  {row.zone && zones && renderZone(row)}
-                                </Stack>
-                              </TableCell>
-                            )}
+                            <TableCell align="left">
+                              <Stack
+                                direction="row"
+                                alignItems="center"
+                                spacing={1}
+                              >
+                                {row.zone && zones && renderZone(row)}
+                              </Stack>
+                            </TableCell>
 
                             <TableCell align="right">
                               {renderResourceButtons(row)}

@@ -17,7 +17,7 @@ import { useKeycloak } from "@react-keycloak/web";
 import { discover } from "../../api/deploy/discover";
 import Scrollbar from "../../components/Scrollbar";
 import { AlertList } from "../../components/AlertList";
-import { Role } from "@kthcloud/go-deploy-types/types/v1/body";
+import { Role } from "@kthcloud/go-deploy-types/types/v2/body";
 
 const TierCard = ({ tier }: { tier: Role }) => {
   const { t } = useTranslation();

@@ -35,7 +35,7 @@ import {
 import { useKeycloak } from "@react-keycloak/web";
 import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
-import { updateVM } from "../../../api/deploy/v2/vms";
+import { updateVM } from "../../../api/deploy/vms";
 import Iconify from "../../../components/Iconify";
 import RFC1035Input from "../../../components/RFC1035Input";
 import useResource from "../../../hooks/useResource";

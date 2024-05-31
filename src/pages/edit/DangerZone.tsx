@@ -25,7 +25,7 @@ import {
   ResourceMigrationCreate,
   TeamRead,
   UserReadDiscovery,
-} from "@kthcloud/go-deploy-types/types/v1/body";
+} from "@kthcloud/go-deploy-types/types/v2/body";
 import Iconify from "../../components/Iconify";
 import { createResourceMigration } from "../../api/deploy/resourceMigrations";
 
@@ -105,7 +105,7 @@ const DangerZone = ({ resource }: { resource: Resource }) => {
     // update resource with body containing new owner id
     const body: ResourceMigrationCreate = {
       type: "updateOwner",
-      resourceID: resource.id,
+      resourceId: resource.id,
       updateOwner: {
         ownerId: ownerId,
       },

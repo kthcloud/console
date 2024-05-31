@@ -11,7 +11,7 @@ import {
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import useResource from "../../hooks/useResource";
-import { ZoneRead } from "@kthcloud/go-deploy-types/types/v1/body";
+import { ZoneRead } from "@kthcloud/go-deploy-types/types/v2/body";
 
 const ZoneSelector = ({
   alignment,

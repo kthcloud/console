@@ -1,4 +1,4 @@
-import { DiscoverRead } from "@kthcloud/go-deploy-types/types/v1/body";
+import { DiscoverRead } from "@kthcloud/go-deploy-types/types/v2/body";
 
 export const discover = async (): Promise<DiscoverRead> => {
   const res = await fetch(import.meta.env.VITE_DEPLOY_API_URL + "/discover", {

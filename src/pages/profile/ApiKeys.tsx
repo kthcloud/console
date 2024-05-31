@@ -35,7 +35,7 @@ import { createApiKey, updateUser } from "../../api/deploy/users";
 import { errorHandler } from "../../utils/errorHandler";
 import { enqueueSnackbar } from "notistack";
 import { useKeycloak } from "@react-keycloak/web";
-import { ApiKeyCreated } from "@kthcloud/go-deploy-types/types/v1/body";
+import { ApiKeyCreated } from "@kthcloud/go-deploy-types/types/v2/body";
 import CopyButton from "../../components/CopyButton";
 
 export const ApiKeys = () => {

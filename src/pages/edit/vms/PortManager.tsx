@@ -25,7 +25,7 @@ import {
 import Iconify from "../../../components/Iconify";
 import { enqueueSnackbar } from "notistack";
 import useResource from "../../../hooks/useResource";
-import { updateVM } from "../../../api/deploy/v2/vms";
+import { updateVM } from "../../../api/deploy/vms";
 import { useKeycloak } from "@react-keycloak/web";
 import { errorHandler } from "../../../utils/errorHandler";
 import { useTranslation } from "react-i18next";
