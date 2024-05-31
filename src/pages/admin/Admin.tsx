@@ -37,7 +37,7 @@ import useInterval from "../../hooks/useInterval";
 import useResource from "../../hooks/useResource";
 import { errorHandler } from "../../utils/errorHandler";
 import { Deployment, Job, User, Uuid, Vm } from "../../types";
-import { TeamRead } from "@kthcloud/go-deploy-types/types/v1/body";
+import { TeamRead } from "@kthcloud/go-deploy-types/types/v2/body";
 import { deleteVM, listVMs } from "../../api/deploy/vms";
 import { GpuLeaseRead } from "@kthcloud/go-deploy-types/types/v2/body";
 import { deleteGpuLease, listGpuLeases } from "../../api/deploy/gpuLeases";
@@ -307,9 +307,6 @@ export const Admin = () => {
         deployment.healthCheckPath
           ?.toLowerCase()
           .includes(deploymentsFilter.toLowerCase()) ||
-        deployment.customDomainUrl
-          ?.toLowerCase()
-          .includes(deploymentsFilter.toLowerCase()) ||
         deploymentsFilter === ""
       ) {
         filtered.push(deployment);
@@ -320,20 +317,20 @@ export const Admin = () => {
   };
 
   const renderCustomDomain = (deployment: Deployment) => {
-    if (!(deployment.customDomain && deployment.customDomainStatus)) return "";
+    if (!deployment.customDomain) return "";
 
-    if (deployment.customDomainStatus === "active") {
+    if (deployment.customDomain.status === "active") {
       return (
         <Stack direction={"column"}>
           <Link
-            href={deployment.customDomainUrl ? deployment.customDomainUrl : "#"}
+            href={deployment.customDomain ? deployment.customDomain.url : "#"}
             target="_blank"
             rel="noopener noreferrer"
           >
-            {deployment.customDomain}
+            {deployment.customDomain.domain}
           </Link>
           <Typography variant="caption" sx={{ color: "#37be5f" }}>
-            {sentenceCase(deployment.customDomainStatus)}
+            {sentenceCase(deployment.customDomain.status)}
           </Typography>
         </Stack>
       );
@@ -341,9 +338,11 @@ export const Admin = () => {
 
     return (
       <Stack direction={"column"}>
-        <Typography variant="body2">{deployment.customDomain}</Typography>
+        <Typography variant="body2">
+          {deployment.customDomain.domain}
+        </Typography>
         <Typography variant="caption" sx={{ color: "orange" }}>
-          {sentenceCase(deployment.customDomainStatus)}
+          {sentenceCase(deployment.customDomain.status)}
         </Typography>
       </Stack>
     );

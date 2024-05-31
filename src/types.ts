@@ -2,7 +2,7 @@ import {
   UserRead,
   DeploymentRead,
   JobRead,
-} from "@kthcloud/go-deploy-types/types/v1/body/index";
+} from "@kthcloud/go-deploy-types/types/v2/body/index";
 import {
   VmRead as V2VmRead,
   PortRead,

@@ -18,7 +18,7 @@ import {
   NotificationRead as Notification,
   TeamRead as Team,
   ZoneRead as Zone,
-} from "@kthcloud/go-deploy-types/types/v1/body/index";
+} from "@kthcloud/go-deploy-types/types/v2/body/index";
 import { Job, Resource, User, Uuid } from "../types";
 import {
   GpuGroupRead,

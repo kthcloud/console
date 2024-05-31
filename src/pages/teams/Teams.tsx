@@ -50,7 +50,7 @@ import {
   TeamResource,
   UserRead,
   UserReadDiscovery,
-} from "@kthcloud/go-deploy-types/types/v1/body";
+} from "@kthcloud/go-deploy-types/types/v2/body";
 import { AlertList } from "../../components/AlertList";
 
 const Teams = () => {

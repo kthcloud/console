@@ -2,7 +2,7 @@ import {
   ApiKeyCreated,
   UserRead,
   UserUpdate,
-} from "@kthcloud/go-deploy-types/types/v1/body";
+} from "@kthcloud/go-deploy-types/types/v2/body";
 import { Jwt, Uuid } from "../../types";
 
 export const getUser = async (

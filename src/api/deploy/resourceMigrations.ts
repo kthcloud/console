@@ -1,4 +1,4 @@
-import { ResourceMigrationCreate } from "@kthcloud/go-deploy-types/types/v1/body";
+import { ResourceMigrationCreate } from "@kthcloud/go-deploy-types/types/v2/body";
 import { Jwt } from "../../types";
 
 export const createResourceMigration = async (

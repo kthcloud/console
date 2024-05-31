@@ -87,8 +87,8 @@ export const DeploymentCommands = ({
           <Button
             component={Link}
             href={
-              deployment.customDomainUrl
-                ? deployment.customDomainUrl
+              deployment.customDomain
+                ? deployment.customDomain.url
                 : deployment.url
             }
             target="_blank"
