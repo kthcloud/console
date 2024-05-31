@@ -1,43 +1,58 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <!-- Favicon -->
-        <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png" />
-        <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png" />
-        <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#00c2e7" />
 
-        <!-- Colors -->
-        <meta name="msapplication-TileColor" content="#00c2e7" />
-        <meta name="theme-color" content="#ffffff" />
+<head>
+    <meta charset="utf-8" />
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png" />
+    <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#00c2e7" />
 
-        <!-- Meta -->
-        <link rel="manifest" href="/manifest.json" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <!-- Colors -->
+    <meta name="msapplication-TileColor" content="#00c2e7" />
+    <meta name="theme-color" content="#ffffff" />
 
-        <!-- Using Google Font -->
-        <link rel="preconnect" href="https://fonts.gstatic.com" />
-        <link
-            href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@200;400;500;600;700&display=swap"
-            rel="stylesheet"
-        />
+    <!-- Meta -->
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 
-        <title>cbhcloud</title>
-        <meta
-            name="description"
-            content="cbhcloud - KTH software makerspace cloud provider. Use cbhcloud for your software projects and machine learning crunching."
-        />
-        <meta name="keywords" content="cloud,iaas,caas,kubernetes,jupyter" />
-        <meta name="author" content="cbhcloud" />
-    </head>
+    <!-- Using Google Font -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@200;400;500;600;700&display=swap"
+        rel="stylesheet" />
 
-    <body>
-        <noscript>
-            <h1>cbhcloud</h1>
-            To experience this page properly, please enable JavaScript.
-        </noscript>
-        <div id="root"></div>
-        <script type="module" src="/src/main.tsx"></script>
-    </body>
+    <title>cbhcloud</title>
+    <meta name="description"
+        content="cbhcloud - KTH software makerspace cloud provider. Use cbhcloud for your software projects and machine learning crunching." />
+    <meta name="keywords" content="cloud,iaas,caas,kubernetes,jupyter" />
+    <meta name="author" content="cbhcloud" />
+</head>
+
+<body>
+    <noscript>
+        <h1>cbhcloud</h1>
+        Welcome to kthcloud. The console is built in React, meaning you have to enable JavaScript to use it.<br />
+        If you prefer to use the API or Python SDK, find information in the <a
+            href="https://docs.cloud.cbh.kth.se/usage/api/">docs</a>.
+    </noscript>
+    <div id="root"></div>
+    <script>
+        function updateFaviconPaths() {
+            if (window.location.hostname === 'beta.app.cloud.cbh.kth.se' || window.location.hostname === 'localhost') {
+                var linkElements = document.querySelectorAll('link[rel*="icon"]');
+
+                linkElements.forEach(function (link) {
+                    var href = link.getAttribute('href');
+                    if (href && href.startsWith('/favicon/')) {
+                        link.setAttribute('href', href.replace('/favicon/', '/favicon/beta/'));
+                    }
+                });
+            }
+        }
+        updateFaviconPaths();
+    </script>
+    <script type="module" src="/src/main.tsx"></script>
+</body>
+
 </html>
