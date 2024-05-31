@@ -1,7 +1,6 @@
 import {
   UserRead,
   DeploymentRead,
-  VmRead,
   JobRead,
 } from "@kthcloud/go-deploy-types/types/v1/body/index";
 import {
@@ -14,10 +13,6 @@ export type Jwt = string;
 
 export type Port = PortRead;
 
-export interface VmV1 extends VmRead {
-  type: "vmv1";
-}
-
 export interface Vm extends V2VmRead {
   type: "vm";
 }
@@ -27,7 +22,7 @@ export interface Deployment extends DeploymentRead {
   deploymentType?: string;
 }
 
-export type Resource = Vm | Deployment | VmV1;
+export type Resource = Vm | Deployment;
 
 export type User = UserRead;
 

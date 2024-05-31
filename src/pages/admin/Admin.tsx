@@ -959,15 +959,6 @@ export const Admin = () => {
                                     "/" +
                                     user.quota.diskSize}
                                 </Typography>
-                                <Typography
-                                  variant="caption"
-                                  key={user.id + "snapshots"}
-                                >
-                                  {"snapshots: " +
-                                    user.usage.snapshots +
-                                    "/" +
-                                    user.quota.snapshots}
-                                </Typography>
                               </Stack>
                             </TableCell>
                           </TableRow>

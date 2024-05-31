@@ -105,7 +105,7 @@ const DangerZone = ({ resource }: { resource: Resource }) => {
     // update resource with body containing new owner id
     const body: ResourceMigrationCreate = {
       type: "updateOwner",
-      resourceID: resource.id,
+      resourceId: resource.id,
       updateOwner: {
         ownerId: ownerId,
       },
