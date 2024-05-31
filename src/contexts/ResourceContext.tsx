@@ -12,20 +12,20 @@ import { getUser } from "../api/deploy/users";
 import { getZones } from "../api/deploy/zones";
 import { getNotifications } from "../api/deploy/notifications";
 import { getTeams } from "../api/deploy/teams";
-import { getVMById, listVMs } from "../api/deploy/v2/vms";
+import { getVMById, listVMs } from "../api/deploy/vms";
 
 import {
   NotificationRead as Notification,
   TeamRead as Team,
   ZoneRead as Zone,
-} from "@kthcloud/go-deploy-types/types/v1/body/index";
+} from "@kthcloud/go-deploy-types/types/v2/body/index";
 import { Job, Resource, User, Uuid } from "../types";
 import {
   GpuGroupRead,
   GpuLeaseRead,
 } from "@kthcloud/go-deploy-types/types/v2/body";
-import { listGpuGroups } from "../api/deploy/v2/gpuGroups";
-import { listGpuLeases } from "../api/deploy/v2/gpuLeases";
+import { listGpuGroups } from "../api/deploy/gpuGroups";
+import { listGpuLeases } from "../api/deploy/gpuLeases";
 
 type ResourceContextType = {
   rows: Resource[];

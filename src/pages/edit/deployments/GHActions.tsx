@@ -199,7 +199,7 @@ const GHActions = ({ resource }: { resource: Deployment }) => {
               <Typography variant="body2">
                 {t("unsure-where-to-paste-this")}
                 <Link
-                  href="https://docs.github.com/en/actions/quickstart"
+                  href="https://docs.github.com/en/actions/security-guides/using-secrets-in-github-actions#creating-secrets-for-a-repository"
                   target="_blank"
                   rel="noreferrer"
                   ml={1}

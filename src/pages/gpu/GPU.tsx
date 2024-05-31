@@ -33,7 +33,7 @@ import {
   createGpuLease,
   deleteGpuLease,
   updateGpuLease,
-} from "../../api/deploy/v2/gpuLeases";
+} from "../../api/deploy/gpuLeases";
 import JobList from "../../components/JobList";
 import {
   GpuGroupRead,

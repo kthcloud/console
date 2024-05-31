@@ -23,7 +23,7 @@ import { useKeycloak } from "@react-keycloak/web";
 import { updateDeployment } from "../../api/deploy/deployments";
 import { enqueueSnackbar } from "notistack";
 import { errorHandler } from "../../utils/errorHandler";
-import { updateVM } from "../../api/deploy/v2/vms";
+import { updateVM } from "../../api/deploy/vms";
 import { LoadingButton } from "@mui/lab";
 
 export const Specs = ({ resource }: { resource: Resource }) => {
@@ -58,27 +58,11 @@ export const Specs = ({ resource }: { resource: Resource }) => {
   const [maxReplicas, setMaxReplicas] = useState<number>(MAX_REPLICAS);
 
   const getInitialCpu = () => {
-    if (resource.type === "deployment") {
-      return (resource as Deployment).cpuCores;
-    } else if (resource.type === "vm") {
-      const vm = resource as Vm;
-      if (vm.specs === undefined || vm.specs.cpuCores === undefined) return 0;
-      return vm.specs.cpuCores;
-    } else {
-      return 0;
-    }
+    return resource.specs.cpuCores || 0;
   };
 
   const getInitialRam = () => {
-    if (resource.type === "deployment") {
-      return (resource as Deployment).ram;
-    } else if (resource.type === "vm") {
-      const vm = resource as Vm;
-      if (vm.specs === undefined || vm.specs.ram === undefined) return 0;
-      return vm.specs.ram;
-    } else {
-      return 0;
-    }
+    return resource.specs.ram || 0;
   };
 
   const [cpu, setCpu] = useState<number>(getInitialCpu());
@@ -91,9 +75,9 @@ export const Specs = ({ resource }: { resource: Resource }) => {
   const updateSpecs = () => {
     if (resource.type === "deployment") {
       const d = resource as Deployment;
-      setCpu(d.cpuCores);
-      setRam(d.ram);
-      setReplicas(d.replicas);
+      setCpu(d.specs.cpuCores);
+      setRam(d.specs.ram);
+      setReplicas(d.specs.replicas);
       return;
     }
     if (resource.type === "vm" && resource.specs) {
@@ -151,7 +135,11 @@ export const Specs = ({ resource }: { resource: Resource }) => {
   const isSame = () => {
     if (resource.type === "deployment") {
       const d = resource as Deployment;
-      return d.cpuCores === cpu && d.ram === ram && d.replicas === replicas;
+      return (
+        d.specs.cpuCores === cpu &&
+        d.specs.ram === ram &&
+        d.specs.replicas === replicas
+      );
     }
     if (resource.type === "vm" && resource.specs) {
       const v = resource as Vm;
@@ -165,9 +153,9 @@ export const Specs = ({ resource }: { resource: Resource }) => {
     setEditing(false);
     if (resource.type === "deployment") {
       const d = resource as Deployment;
-      setCpu(d.cpuCores);
-      setRam(d.ram);
-      setReplicas(d.replicas);
+      setCpu(d.specs.cpuCores);
+      setRam(d.specs.ram);
+      setReplicas(d.specs.replicas);
       setLoading(false);
       return;
     }

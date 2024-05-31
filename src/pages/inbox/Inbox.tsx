@@ -26,7 +26,6 @@ import {
   markNotificationAsRead,
 } from "../../api/deploy/notifications";
 import { joinTeam } from "../../api/deploy/teams";
-import { acceptVmTransfer } from "../../api/deploy/vms";
 import Iconify from "../../components/Iconify";
 import JobList from "../../components/JobList";
 import LoadingPage from "../../components/LoadingPage";
@@ -34,7 +33,7 @@ import Page from "../../components/Page";
 import useResource from "../../hooks/useResource";
 import { errorHandler } from "../../utils/errorHandler";
 import { useTheme } from "@mui/material/styles";
-import { NotificationRead } from "@kthcloud/go-deploy-types/types/v1/body";
+import { NotificationRead } from "@kthcloud/go-deploy-types/types/v2/body";
 import { AlertList } from "../../components/AlertList";
 
 const Inbox = () => {
@@ -62,12 +61,6 @@ const Inbox = () => {
         );
       } else if (notification.type === "deploymentTransfer") {
         await acceptDeploymentTransfer(
-          keycloak.token,
-          notification.content.id,
-          notification.content.code
-        );
-      } else if (notification.type === "vmTransfer") {
-        await acceptVmTransfer(
           keycloak.token,
           notification.content.id,
           notification.content.code

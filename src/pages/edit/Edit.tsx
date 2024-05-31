@@ -40,10 +40,10 @@ import DangerZone from "./DangerZone";
 import Iconify from "../../components/Iconify";
 import { enqueueSnackbar } from "notistack";
 import { updateDeployment } from "../../api/deploy/deployments";
-import { updateVM } from "../../api/deploy/v2/vms";
+import { updateVM } from "../../api/deploy/vms";
 import { errorHandler } from "../../utils/errorHandler";
 import { Job, Resource, Deployment, Vm } from "../../types";
-import { Volume } from "@kthcloud/go-deploy-types/types/v1/body";
+import { Volume } from "@kthcloud/go-deploy-types/types/v2/body";
 import { AlertList } from "../../components/AlertList";
 import { Specs } from "./Specs";
 import { ReplicaStatus } from "./deployments/ReplicaStatus";
@@ -318,7 +318,7 @@ export function Edit() {
 
                 {resource.type === "deployment" && (
                   <>
-                    {resource.replicas > 1 && (
+                    {resource.specs.replicas > 1 && (
                       <ReplicaStatus deployment={resource as Deployment} />
                     )}
                     <DeploymentCommands deployment={resource as Deployment} />

@@ -1,4 +1,4 @@
-import { DeploymentRead } from "@kthcloud/go-deploy-types/types/v1/body";
+import { DeploymentRead } from "@kthcloud/go-deploy-types/types/v2/body";
 import {
   Fade,
   IconButton,

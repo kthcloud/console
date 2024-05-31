@@ -1,8 +1,8 @@
-import { Jwt } from "../../../types";
+import { Jwt } from "../../types";
 
 export const listGpuGroups = async (token: Jwt, vmId?: string) => {
   const vmIdQuery = vmId ? `?vmId=${encodeURIComponent(vmId)}` : "";
-  const url = `${import.meta.env.VITE_DEPLOY_V2_API_URL}/gpuGroups${vmIdQuery}`;
+  const url = `${import.meta.env.VITE_DEPLOY_API_URL}/gpuGroups${vmIdQuery}`;
   const response = await fetch(url, {
     method: "GET",
     headers: {
@@ -24,7 +24,7 @@ export const listGpuGroups = async (token: Jwt, vmId?: string) => {
 };
 
 export const getGpuGroup = async (token: Jwt, gpuGroupId: string) => {
-  const url = `${import.meta.env.VITE_DEPLOY_V2_API_URL}/gpuGroups/${gpuGroupId}`;
+  const url = `${import.meta.env.VITE_DEPLOY_API_URL}/gpuGroups/${gpuGroupId}`;
   const response = await fetch(url, {
     method: "GET",
     headers: {

@@ -35,9 +35,29 @@
     <body>
         <noscript>
             <h1>cbhcloud</h1>
-            To experience this page properly, please enable JavaScript.
+            Welcome to kthcloud. The console is built in React, meaning you have to enable JavaScript to use it.<br />
+            If you prefer to use the API or Python SDK, find information in the
+            <a href="https://docs.cloud.cbh.kth.se/usage/api/">docs</a>.
         </noscript>
         <div id="root"></div>
+        <script>
+            function updateFaviconPaths() {
+                if (
+                    window.location.hostname === "beta.app.cloud.cbh.kth.se" ||
+                    window.location.hostname === "localhost"
+                ) {
+                    var linkElements = document.querySelectorAll('link[rel*="icon"]');
+
+                    linkElements.forEach(function (link) {
+                        var href = link.getAttribute("href");
+                        if (href && href.startsWith("/favicon/")) {
+                            link.setAttribute("href", href.replace("/favicon/", "/favicon/beta/"));
+                        }
+                    });
+                }
+            }
+            updateFaviconPaths();
+        </script>
         <script type="module" src="/src/main.tsx"></script>
     </body>
 </html>

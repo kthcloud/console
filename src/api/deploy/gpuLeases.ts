@@ -1,9 +1,9 @@
 import { GpuLeaseCreate } from "@kthcloud/go-deploy-types/types/v2/body";
-import { Jwt, Uuid } from "../../../types";
+import { Jwt, Uuid } from "../../types";
 
 export const listGpuLeases = async (token: Jwt, vmId?: Uuid) => {
   const vmIdQuery = vmId ? `?vmId=${encodeURIComponent(vmId)}` : "";
-  const url = `${import.meta.env.VITE_DEPLOY_V2_API_URL}/gpuLeases${vmIdQuery}`;
+  const url = `${import.meta.env.VITE_DEPLOY_API_URL}/gpuLeases${vmIdQuery}`;
   const response = await fetch(url, {
     method: "GET",
     headers: {
@@ -18,7 +18,7 @@ export const listGpuLeases = async (token: Jwt, vmId?: Uuid) => {
 };
 
 export const createGpuLease = async (token: Jwt, body: GpuLeaseCreate) => {
-  const url = `${import.meta.env.VITE_DEPLOY_V2_API_URL}/gpuLeases`;
+  const url = `${import.meta.env.VITE_DEPLOY_API_URL}/gpuLeases`;
   const response = await fetch(url, {
     method: "POST",
     headers: {
@@ -35,7 +35,7 @@ export const createGpuLease = async (token: Jwt, body: GpuLeaseCreate) => {
 };
 
 export const getGpuLease = async (token: Jwt, gpuLeaseId: Uuid) => {
-  const url = `${import.meta.env.VITE_DEPLOY_V2_API_URL}/gpuLeases/${gpuLeaseId}`;
+  const url = `${import.meta.env.VITE_DEPLOY_API_URL}/gpuLeases/${gpuLeaseId}`;
   const response = await fetch(url, {
     method: "GET",
     headers: {
@@ -54,7 +54,7 @@ export const updateGpuLease = async (
   gpuLeaseId: Uuid,
   body: any
 ) => {
-  const url = `${import.meta.env.VITE_DEPLOY_V2_API_URL}/gpuLeases/${gpuLeaseId}`;
+  const url = `${import.meta.env.VITE_DEPLOY_API_URL}/gpuLeases/${gpuLeaseId}`;
   const response = await fetch(url, {
     method: "POST",
     headers: {
@@ -71,7 +71,7 @@ export const updateGpuLease = async (
 };
 
 export const deleteGpuLease = async (token: Jwt, gpuLeaseId: Uuid) => {
-  const url = `${import.meta.env.VITE_DEPLOY_V2_API_URL}/gpuLeases/${gpuLeaseId}`;
+  const url = `${import.meta.env.VITE_DEPLOY_API_URL}/gpuLeases/${gpuLeaseId}`;
   const response = await fetch(url, {
     method: "DELETE",
     headers: {

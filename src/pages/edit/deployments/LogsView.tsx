@@ -15,7 +15,7 @@ import polyfilledEventSource from "@sanity/eventsource";
 import { useTranslation } from "react-i18next";
 import CopyButton from "../../../components/CopyButton";
 import { Deployment } from "../../../types";
-import { LogMessage } from "@kthcloud/go-deploy-types/types/v1/body";
+import { LogMessage } from "@kthcloud/go-deploy-types/types/v2/body";
 
 export const LogsView = ({ deployment }: { deployment: Deployment }) => {
   const { t } = useTranslation();

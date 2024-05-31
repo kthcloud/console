@@ -55,10 +55,10 @@ export const DomainManager = ({ deployment }: { deployment: Deployment }) => {
   const steps = t("setup-custom-domain-steps").split("|");
 
   useEffect(() => {
-    if (!deployment.customDomainUrl) return;
+    if (!deployment.customDomain) return;
 
     const cleaned = toUnicode(
-      deployment.customDomainUrl.replace("https://", "").trim()
+      deployment.customDomain.url.replace("https://", "").trim()
     );
     setDomain(cleaned);
     setInitialDomain(cleaned);
@@ -127,8 +127,8 @@ export const DomainManager = ({ deployment }: { deployment: Deployment }) => {
         return;
       }
       if (
-        deployment.customDomainUrl &&
-        deployment.customDomainUrl.split("//")[1] === domain
+        deployment.customDomain &&
+        deployment.customDomain.url.split("//")[1] === domain
       ) {
         setActiveStep((step) => step + 1);
         return;
@@ -260,8 +260,8 @@ export const DomainManager = ({ deployment }: { deployment: Deployment }) => {
                       <TableRow>
                         <TableCell>CNAME</TableCell>
                         <TableCell>
-                          {deployment.customDomainUrl ? (
-                            deployment.customDomainUrl.split("//")[1]
+                          {deployment.customDomain ? (
+                            deployment.customDomain.url.split("//")[1]
                           ) : (
                             <Skeleton />
                           )}
@@ -271,14 +271,17 @@ export const DomainManager = ({ deployment }: { deployment: Deployment }) => {
                       <TableRow>
                         <TableCell>TXT</TableCell>
                         <TableCell>
-                          {deployment.customDomainUrl ? (
+                          {deployment.customDomain ? (
                             "_kthcloud." +
-                            deployment.customDomainUrl.split("//")[1]
+                            deployment.customDomain.url.split("//")[1]
                           ) : (
                             <Skeleton />
                           )}
                         </TableCell>
-                        <TableCell>{deployment.customDomainSecret}</TableCell>
+                        <TableCell>
+                          {deployment.customDomain &&
+                            deployment.customDomain.secret}
+                        </TableCell>
                       </TableRow>
                     </TableBody>
                   </Table>
@@ -354,21 +357,21 @@ export const DomainManager = ({ deployment }: { deployment: Deployment }) => {
               flexWrap="wrap"
               useFlexGap
             >
-              {deployment.customDomainStatus && (
+              {deployment.customDomain && (
                 <Chip
                   label={
                     t("admin-status") +
                     ": " +
-                    sentenceCase(deployment.customDomainStatus)
+                    sentenceCase(deployment.customDomain.status)
                   }
                 />
               )}
-              {deployment.customDomainUrl && (
+              {deployment.customDomain && (
                 <Chip
-                  label={deployment.customDomainUrl}
+                  label={deployment.customDomain.url}
                   icon={<Iconify icon="mdi:globe" />}
                   component={Link}
-                  href={deployment.customDomainUrl}
+                  href={deployment.customDomain.url}
                   target="_blank"
                   rel="noreferrer"
                   underline="none"
@@ -379,17 +382,15 @@ export const DomainManager = ({ deployment }: { deployment: Deployment }) => {
                 onClick={() => setCreateDialogOpen(true)}
                 startIcon={
                   <Iconify
-                    icon={
-                      !deployment.customDomainUrl ? "mdi:plus" : "mdi:pencil"
-                    }
+                    icon={!deployment.customDomain ? "mdi:plus" : "mdi:pencil"}
                   />
                 }
               >
-                {!deployment.customDomainUrl
+                {!deployment.customDomain
                   ? t("setup-domain")
                   : t("edit-domain")}
               </Button>
-              {deployment.customDomainUrl && (
+              {deployment.customDomain && (
                 <Button
                   variant="outlined"
                   onClick={handleClear}
@@ -400,7 +401,7 @@ export const DomainManager = ({ deployment }: { deployment: Deployment }) => {
                 </Button>
               )}
             </Stack>
-            {!deployment.customDomainUrl ? (
+            {!deployment.customDomain ? (
               <Typography variant="body1" sx={{ color: "text.secondary" }}>
                 {t("no-custom-domain")}
               </Typography>
@@ -422,16 +423,16 @@ export const DomainManager = ({ deployment }: { deployment: Deployment }) => {
                       <TableRow>
                         <TableCell>CNAME</TableCell>
                         <TableCell>
-                          {deployment.customDomainUrl.split("//")[1]}
+                          {deployment.customDomain.url.split("//")[1]}
                         </TableCell>
                         <TableCell>app.cloud.cbh.kth.se</TableCell>
                       </TableRow>
                       <TableRow>
                         <TableCell>TXT</TableCell>
                         <TableCell>
-                          _kthcloud.{deployment.customDomainUrl.split("//")[1]}
+                          _kthcloud.{deployment.customDomain.url.split("//")[1]}
                         </TableCell>
-                        <TableCell>{deployment.customDomainSecret}</TableCell>
+                        <TableCell>{deployment.customDomain.secret}</TableCell>
                       </TableRow>
                     </TableBody>
                   </Table>

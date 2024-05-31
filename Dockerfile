@@ -10,7 +10,7 @@ ENV VITE_RELEASE_DATE=${RELEASE_DATE}
 ENV VITE_RELEASE_COMMIT=${RELEASE_COMMIT}
 
 ENV VITE_API_URL="https://api.cloud.cbh.kth.se"
-ENV VITE_DEPLOY_API_URL="https://api.cloud.cbh.kth.se/deploy/v1"
+ENV VITE_DEPLOY_API_URL="https://api.cloud.cbh.kth.se/deploy/v2"
 ENV NODE_ENV="production"
 
 WORKDIR /app

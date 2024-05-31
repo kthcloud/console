@@ -9,7 +9,7 @@ import Iconify from "../../../components/Iconify";
 import useResource from "../../../hooks/useResource";
 import { errorHandler } from "../../../utils/errorHandler";
 import { Vm } from "../../../types";
-import { vmAction, deleteVM } from "../../../api/deploy/v2/vms";
+import { vmAction, deleteVM } from "../../../api/deploy/vms";
 
 export const VMCommands = ({ vm }: { vm: Vm }) => {
   const { t } = useTranslation();
