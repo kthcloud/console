@@ -454,13 +454,15 @@ export function Deploy() {
                   {t("storage-manager")}
                 </Button>
               )}
-              <Button
-                component={RouterLink}
-                to={"/gpu"}
-                startIcon={<Iconify icon={"mdi:gpu"} />}
-              >
-                {t("gpu-leases")}
-              </Button>
+              {(user.role.permissions.includes("useGpus") || user.admin) && (
+                <Button
+                  component={RouterLink}
+                  to={"/gpu"}
+                  startIcon={<Iconify icon={"mdi:gpu"} />}
+                >
+                  {t("gpu-leases")}
+                </Button>
+              )}
               <Button
                 component={RouterLink}
                 to="/create"

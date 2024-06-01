@@ -40,7 +40,7 @@ import {
   GpuLeaseRead,
 } from "@kthcloud/go-deploy-types/types/v2/body";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AlertList } from "../../components/AlertList";
 
 export const GPU = () => {
@@ -60,6 +60,19 @@ export const GPU = () => {
     zones?: string[];
   }
   const [groupedGpus, setGroupedGpus] = useState<GPUGroup[]>([]);
+
+  const { user } = useResource();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!user) return;
+    if (!user.role.permissions.includes("useGpus") && !user.admin) {
+      enqueueSnackbar(t("not-permitted-to-gpu-page"), {
+        variant: "error",
+      });
+      navigate("/deploy");
+    }
+  }, [user]);
 
   useEffect(() => {
     const grouped: GPUGroup[] = [];
