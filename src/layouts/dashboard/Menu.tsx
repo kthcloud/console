@@ -80,13 +80,15 @@ export default function Menu() {
               >
                 {t("menu-dashboard")}
               </MenuItem>
-              <MenuItem
-                to={"/gpu"}
-                component={RouterLink}
-                onClick={handleClose}
-              >
-                {t("gpu-leases")}
-              </MenuItem>
+              {(user.role.permissions.includes("useGpus") || user.admin) && (
+                <MenuItem
+                  to={"/gpu"}
+                  component={RouterLink}
+                  onClick={handleClose}
+                >
+                  {t("gpu-leases")}
+                </MenuItem>
+              )}
               <MenuItem
                 to={"/create"}
                 component={RouterLink}
