@@ -15,7 +15,6 @@ import {
   MenuItem,
   Select,
   Stack,
-  Table,
   TableBody,
   TableCell,
   TableContainer,
@@ -42,6 +41,7 @@ import {
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AlertList } from "../../components/AlertList";
+import NoWrapTable from "../../components/NoWrapTable";
 
 export const GPU = () => {
   const { t } = useTranslation();
@@ -247,7 +247,7 @@ export const GPU = () => {
                 />
                 <CardContent>
                   <TableContainer>
-                    <Table>
+                    <NoWrapTable>
                       <TableHead>
                         <TableRow>
                           <TableCell>{t("admin-name")}</TableCell>
@@ -347,7 +347,7 @@ export const GPU = () => {
                           </TableRow>
                         )}
                       </TableBody>
-                    </Table>
+                    </NoWrapTable>
                   </TableContainer>
                 </CardContent>
               </Card>
@@ -359,7 +359,7 @@ export const GPU = () => {
                 />
                 <CardContent>
                   <TableContainer>
-                    <Table>
+                    <NoWrapTable>
                       <TableHead>
                         <TableRow>
                           <TableCell>{t("admin-name")}</TableCell>
@@ -413,7 +413,7 @@ export const GPU = () => {
                           </TableRow>
                         )}
                       </TableBody>
-                    </Table>
+                    </NoWrapTable>
                   </TableContainer>
                 </CardContent>
               </Card>
