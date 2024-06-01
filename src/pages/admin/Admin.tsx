@@ -9,7 +9,6 @@ import {
   Container,
   Link,
   Stack,
-  Table,
   TableBody,
   TableCell,
   TableContainer,
@@ -44,6 +43,7 @@ import { deleteGpuLease, listGpuLeases } from "../../api/deploy/gpuLeases";
 import { sentenceCase } from "change-case";
 import { getReasonPhrase } from "http-status-codes";
 import ConfirmButton from "../../components/ConfirmButton";
+import { NoWrapTable as Table } from "../../components/NoWrapTable";
 
 export const Admin = () => {
   const { t } = useTranslation();

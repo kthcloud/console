@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
@@ -32,6 +31,7 @@ import { useTranslation } from "react-i18next";
 import CopyButton from "../../../components/CopyButton";
 import { Port, Vm } from "../../../types";
 import { PortUpdate } from "@kthcloud/go-deploy-types/types/v2/body";
+import { NoWrapTable as Table } from "../../../components/NoWrapTable";
 
 export default function PortManager({ vm }: { vm: Vm }) {
   const { t } = useTranslation();

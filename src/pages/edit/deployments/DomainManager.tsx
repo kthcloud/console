@@ -16,7 +16,6 @@ import {
   Step,
   StepLabel,
   Stepper,
-  Table,
   TableBody,
   TableCell,
   TableContainer,
@@ -38,6 +37,7 @@ import { toUnicode } from "punycode";
 import { useTranslation } from "react-i18next";
 import { sentenceCase } from "change-case";
 import { Deployment } from "../../../types";
+import { NoWrapTable as Table } from "../../../components/NoWrapTable";
 
 export const DomainManager = ({ deployment }: { deployment: Deployment }) => {
   const { t } = useTranslation();

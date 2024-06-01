@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import Iconify from "../../components/Iconify";
-import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
@@ -45,6 +44,7 @@ import { useTranslation } from "react-i18next";
 import { User } from "../../types";
 import { ApiKeys } from "./ApiKeys";
 import { AlertList } from "../../components/AlertList";
+import { NoWrapTable as Table } from "../../components/NoWrapTable";
 
 export function Profile() {
   const { t } = useTranslation();

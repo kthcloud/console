@@ -12,7 +12,6 @@ import {
   TableBody,
   IconButton,
   Paper,
-  Table,
   Stack,
   Switch,
   FormControlLabel,
@@ -29,6 +28,7 @@ import useResource from "../../hooks/useResource";
 import ZoneSelector from "./ZoneSelector";
 import { useTranslation } from "react-i18next";
 import { Volume } from "@kthcloud/go-deploy-types/types/v2/body";
+import { NoWrapTable as Table } from "../../components/NoWrapTable";
 
 export default function CreateDeployment({
   finished,

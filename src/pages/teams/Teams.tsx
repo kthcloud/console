@@ -13,7 +13,6 @@ import {
   Paper,
   Skeleton,
   Stack,
-  Table,
   TableBody,
   TableCell,
   TableContainer,
@@ -52,6 +51,7 @@ import {
   UserReadDiscovery,
 } from "@kthcloud/go-deploy-types/types/v2/body";
 import { AlertList } from "../../components/AlertList";
+import { NoWrapTable as Table } from "../../components/NoWrapTable";
 
 const Teams = () => {
   const { user, teams, beginFastLoad } = useResource();

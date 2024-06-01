@@ -7,7 +7,6 @@ import {
   IconButton,
   Paper,
   Stack,
-  Table,
   TableBody,
   TableCell,
   TableContainer,
@@ -22,6 +21,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import Iconify from "../../components/Iconify";
+import { NoWrapTable as Table } from "../../components/NoWrapTable";
 
 const ResourceComparisonTable = () => {
   const { t } = useTranslation();
