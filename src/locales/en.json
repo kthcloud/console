@@ -527,6 +527,7 @@
         "copy-user-id": "User ID",
         "error-copying-user-id": "Could not copy user ID",
         "copied-user-id": "Copied user ID",
-        "error-copying-user-id-user-is-null": "Could not copy user ID from user since user is null"
+        "error-copying-user-id-user-is-null": "Could not copy user ID from user since user is null",
+        "not-permitted-to-gpu-page": "Cannot access GPU page: Not allowed to use GPUs"
     }
 }

@@ -526,6 +526,7 @@
         "copy-user-id": "Användar ID",
         "error-copying-user-id": "Kunde inte kopiera användar ID",
         "copied-user-id": "Kopierade användar ID",
-        "error-copying-user-id-user-is-null": "Kunde inte kopiera användar ID eftersom användaren är null"
+        "error-copying-user-id-user-is-null": "Kunde inte kopiera användar ID eftersom användaren är null",
+        "not-permitted-to-gpu-page": "Kan inte komma åt GPU sidan: Inte tillåten att använda GPUer"
     }
 }
