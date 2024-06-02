@@ -21,7 +21,6 @@ import {
   Select,
   Skeleton,
   Stack,
-  Table,
   TableBody,
   TableCell,
   TableContainer,
@@ -49,6 +48,7 @@ import {
   PortRead,
   PortUpdate,
 } from "@kthcloud/go-deploy-types/types/v2/body";
+import { NoWrapTable as Table } from "../../../components/NoWrapTable";
 
 interface Proxy extends HttpProxyRead {
   port?: number;

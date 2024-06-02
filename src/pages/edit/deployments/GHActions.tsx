@@ -13,7 +13,6 @@ import {
   Link,
   Paper,
   Stack,
-  Table,
   TableBody,
   TableCell,
   TableContainer,
@@ -28,6 +27,7 @@ import { useTranslation } from "react-i18next";
 import CopyButton from "../../../components/CopyButton";
 import { Deployment } from "../../../types";
 import { CustomTheme } from "../../../theme/types";
+import { NoWrapTable as Table } from "../../../components/NoWrapTable";
 
 type Secret = {
   name: string;
