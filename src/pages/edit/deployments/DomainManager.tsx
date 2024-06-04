@@ -100,7 +100,7 @@ export const DomainManager = ({ deployment }: { deployment: Deployment }) => {
     try {
       const res = await updateDeployment(
         deployment.id,
-        { customDomain: null },
+        { customDomain: "" },
         keycloak.token
       );
       queueJob(res);
