@@ -77,6 +77,16 @@ const ProxyManager = ({ vm }: { vm: Vm }) => {
   const [ports, setPorts] = useState<Port[]>([]);
   const [deleting, setDeleting] = useState<string[]>([]);
   const [selectedPort, setSelectedPort] = useState<number>(0);
+  const [endpoint, setEndpoint] = useState<string>("");
+
+  useEffect(() => {
+    const endpoint = zones.find((z) => z.name === vm.zone)?.endpoints
+      .deployment;
+
+    if (!endpoint) return;
+    setEndpoint(endpoint);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  });
 
   useEffect(() => {
     const tcpPorts: Port[] = vm.ports.filter((port) => port.protocol === "tcp");
@@ -318,7 +328,7 @@ const ProxyManager = ({ vm }: { vm: Vm }) => {
                                   sx={{ minWidth: 150 }}
                                 />
                               </TableCell>
-                              <TableCell>app.cloud.cbh.kth.se</TableCell>
+                              <TableCell>{endpoint}</TableCell>
                             </TableRow>
                             {editing?.customDomain && (
                               <TableRow>
