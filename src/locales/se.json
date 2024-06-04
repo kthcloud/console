@@ -15,7 +15,7 @@
         "deployment-in-progress": "driftsättning pågår... ",
         "learn-more": "Läs mer",
         "button-close": "Stäng",
-        "create-deployment-image": "Förbyggd container",
+        "create-deployment-image": "Container image",
         "create-deployment-name": "Namn",
         "menu-label": "Meny",
         "create-deployment-app-path-label": "Filsökväg i appen",
@@ -147,7 +147,7 @@
         "create-deployment-app-path": "Filsökväg i appen",
         "profile": "Profil",
         "admin-id": "ID",
-        "image-subheader": "Redigera eller uppdatera din container. Till exempel mongo, mongo:4.4 or quay.io/keycloak/keycloak",
+        "image-subheader": "Konfigurera inställningar relaterade till din deployments image",
         "menu-manage-resources": "Hantera resurser",
         "error-could-not-fetch-gpus": "Kunde inte hämta grafikkort",
         "could-not-fetch-profile": "Profilen kunde inte hämtas: ",
@@ -529,6 +529,7 @@
         "error-copying-user-id-user-is-null": "Kunde inte kopiera användar ID eftersom användaren är null",
         "not-permitted-to-gpu-page": "Kan inte komma åt GPU sidan: Inte tillåten att använda GPUer",
         "run-args": "Argument till körning",
-        "nothing-to-do": "Inget att göra"
+        "nothing-to-do": "Inget att göra",
+        "image-tag": "Image tagg"
     }
 }
