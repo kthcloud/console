@@ -5,7 +5,7 @@ import { styled } from "@mui/material/styles";
 import { Card, CardHeader, CardContent } from "@mui/material";
 // components
 import { BaseOptionChart } from "../../components/chart";
-import { ChartDataPoint } from "./Status";
+import { CapacityPoint } from "./Status";
 import { ApexOptions } from "apexcharts";
 
 const CHART_HEIGHT = 360;
@@ -36,7 +36,7 @@ export default function TreeMap({
   chartColors,
 }: {
   title: string;
-  chartData: ChartDataPoint[];
+  chartData: CapacityPoint[];
   chartColors: string[];
 }) {
   const chartOptions: ApexOptions = merge(BaseOptionChart(), {

@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 // mui
 import { useTheme } from "@mui/material/styles";
 import {
@@ -24,13 +22,18 @@ import ServerStats from "./ServerStats";
 import LineChart from "./LineChart";
 import { useTranslation } from "react-i18next";
 import { AlertList } from "../../components/AlertList";
+import {
+  TimestampedSystemCapacities,
+  TimestampedSystemStats,
+  TimestampedSystemStatus,
+} from "@kthcloud/go-deploy-types/types/v2/body";
 
 type MastodonPost = {
   id: string;
 };
 
 export type ChartDataPoint = {
-  x: number;
+  x: string;
   y: number;
 };
 export type ChartData = {
@@ -38,13 +41,23 @@ export type ChartData = {
   data: ChartDataPoint[];
 };
 
+export type CapacityPoint = {
+  x: string;
+  y: number;
+};
+
+export type HeatMapRow = {
+  name: string;
+  data: (number | null)[];
+};
+
 export function Status() {
   const { t } = useTranslation();
 
-  const [statusData, setStatusData] = useState([]);
-  const [cpuCapacities, setCpuCapacities] = useState([]);
-  const [ramCapacities, setRamCapacities] = useState([]);
-  const [gpuCapacities, setGpuCapacities] = useState([]);
+  const [statusData, setStatusData] = useState<HeatMapRow[]>([]);
+  const [cpuCapacities, setCpuCapacities] = useState<CapacityPoint[]>([]);
+  const [ramCapacities, setRamCapacities] = useState<CapacityPoint[]>([]);
+  const [gpuCapacities, setGpuCapacities] = useState<CapacityPoint[]>([]);
   const [overviewData, _setOverviewData] = useState<ChartData[]>([]);
   const [statusLock, setStatusLock] = useState(false);
   const [capacitiesLock, setCapacitiesLock] = useState(false);
@@ -55,7 +68,7 @@ export function Status() {
   const [cpuCores, setCpuCores] = useState(0);
   const [gpus, setGpus] = useState(0);
 
-  const setOverviewData = (data) => {
+  const setOverviewData = (data: TimestampedSystemStatus[]) => {
     const cpuTemp: ChartDataPoint[] = [];
     const cpuLoad: ChartDataPoint[] = [];
     const ramLoad: ChartDataPoint[] = [];
@@ -132,7 +145,7 @@ export function Status() {
       method: "GET",
     })
       .then((response) => response.json())
-      .then((result) => {
+      .then((result: TimestampedSystemStatus[]) => {
         let statusData = result[0].status.hosts.map((host) => {
           const gpuTemp = host.gpu ? host.gpu.temp[0].main : null;
           return {
@@ -175,7 +188,7 @@ export function Status() {
       method: "GET",
     })
       .then((response) => response.json())
-      .then((result) => {
+      .then((result: TimestampedSystemStats[]) => {
         setPodCount(result[0].stats.k8s.podCount);
       })
       .catch((error) => {
@@ -190,18 +203,20 @@ export function Status() {
       method: "GET",
     })
       .then((response) => response.json())
-      .then((result) => {
+      .then((result: TimestampedSystemCapacities[]) => {
         setRam(result[0].capacities.ram.total);
         setCpuCores(result[0].capacities.cpuCore.total);
         setGpus(result[0].capacities.gpu.total);
 
         setRamCapacities(
-          result[0].capacities.hosts.map((host) => {
-            return {
-              x: host.displayName,
-              y: host.ram.total,
-            };
-          })
+          result[0].capacities.hosts
+            .map((host) => {
+              return {
+                x: host.displayName,
+                y: host.ram.total,
+              };
+            })
+            .filter((host) => host.y > 0)
         );
 
         setGpuCapacities(
