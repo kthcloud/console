@@ -13,29 +13,34 @@ import { Deployment } from "../../../types";
 export const ImageManager = ({ deployment }: { deployment: Deployment }) => {
   const { t } = useTranslation();
   const [image, setImage] = useState<string>("");
+  const [imageArgs, setImageArgs] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const { initialized, keycloak } = useKeycloak();
   const { queueJob } = useResource();
 
   useEffect(() => {
-    if (!deployment.image) return;
-    setImage(deployment.image);
+    if (deployment.image) setImage(deployment.image);
+    if (deployment.args) setImageArgs(deployment.args.join(" "));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleSave = async (img: string) => {
+  const handleSave = async (img: string, args: string) => {
     if (!(initialized && keycloak.token)) return;
     const newImage = img.trim();
-    if (newImage === deployment.image) return;
+    const newArgs = args.trim();
+
+    let body = {};
+    if (newImage !== deployment.image && newImage !== "") {
+      body = { ...body, image: newImage };
+    }
+    if (newArgs !== deployment.args.join(" ")) {
+      body = { ...body, args: newArgs.split(" ") };
+    }
 
     setLoading(true);
 
     try {
-      const res = await updateDeployment(
-        deployment.id,
-        { image: newImage },
-        keycloak.token
-      );
+      const res = await updateDeployment(deployment.id, body, keycloak.token);
       queueJob(res);
       enqueueSnackbar(t("saving-image-update"), {
         variant: "info",
@@ -65,15 +70,34 @@ export const ImageManager = ({ deployment }: { deployment: Deployment }) => {
           flexWrap={"wrap"}
           useFlexGap
         >
+          {deployment.deploymentType === "prebuilt" && (
+            <TextField
+              label={t("image-tag")}
+              variant="outlined"
+              placeholder={deployment.image}
+              value={image}
+              onChange={(e) => setImage(e.target.value.trim())}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleSave(image, imageArgs);
+                }
+              }}
+              fullWidth
+              sx={{ maxWidth: "sm" }}
+              disabled={loading}
+            />
+          )}
           <TextField
-            label={t("create-deployment-image")}
+            label={t("run-args")}
             variant="outlined"
-            placeholder={deployment.image}
-            value={image}
-            onChange={(e) => setImage(e.target.value.trim())}
+            placeholder={deployment.args.join(" ")}
+            value={imageArgs}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setImageArgs(e.target.value)
+            }
             onKeyDown={(e) => {
               if (e.key === "Enter") {
-                handleSave(image);
+                handleSave(image, imageArgs);
               }
             }}
             fullWidth
@@ -82,7 +106,7 @@ export const ImageManager = ({ deployment }: { deployment: Deployment }) => {
           />
           <LoadingButton
             variant="contained"
-            onClick={() => handleSave(image)}
+            onClick={() => handleSave(image, imageArgs)}
             startIcon={<Iconify icon="material-symbols:save" />}
             loading={loading}
           >

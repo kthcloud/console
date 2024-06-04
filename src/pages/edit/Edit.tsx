@@ -355,10 +355,9 @@ export function Edit() {
                 <PrivateMode deployment={resource as Deployment} />
               )}
 
-              {resource.type === "deployment" &&
-                (resource as Deployment).deploymentType === "prebuilt" && (
-                  <ImageManager deployment={resource as Deployment} />
-                )}
+              {resource.type === "deployment" && (
+                <ImageManager deployment={resource as Deployment} />
+              )}
 
               {resource.type === "deployment" &&
                 user?.role?.permissions.includes("useCustomDomains") && (
