@@ -529,6 +529,7 @@
         "not-permitted-to-gpu-page": "Kan inte komma åt GPU sidan: Inte tillåten att använda GPUer",
         "run-args": "Argument till körning",
         "nothing-to-do": "Inget att göra",
-        "image-tag": "Image tagg"
+        "image-tag": "Image tagg",
+        "too-many-run-args": "För många argument, max 100"
     }
 }

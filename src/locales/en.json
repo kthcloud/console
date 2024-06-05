@@ -530,6 +530,7 @@
         "error-copying-user-id-user-is-null": "Could not copy user ID from user since user is null",
         "not-permitted-to-gpu-page": "Cannot access GPU page: Not allowed to use GPUs",
         "nothing-to-do": "Nothing to do",
-        "image-tag": "Image tag"
+        "image-tag": "Image tag",
+        "too-many-run-args": "Too many run args, max 100"
     }
 }
