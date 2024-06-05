@@ -1,5 +1,13 @@
 import { LoadingButton } from "@mui/lab";
-import { Card, CardContent, CardHeader, Stack, TextField } from "@mui/material";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  Stack,
+  TextField,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import { useKeycloak } from "@react-keycloak/web";
 import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
@@ -15,6 +23,7 @@ export const ImageManager = ({ deployment }: { deployment: Deployment }) => {
   const [image, setImage] = useState<string>("");
   const [imageArgs, setImageArgs] = useState<string>("");
   const [loading, setLoading] = useState(false);
+  const [tooManyArgs, setTooManyArgs] = useState(false);
   const { initialized, keycloak } = useKeycloak();
   const { queueJob } = useResource();
 
@@ -26,6 +35,12 @@ export const ImageManager = ({ deployment }: { deployment: Deployment }) => {
 
   const handleSave = async (img: string, args: string) => {
     if (!(initialized && keycloak.token)) return;
+    if (tooManyArgs) {
+      enqueueSnackbar(t("too-many-run-args"), {
+        variant: "error",
+      });
+      return;
+    }
     const newImage = img.trim();
     const newArgs = args.trim();
 
@@ -55,6 +70,14 @@ export const ImageManager = ({ deployment }: { deployment: Deployment }) => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (imageArgs.split(" ").length > 100) {
+      setTooManyArgs(true);
+    } else if (tooManyArgs) {
+      setTooManyArgs(false);
+    }
+  }, [imageArgs]);
 
   return (
     <Card sx={{ boxShadow: 20 }}>
@@ -88,7 +111,7 @@ export const ImageManager = ({ deployment }: { deployment: Deployment }) => {
             />
           )}
           <TextField
-            label={t("run-args")}
+            label={!tooManyArgs ? t("run-args") : t("too-many-run-args")}
             variant="outlined"
             placeholder={deployment.args.join(" ")}
             value={imageArgs}
@@ -103,6 +126,7 @@ export const ImageManager = ({ deployment }: { deployment: Deployment }) => {
             fullWidth
             sx={{ maxWidth: "sm" }}
             disabled={loading}
+            error={tooManyArgs}
           />
           <LoadingButton
             variant="contained"
