@@ -16,7 +16,6 @@ import {
   Step,
   StepLabel,
   Stepper,
-  Table,
   TableBody,
   TableCell,
   TableContainer,
@@ -38,11 +37,12 @@ import { toUnicode } from "punycode";
 import { useTranslation } from "react-i18next";
 import { sentenceCase } from "change-case";
 import { Deployment } from "../../../types";
+import { NoWrapTable as Table } from "../../../components/NoWrapTable";
 
 export const DomainManager = ({ deployment }: { deployment: Deployment }) => {
   const { t } = useTranslation();
   const { initialized, keycloak } = useKeycloak();
-  const { queueJob } = useResource();
+  const { queueJob, zones } = useResource();
   const theme = useTheme();
   const md = useMediaQuery(theme.breakpoints.down("md"));
 
@@ -51,6 +51,16 @@ export const DomainManager = ({ deployment }: { deployment: Deployment }) => {
   const [initialDomain, setInitialDomain] = useState<string>("");
   const [createDialogOpen, setCreateDialogOpen] = useState<boolean>(false);
   const [activeStep, setActiveStep] = useState<number>(0);
+  const [endpoint, setEndpoint] = useState<string>("");
+
+  useEffect(() => {
+    const endpoint = zones.find((z) => z.name === deployment.zone)?.endpoints
+      .deployment;
+
+    if (!endpoint) return;
+    setEndpoint(endpoint);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  });
 
   const steps = t("setup-custom-domain-steps").split("|");
 
@@ -100,7 +110,7 @@ export const DomainManager = ({ deployment }: { deployment: Deployment }) => {
     try {
       const res = await updateDeployment(
         deployment.id,
-        { customDomain: null },
+        { customDomain: "" },
         keycloak.token
       );
       queueJob(res);
@@ -193,7 +203,9 @@ export const DomainManager = ({ deployment }: { deployment: Deployment }) => {
             {activeStep === 0 && (
               <>
                 <Typography variant="body1" sx={{ color: "text.secondary" }}>
-                  {t("setup-custom-domain-0")}
+                  {t("setup-custom-domain-0-0") +
+                    endpoint +
+                    t("setup-custom-domain-0-1")}
                 </Typography>
                 <Typography variant="body2" sx={{ color: "text.secondary" }}>
                   {t("setup-custom-domain-0-warning")}
@@ -229,7 +241,7 @@ export const DomainManager = ({ deployment }: { deployment: Deployment }) => {
                             disabled={loading}
                           />
                         </TableCell>
-                        <TableCell>app.cloud.cbh.kth.se</TableCell>
+                        <TableCell>{endpoint}</TableCell>
                       </TableRow>
                     </TableBody>
                   </Table>
@@ -266,7 +278,7 @@ export const DomainManager = ({ deployment }: { deployment: Deployment }) => {
                             <Skeleton />
                           )}
                         </TableCell>
-                        <TableCell>app.cloud.cbh.kth.se</TableCell>
+                        <TableCell>{endpoint}</TableCell>
                       </TableRow>
                       <TableRow>
                         <TableCell>TXT</TableCell>
@@ -425,7 +437,7 @@ export const DomainManager = ({ deployment }: { deployment: Deployment }) => {
                         <TableCell>
                           {deployment.customDomain.url.split("//")[1]}
                         </TableCell>
-                        <TableCell>app.cloud.cbh.kth.se</TableCell>
+                        <TableCell>{endpoint}</TableCell>
                       </TableRow>
                       <TableRow>
                         <TableCell>TXT</TableCell>

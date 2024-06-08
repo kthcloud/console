@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
@@ -26,6 +25,7 @@ import { errorHandler } from "../../../utils/errorHandler";
 import { useTranslation } from "react-i18next";
 import { Deployment } from "../../../types";
 import { Env } from "@kthcloud/go-deploy-types/types/v2/body";
+import { NoWrapTable as Table } from "../../../components/NoWrapTable";
 
 export default function EnvManager({ deployment }: { deployment: Deployment }) {
   const { t } = useTranslation();

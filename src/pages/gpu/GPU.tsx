@@ -15,7 +15,6 @@ import {
   MenuItem,
   Select,
   Stack,
-  Table,
   TableBody,
   TableCell,
   TableContainer,
@@ -40,8 +39,9 @@ import {
   GpuLeaseRead,
 } from "@kthcloud/go-deploy-types/types/v2/body";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AlertList } from "../../components/AlertList";
+import NoWrapTable from "../../components/NoWrapTable";
 
 export const GPU = () => {
   const { t } = useTranslation();
@@ -60,6 +60,19 @@ export const GPU = () => {
     zones?: string[];
   }
   const [groupedGpus, setGroupedGpus] = useState<GPUGroup[]>([]);
+
+  const { user } = useResource();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!user) return;
+    if (!user.role.permissions.includes("useGpus") && !user.admin) {
+      enqueueSnackbar(t("not-permitted-to-gpu-page"), {
+        variant: "error",
+      });
+      navigate("/deploy");
+    }
+  }, [user]);
 
   useEffect(() => {
     const grouped: GPUGroup[] = [];
@@ -234,7 +247,7 @@ export const GPU = () => {
                 />
                 <CardContent>
                   <TableContainer>
-                    <Table>
+                    <NoWrapTable>
                       <TableHead>
                         <TableRow>
                           <TableCell>{t("admin-name")}</TableCell>
@@ -261,10 +274,7 @@ export const GPU = () => {
                               </TableCell>
                               <TableCell>{lease.queuePosition}</TableCell>
                               <TableCell>
-                                {
-                                  //@ts-ignore
-                                  lease.leaseDuration + " h"
-                                }
+                                {lease.leaseDuration + " h"}
                               </TableCell>
                               <TableCell>
                                 {new Date(lease.createdAt).toLocaleString(
@@ -334,7 +344,7 @@ export const GPU = () => {
                           </TableRow>
                         )}
                       </TableBody>
-                    </Table>
+                    </NoWrapTable>
                   </TableContainer>
                 </CardContent>
               </Card>
@@ -346,7 +356,7 @@ export const GPU = () => {
                 />
                 <CardContent>
                   <TableContainer>
-                    <Table>
+                    <NoWrapTable>
                       <TableHead>
                         <TableRow>
                           <TableCell>{t("admin-name")}</TableCell>
@@ -400,7 +410,7 @@ export const GPU = () => {
                           </TableRow>
                         )}
                       </TableBody>
-                    </Table>
+                    </NoWrapTable>
                   </TableContainer>
                 </CardContent>
               </Card>

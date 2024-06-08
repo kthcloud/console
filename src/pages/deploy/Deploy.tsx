@@ -1,7 +1,6 @@
 // mui
 import {
   Card,
-  Table,
   Stack,
   Checkbox,
   TableRow,
@@ -46,6 +45,7 @@ import { Deployment, Resource, Uuid, Vm } from "../../types";
 import { ThemeColor } from "../../theme/types";
 import { deleteVM } from "../../api/deploy/vms";
 import { AlertList } from "../../components/AlertList";
+import { NoWrapTable as Table } from "../../components/NoWrapTable";
 
 const descendingComparator = (
   a: Record<string, any>,
@@ -454,13 +454,15 @@ export function Deploy() {
                   {t("storage-manager")}
                 </Button>
               )}
-              <Button
-                component={RouterLink}
-                to={"/gpu"}
-                startIcon={<Iconify icon={"mdi:gpu"} />}
-              >
-                {t("gpu-leases")}
-              </Button>
+              {(user.role.permissions.includes("useGpus") || user.admin) && (
+                <Button
+                  component={RouterLink}
+                  to={"/gpu"}
+                  startIcon={<Iconify icon={"mdi:gpu"} />}
+                >
+                  {t("gpu-leases")}
+                </Button>
+              )}
               <Button
                 component={RouterLink}
                 to="/create"

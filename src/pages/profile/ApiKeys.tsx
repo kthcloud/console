@@ -15,7 +15,6 @@ import {
   Select,
   Skeleton,
   Stack,
-  Table,
   TableBody,
   TableCell,
   TableContainer,
@@ -37,6 +36,7 @@ import { enqueueSnackbar } from "notistack";
 import { useKeycloak } from "@react-keycloak/web";
 import { ApiKeyCreated } from "@kthcloud/go-deploy-types/types/v2/body";
 import CopyButton from "../../components/CopyButton";
+import { NoWrapTable as Table } from "../../components/NoWrapTable";
 
 export const ApiKeys = () => {
   const { t } = useTranslation();

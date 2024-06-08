@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import {
   Accordion,
   AccordionDetails,
@@ -21,7 +19,6 @@ import {
   Select,
   Skeleton,
   Stack,
-  Table,
   TableBody,
   TableCell,
   TableContainer,
@@ -46,9 +43,11 @@ import { sentenceCase } from "change-case";
 import { Vm } from "../../../types";
 import {
   HttpProxyRead,
+  PortCreate,
   PortRead,
   PortUpdate,
 } from "@kthcloud/go-deploy-types/types/v2/body";
+import { NoWrapTable as Table } from "../../../components/NoWrapTable";
 
 interface Proxy extends HttpProxyRead {
   port?: number;
@@ -58,14 +57,19 @@ interface Port extends PortRead {
   httpProxy?: Proxy;
 }
 
+interface NewProxy {
+  name: string;
+  customDomain?: string;
+}
+
 const ProxyManager = ({ vm }: { vm: Vm }) => {
   const { t } = useTranslation();
   const { initialized, keycloak } = useKeycloak();
-  const { queueJob, user } = useResource();
+  const { queueJob, user, zones } = useResource();
   const theme = useTheme();
   const md = useMediaQuery(theme.breakpoints.down("md"));
 
-  const [newProxy, setNewProxy] = useState<Proxy>({
+  const [newProxy, setNewProxy] = useState<NewProxy>({
     name: "",
     customDomain: undefined,
   });
@@ -77,6 +81,16 @@ const ProxyManager = ({ vm }: { vm: Vm }) => {
   const [ports, setPorts] = useState<Port[]>([]);
   const [deleting, setDeleting] = useState<string[]>([]);
   const [selectedPort, setSelectedPort] = useState<number>(0);
+  const [endpoint, setEndpoint] = useState<string>("");
+
+  useEffect(() => {
+    const endpoint = zones.find((z) => z.name === vm.zone)?.endpoints
+      .deployment;
+
+    if (!endpoint) return;
+    setEndpoint(endpoint);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  });
 
   useEffect(() => {
     const tcpPorts: Port[] = vm.ports.filter((port) => port.protocol === "tcp");
@@ -109,7 +123,7 @@ const ProxyManager = ({ vm }: { vm: Vm }) => {
     if (!(initialized && keycloak.token)) return;
     setLoading(true);
 
-    const portsList = vm.ports;
+    const portsList = vm.ports as PortCreate[];
 
     portsList.forEach((port) => {
       if (port.port === selectedPort) {
@@ -318,21 +332,21 @@ const ProxyManager = ({ vm }: { vm: Vm }) => {
                                   sx={{ minWidth: 150 }}
                                 />
                               </TableCell>
-                              <TableCell>app.cloud.cbh.kth.se</TableCell>
+                              <TableCell>{endpoint}</TableCell>
                             </TableRow>
                             {editing?.customDomain && (
                               <TableRow>
                                 <TableCell>TXT</TableCell>
                                 <TableCell>
                                   {editing.customDomain ? (
-                                    "_kthcloud." + editing.customDomain
+                                    "_kthcloud." + editing.customDomain.domain
                                   ) : (
                                     <Skeleton />
                                   )}
                                 </TableCell>
                                 <TableCell>
-                                  {editing.customDomainSecret ? (
-                                    editing.customDomainSecret
+                                  {editing.customDomain ? (
+                                    editing.customDomain.secret
                                   ) : (
                                     <Skeleton />
                                   )}
@@ -357,12 +371,12 @@ const ProxyManager = ({ vm }: { vm: Vm }) => {
                         alignItems={"center"}
                         useFlexGap
                       >
-                        {editing?.customDomainStatus && (
+                        {editing?.customDomain && (
                           <Chip
                             label={
                               t("admin-status") +
                               ": " +
-                              sentenceCase(editing.customDomainStatus)
+                              sentenceCase(editing.customDomain.status)
                             }
                           />
                         )}
@@ -460,16 +474,16 @@ const ProxyManager = ({ vm }: { vm: Vm }) => {
                             <TableCell>
                               <Link
                                 href={
-                                  proxy.customDomain && proxy.customDomainUrl
-                                    ? proxy.customDomainUrl
+                                  proxy.customDomain
+                                    ? proxy.customDomain.url
                                     : proxy.url
                                 }
                                 sx={{ whiteSpace: "nowrap" }}
                                 target="_blank"
                                 rel="noopener noreferrer"
                               >
-                                {proxy.customDomain && proxy.customDomainUrl
-                                  ? proxy.customDomainUrl
+                                {proxy.customDomain
+                                  ? proxy.customDomain.url
                                   : proxy.url}
                               </Link>
                             </TableCell>
@@ -487,7 +501,12 @@ const ProxyManager = ({ vm }: { vm: Vm }) => {
                                   component="label"
                                   disabled={loading}
                                   onClick={() => {
-                                    setNewProxy(proxy);
+                                    setNewProxy({
+                                      name: proxy.name,
+                                      customDomain: proxy.customDomain
+                                        ? proxy.customDomain.domain
+                                        : "",
+                                    });
                                     setEditing(proxy);
                                     if (proxy.port) setSelectedPort(proxy.port);
                                     setCreateDialogOpen(true);

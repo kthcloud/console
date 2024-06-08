@@ -12,7 +12,6 @@ import {
   TableBody,
   IconButton,
   Paper,
-  Table,
   Stack,
   Switch,
   FormControlLabel,
@@ -29,6 +28,7 @@ import useResource from "../../hooks/useResource";
 import ZoneSelector from "./ZoneSelector";
 import { useTranslation } from "react-i18next";
 import { Volume } from "@kthcloud/go-deploy-types/types/v2/body";
+import { NoWrapTable as Table } from "../../components/NoWrapTable";
 
 export default function CreateDeployment({
   finished,
@@ -58,6 +58,7 @@ export default function CreateDeployment({
 
   const [selectedZone, setSelectedZone] = useState("");
   const [image, setImage] = useState("");
+  const [imageArgs, setImageArgs] = useState("");
 
   const [envs, setEnvs] = useState([{ name: "PORT", value: "8080" }]);
   const [newEnvName, setNewEnvName] = useState("");
@@ -116,6 +117,7 @@ export default function CreateDeployment({
         cleaned,
         selectedZone,
         image,
+        imageArgs.split(" "),
         newEnvs,
         newPersistent,
         keycloak.token
@@ -174,16 +176,34 @@ export default function CreateDeployment({
           subheader={t("create-deployment-image-subheader")}
         />
         <CardContent>
-          <TextField
-            label={t("create-deployment-image")}
-            variant="outlined"
-            placeholder="mongo:latest"
-            value={image}
-            onChange={(e) => {
-              setImage(e.target.value.trim());
-            }}
-            fullWidth
-          />
+          <Stack
+            direction="row"
+            spacing={3}
+            alignItems={"center"}
+            flexWrap={"wrap"}
+            useFlexGap
+          >
+            <TextField
+              label={t("create-deployment-image")}
+              variant="outlined"
+              placeholder="mongo:latest"
+              value={image}
+              onChange={(e) => {
+                setImage(e.target.value.trim());
+              }}
+              fullWidth
+            />
+            <TextField
+              label={t("run-args")}
+              variant="outlined"
+              placeholder="--setParameter httpVerboseLogging=true"
+              value={imageArgs}
+              onChange={(e) => {
+                setImageArgs(e.target.value);
+              }}
+              fullWidth
+            />
+          </Stack>
         </CardContent>
       </Card>
 

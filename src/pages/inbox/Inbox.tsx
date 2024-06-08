@@ -8,7 +8,6 @@ import {
   Paper,
   Skeleton,
   Stack,
-  Table,
   TableBody,
   TableCell,
   TableContainer,
@@ -35,6 +34,7 @@ import { errorHandler } from "../../utils/errorHandler";
 import { useTheme } from "@mui/material/styles";
 import { NotificationRead } from "@kthcloud/go-deploy-types/types/v2/body";
 import { AlertList } from "../../components/AlertList";
+import { NoWrapTable as Table } from "../../components/NoWrapTable";
 
 const Inbox = () => {
   const { user, notifications, unread, beginFastLoad } = useResource();

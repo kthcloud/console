@@ -83,6 +83,7 @@ export const createDeployment = async (
   name: any,
   zone: any,
   image: any,
+  imageArgs: any,
   envs: any,
   volumes: any,
   token: string
@@ -93,6 +94,7 @@ export const createDeployment = async (
 
   if (zone) body = { ...body, zone };
   if (image) body = { ...body, image };
+  if (imageArgs) body = { ...body, args: imageArgs };
   if (envs) body = { ...body, envs };
   if (volumes) body = { ...body, volumes };
 

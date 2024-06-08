@@ -13,6 +13,7 @@ import { useKeycloak } from "@react-keycloak/web";
 import { useTranslation } from "react-i18next";
 import { GenAITooltip } from "../../../../components/GenAITooltip";
 import { Link } from "react-router-dom";
+import { TimestampedSystemCapacities } from "@kthcloud/go-deploy-types/types/v2/body";
 
 const Hero = () => {
   const { keycloak, initialized } = useKeycloak();
@@ -29,7 +30,7 @@ const Hero = () => {
       method: "GET",
     })
       .then((response) => response.json())
-      .then((result) => {
+      .then((result: TimestampedSystemCapacities[]) => {
         setRam(result[0].capacities.ram.total);
         setCpuCores(result[0].capacities.cpuCore.total);
         setGpus(result[0].capacities.gpu.total);

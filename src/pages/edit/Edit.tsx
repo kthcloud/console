@@ -47,6 +47,7 @@ import { Volume } from "@kthcloud/go-deploy-types/types/v2/body";
 import { AlertList } from "../../components/AlertList";
 import { Specs } from "./Specs";
 import { ReplicaStatus } from "./deployments/ReplicaStatus";
+import ProxyManager from "./vms/ProxyManager";
 
 export function Edit() {
   const { t } = useTranslation();
@@ -337,7 +338,7 @@ export function Edit() {
 
               {resource.type === "vm" && <PortManager vm={resource as Vm} />}
 
-              {/* {resource.type === "vm" && <ProxyManager vm={resource as Vm} />} */}
+              {resource.type === "vm" && <ProxyManager vm={resource as Vm} />}
 
               {resource.type === "deployment" && (
                 <EnvManager deployment={resource as Deployment} />
@@ -355,10 +356,9 @@ export function Edit() {
                 <PrivateMode deployment={resource as Deployment} />
               )}
 
-              {resource.type === "deployment" &&
-                (resource as Deployment).deploymentType === "prebuilt" && (
-                  <ImageManager deployment={resource as Deployment} />
-                )}
+              {resource.type === "deployment" && (
+                <ImageManager deployment={resource as Deployment} />
+              )}
 
               {resource.type === "deployment" &&
                 user?.role?.permissions.includes("useCustomDomains") && (
