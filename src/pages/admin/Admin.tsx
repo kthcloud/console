@@ -670,7 +670,7 @@ export const Admin = () => {
               </Card>
 
               <Card sx={{ boxShadow: 20 }}>
-                <CardHeader title={t("resource-vms")} />
+                <CardHeader title={t("vms")} />
 
                 <CardContent>
                   <Stack
@@ -1026,7 +1026,7 @@ export const Admin = () => {
                           <TableCell>{t("admin-id")}</TableCell>
                           <TableCell>{t("admin-name")}</TableCell>
                           <TableCell>{t("admin-user")}</TableCell>
-                          <TableCell>{`${t("resource-vm")} ${t("admin-name").toLowerCase()}`}</TableCell>
+                          <TableCell>{`${t("vm")} ${t("admin-name").toLowerCase()}`}</TableCell>
                           <TableCell>{t("admin-leased-until")}</TableCell>
                           <TableCell>{t("admin-gpu-expired")}</TableCell>
                         </TableRow>

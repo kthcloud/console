@@ -19,7 +19,6 @@ import { useKeycloak } from "@react-keycloak/web";
 import { enqueueSnackbar } from "notistack";
 import { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { acceptDeploymentTransfer } from "../../api/deploy/deployments";
 import {
   deleteNotification,
   markNotificationAsRead,
@@ -32,12 +31,26 @@ import Page from "../../components/Page";
 import useResource from "../../hooks/useResource";
 import { errorHandler } from "../../utils/errorHandler";
 import { useTheme } from "@mui/material/styles";
-import { NotificationRead } from "@kthcloud/go-deploy-types/types/v2/body";
+import {
+  NotificationRead,
+  ResourceMigrationRead,
+} from "@kthcloud/go-deploy-types/types/v2/body";
 import { AlertList } from "../../components/AlertList";
 import { NoWrapTable as Table } from "../../components/NoWrapTable";
+import {
+  acceptMigration,
+  deleteMigration,
+} from "../../api/deploy/resourceMigrations";
 
 const Inbox = () => {
-  const { user, notifications, unread, beginFastLoad } = useResource();
+  const {
+    user,
+    notifications,
+    unread,
+    resourceMigrations,
+    rows,
+    beginFastLoad,
+  } = useResource();
   const { t } = useTranslation();
   const { initialized, keycloak } = useKeycloak();
   const [expandedRead, setExpandedRead] = useState(false);
@@ -60,7 +73,7 @@ const Inbox = () => {
           notification.content.code
         );
       } else if (notification.type === "deploymentTransfer") {
-        await acceptDeploymentTransfer(
+        await acceptMigration(
           keycloak.token,
           notification.content.id,
           notification.content.code
@@ -93,7 +106,7 @@ const Inbox = () => {
     }
   };
 
-  const handleDelete = async (notification: NotificationRead) => {
+  const handleDeleteNotification = async (notification: NotificationRead) => {
     if (!(initialized && keycloak.token)) return;
 
     try {
@@ -120,6 +133,44 @@ const Inbox = () => {
       default:
         return "";
     }
+  };
+
+  const handleDeleteMigration = async (migration: ResourceMigrationRead) => {
+    if (!(initialized && keycloak.token)) return;
+
+    try {
+      setStale(migration.id);
+      beginFastLoad();
+      await deleteMigration(keycloak.token, migration.id);
+    } catch (error: any) {
+      errorHandler(error).forEach((e) =>
+        enqueueSnackbar(t("update-error") + e, {
+          variant: "error",
+        })
+      );
+    }
+  };
+
+  const renderMigrationDetails = (migration: ResourceMigrationRead) => {
+    if (!migration.updateOwner) return null;
+    const resource = rows.find((r) => r.id === migration.resourceId);
+
+    let details = `${t("transfer-ownership")} ${t("of")} ${migration.resourceType} `;
+
+    if (resource) {
+      details += " " + resource.name;
+    }
+
+    details += ` ${t("to-user")} `;
+
+    return (
+      <Typography variant="body2">
+        {details}
+        <Typography variant="caption" sx={{ ml: 1 }}>
+          {migration.updateOwner.ownerId}
+        </Typography>
+      </Typography>
+    );
   };
 
   return (
@@ -151,7 +202,7 @@ const Inbox = () => {
                       >
                         <TableHead>
                           <TableRow>
-                            <TableCell>Notification</TableCell>
+                            <TableCell>{t("notification")}</TableCell>
                             <TableCell align="right">
                               {t("admin-actions")}
                             </TableCell>
@@ -234,7 +285,9 @@ const Inbox = () => {
                                             <Iconify icon="mdi:delete" />
                                           }
                                           onClick={() =>
-                                            handleDelete(notification)
+                                            handleDeleteNotification(
+                                              notification
+                                            )
                                           }
                                         >
                                           {t("button-clear")}
@@ -361,7 +414,7 @@ const Inbox = () => {
                                                         <Iconify icon="mdi:delete" />
                                                       }
                                                       onClick={() =>
-                                                        handleDelete(
+                                                        handleDeleteNotification(
                                                           notification
                                                         )
                                                       }
@@ -413,6 +466,82 @@ const Inbox = () => {
                   </Stack>
                 </CardContent>
               </Card>
+
+              {resourceMigrations.length > 0 && (
+                <Card sx={{ boxShadow: 20 }}>
+                  <CardHeader title={t("pending-migrations")} />
+                  <CardContent>
+                    <Stack spacing={2}>
+                      <TableContainer component={Paper}>
+                        <Table
+                          sx={{ minWidth: 650 }}
+                          aria-label="notifications table"
+                        >
+                          <TableHead>
+                            <TableRow>
+                              <TableCell>{t("migration")}</TableCell>
+                              <TableCell>{t("created-at")}</TableCell>
+                              <TableCell align="right">
+                                {t("admin-actions")}
+                              </TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {resourceMigrations.map((migration) => (
+                              <Fragment key={migration.id}>
+                                {stale !== migration.id ? (
+                                  <TableRow>
+                                    <TableCell>
+                                      {renderMigrationDetails(migration)}
+                                    </TableCell>
+                                    <TableCell>
+                                      <Typography
+                                        variant="caption"
+                                        fontFamily={"monospace"}
+                                      >
+                                        {
+                                          migration.createdAt
+                                            ?.replace("T", " ")
+                                            ?.replace("Z", "")
+                                            ?.split(".")[0]
+                                        }
+                                      </Typography>
+                                    </TableCell>
+                                    <TableCell align="right">
+                                      <ButtonGroup
+                                        variant="outlined"
+                                        sx={{ py: 3 }}
+                                      >
+                                        <Button
+                                          color="error"
+                                          startIcon={
+                                            <Iconify icon="mdi:delete" />
+                                          }
+                                          onClick={() =>
+                                            handleDeleteMigration(migration)
+                                          }
+                                        >
+                                          {t("remove")}
+                                        </Button>
+                                      </ButtonGroup>
+                                    </TableCell>
+                                  </TableRow>
+                                ) : (
+                                  <TableRow>
+                                    <TableCell colSpan={2}>
+                                      <Skeleton animation="wave" height={64} />
+                                    </TableCell>
+                                  </TableRow>
+                                )}
+                              </Fragment>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                    </Stack>
+                  </CardContent>
+                </Card>
+              )}
             </Stack>
           </Container>
         </Page>

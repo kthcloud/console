@@ -155,8 +155,8 @@ const ResourceComparisonTable = () => {
               <TableHead>
                 <TableRow>
                   <TableCell>{t("use-case")}</TableCell>
-                  <TableCell>{t("resource-kubernetes-deployment")}</TableCell>
-                  <TableCell>{t("resource-vm")}</TableCell>
+                  <TableCell>{t("deployment")}</TableCell>
+                  <TableCell>{t("vm")}</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
