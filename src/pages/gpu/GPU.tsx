@@ -274,10 +274,7 @@ export const GPU = () => {
                               </TableCell>
                               <TableCell>{lease.queuePosition}</TableCell>
                               <TableCell>
-                                {
-                                  //@ts-ignore
-                                  lease.leaseDuration + " h"
-                                }
+                                {lease.leaseDuration + " h"}
                               </TableCell>
                               <TableCell>
                                 {new Date(lease.createdAt).toLocaleString(
