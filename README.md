@@ -30,7 +30,6 @@ External:
 
 -   [Gravatar](https://gravatar.com): Provides user avatars
 -   [Google Fonts](https://fonts.google.com): Provides fonts
--   [GitHub SSO](https://github.com): Enables linking GitHub repos for continuous delivery
 
 ## Setup
 
