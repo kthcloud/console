@@ -114,7 +114,7 @@ export const Create = () => {
                         startIcon={<Iconify icon="lucide:container" />}
                         sx={{ px: 3 }}
                       >
-                        {t("resource-kubernetes-deployment")}
+                        {t("deployment")}
                       </Button>
                       <Button
                         variant={alignment === "vm" ? "contained" : "text"}
@@ -126,7 +126,7 @@ export const Create = () => {
                         startIcon={<Iconify icon="carbon:virtual-machine" />}
                         sx={{ px: 3 }}
                       >
-                        {t("resource-vm")}
+                        {t("vm")}
                       </Button>
                     </Stack>
                   </Stack>

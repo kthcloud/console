@@ -16,6 +16,7 @@ import { getVMById, listVMs } from "../api/deploy/vms";
 
 import {
   NotificationRead as Notification,
+  ResourceMigrationRead,
   TeamRead as Team,
   ZoneRead as Zone,
 } from "@kthcloud/go-deploy-types/types/v2/body/index";
@@ -26,6 +27,7 @@ import {
 } from "@kthcloud/go-deploy-types/types/v2/body";
 import { listGpuGroups } from "../api/deploy/gpuGroups";
 import { listGpuLeases } from "../api/deploy/gpuLeases";
+import { listMigrations } from "../api/deploy/resourceMigrations";
 
 type ResourceContextType = {
   rows: Resource[];
@@ -50,6 +52,8 @@ type ResourceContextType = {
   setGpuGroups: (gpuGroups: GpuGroupRead[]) => void;
   gpuLeases: GpuLeaseRead[];
   setGpuLeases: (gpuLeases: GpuLeaseRead[]) => void;
+  resourceMigrations: ResourceMigrationRead[];
+  setResourceMigrations: (resourceMigrations: ResourceMigrationRead[]) => void;
   queueJob: (job: Job) => void;
   beginFastLoad: () => void;
   initialLoad: boolean;
@@ -83,6 +87,8 @@ const initialState: ResourceContextType = {
   setGpuGroups: () => {},
   gpuLeases: new Array<GpuLeaseRead>(),
   setGpuLeases: () => {},
+  resourceMigrations: new Array<ResourceMigrationRead>(),
+  setResourceMigrations: () => {},
   queueJob: () => {},
   initialLoad: false,
   setInitialLoad: () => {},
@@ -118,6 +124,9 @@ export const ResourceContextProvider = ({
   const [zones, setZones] = useState<Zone[]>([]);
   const [gpuGroups, setGpuGroups] = useState<GpuGroupRead[]>([]);
   const [gpuLeases, setGpuLeases] = useState<GpuLeaseRead[]>([]);
+  const [resourceMigrations, setResourceMigrations] = useState<
+    ResourceMigrationRead[]
+  >([]);
 
   // Loading and connection error handler
   const [initialLoad, setInitialLoad] = useState<boolean>(false);
@@ -238,6 +247,20 @@ export const ResourceContextProvider = ({
     } catch (error: any) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar("Error fetching GPU leases: " + e, {
+          variant: "error",
+        })
+      );
+    }
+  };
+
+  const loadResourceMigrations = async () => {
+    if (!(initialized && keycloak.authenticated && keycloak.token)) return;
+    try {
+      const migrations = await listMigrations(keycloak.token);
+      setResourceMigrations(migrations);
+    } catch (error: any) {
+      errorHandler(error).forEach((e) =>
+        enqueueSnackbar("Error fetching migrations: " + e, {
           variant: "error",
         })
       );
@@ -368,6 +391,7 @@ export const ResourceContextProvider = ({
     loadZones();
     loadGpuGroups();
     loadGpuLeases();
+    loadResourceMigrations();
 
     // eslint-disable-next-line
   }, [user]);
@@ -416,6 +440,8 @@ export const ResourceContextProvider = ({
         setGpuGroups,
         gpuLeases,
         setGpuLeases,
+        resourceMigrations,
+        setResourceMigrations,
         queueJob,
         beginFastLoad,
         initialLoad,

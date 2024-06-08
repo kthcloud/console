@@ -167,24 +167,3 @@ export const applyCommand = async (id: string, command: any, token: string) => {
   }
   return true;
 };
-
-export const acceptDeploymentTransfer = async (
-  token: any,
-  id: any,
-  code: any
-) => {
-  const url = `${import.meta.env.VITE_DEPLOY_API_URL}/deployments/${id}`;
-  const body = { transferCode: code };
-
-  const response = await fetch(url, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(body),
-  });
-
-  const result = await response.json();
-  return result;
-};

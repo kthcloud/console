@@ -20,7 +20,7 @@
         "menu-label": "Meny",
         "create-deployment-app-path-label": "Filsökväg i appen",
         "create-deployment-github-title": "Koppla GitHub projekt",
-        "resource-vm": "Virtuell maskin",
+        "vm": "Virtuell maskin",
         "login-with-github": "Logga in med GitHub",
         "admin-name-call-to-action": "Proxy kommer att ha namnet: ",
         "gpu-drivers-3": " för att installera senaste drivrutinerna.",
@@ -263,7 +263,7 @@
         "admin-leased-until": "Lånat till",
         "specs-subheader": "Ändra storlek utifrån dina behov",
         "onboarding-deployments": "Resurstyp: Deployments",
-        "resource-kubernetes-deployment": "Kubernetes deployment",
+        "deployment": "Deployment",
         "tcp-first": "Exponera en TCP port först",
         "gpu-lease": "Låna grafikkort",
         "admin-user": "Användare",
@@ -288,7 +288,7 @@
         "take-me-back": "Ta mig hem",
         "admin-status": "Status",
         "revert": "Återgå",
-        "resource-vms": "Virtuella maskiner",
+        "vms": "Virtuella maskiner",
         "create-deployment-env-key": "Variabel",
         "error-all-fields": "Fyll i alla fält",
         "create-vm-minimum-disk-size": "Minst diskutrymme",
@@ -530,6 +530,9 @@
         "run-args": "Argument till körning",
         "nothing-to-do": "Inget att göra",
         "image-tag": "Image tagg",
-        "too-many-run-args": "För många argument, max 100"
+        "too-many-run-args": "För många argument, max 100",
+        "pending-migrations": "Pågående överföringar",
+        "migration": "Överföring",
+        "of": "av"
     }
 }
