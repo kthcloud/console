@@ -241,7 +241,7 @@
         "deleting-proxy": "Deleting proxy ",
         "proxies": "Proxies",
         "proxies-subheader-1": "Deploy a proxy to a port forwarded from your VM.",
-        "proxies-subheader-2": "This makes them accessible with a nice URL instead of the randomly assigned external port.",
+        "proxies-subheader-2": "This makes them accessible with a proper URL instead of the randomly assigned external port.",
         "new-proxy": "New proxy",
         "select-port": "Select port to proxy to",
         "admin-name-call-to-action": "Proxy will have name: ",
