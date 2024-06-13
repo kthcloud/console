@@ -68,7 +68,7 @@ export const ImageManager = ({ deployment }: { deployment: Deployment }) => {
 
   useEffect(() => {
     const length = imageArgs.split(" ").length;
-    if (length > 2 && imageArgs.split(" ")[length - 1] !== "") {
+    if (length > 100 && imageArgs.split(" ")[length - 1] !== "") {
       setTooManyArgs(true);
     } else if (tooManyArgs) {
       setTooManyArgs(false);
