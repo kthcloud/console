@@ -112,12 +112,16 @@ export default function CreateDeployment({
       setNewPersistentServerPath("");
     }
 
+    // If args are "", it should be an empty array
+    let newImageArgs = imageArgs.split(" ");
+    if (newImageArgs.length === 1 && newImageArgs[0] === "") newImageArgs = [];
+
     try {
       const job = await createDeployment(
         cleaned,
         selectedZone,
         image,
-        imageArgs.split(" "),
+        newImageArgs,
         newEnvs,
         newPersistent,
         keycloak.token
