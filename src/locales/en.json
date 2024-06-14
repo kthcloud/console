@@ -25,9 +25,9 @@
         "error-creating-vm": "Error creating VM",
         "error-all-fields": "Please fill all fields",
         "resource-deployments": "Deployments",
-        "resource-kubernetes-deployment": "Kubernetes deployment",
-        "resource-vms": "Virtual machines",
-        "resource-vm": "Virtual machine",
+        "deployment": "Deployment",
+        "vms": "Virtual machines",
+        "vm": "Virtual machine",
         "resource-gpus": "GPUs",
         "resource-gpu": "GPU",
         "resource-users": "Users",
@@ -531,6 +531,9 @@
         "not-permitted-to-gpu-page": "Cannot access GPU page: Not allowed to use GPUs",
         "nothing-to-do": "Nothing to do",
         "image-tag": "Image tag",
-        "too-many-run-args": "Too many run args, max 100"
+        "too-many-run-args": "Too many run args, max 100",
+        "pending-migrations": "Pending migrations",
+        "migration": "Migration",
+        "of": "of"
     }
 }

@@ -80,12 +80,12 @@ const ResourceTypeChat = () => {
         <>
           {!response ? (
             <Typography variant="body2">
-              <b>{t("resource-kubernetes-deployment")}</b>
+              <b>{t("deployment")}</b>
               <br />
               {t("explain-deployment")}
               <br />
               <br />
-              <b>VM ({t("resource-vm")})</b>
+              <b>VM ({t("vm")})</b>
               <br />
               {t("explain-vm")}
             </Typography>
