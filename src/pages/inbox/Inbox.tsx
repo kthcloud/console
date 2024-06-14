@@ -70,13 +70,12 @@ const Inbox = () => {
         (u) => u.id === notification.content.userId
       );
 
-      if (!alreadyExists && keycloak.token) {
+      if (!alreadyExists && keycloak.token && notification.content.userId) {
         discoverUserById(notification.content.userId, keycloak.token)
           .then((userDiscover) => setUserCache([...userCache, userDiscover]))
           .catch((e) => console.error(e));
       }
     });
-    console.log(userCache);
   }, [notifications]);
 
   const accept = async (notification: NotificationRead) => {
