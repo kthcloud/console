@@ -533,6 +533,7 @@
         "too-many-run-args": "För många argument, max 100",
         "pending-migrations": "Pågående överföringar",
         "migration": "Överföring",
-        "of": "av"
+        "of": "av",
+        "enable-notifications": "Aktivera notiser"
     }
 }

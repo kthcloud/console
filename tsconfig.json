@@ -23,6 +23,6 @@
         "noImplicitThis": true,
         "strictNullChecks": true
     },
-    "include": ["src"],
+    "include": ["src", "public/service-worker.js"],
     "references": [{ "path": "./tsconfig.node.json" }]
 }

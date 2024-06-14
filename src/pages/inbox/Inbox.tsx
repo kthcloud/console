@@ -3,6 +3,7 @@ import {
   Button,
   ButtonGroup,
   Card,
+  CardActions,
   CardContent,
   CardHeader,
   Container,
@@ -70,13 +71,12 @@ const Inbox = () => {
         (u) => u.id === notification.content.userId
       );
 
-      if (!alreadyExists && keycloak.token) {
+      if (!alreadyExists && keycloak.token && notification.content.userId) {
         discoverUserById(notification.content.userId, keycloak.token)
           .then((userDiscover) => setUserCache([...userCache, userDiscover]))
           .catch((e) => console.error(e));
       }
     });
-    console.log(userCache);
   }, [notifications]);
 
   const accept = async (notification: NotificationRead) => {
@@ -211,6 +211,21 @@ const Inbox = () => {
                   title={t("notifications")}
                   subheader={t("notificationsSubheader")}
                 />
+                <CardContent>
+                  <Stack direction="row" spacing={2}>
+                    <Button
+                      startIcon={<Iconify icon="mdi:bell" />}
+                      disabled={Notification.permission === "granted"}
+                      onClick={() => {
+                        Notification.requestPermission().then((permission) => {
+                          console.log(permission);
+                        });
+                      }}
+                    >
+                      {t("enable-notifications")}
+                    </Button>
+                  </Stack>
+                </CardContent>
                 <CardContent>
                   <Stack spacing={2}>
                     <TableContainer component={Paper}>

@@ -15,7 +15,7 @@ import { getTeams } from "../api/deploy/teams";
 import { getVMById, listVMs } from "../api/deploy/vms";
 
 import {
-  NotificationRead as Notification,
+  NotificationRead,
   ResourceMigrationRead,
   TeamRead as Team,
   ZoneRead as Zone,
@@ -40,8 +40,8 @@ type ResourceContextType = {
   connectionError: boolean;
   user: User | null;
   setUser: (user: User) => void;
-  notifications: Notification[];
-  setNotifications: (notifications: Notification[]) => void;
+  notifications: NotificationRead[];
+  setNotifications: (notifications: NotificationRead[]) => void;
   unread: number;
   setUnread: (unread: number) => void;
   teams: Team[];
@@ -75,7 +75,7 @@ const initialState: ResourceContextType = {
   connectionError: false,
   user: null,
   setUser: () => {},
-  notifications: new Array<Notification>(),
+  notifications: new Array<NotificationRead>(),
   setNotifications: () => {},
   unread: 0,
   setUnread: () => {},
@@ -118,7 +118,7 @@ export const ResourceContextProvider = ({
   const [userRows, setUserRows] = useState<Resource[]>([]);
   const [jobs, setJobs] = useState<Job[]>([]);
   const [user, setUser] = useState<User | null>(null);
-  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [notifications, setNotifications] = useState<NotificationRead[]>([]);
   const [unread, setUnread] = useState<number>(0);
   const [teams, setTeams] = useState<Team[]>([]);
   const [zones, setZones] = useState<Zone[]>([]);
@@ -376,6 +376,18 @@ export const ResourceContextProvider = ({
     }
   };
 
+  const sendJwtToServiceWorker = async () => {
+    if ("serviceWorker" in navigator) {
+      const registration = await navigator.serviceWorker.ready;
+      if (registration.active) {
+        registration.active.postMessage({
+          type: "JWT",
+          jwt: keycloak.token,
+        });
+      }
+    }
+  };
+
   useEffect(() => {
     loadUser();
     // eslint-disable-next-line
@@ -403,6 +415,7 @@ export const ResourceContextProvider = ({
     }
     setLoadStart(Date.now());
     loadUser();
+    sendJwtToServiceWorker();
 
     setNextLoad(Date.now() + loadInterval);
   }, loadInterval);
