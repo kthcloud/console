@@ -6,7 +6,6 @@ import {
   CardContent,
   CardHeader,
   Container,
-  Grid,
   Paper,
   Skeleton,
   Stack,
@@ -190,6 +189,70 @@ const Inbox = () => {
     );
   };
 
+  const renderNotificationDescription = (notification: NotificationRead) => {
+    return (
+      <Stack
+        direction="row"
+        alignItems="center"
+        spacing={1}
+        justifyContent={"flex-start"}
+        useFlexGap
+      >
+        {notification.content.userId &&
+          (userCache.find((u) => u.id === notification.content.userId)
+            ?.gravatarUrl ? (
+            <Avatar
+              src={
+                userCache.find((u) => u.id === notification.content.userId)!
+                  .gravatarUrl + "?s=32"
+              }
+              sx={{ width: 20, height: 20 }}
+            />
+          ) : (
+            <Avatar sx={{ width: 20, height: 20 }}>
+              <Iconify
+                icon="mdi:account"
+                sx={{
+                  width: 16,
+                  height: 16,
+                }}
+                title="Profile"
+              />
+            </Avatar>
+          ))}
+
+        {notification.content.name && (
+          <Typography variant="body2">{notification.content.name}</Typography>
+        )}
+
+        <Stack direction="row" alignItems={"center"} spacing={1}>
+          <Typography variant="body2" color="text.secondary">
+            {
+              userCache.find((u) => u.id === notification.content.userId)
+                ?.username
+            }
+          </Typography>
+          <Typography variant="body2" fontWeight={"lighter"}>
+            {notificationAction(notification?.type)}
+          </Typography>
+          {notification.content.resourceName && (
+            <Typography variant="body2">
+              {notification.content.resourceName}
+            </Typography>
+          )}
+          <Typography variant="caption" fontFamily={"monospace"}>
+            {
+              notification?.createdAt
+                ?.replace("T", " ")
+                ?.replace("Z", "")
+                ?.split(".")[0]
+            }
+          </Typography>
+        </Stack>
+      </Stack>
+    );
+  };
+
   return (
     <>
       {!user ? (
@@ -232,104 +295,8 @@ const Inbox = () => {
                                 stale !== notification.id && (
                                   <TableRow>
                                     <TableCell>
-                                      {userCache.find(
-                                        (u) =>
-                                          u.id === notification.content.userId
-                                      ) && (
-                                        <Grid container>
-                                          <Grid
-                                            item
-                                            sx={{
-                                              display: "flex",
-                                              width: 44,
-                                            }}
-                                          >
-                                            {userCache.find(
-                                              (u) =>
-                                                u.id ===
-                                                notification.content.userId
-                                            )?.gravatarUrl ? (
-                                              <Avatar
-                                                src={
-                                                  userCache.find(
-                                                    (u) =>
-                                                      u.id ===
-                                                      notification.content
-                                                        .userId
-                                                  )!.gravatarUrl + "?s=32"
-                                                }
-                                                sx={{ width: 20, height: 20 }}
-                                              />
-                                            ) : (
-                                              <Avatar
-                                                sx={{ width: 20, height: 20 }}
-                                              >
-                                                <Iconify
-                                                  icon="mdi:account"
-                                                  sx={{
-                                                    width: 16,
-                                                    height: 16,
-                                                  }}
-                                                  title="Profile"
-                                                />
-                                              </Avatar>
-                                            )}
-                                            <Grid
-                                              item
-                                              sx={{
-                                                width: "calc(100% - 44px)",
-                                                wordWrap: "break-word",
-                                                paddingLeft: 1,
-                                              }}
-                                            ></Grid>
-                                            <Stack
-                                              direction="row"
-                                              alignItems={"center"}
-                                              spacing={1}
-                                            >
-                                              <Typography
-                                                variant="body2"
-                                                color="text.secondary"
-                                              >
-                                                {
-                                                  userCache.find(
-                                                    (u) =>
-                                                      u.id ===
-                                                      notification.content
-                                                        .userId
-                                                  )?.username
-                                                }
-                                              </Typography>
-                                              <Typography variant="body2">
-                                                <span
-                                                  style={{
-                                                    fontWeight: "lighter",
-                                                  }}
-                                                >
-                                                  {notificationAction(
-                                                    notification?.type
-                                                  )}
-                                                </span>{" "}
-                                                <span>
-                                                  {notification?.content
-                                                    ?.email &&
-                                                    notification?.content?.name}
-                                                </span>
-                                              </Typography>
-                                              <Typography
-                                                variant="caption"
-                                                fontFamily={"monospace"}
-                                              >
-                                                {
-                                                  notification?.createdAt
-                                                    ?.replace("T", " ")
-                                                    ?.replace("Z", "")
-                                                    ?.split(".")[0]
-                                                }
-                                              </Typography>
-                                            </Stack>
-                                          </Grid>
-                                        </Grid>
+                                      {renderNotificationDescription(
+                                        notification
                                       )}
                                     </TableCell>
                                     <TableCell align="right">
@@ -426,51 +393,9 @@ const Inbox = () => {
                                             stale !== notification.id && (
                                               <TableRow>
                                                 <TableCell>
-                                                  <Stack
-                                                    direction="row"
-                                                    alignItems="center"
-                                                    spacing={3}
-                                                    flexWrap={"wrap"}
-                                                    justifyContent={
-                                                      "space-between"
-                                                    }
-                                                    useFlexGap
-                                                  >
-                                                    <Typography variant="body2">
-                                                      <span>
-                                                        {notification?.content
-                                                          ?.email ||
-                                                          notification?.content
-                                                            ?.name}
-                                                      </span>{" "}
-                                                      <span
-                                                        style={{
-                                                          fontWeight: "lighter",
-                                                        }}
-                                                      >
-                                                        {notificationAction(
-                                                          notification?.type
-                                                        )}
-                                                      </span>{" "}
-                                                      <span>
-                                                        {notification?.content
-                                                          ?.email &&
-                                                          notification?.content
-                                                            ?.name}
-                                                      </span>
-                                                    </Typography>
-                                                    <Typography
-                                                      variant="caption"
-                                                      fontFamily={"monospace"}
-                                                    >
-                                                      {
-                                                        notification?.createdAt
-                                                          ?.replace("T", " ")
-                                                          ?.replace("Z", "")
-                                                          ?.split(".")[0]
-                                                      }
-                                                    </Typography>
-                                                  </Stack>
+                                                  {renderNotificationDescription(
+                                                    notification
+                                                  )}
                                                 </TableCell>
                                                 <TableCell align="right">
                                                   <ButtonGroup
