@@ -34,6 +34,7 @@ import { useTheme } from "@mui/material/styles";
 import {
   NotificationRead,
   ResourceMigrationRead,
+  UserRead,
 } from "@kthcloud/go-deploy-types/types/v2/body";
 import { AlertList } from "../../components/AlertList";
 import { NoWrapTable as Table } from "../../components/NoWrapTable";
@@ -41,6 +42,7 @@ import {
   acceptMigration,
   deleteMigration,
 } from "../../api/deploy/resourceMigrations";
+import { discoverUserById } from "../../api/deploy/users";
 
 const Inbox = () => {
   const {
@@ -56,9 +58,23 @@ const Inbox = () => {
   const [expandedRead, setExpandedRead] = useState(false);
   const [stale, setStale] = useState<string>("");
   const theme = useTheme();
+  const [userCache, setUserCache] = useState<UserRead[]>([]);
 
   useEffect(() => {
     setStale("");
+
+    notifications.forEach((notification: NotificationRead) => {
+      const alreadyExists = userCache.find(
+        (u) => u.id === notification.content.userId
+      );
+
+      if (!alreadyExists && keycloak.token) {
+        discoverUserById(notification.content.userId, keycloak.token)
+          .then((userDiscover) => setUserCache([...userCache, userDiscover]))
+          .catch((e) => console.error(e));
+      }
+    });
+    console.log(userCache);
   }, [notifications]);
 
   const accept = async (notification: NotificationRead) => {
@@ -72,7 +88,7 @@ const Inbox = () => {
           notification.content.id,
           notification.content.code
         );
-      } else if (notification.type === "deploymentTransfer") {
+      } else if (notification.type === "resourceTransfer") {
         await acceptMigration(
           keycloak.token,
           notification.content.id,
@@ -126,7 +142,7 @@ const Inbox = () => {
     switch (type) {
       case "teamInvite":
         return t("invited-you-to-join-their-team");
-      case "deploymentTransfer":
+      case "resourceTransfer":
         return t("transferred-a-deployment-to-you");
       case "vmTransfer":
         return t("transferred-a-vm-to-you");
