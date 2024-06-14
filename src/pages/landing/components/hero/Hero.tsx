@@ -11,13 +11,12 @@ import { useEffect, useState } from "react";
 import { fShortenNumber } from "../../../../utils/formatNumber";
 import { useKeycloak } from "@react-keycloak/web";
 import { useTranslation } from "react-i18next";
-import { GenAITooltip } from "../../../../components/GenAITooltip";
 import { Link } from "react-router-dom";
 import { TimestampedSystemCapacities } from "@kthcloud/go-deploy-types/types/v2/body";
 
 const Hero = () => {
   const { keycloak, initialized } = useKeycloak();
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
   // Capacities
   const [capacitiesLoading, setCapacitiesLoading] = useState(true);
@@ -46,38 +45,6 @@ const Hero = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Header
-  const [headerLoading, setHeaderLoading] = useState(true);
-  const [header, setHeader] = useState("Welcome to kthcloud");
-  const [subheader, setSubheader] = useState(
-    "Start deploying your projects today"
-  );
-
-  const getHeaderGenerated = async () => {
-    try {
-      const res = await fetch(
-        "https://llama-prefetch.app.cloud.cbh.kth.se/query"
-      );
-
-      const content = await res.json();
-
-      if (content.header) {
-        setHeader(content.header);
-      }
-      if (content.sub) {
-        setSubheader(content.sub);
-      }
-    } catch (_) {
-      console.error("Error fetching header");
-    } finally {
-      setHeaderLoading(false);
-    }
-  };
-  useEffect(() => {
-    getHeaderGenerated();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   return (
     <Container maxWidth="lg" sx={{ marginBottom: { xs: "100px" } }}>
       <Grid container>
@@ -102,26 +69,18 @@ const Hero = () => {
             variant="h1"
             sx={{
               fontSize: { xs: "38px", sm: "56px", md: "72px" },
-              opacity: headerLoading ? 0 : 255,
               pr: 5,
             }}
           >
-            {i18n.language !== "en" ? (
-              t("onboarding-welcome")
-            ) : (
-              <GenAITooltip>{header}</GenAITooltip>
-            )}
+            {t("landing-intro-header") +
+              " " +
+              (window.location.hostname.includes("cbh")
+                ? "cbhcloud"
+                : "kthcloud")}
           </Typography>
           <div className="hero-p">
-            <Typography
-              variant="body1"
-              sx={{ fontSize: "1.4rem", opacity: headerLoading ? 0 : 1 }}
-            >
-              {i18n.language !== "en" ? (
-                t("landing-intro-subheader")
-              ) : (
-                <GenAITooltip>{subheader}</GenAITooltip>
-              )}
+            <Typography variant="body1" sx={{ fontSize: "1.4rem" }}>
+              {t("landing-intro-subheader")}
             </Typography>
           </div>
           <Stack
