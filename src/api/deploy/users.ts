@@ -1,6 +1,7 @@
 import {
   ApiKeyCreated,
   UserRead,
+  UserReadDiscovery,
   UserUpdate,
 } from "@kthcloud/go-deploy-types/types/v2/body";
 import { Jwt, Uuid } from "../../types";
@@ -132,7 +133,7 @@ export const createApiKey = async (
 export const discoverUserById = async (
   userId: string,
   token: string
-): Promise<UserRead> => {
+): Promise<UserReadDiscovery> => {
   const res = await fetch(
     import.meta.env.VITE_DEPLOY_API_URL + "/users/" + userId + "?discover=true",
     {
