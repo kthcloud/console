@@ -15,13 +15,8 @@
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "@iconify/react": "^4.1.1",
-<<<<<<< HEAD
     "@kthcloud/go-deploy-types": "^1.0.20",
     "@mui/icons-material": "^5.15.20",
-=======
-    "@kthcloud/go-deploy-types": "^1.0.18",
-    "@mui/icons-material": "^5.15.19",
->>>>>>> 86ef486 (Update dependencies)
     "@mui/lab": "^5.0.0-alpha.170",
     "@mui/material": "^5.15.20",
     "@mui/material-next": "^6.0.0-alpha.126",
