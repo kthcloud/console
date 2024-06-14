@@ -1,4 +1,5 @@
 import {
+  Avatar,
   Button,
   ButtonGroup,
   Card,
@@ -19,7 +20,6 @@ import { useKeycloak } from "@react-keycloak/web";
 import { enqueueSnackbar } from "notistack";
 import { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { acceptDeploymentTransfer } from "../../api/deploy/deployments";
 import {
   deleteNotification,
   markNotificationAsRead,
@@ -32,20 +32,49 @@ import Page from "../../components/Page";
 import useResource from "../../hooks/useResource";
 import { errorHandler } from "../../utils/errorHandler";
 import { useTheme } from "@mui/material/styles";
-import { NotificationRead } from "@kthcloud/go-deploy-types/types/v2/body";
+import {
+  NotificationRead,
+  ResourceMigrationRead,
+  UserReadDiscovery,
+} from "@kthcloud/go-deploy-types/types/v2/body";
 import { AlertList } from "../../components/AlertList";
 import { NoWrapTable as Table } from "../../components/NoWrapTable";
+import {
+  acceptMigration,
+  deleteMigration,
+} from "../../api/deploy/resourceMigrations";
+import { discoverUserById } from "../../api/deploy/users";
 
 const Inbox = () => {
-  const { user, notifications, unread, beginFastLoad } = useResource();
+  const {
+    user,
+    notifications,
+    unread,
+    resourceMigrations,
+    rows,
+    beginFastLoad,
+  } = useResource();
   const { t } = useTranslation();
   const { initialized, keycloak } = useKeycloak();
   const [expandedRead, setExpandedRead] = useState(false);
   const [stale, setStale] = useState<string>("");
   const theme = useTheme();
+  const [userCache, setUserCache] = useState<UserReadDiscovery[]>([]);
 
   useEffect(() => {
     setStale("");
+
+    notifications.forEach((notification: NotificationRead) => {
+      const alreadyExists = userCache.find(
+        (u) => u.id === notification.content.userId
+      );
+
+      if (!alreadyExists && keycloak.token && notification.content.userId) {
+        discoverUserById(notification.content.userId, keycloak.token)
+          .then((userDiscover) => setUserCache([...userCache, userDiscover]))
+          .catch((e) => console.error(e));
+      }
+    });
   }, [notifications]);
 
   const accept = async (notification: NotificationRead) => {
@@ -59,8 +88,8 @@ const Inbox = () => {
           notification.content.id,
           notification.content.code
         );
-      } else if (notification.type === "deploymentTransfer") {
-        await acceptDeploymentTransfer(
+      } else if (notification.type === "resourceTransfer") {
+        await acceptMigration(
           keycloak.token,
           notification.content.id,
           notification.content.code
@@ -93,7 +122,7 @@ const Inbox = () => {
     }
   };
 
-  const handleDelete = async (notification: NotificationRead) => {
+  const handleDeleteNotification = async (notification: NotificationRead) => {
     if (!(initialized && keycloak.token)) return;
 
     try {
@@ -113,13 +142,115 @@ const Inbox = () => {
     switch (type) {
       case "teamInvite":
         return t("invited-you-to-join-their-team");
-      case "deploymentTransfer":
+      case "resourceTransfer":
         return t("transferred-a-deployment-to-you");
       case "vmTransfer":
         return t("transferred-a-vm-to-you");
       default:
         return "";
     }
+  };
+
+  const handleDeleteMigration = async (migration: ResourceMigrationRead) => {
+    if (!(initialized && keycloak.token)) return;
+
+    try {
+      setStale(migration.id);
+      beginFastLoad();
+      await deleteMigration(keycloak.token, migration.id);
+    } catch (error: any) {
+      errorHandler(error).forEach((e) =>
+        enqueueSnackbar(t("update-error") + e, {
+          variant: "error",
+        })
+      );
+    }
+  };
+
+  const renderMigrationDetails = (migration: ResourceMigrationRead) => {
+    if (!migration.updateOwner) return null;
+    const resource = rows.find((r) => r.id === migration.resourceId);
+
+    let details = `${t("transfer-ownership")} ${t("of")} ${migration.resourceType} `;
+
+    if (resource) {
+      details += " " + resource.name;
+    }
+
+    details += ` ${t("to-user")} `;
+
+    return (
+      <Typography variant="body2">
+        {details}
+        <Typography variant="caption" sx={{ ml: 1 }}>
+          {migration.updateOwner.ownerId}
+        </Typography>
+      </Typography>
+    );
+  };
+
+  const renderNotificationDescription = (notification: NotificationRead) => {
+    return (
+      <Stack
+        direction="row"
+        alignItems="center"
+        spacing={1}
+        justifyContent={"flex-start"}
+        useFlexGap
+      >
+        {notification.content.userId &&
+          (userCache.find((u) => u.id === notification.content.userId)
+            ?.gravatarUrl ? (
+            <Avatar
+              src={
+                userCache.find((u) => u.id === notification.content.userId)!
+                  .gravatarUrl + "?s=32"
+              }
+              sx={{ width: 20, height: 20 }}
+            />
+          ) : (
+            <Avatar sx={{ width: 20, height: 20 }}>
+              <Iconify
+                icon="mdi:account"
+                sx={{
+                  width: 16,
+                  height: 16,
+                }}
+                title="Profile"
+              />
+            </Avatar>
+          ))}
+
+        {notification.content.name && (
+          <Typography variant="body2">{notification.content.name}</Typography>
+        )}
+
+        <Stack direction="row" alignItems={"center"} spacing={1}>
+          <Typography variant="body2" color="text.secondary">
+            {
+              userCache.find((u) => u.id === notification.content.userId)
+                ?.username
+            }
+          </Typography>
+          <Typography variant="body2" fontWeight={"lighter"}>
+            {notificationAction(notification?.type)}
+          </Typography>
+          {notification.content.resourceName && (
+            <Typography variant="body2">
+              {notification.content.resourceName}
+            </Typography>
+          )}
+          <Typography variant="caption" fontFamily={"monospace"}>
+            {
+              notification?.createdAt
+                ?.replace("T", " ")
+                ?.replace("Z", "")
+                ?.split(".")[0]
+            }
+          </Typography>
+        </Stack>
+      </Stack>
+    );
   };
 
   return (
@@ -151,7 +282,7 @@ const Inbox = () => {
                       >
                         <TableHead>
                           <TableRow>
-                            <TableCell>Notification</TableCell>
+                            <TableCell>{t("notification")}</TableCell>
                             <TableCell align="right">
                               {t("admin-actions")}
                             </TableCell>
@@ -164,43 +295,9 @@ const Inbox = () => {
                                 stale !== notification.id && (
                                   <TableRow>
                                     <TableCell>
-                                      <Stack
-                                        direction="row"
-                                        alignItems="center"
-                                        spacing={3}
-                                        flexWrap={"wrap"}
-                                        justifyContent={"space-between"}
-                                        useFlexGap
-                                      >
-                                        <Typography variant="body2">
-                                          <span>
-                                            {notification?.content?.email ||
-                                              notification?.content?.name}
-                                          </span>{" "}
-                                          <span
-                                            style={{ fontWeight: "lighter" }}
-                                          >
-                                            {notificationAction(
-                                              notification?.type
-                                            )}
-                                          </span>{" "}
-                                          <span>
-                                            {notification?.content?.email &&
-                                              notification?.content?.name}
-                                          </span>
-                                        </Typography>
-                                        <Typography
-                                          variant="caption"
-                                          fontFamily={"monospace"}
-                                        >
-                                          {
-                                            notification?.createdAt
-                                              ?.replace("T", " ")
-                                              ?.replace("Z", "")
-                                              ?.split(".")[0]
-                                          }
-                                        </Typography>
-                                      </Stack>
+                                      {renderNotificationDescription(
+                                        notification
+                                      )}
                                     </TableCell>
                                     <TableCell align="right">
                                       <ButtonGroup
@@ -234,7 +331,9 @@ const Inbox = () => {
                                             <Iconify icon="mdi:delete" />
                                           }
                                           onClick={() =>
-                                            handleDelete(notification)
+                                            handleDeleteNotification(
+                                              notification
+                                            )
                                           }
                                         >
                                           {t("button-clear")}
@@ -294,51 +393,9 @@ const Inbox = () => {
                                             stale !== notification.id && (
                                               <TableRow>
                                                 <TableCell>
-                                                  <Stack
-                                                    direction="row"
-                                                    alignItems="center"
-                                                    spacing={3}
-                                                    flexWrap={"wrap"}
-                                                    justifyContent={
-                                                      "space-between"
-                                                    }
-                                                    useFlexGap
-                                                  >
-                                                    <Typography variant="body2">
-                                                      <span>
-                                                        {notification?.content
-                                                          ?.email ||
-                                                          notification?.content
-                                                            ?.name}
-                                                      </span>{" "}
-                                                      <span
-                                                        style={{
-                                                          fontWeight: "lighter",
-                                                        }}
-                                                      >
-                                                        {notificationAction(
-                                                          notification?.type
-                                                        )}
-                                                      </span>{" "}
-                                                      <span>
-                                                        {notification?.content
-                                                          ?.email &&
-                                                          notification?.content
-                                                            ?.name}
-                                                      </span>
-                                                    </Typography>
-                                                    <Typography
-                                                      variant="caption"
-                                                      fontFamily={"monospace"}
-                                                    >
-                                                      {
-                                                        notification?.createdAt
-                                                          ?.replace("T", " ")
-                                                          ?.replace("Z", "")
-                                                          ?.split(".")[0]
-                                                      }
-                                                    </Typography>
-                                                  </Stack>
+                                                  {renderNotificationDescription(
+                                                    notification
+                                                  )}
                                                 </TableCell>
                                                 <TableCell align="right">
                                                   <ButtonGroup
@@ -361,7 +418,7 @@ const Inbox = () => {
                                                         <Iconify icon="mdi:delete" />
                                                       }
                                                       onClick={() =>
-                                                        handleDelete(
+                                                        handleDeleteNotification(
                                                           notification
                                                         )
                                                       }
@@ -413,6 +470,82 @@ const Inbox = () => {
                   </Stack>
                 </CardContent>
               </Card>
+
+              {resourceMigrations.length > 0 && (
+                <Card sx={{ boxShadow: 20 }}>
+                  <CardHeader title={t("pending-migrations")} />
+                  <CardContent>
+                    <Stack spacing={2}>
+                      <TableContainer component={Paper}>
+                        <Table
+                          sx={{ minWidth: 650 }}
+                          aria-label="notifications table"
+                        >
+                          <TableHead>
+                            <TableRow>
+                              <TableCell>{t("migration")}</TableCell>
+                              <TableCell>{t("created-at")}</TableCell>
+                              <TableCell align="right">
+                                {t("admin-actions")}
+                              </TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {resourceMigrations.map((migration) => (
+                              <Fragment key={migration.id}>
+                                {stale !== migration.id ? (
+                                  <TableRow>
+                                    <TableCell>
+                                      {renderMigrationDetails(migration)}
+                                    </TableCell>
+                                    <TableCell>
+                                      <Typography
+                                        variant="caption"
+                                        fontFamily={"monospace"}
+                                      >
+                                        {
+                                          migration.createdAt
+                                            ?.replace("T", " ")
+                                            ?.replace("Z", "")
+                                            ?.split(".")[0]
+                                        }
+                                      </Typography>
+                                    </TableCell>
+                                    <TableCell align="right">
+                                      <ButtonGroup
+                                        variant="outlined"
+                                        sx={{ py: 3 }}
+                                      >
+                                        <Button
+                                          color="error"
+                                          startIcon={
+                                            <Iconify icon="mdi:delete" />
+                                          }
+                                          onClick={() =>
+                                            handleDeleteMigration(migration)
+                                          }
+                                        >
+                                          {t("remove")}
+                                        </Button>
+                                      </ButtonGroup>
+                                    </TableCell>
+                                  </TableRow>
+                                ) : (
+                                  <TableRow>
+                                    <TableCell colSpan={2}>
+                                      <Skeleton animation="wave" height={64} />
+                                    </TableCell>
+                                  </TableRow>
+                                )}
+                              </Fragment>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
+                    </Stack>
+                  </CardContent>
+                </Card>
+              )}
             </Stack>
           </Container>
         </Page>

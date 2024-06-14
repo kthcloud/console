@@ -22,12 +22,12 @@ import { sentenceCase } from "change-case";
 import Page from "../../components/Page";
 import LoadingPage from "../../components/LoadingPage";
 import JobList from "../../components/JobList";
+import ResourceTypeInfo from "./ResourceTypeInfo";
 
 // api
 import CreateDeployment from "./CreateDeployment";
 import CreateVm from "./CreateVm";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import ResourceTypeChat from "./ResourceTypeChat";
 import { useTranslation } from "react-i18next";
 import Iconify from "../../components/Iconify";
 import { Job } from "../../types";
@@ -92,7 +92,7 @@ export const Create = () => {
                 <CardHeader title={t("resource-type")} />
                 <CardContent>
                   <Stack spacing={3} direction="column" useFlexGap>
-                    <ResourceTypeChat />
+                    <ResourceTypeInfo />
                     <Typography variant="h5" sx={{ mt: 2 }}>
                       {t("choose-type")}
                     </Typography>
@@ -114,7 +114,7 @@ export const Create = () => {
                         startIcon={<Iconify icon="lucide:container" />}
                         sx={{ px: 3 }}
                       >
-                        {t("resource-kubernetes-deployment")}
+                        {t("deployment")}
                       </Button>
                       <Button
                         variant={alignment === "vm" ? "contained" : "text"}
@@ -126,7 +126,7 @@ export const Create = () => {
                         startIcon={<Iconify icon="carbon:virtual-machine" />}
                         sx={{ px: 3 }}
                       >
-                        {t("resource-vm")}
+                        {t("vm")}
                       </Button>
                     </Stack>
                   </Stack>

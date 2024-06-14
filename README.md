@@ -21,7 +21,6 @@ console uses these services for its functionality.
 kthcloud maintained:
 
 -   [go-deploy](https://github.com/kthcloud/go-deploy): Backend for creation, and management of resources
--   [sys-api](https://github.com/kthcloud/sys-api): Provides stats and capacities
 -   [alert](https://alert.app.cloud.cbh.kth.se/): Provides alerts
 -   [llama](https://llama.app.cloud.cbh.kth.se/): Enables genAI features
 -   [llama-prefetch](https://github.com/kthcloud/llama-prefetch/): Reduces genAI features latency by prefetching queries
@@ -31,7 +30,6 @@ External:
 
 -   [Gravatar](https://gravatar.com): Provides user avatars
 -   [Google Fonts](https://fonts.google.com): Provides fonts
--   [GitHub SSO](https://github.com): Enables linking GitHub repos for continuous delivery
 
 ## Setup
 

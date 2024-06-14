@@ -224,7 +224,7 @@ export function Status() {
             .map((host) => {
               return {
                 x: host.displayName,
-                y: host.gpu ? host.gpu.count : 0,
+                y: host.gpu ? host.gpu.total : 0,
               };
             })
             .filter((host) => host.y > 0)

@@ -41,7 +41,10 @@ export const ImageManager = ({ deployment }: { deployment: Deployment }) => {
       body = { ...body, image: newImage };
     }
     if (newArgs !== deployment.args.join(" ")) {
-      body = { ...body, args: newArgs.split(" ") };
+      let argsList = newArgs.split(" ");
+      if (argsList.length === 1 && argsList[0] === "") argsList = [];
+
+      body = { ...body, args: argsList };
     }
 
     setLoading(true);
@@ -65,7 +68,7 @@ export const ImageManager = ({ deployment }: { deployment: Deployment }) => {
 
   useEffect(() => {
     const length = imageArgs.split(" ").length;
-    if (length > 2 && imageArgs.split(" ")[length - 1] !== "") {
+    if (length > 100 && imageArgs.split(" ")[length - 1] !== "") {
       setTooManyArgs(true);
     } else if (tooManyArgs) {
       setTooManyArgs(false);
