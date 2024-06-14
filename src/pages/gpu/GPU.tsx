@@ -298,6 +298,7 @@ export const GPU = () => {
                                       <Button
                                         component={Link}
                                         to="/create?type=vm"
+                                        variant="contained"
                                       >
                                         {t("create-a-vm-first")}
                                       </Button>
