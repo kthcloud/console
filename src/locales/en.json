@@ -534,6 +534,7 @@
         "too-many-run-args": "Too many run args, max 100",
         "pending-migrations": "Pending migrations",
         "migration": "Migration",
-        "of": "of"
+        "of": "of",
+        "error-connecting-to-iam": "Error connecting to IAM"
     }
 }
