@@ -16,7 +16,7 @@ import { errorHandler } from "../../../utils/errorHandler";
 import { useTranslation } from "react-i18next";
 import { Deployment } from "../../../types";
 
-type visibility = "public" | "private" | "auth" | undefined | string;
+type visibility = "public" | "private" | "auth" | "hidden" | string;
 
 const PrivacyModeSelector = ({
   privacyMode,
@@ -51,7 +51,7 @@ const PrivacyModeSelector = ({
       <ToggleButton value="auth">
         {t("admin-visibility-private-self")}
       </ToggleButton>
-      <ToggleButton value={undefined}>
+      <ToggleButton value={"hidden"}>
         {t("admin-visibility-hidden")}
       </ToggleButton>
     </ToggleButtonGroup>
