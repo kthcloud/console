@@ -151,7 +151,7 @@
         "menu-manage-resources": "Hantera resurser",
         "error-could-not-fetch-gpus": "Kunde inte hämta grafikkort",
         "could-not-fetch-profile": "Profilen kunde inte hämtas: ",
-        "visibility-subheader": "Välj om din app ska synas på webben",
+        "visibility-subheader": "Välj synlighetsnivån av din deployment",
         "secrets": "hemligheter",
         "onboarding-resources": "Resurser på kthcloud",
         "deleting": "Raderar...",
@@ -533,6 +533,9 @@
         "too-many-run-args": "För många argument, max 100",
         "pending-migrations": "Pågående överföringar",
         "migration": "Överföring",
-        "of": "av"
+        "of": "av",
+        "admin-visibility-private-teams": "Privat (Grupp)",
+        "admin-visibility-private-self": "Privat (Bara du)",
+        "admin-visibility-hidden": "Gömd"
     }
 }
