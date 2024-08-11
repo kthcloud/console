@@ -534,8 +534,9 @@
         "pending-migrations": "Pågående överföringar",
         "migration": "Överföring",
         "of": "av",
-        "admin-visibility-private-teams": "Privat (Grupp)",
-        "admin-visibility-private-self": "Privat (Bara du)",
-        "admin-visibility-hidden": "Gömd"
+        "admin-visibility-auth": "Privat (auth proxy)",
+        "visibility-public-tooltip": "Din deployment är publikt åtkomlig på internet.",
+        "visibility-private-tooltip": "Din deployment är privat och inte åtkomlig på internet. Enbart intern trafik mellan appar är tillåten.",
+        "visibility-auth-tooltip": "Din deployment är privat och åtkomlig på internet via en autentiserings-proxy, detta begränsar tillåten trafik."
     }
 }

@@ -5,6 +5,7 @@ import {
   CircularProgress,
   ToggleButtonGroup,
   ToggleButton,
+  Tooltip,
 } from "@mui/material";
 
 import { enqueueSnackbar } from "notistack";
@@ -16,7 +17,7 @@ import { errorHandler } from "../../../utils/errorHandler";
 import { useTranslation } from "react-i18next";
 import { Deployment } from "../../../types";
 
-type visibility = "public" | "private" | "auth" | "hidden" | string;
+type visibility = "public" | "private" | "auth" | string;
 
 const PrivacyModeSelector = ({
   privacyMode,
@@ -44,16 +45,21 @@ const PrivacyModeSelector = ({
       onChange={handleChange}
       aria-label="Platform"
     >
-      <ToggleButton value="public">{t("admin-visibility-public")}</ToggleButton>
-      <ToggleButton value="private">
-        {t("admin-visibility-private-teams")}
-      </ToggleButton>
-      <ToggleButton value="auth">
-        {t("admin-visibility-private-self")}
-      </ToggleButton>
-      <ToggleButton value={"hidden"}>
-        {t("admin-visibility-hidden")}
-      </ToggleButton>
+      <Tooltip enterTouchDelay={10} title={t("visibility-public-tooltip")}>
+        <ToggleButton value="public">
+          {t("admin-visibility-public")}
+        </ToggleButton>
+      </Tooltip>
+      <Tooltip enterTouchDelay={10} title={t("visibility-auth-tooltip")}>
+        <ToggleButton value="auth">
+          <>{t("admin-visibility-auth")}</>
+        </ToggleButton>
+      </Tooltip>
+      <Tooltip enterTouchDelay={10} title={t("visibility-private-tooltip")}>
+        <ToggleButton value="private">
+          {t("admin-visibility-private")}
+        </ToggleButton>
+      </Tooltip>
     </ToggleButtonGroup>
   );
 };
@@ -65,15 +71,15 @@ export const PrivateMode = ({ deployment }: { deployment: Deployment }) => {
   const { initialized, keycloak } = useKeycloak();
   const { queueJob } = useResource();
 
-  const applyChanges = async (checked: visibility) => {
+  const applyChanges = async (visibility: visibility) => {
     if (!(initialized && keycloak.token)) return;
-    setPrivacyMode(checked);
+    setPrivacyMode(visibility);
     setLoading(true);
 
     try {
       const res = await updateDeployment(
         deployment.id,
-        { Visibility: checked },
+        { Visibility: visibility },
         keycloak.token
       );
 
