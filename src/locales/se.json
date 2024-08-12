@@ -151,7 +151,7 @@
         "menu-manage-resources": "Hantera resurser",
         "error-could-not-fetch-gpus": "Kunde inte hämta grafikkort",
         "could-not-fetch-profile": "Profilen kunde inte hämtas: ",
-        "visibility-subheader": "Välj om din app ska synas på webben",
+        "visibility-subheader": "Välj synlighetsnivån av din deployment",
         "secrets": "hemligheter",
         "onboarding-resources": "Resurser på kthcloud",
         "deleting": "Raderar...",
@@ -533,6 +533,10 @@
         "too-many-run-args": "För många argument, max 100",
         "pending-migrations": "Pågående överföringar",
         "migration": "Överföring",
-        "of": "av"
+        "of": "av",
+        "admin-visibility-auth": "Privat (auth proxy)",
+        "visibility-public-tooltip": "Din deployment är publikt åtkomlig på internet.",
+        "visibility-private-tooltip": "Din deployment är privat och inte åtkomlig på internet. Enbart intern trafik mellan appar är tillåten.",
+        "visibility-auth-tooltip": "Din deployment är privat och åtkomlig på internet via en autentiserings-proxy, detta begränsar tillåten trafik."
     }
 }
