@@ -207,7 +207,7 @@
         "line-wrap": "Line wrap",
         "visibility-saving": "Saving visibility...",
         "could-not-save-visibility": "Could not save visibility: ",
-        "visibility-subheader": "Choose whether to make this deployment hidden from the internet",
+        "visibility-subheader": "Choose the visibility level of this deployment",
         "lease-gpu": "Lease GPU",
         "lease-gpu-forever": "Lease GPU forever",
         "renew-gpu-lease": "Renew GPU lease",
@@ -535,6 +535,10 @@
         "pending-migrations": "Pending migrations",
         "migration": "Migration",
         "of": "of",
-        "error-connecting-to-iam": "Error connecting to IAM"
+        "error-connecting-to-iam": "Error connecting to IAM",
+        "admin-visibility-auth": "Private (auth proxy)",
+        "visibility-public-tooltip": "Your deployment is publicly accessible on the internet.",
+        "visibility-private-tooltip": "Your deployment is private and not reachable on the internet. Only internal traffic is allowed in (traffic between deployments).",
+        "visibility-auth-tooltip": "Your deployment is private and reachable on the internet through an authentication proxy, this limits the allowed traffic."
     }
 }
