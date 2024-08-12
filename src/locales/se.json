@@ -534,6 +534,7 @@
         "pending-migrations": "Pågående överföringar",
         "migration": "Överföring",
         "of": "av",
+        "error-connecting-to-iam": "Fel vid anslutning till IAM",
         "admin-visibility-auth": "Privat (auth proxy)",
         "visibility-public-tooltip": "Din deployment är publikt åtkomlig på internet.",
         "visibility-private-tooltip": "Din deployment är privat och inte åtkomlig på internet. Enbart intern trafik mellan appar är tillåten.",

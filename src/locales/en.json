@@ -535,6 +535,7 @@
         "pending-migrations": "Pending migrations",
         "migration": "Migration",
         "of": "of",
+        "error-connecting-to-iam": "Error connecting to IAM",
         "admin-visibility-auth": "Private (auth proxy)",
         "visibility-public-tooltip": "Your deployment is publicly accessible on the internet.",
         "visibility-private-tooltip": "Your deployment is private and not reachable on the internet. Only internal traffic is allowed in (traffic between deployments).",
