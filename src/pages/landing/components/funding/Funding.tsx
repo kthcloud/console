@@ -66,6 +66,7 @@ const Funding = () => {
             </CardContent>
           </Card>
         </Grid>
+        
       </Grid>
     </Container>
   );
