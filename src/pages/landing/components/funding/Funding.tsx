@@ -66,21 +66,6 @@ const Funding = () => {
             </CardContent>
           </Card>
         </Grid>
-
-        { /*
-        <Grid item xs={12} md={6}>
-          <Card>
-            <CardHeader title={t("disclaimer")} />
-            <CardContent>
-              <Typography variant="body1">
-                {t("genai-long")}
-                <Iconify icon="twemoji:sparkles" sx={{ marginLeft: 1 }} />
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        */ }
-     
       </Grid>
     </Container>
   );
