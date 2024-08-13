@@ -66,6 +66,8 @@ const Funding = () => {
             </CardContent>
           </Card>
         </Grid>
+
+        { /*
         <Grid item xs={12} md={6}>
           <Card>
             <CardHeader title={t("disclaimer")} />
@@ -77,6 +79,8 @@ const Funding = () => {
             </CardContent>
           </Card>
         </Grid>
+        */ }
+     
       </Grid>
     </Container>
   );
