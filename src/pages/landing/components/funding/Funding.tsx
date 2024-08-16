@@ -7,7 +7,6 @@ import {
   Link,
   Typography,
 } from "@mui/material";
-import Iconify from "../../../../components/Iconify";
 import { t } from "i18next";
 
 const Funding = () => {
@@ -66,7 +65,6 @@ const Funding = () => {
             </CardContent>
           </Card>
         </Grid>
-        
       </Grid>
     </Container>
   );
