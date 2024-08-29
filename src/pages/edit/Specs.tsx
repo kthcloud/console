@@ -74,8 +74,12 @@ export const Specs = ({ resource }: { resource: Resource }) => {
 
   useEffect(() => {
     if (user) {
-      const coresLeft = user.quota.cpuCores - user.usage.cpuCores;
-      const ramLeft = user.quota.ram - user.usage.ram;
+      const coresLeft =
+        user.quota.cpuCores -
+        user.usage.cpuCores +
+        (resource.specs.cpuCores ?? 0);
+      const ramLeft =
+        user.quota.ram - user.usage.ram + (resource.specs.ram ?? 0);
 
       if (coresLeft !== maxCpu) {
         const currentCores =
