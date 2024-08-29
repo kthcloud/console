@@ -55,7 +55,7 @@ export const Specs = ({ resource }: { resource: Resource }) => {
   const [maxRam, setMaxRam] = useState<number>(
     resource.type === "vm" ? MAX_RAM_VM : MAX_RAM_DEPLOYMENT
   );
-  const [maxReplicas, setMaxReplicas] = useState<number>(MAX_REPLICAS);
+  const [maxReplicas, _] = useState<number>(MAX_REPLICAS);
 
   const getInitialCpu = () => {
     return resource.specs.cpuCores || 0;
@@ -71,6 +71,30 @@ export const Specs = ({ resource }: { resource: Resource }) => {
 
   const [loading, setLoading] = useState<boolean>(false);
   const [editing, setEditing] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (user) {
+      const coresLeft = user.quota.cpuCores - user.usage.cpuCores;
+      const ramLeft = user.quota.ram - user.usage.ram;
+
+      if (coresLeft !== maxCpu) {
+        const currentCores =
+          resource.specs.cpuCores ??
+          (resource.type === "vm" ? MIN_CPU_VM : MIN_CPU_DEPLOYMENT);
+
+        // make sure that max cant be lower than the current core count
+        setMaxCpu(coresLeft >= currentCores ? coresLeft : currentCores);
+      }
+      if (ramLeft !== maxRam) {
+        const currentRam =
+          resource.specs.ram ??
+          (resource.type === "vm" ? MIN_RAM_VM : MIN_RAM_DEPLOYMENT);
+
+        // make sure that max cant be lower than the current ram amount
+        setMaxRam(ramLeft >= currentRam ? ramLeft : currentRam);
+      }
+    }
+  }, [user, resource]);
 
   const updateSpecs = () => {
     if (resource.type === "deployment") {
@@ -122,15 +146,6 @@ export const Specs = ({ resource }: { resource: Resource }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [cpu, ram, replicas, maxCpu, maxRam, maxReplicas]
   );
-
-  // Set max values
-  useEffect(() => {
-    setMaxCpu(20);
-    setMaxRam(20);
-    setMaxReplicas(20);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [resource]);
 
   const isSame = () => {
     if (resource.type === "deployment") {
@@ -342,7 +357,7 @@ export const Specs = ({ resource }: { resource: Resource }) => {
               <Grid xs={12}>
                 <Slider
                   value={cpu}
-                  onChange={(_, v) => setCpu(v as number)}
+                  onChange={(_: any, v: any) => setCpu(v as number)}
                   min={resource.type === "vm" ? MIN_CPU_VM : MIN_CPU_DEPLOYMENT}
                   max={maxCpu}
                   step={resource.type === "vm" ? STEP_VM : STEP_DEPLOYMENT}
@@ -389,7 +404,7 @@ export const Specs = ({ resource }: { resource: Resource }) => {
               <Grid xs={12}>
                 <Slider
                   value={ram}
-                  onChange={(_, v) => setRam(v as number)}
+                  onChange={(_: any, v: any) => setRam(v as number)}
                   min={resource.type === "vm" ? MIN_RAM_VM : MIN_RAM_DEPLOYMENT}
                   max={maxRam}
                   step={resource.type === "vm" ? STEP_VM : STEP_DEPLOYMENT}
@@ -464,7 +479,7 @@ export const Specs = ({ resource }: { resource: Resource }) => {
                 <Grid xs={12}>
                   <Slider
                     value={replicas}
-                    onChange={(_, v) => setReplicas(v as number)}
+                    onChange={(_: any, v: any) => setReplicas(v as number)}
                     min={MIN_REPLICAS}
                     max={maxReplicas}
                     step={1}
