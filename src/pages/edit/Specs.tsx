@@ -74,17 +74,14 @@ export const Specs = ({ resource }: { resource: Resource }) => {
 
   useEffect(() => {
     if (user) {
-      const replicasInUse =
-        resource.type === "vm" ? 1 : (resource as Deployment).specs.replicas;
-
       const coresLeft =
         user.quota.cpuCores -
         user.usage.cpuCores +
-        (resource.specs.cpuCores ?? 0) * replicasInUse;
+        (resource.specs.cpuCores ?? 0);
       const ramLeft =
         user.quota.ram -
         user.usage.ram +
-        (resource.specs.ram ?? 0) * replicasInUse;
+        (resource.specs.ram ?? 0);
 
       if (coresLeft !== maxCpu) {
         const currentCores =
