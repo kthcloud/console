@@ -388,7 +388,9 @@ export const Specs = ({ resource }: { resource: Resource }) => {
                     }}
                   />
                   <Typography variant="body2" fontFamily="monospace">
-                    {maxCpu}
+                    {resource.type === "vm"
+                      ? Math.floor(maxCpu / STEP_VM) * STEP_VM
+                      : Math.floor(maxCpu / STEP_DEPLOYMENT) * STEP_DEPLOYMENT}
                   </Typography>
                 </Stack>
               </Grid>
@@ -437,7 +439,9 @@ export const Specs = ({ resource }: { resource: Resource }) => {
                   />
 
                   <Typography variant="body2" fontFamily="monospace">
-                    {maxRam}
+                    {resource.type === "vm"
+                      ? Math.floor(maxRam / STEP_VM) * STEP_VM
+                      : Math.floor(maxRam / STEP_DEPLOYMENT) * STEP_DEPLOYMENT}
                   </Typography>
                 </Stack>
               </Grid>
