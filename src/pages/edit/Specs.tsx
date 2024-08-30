@@ -74,12 +74,17 @@ export const Specs = ({ resource }: { resource: Resource }) => {
 
   useEffect(() => {
     if (user) {
+      const replicasInUse =
+        resource.type === "vm" ? 1 : (resource as Deployment).specs.replicas;
+
       const coresLeft =
         user.quota.cpuCores -
         user.usage.cpuCores +
-        (resource.specs.cpuCores ?? 0);
+        (resource.specs.cpuCores ?? 0) * replicasInUse;
       const ramLeft =
-        user.quota.ram - user.usage.ram + (resource.specs.ram ?? 0);
+        user.quota.ram -
+        user.usage.ram +
+        (resource.specs.ram ?? 0) * replicasInUse;
 
       if (coresLeft !== maxCpu) {
         const currentCores =
@@ -390,9 +395,9 @@ export const Specs = ({ resource }: { resource: Resource }) => {
                   <Typography variant="body2" fontFamily="monospace">
                     {resource.type === "vm"
                       ? Math.floor(maxCpu / STEP_VM) * STEP_VM
-                      : Math.floor(
+                      : (Math.floor(
                           Number(maxCpu.toPrecision(10)) / STEP_DEPLOYMENT
-                        ) * STEP_DEPLOYMENT}
+                        ) * STEP_DEPLOYMENT).toPrecision(2)}
                   </Typography>
                 </Stack>
               </Grid>
@@ -443,10 +448,11 @@ export const Specs = ({ resource }: { resource: Resource }) => {
                   <Typography variant="body2" fontFamily="monospace">
                     {resource.type === "vm"
                       ? Math.floor(maxRam / STEP_VM) * STEP_VM
-                      : Math.floor(
-                          Number(maxRam.toPrecision(10)) / STEP_DEPLOYMENT
-                        ) * STEP_DEPLOYMENT}
+                      : (Math.floor(
+                          (Number(maxRam.toPrecision(10)) / STEP_DEPLOYMENT)
+                        ) * STEP_DEPLOYMENT).toPrecision(2)}
                   </Typography>
+
                 </Stack>
               </Grid>
             </Grid>
