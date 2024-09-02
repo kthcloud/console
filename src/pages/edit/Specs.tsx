@@ -73,7 +73,7 @@ export const Specs = ({ resource }: { resource: Resource }) => {
   const [editing, setEditing] = useState<boolean>(false);
 
   const toClosestStep = (value: number, step: number) => {
-    return Math.round(Math.round(value / step) * step * 100) / 100;
+    return Math.round(Math.floor(value / step) * step * 100) / 100;
   };
 
   const calculateResourcesLeft = (
