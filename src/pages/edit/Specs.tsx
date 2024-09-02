@@ -72,39 +72,88 @@ export const Specs = ({ resource }: { resource: Resource }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [editing, setEditing] = useState<boolean>(false);
 
+  const toClosestStep = (value: number, step: number) => {
+    return Math.round(Math.round(value / step) * step * 100) / 100;
+  };
+
+  const calculateResourcesLeft = (
+    quota: { cpuCores: number; ram: number },
+    usage: { cpuCores: number; ram: number },
+    currentUsage: {
+      cpuCores: number;
+      ram: number;
+      replicas?: number;
+    }
+  ): {
+    totalCoresLeft: number;
+    totalRamLeft: number;
+  } => {
+    const usageWithoutDepl = {
+      cpuCores: Math.max(
+        usage.cpuCores - currentUsage.cpuCores * (currentUsage.replicas ?? 1),
+        0
+      ),
+      ram: Math.max(
+        usage.ram - currentUsage.ram * (currentUsage.replicas ?? 1),
+        0
+      ),
+    };
+
+    const totalCoresLeft = quota.cpuCores - usageWithoutDepl.cpuCores;
+    const totalRamLeft = quota.ram - usageWithoutDepl.ram;
+
+    return { totalCoresLeft, totalRamLeft };
+  };
+
   useEffect(() => {
     if (user) {
-      const deploymentIsDisabled =
-        resource.type === "vm"
-          ? false
-          : (resource as Deployment).specs.replicas === 0;
-      const coresLeft =
-        user.quota.cpuCores -
-        user.usage.cpuCores +
-        (deploymentIsDisabled ? 0 : resource.specs.cpuCores ?? 0);
-      const ramLeft =
-        user.quota.ram -
-        user.usage.ram +
-        (deploymentIsDisabled ? 0 : resource.specs.ram ?? 0);
+      const currentUsage = {
+        cpuCores: resource.specs.cpuCores ?? 0,
+        ram: resource.specs.ram ?? 0,
+        replicas: (resource as Deployment).specs.replicas,
+      };
 
-      if (coresLeft !== maxCpu) {
-        const currentCores =
-          resource.specs.cpuCores ??
-          (resource.type === "vm" ? MIN_CPU_VM : MIN_CPU_DEPLOYMENT);
+      const { totalCoresLeft, totalRamLeft } = calculateResourcesLeft(
+        user.quota,
+        user.usage,
+        currentUsage
+      );
 
-        // make sure that max cant be lower than the current core count
-        setMaxCpu(coresLeft >= currentCores ? coresLeft : currentCores);
-      }
-      if (ramLeft !== maxRam) {
-        const currentRam =
-          resource.specs.ram ??
-          (resource.type === "vm" ? MIN_RAM_VM : MIN_RAM_DEPLOYMENT);
+      const newmax = {
+        cpuCores: toClosestStep(
+          Math.ceil(
+            (replicas !== 0 ? totalCoresLeft / replicas : totalCoresLeft) * 10
+          ) / 10,
+          resource.type === "vm" ? STEP_VM : STEP_DEPLOYMENT
+        ),
+        ram: toClosestStep(
+          Math.ceil(
+            (replicas !== 0 ? totalRamLeft / replicas : totalRamLeft) * 10
+          ) / 10,
+          resource.type === "vm" ? STEP_VM : STEP_DEPLOYMENT
+        ),
+      };
 
-        // make sure that max cant be lower than the current ram amount
-        setMaxRam(ramLeft >= currentRam ? ramLeft : currentRam);
-      }
+      setMaxCpu(
+        // Set the maxCpu to the highest of the new max or the current value.
+        // This since the current value has been allowed previously, but the user is actually exceeding their quota.
+        Math.max(
+          newmax.cpuCores,
+          replicas !== 0
+            ? currentUsage.cpuCores / replicas
+            : currentUsage.cpuCores
+        )
+      );
+      setMaxRam(
+        // Set the maxRam to the highest of the new max or the current value.
+        // This since the current value has been allowed previously, but the user is actually exceeding their quota.
+        Math.max(
+          newmax.ram,
+          replicas !== 0 ? currentUsage.ram / replicas : currentUsage.ram
+        )
+      );
     }
-  }, [user, resource]);
+  }, [user, resource, cpu, ram, replicas]);
 
   const updateSpecs = () => {
     if (resource.type === "deployment") {
@@ -394,13 +443,7 @@ export const Specs = ({ resource }: { resource: Resource }) => {
                     }}
                   />
                   <Typography variant="body2" fontFamily="monospace">
-                    {resource.type === "vm"
-                      ? Math.floor(maxCpu / STEP_VM) * STEP_VM
-                      : (
-                          Math.floor(
-                            Number(maxCpu.toPrecision(10)) / STEP_DEPLOYMENT
-                          ) * STEP_DEPLOYMENT
-                        ).toPrecision(2)}
+                    {maxCpu}
                   </Typography>
                 </Stack>
               </Grid>
@@ -449,13 +492,7 @@ export const Specs = ({ resource }: { resource: Resource }) => {
                   />
 
                   <Typography variant="body2" fontFamily="monospace">
-                    {resource.type === "vm"
-                      ? Math.floor(maxRam / STEP_VM) * STEP_VM
-                      : (
-                          Math.floor(
-                            Number(maxRam.toPrecision(10)) / STEP_DEPLOYMENT
-                          ) * STEP_DEPLOYMENT
-                        ).toPrecision(2)}
+                    {maxRam}
                   </Typography>
                 </Stack>
               </Grid>
