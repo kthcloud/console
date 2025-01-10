@@ -118,7 +118,11 @@ export const Admin = () => {
       },
       async () => {
         try {
-          const response = await listGpuLeases(keycloak.token!, undefined, true);
+          const response = await listGpuLeases(
+            keycloak.token!,
+            undefined,
+            true
+          );
           setDbGPUs(response);
         } catch (error: any) {
           errorHandler(error).forEach((e) =>

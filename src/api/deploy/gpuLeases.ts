@@ -3,7 +3,10 @@ import { Jwt, Uuid } from "../../types";
 
 export const listGpuLeases = async (token: Jwt, vmId?: Uuid, all?: boolean) => {
   const vmIdQuery = vmId ? `?vmId=${encodeURIComponent(vmId)}` : "";
-  const allQuery = all !== undefined ? ((vmIdQuery ? "&" : "?") + "all=" + (all !== false ? "true" : "false")) : ""
+  const allQuery =
+    all !== undefined
+      ? (vmIdQuery ? "&" : "?") + "all=" + (all !== false ? "true" : "false")
+      : "";
   const url = `${import.meta.env.VITE_DEPLOY_API_URL}/gpuLeases${vmIdQuery + allQuery}`;
   const response = await fetch(url, {
     method: "GET",
