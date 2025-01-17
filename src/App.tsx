@@ -1,5 +1,5 @@
 // keycloak
-import { ReactKeycloakProvider } from "@react-keycloak/web";
+import { AuthContextWrapperProvider } from "./contexts/AuthContextWrapper";
 import { keycloak } from "./keycloak";
 // routes
 import Router from "./Router";
@@ -17,7 +17,7 @@ import { AlertContextProvider } from "./contexts/AlertContext";
 
 export default function App() {
   return (
-    <ReactKeycloakProvider authClient={keycloak}>
+    <AuthContextWrapperProvider authClient={keycloak}>
       <AlertContextProvider>
         <ResourceContextProvider>
           <ThemeModeContextProvider>
@@ -45,6 +45,6 @@ export default function App() {
           </ThemeModeContextProvider>
         </ResourceContextProvider>
       </AlertContextProvider>
-    </ReactKeycloakProvider>
+    </AuthContextWrapperProvider>
   );
 }

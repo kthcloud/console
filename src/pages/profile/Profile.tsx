@@ -140,7 +140,7 @@ export function Profile() {
         useFlexGap={true}
       >
         <Typography variant={"body2"} sx={{ fontFamily: "monospace" }}>
-          {"..." + rawKey.substring(rawKey.length - 20, rawKey.length - 1)}
+          {"..." + rawKey.substring(rawKey.length - 20, rawKey.length)}
         </Typography>
         <CopyButton content={key} />
       </Stack>

@@ -153,7 +153,7 @@ export default function Menu() {
             {t("menu-status")}
           </MenuItem>
           <MenuItem
-            href={"https://maia.cloud.cbh.kth.se/"}
+            href={"https://maia.app.cloud.cbh.kth.se/maia"}
             component={Link}
             onClick={handleClose}
             target="_blank"

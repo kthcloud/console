@@ -7,7 +7,6 @@ import {
   Link,
   Typography,
 } from "@mui/material";
-import Iconify from "../../../../components/Iconify";
 import { t } from "i18next";
 
 const Funding = () => {
@@ -62,17 +61,6 @@ const Funding = () => {
                 >
                   CoS
                 </Link>
-              </Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item xs={12} md={6}>
-          <Card>
-            <CardHeader title={t("disclaimer")} />
-            <CardContent>
-              <Typography variant="body1">
-                {t("genai-long")}
-                <Iconify icon="twemoji:sparkles" sx={{ marginLeft: 1 }} />
               </Typography>
             </CardContent>
           </Card>

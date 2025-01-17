@@ -55,7 +55,7 @@ export const Specs = ({ resource }: { resource: Resource }) => {
   const [maxRam, setMaxRam] = useState<number>(
     resource.type === "vm" ? MAX_RAM_VM : MAX_RAM_DEPLOYMENT
   );
-  const [maxReplicas, setMaxReplicas] = useState<number>(MAX_REPLICAS);
+  const [maxReplicas, _] = useState<number>(MAX_REPLICAS);
 
   const getInitialCpu = () => {
     return resource.specs.cpuCores || 0;
@@ -71,6 +71,89 @@ export const Specs = ({ resource }: { resource: Resource }) => {
 
   const [loading, setLoading] = useState<boolean>(false);
   const [editing, setEditing] = useState<boolean>(false);
+
+  const toClosestStep = (value: number, step: number) => {
+    return Math.round(Math.floor(value / step) * step * 100) / 100;
+  };
+
+  const calculateResourcesLeft = (
+    quota: { cpuCores: number; ram: number },
+    usage: { cpuCores: number; ram: number },
+    currentUsage: {
+      cpuCores: number;
+      ram: number;
+      replicas?: number;
+    }
+  ): {
+    totalCoresLeft: number;
+    totalRamLeft: number;
+  } => {
+    const usageWithoutDepl = {
+      cpuCores: Math.max(
+        usage.cpuCores - currentUsage.cpuCores * (currentUsage.replicas ?? 1),
+        0
+      ),
+      ram: Math.max(
+        usage.ram - currentUsage.ram * (currentUsage.replicas ?? 1),
+        0
+      ),
+    };
+
+    const totalCoresLeft = quota.cpuCores - usageWithoutDepl.cpuCores;
+    const totalRamLeft = quota.ram - usageWithoutDepl.ram;
+
+    return { totalCoresLeft, totalRamLeft };
+  };
+
+  useEffect(() => {
+    if (user) {
+      const currentUsage = {
+        cpuCores: resource.specs.cpuCores ?? 0,
+        ram: resource.specs.ram ?? 0,
+        replicas: (resource as Deployment).specs.replicas,
+      };
+
+      const { totalCoresLeft, totalRamLeft } = calculateResourcesLeft(
+        user.quota,
+        user.usage,
+        currentUsage
+      );
+
+      const newmax = {
+        cpuCores: toClosestStep(
+          Math.ceil(
+            (replicas !== 0 ? totalCoresLeft / replicas : totalCoresLeft) * 10
+          ) / 10,
+          resource.type === "vm" ? STEP_VM : STEP_DEPLOYMENT
+        ),
+        ram: toClosestStep(
+          Math.ceil(
+            (replicas !== 0 ? totalRamLeft / replicas : totalRamLeft) * 10
+          ) / 10,
+          resource.type === "vm" ? STEP_VM : STEP_DEPLOYMENT
+        ),
+      };
+
+      setMaxCpu(
+        // Set the maxCpu to the highest of the new max or the current value.
+        // This since the current value has been allowed previously, but the user is actually exceeding their quota.
+        Math.max(
+          newmax.cpuCores,
+          replicas !== 0
+            ? currentUsage.cpuCores / replicas
+            : currentUsage.cpuCores
+        )
+      );
+      setMaxRam(
+        // Set the maxRam to the highest of the new max or the current value.
+        // This since the current value has been allowed previously, but the user is actually exceeding their quota.
+        Math.max(
+          newmax.ram,
+          replicas !== 0 ? currentUsage.ram / replicas : currentUsage.ram
+        )
+      );
+    }
+  }, [user, resource, cpu, ram, replicas]);
 
   const updateSpecs = () => {
     if (resource.type === "deployment") {
@@ -122,15 +205,6 @@ export const Specs = ({ resource }: { resource: Resource }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [cpu, ram, replicas, maxCpu, maxRam, maxReplicas]
   );
-
-  // Set max values
-  useEffect(() => {
-    setMaxCpu(20);
-    setMaxRam(20);
-    setMaxReplicas(20);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [resource]);
 
   const isSame = () => {
     if (resource.type === "deployment") {
@@ -342,7 +416,7 @@ export const Specs = ({ resource }: { resource: Resource }) => {
               <Grid xs={12}>
                 <Slider
                   value={cpu}
-                  onChange={(_, v) => setCpu(v as number)}
+                  onChange={(_: any, v: any) => setCpu(v as number)}
                   min={resource.type === "vm" ? MIN_CPU_VM : MIN_CPU_DEPLOYMENT}
                   max={maxCpu}
                   step={resource.type === "vm" ? STEP_VM : STEP_DEPLOYMENT}
@@ -389,7 +463,7 @@ export const Specs = ({ resource }: { resource: Resource }) => {
               <Grid xs={12}>
                 <Slider
                   value={ram}
-                  onChange={(_, v) => setRam(v as number)}
+                  onChange={(_: any, v: any) => setRam(v as number)}
                   min={resource.type === "vm" ? MIN_RAM_VM : MIN_RAM_DEPLOYMENT}
                   max={maxRam}
                   step={resource.type === "vm" ? STEP_VM : STEP_DEPLOYMENT}
@@ -464,7 +538,7 @@ export const Specs = ({ resource }: { resource: Resource }) => {
                 <Grid xs={12}>
                   <Slider
                     value={replicas}
-                    onChange={(_, v) => setReplicas(v as number)}
+                    onChange={(_: any, v: any) => setReplicas(v as number)}
                     min={MIN_REPLICAS}
                     max={maxReplicas}
                     step={1}

@@ -6,11 +6,23 @@ import { useKeycloak } from "@react-keycloak/web";
 import LoadingPage from "../../components/LoadingPage";
 import Funding from "./components/funding/Funding";
 import { AlertList } from "../../components/AlertList";
+import { useContext, useEffect } from "react";
+import { AuthContextWrapper } from "../../contexts/AuthContextWrapper";
+import { enqueueSnackbar } from "notistack";
+import { useTranslation } from "react-i18next";
 
 export function Landing() {
   const { keycloak, initialized } = useKeycloak();
+  const { error } = useContext(AuthContextWrapper);
+  const { t } = useTranslation();
 
-  if (!initialized) {
+  useEffect(() => {
+    if (error) {
+      enqueueSnackbar(t("error-connecting-to-iam"), { variant: "error" });
+    }
+  }, [error, enqueueSnackbar]);
+
+  if (!initialized && !error) {
     return (
       <Page>
         <Box component="div" sx={{ minHeight: "100vh" }}></Box>

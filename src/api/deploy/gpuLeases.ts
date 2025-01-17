@@ -1,9 +1,13 @@
 import { GpuLeaseCreate } from "@kthcloud/go-deploy-types/types/v2/body";
 import { Jwt, Uuid } from "../../types";
 
-export const listGpuLeases = async (token: Jwt, vmId?: Uuid) => {
+export const listGpuLeases = async (token: Jwt, vmId?: Uuid, all?: boolean) => {
   const vmIdQuery = vmId ? `?vmId=${encodeURIComponent(vmId)}` : "";
-  const url = `${import.meta.env.VITE_DEPLOY_API_URL}/gpuLeases${vmIdQuery}`;
+  const allQuery =
+    all !== undefined
+      ? (vmIdQuery ? "&" : "?") + "all=" + (all !== false ? "true" : "false")
+      : "";
+  const url = `${import.meta.env.VITE_DEPLOY_API_URL}/gpuLeases${vmIdQuery + allQuery}`;
   const response = await fetch(url, {
     method: "GET",
     headers: {

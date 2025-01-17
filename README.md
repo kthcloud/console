@@ -22,8 +22,6 @@ kthcloud maintained:
 
 -   [go-deploy](https://github.com/kthcloud/go-deploy): Backend for creation, and management of resources
 -   [alert](https://alert.app.cloud.cbh.kth.se/): Provides alerts
--   [llama](https://llama.app.cloud.cbh.kth.se/): Enables genAI features
--   [llama-prefetch](https://github.com/kthcloud/llama-prefetch/): Reduces genAI features latency by prefetching queries
 -   [kthcloud iam](https://iam.cloud.cbh.kth.se): Provides user auth
 
 External:
