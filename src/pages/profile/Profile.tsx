@@ -259,7 +259,7 @@ export function Profile() {
                       <Button
                         startIcon={<Iconify icon="mdi-lock" />}
                         component={Link}
-                        href="https://iam.cloud.cbh.kth.se/realms/cloud/account/"
+                        href={`${import.meta.env.VITE_KEYCLOAK_URL}/realms/${import.meta.env.VITE_KEYCLOAK_REALM}/account/`}
                         target="_blank"
                         rel="noopener noreferrer"
                         variant="outlined"
