@@ -250,9 +250,10 @@ export function Edit() {
         >
           {stale
             ? t("stale-description") +
-              (resource.status === "resourceDisabled"
+              (resource.status === "resourceDisabled" ||
+              resource.status === "resourceStopped"
                 ? " " + t("stale-and-disabled-description")
-                : " " + t("stale-and-not-disabled"))
+                : " " + t("stale-and-not-disabled-description"))
             : t("stale-soon-description") +
               ` (${daysLeftUntilStale} ${t("days-left")})`}
         </Typography>
