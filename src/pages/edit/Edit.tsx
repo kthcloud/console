@@ -50,6 +50,7 @@ import { ReplicaStatus } from "./deployments/ReplicaStatus";
 import ProxyManager from "./vms/ProxyManager";
 import { isOlderThanThreeMonths } from "../../components/render/Resource";
 import Label from "../../components/Label";
+import { getDaysLeftUntilStale } from "../../utils/staleDates";
 
 export function Edit() {
   const { t } = useTranslation();
@@ -195,13 +196,31 @@ export function Edit() {
     );
   };
   const renderStaleResourceHeaderFullWidth = (resource: Resource) => {
-    const stale = isOlderThanThreeMonths(resource?.accessedAt);
-    if (!stale) return <></>;
+    const warningDaysBeforeStale = 30;
+    const daysLeftUntilStale = getDaysLeftUntilStale(resource?.accessedAt);
+    const stale =
+      typeof daysLeftUntilStale === "number"
+        ? daysLeftUntilStale <= 0
+        : isOlderThanThreeMonths(resource?.accessedAt);
+
+    if (
+      !stale &&
+      (daysLeftUntilStale === false ||
+        (daysLeftUntilStale as number) > warningDaysBeforeStale)
+    )
+      return <></>;
+
+    // Styles for the icon and header
+    const boxStyles: React.CSSProperties = {
+      display: "flex",
+      alignItems: "center",
+      gap: "8px",
+    };
 
     return (
       <Label
         variant="ghost"
-        color="warning"
+        color={!stale ? "info" : "warning"}
         sx={{
           width: "100%",
           height: "100%",
@@ -211,10 +230,15 @@ export function Edit() {
           padding: "0.5em",
         }}
       >
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          <Iconify icon="mdi:hourglass-full" sx={{ opacity: 0.65 }} />
-          <Typography variant="h6">{t("stale")}</Typography>
-        </Box>
+        <div style={boxStyles}>
+          <Iconify
+            icon={!stale ? "mdi:hourglass" : "mdi:hourglass-full"}
+            sx={{ opacity: 0.65 }}
+          />
+          <Typography variant="h6">
+            {!stale ? t("stale-soon") : t("stale")}
+          </Typography>
+        </div>
         <Typography
           variant="body2"
           ml={"1.5em"}
@@ -224,10 +248,13 @@ export function Edit() {
             whiteSpace: "normal",
           }}
         >
-          {t("stale-description") +
-            (resource.status === "resourceDisabled"
-              ? " " + t("stale-and-disabled-description")
-              : " " + t("stale-and-not-disabled"))}
+          {stale
+            ? t("stale-description") +
+              (resource.status === "resourceDisabled"
+                ? " " + t("stale-and-disabled-description")
+                : " " + t("stale-and-not-disabled"))
+            : t("stale-soon-description") +
+              ` (${daysLeftUntilStale} ${t("days-left")})`}
         </Typography>
       </Label>
     );

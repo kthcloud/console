@@ -541,6 +541,10 @@
         "stale": "Inaktiv",
         "stale-description": "Denna resurs har inte åtkommits av dess ägare under mer än eller lika med 3 månader.",
         "stale-and-disabled-description": "Denna resurs har inaktiverats på grund av inaktivitet. Kontakta resursägaren för att logga in och återställa åtkomsten.",
-        "stale-and-not-disabled-description": "På grund av långvarig inaktivitet kommer denna resurs att inaktiveras inom en snar framtid."
+        "stale-and-not-disabled-description": "På grund av långvarig inaktivitet kommer denna resurs att inaktiveras inom en snar framtid.",
+        "stale-soon": "Snart inaktiv",
+        "stale-soon-description": "Denna resurs kommer snart att bli avaktiverad på grund av ägarens inaktivitet",
+        "stale-in": "Inaktiv om",
+        "days-left": "dagar kvar"
     }
 }

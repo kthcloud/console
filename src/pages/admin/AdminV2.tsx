@@ -275,7 +275,7 @@ export default function AdminV2() {
             };
 
             return (
-              <Box sx={{ minWidth: 150 }}>
+              <div style={{ minWidth: 150 }}>
                 <Typography variant="body2">CPU</Typography>
                 <Tooltip
                   title={`${user.usage.cpuCores} of ${user.quota.cpuCores} cores (${cpu}%)`}
@@ -296,7 +296,7 @@ export default function AdminV2() {
                 >
                   <LinearProgress variant="determinate" value={Number(disk)} />
                 </Tooltip>
-              </Box>
+              </div>
             );
           },
         },

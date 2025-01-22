@@ -11,6 +11,7 @@ import { ThemeColor } from "../../theme/types";
 import { sentenceCase } from "change-case";
 import { getReasonPhrase } from "http-status-codes";
 import { TFunction } from "i18next";
+import { getDaysLeftUntilStale } from "../../utils/staleDates";
 
 export const renderResourceButtons = (resource: Resource) => {
   if (
@@ -294,17 +295,41 @@ export const renderStale = (
   row: Resource,
   t: TFunction<"translation", undefined>
 ) => {
-  const stale = isOlderThanThreeMonths(row?.accessedAt);
-  if (!stale) return <></>;
+  const warningDaysBeforeStale = 30;
+  const daysLeftUntilStale = getDaysLeftUntilStale(row?.accessedAt);
+  const stale =
+    typeof daysLeftUntilStale === "number"
+      ? daysLeftUntilStale <= 0
+      : isOlderThanThreeMonths(row?.accessedAt);
+
+  if (
+    !stale &&
+    (daysLeftUntilStale === false ||
+      (daysLeftUntilStale as number) > warningDaysBeforeStale)
+  )
+    return <></>;
 
   return (
     <Label
       variant="ghost"
-      color="warning"
-      startIcon={<Iconify icon="mdi:hourglass-full" sx={{ opacity: 0.65 }} />}
+      color={!stale ? "info" : "warning"}
+      startIcon={
+        <Iconify
+          icon={!stale ? "mdi:hourglass" : "mdi:hourglass-full"}
+          sx={{ opacity: 0.65 }}
+        />
+      }
     >
-      <Tooltip title={t("stale-description")}>
-        <span>{t("stale")}</span>
+      <Tooltip
+        title={
+          !stale ? t("stale-soon-description") + "." : t("stale-description")
+        }
+      >
+        <span>
+          {!stale
+            ? t("stale-in") + ` (${daysLeftUntilStale} ${t("days")})`
+            : t("stale")}
+        </span>
       </Tooltip>
     </Label>
   );

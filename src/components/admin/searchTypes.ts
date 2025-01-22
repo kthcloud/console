@@ -1,4 +1,4 @@
-export type Category = "Matches"|"User" | "Attribute";
+export type Category = "Matches" | "User" | "Attribute";
 
 export type QueryModifier = {
   Matches: "";

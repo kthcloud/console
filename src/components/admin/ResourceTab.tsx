@@ -10,16 +10,15 @@ import {
   Skeleton,
   Typography,
   Modal,
-  Box,
   Button,
   TablePagination,
-  SxProps,
-  Theme,
+  useTheme,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import ConfirmButton from "../ConfirmButton";
 import SearchBar from "./SearchBar";
 import { Category, QueryModifier } from "./searchTypes";
+import { CustomTheme } from "../../theme/types";
 
 interface ResourceTabProps<T> {
   resourceName: String;
@@ -60,6 +59,7 @@ const ResourceTab = <T extends { id: string | number }>({
   setQueryModifier,
 }: ResourceTabProps<T>) => {
   const { t } = useTranslation();
+  const theme = useTheme();
   const loading = !data;
   const resolvedColumns =
     columns && columns.length > 0
@@ -103,18 +103,18 @@ const ResourceTab = <T extends { id: string | number }>({
   );
 
   // annoying TS compile issue for some reason
-  const modalBoxStyles: any = {
-    position: "absolute" as const,
-    top: "50%" as const,
-    left: "50%" as const,
-    transform: "translate(-50%, -50%)" as const,
-    width: "80vw" as const,
-    height: "80vh" as const,
-    bgcolor: "background.paper" as const,
-    boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)" as const,
-    p: "1em" as const,
-    borderRadius: "2em" as const,
-    overflow: "auto" as const,
+  const modalBoxStyles: React.CSSProperties = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: "80vw",
+    height: "80vh",
+    backgroundColor: `${(theme as CustomTheme).palette.grey[500_32]} !important`,
+    boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
+    padding: "1em",
+    borderRadius: "2em",
+    overflow: "auto",
   };
 
   return (
@@ -228,9 +228,9 @@ const ResourceTab = <T extends { id: string | number }>({
             setSelectedItem(undefined);
           }}
         >
-          <Box sx={modalBoxStyles}>
+          <div style={modalBoxStyles}>
             <OnClickModal data={selectedItem} />
-          </Box>
+          </div>
         </Modal>
       ) : (
         selectedItem && (
@@ -240,7 +240,7 @@ const ResourceTab = <T extends { id: string | number }>({
               setSelectedItem(undefined);
             }}
           >
-            <Box sx={modalBoxStyles}>
+            <div style={modalBoxStyles}>
               <Typography variant="h6" gutterBottom>
                 Item Details
               </Typography>
@@ -262,7 +262,7 @@ const ResourceTab = <T extends { id: string | number }>({
               ) : (
                 <Typography variant="body1">No item selected.</Typography>
               )}
-            </Box>
+            </div>
           </Modal>
         )
       )}
