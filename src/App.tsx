@@ -14,6 +14,7 @@ import { IconButton } from "@mui/material";
 import Iconify from "./components/Iconify";
 import { ThemeModeContextProvider } from "./contexts/ThemeModeContext";
 import { AlertContextProvider } from "./contexts/AlertContext";
+import { AdminResourceContextProvider } from "./contexts/AdminResourceContext";
 
 export default function App() {
   return (
@@ -39,7 +40,9 @@ export default function App() {
               <ThemeProvider>
                 <ScrollToTop />
                 <BaseOptionChartStyle />
-                <Router />
+                <AdminResourceContextProvider>
+                  <Router />
+                </AdminResourceContextProvider>
               </ThemeProvider>
             </SnackbarProvider>
           </ThemeModeContextProvider>
