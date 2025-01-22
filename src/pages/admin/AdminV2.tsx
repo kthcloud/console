@@ -35,6 +35,7 @@ import {
   renderResourceStatus,
   renderResourceWithGPU,
   renderShared,
+  renderStale,
   renderStatusCode,
 } from "../../components/render/Resource";
 import { Resource, Uuid } from "../../types";
@@ -122,6 +123,7 @@ export default function AdminV2() {
                 {renderResourceStatus(deployment as Resource, t)}
                 {renderStatusCode(deployment as Resource)}
                 {renderShared(deployment as Resource, t)}
+                {renderStale(deployment as Resource, t)}
               </Stack>
             );
           },
@@ -182,6 +184,7 @@ export default function AdminV2() {
               <Stack direction="row" alignItems="center" spacing={1}>
                 {renderResourceStatus(vm as Resource, t)}
                 {renderShared(vm as Resource, t)}
+                {renderStale(vm as Resource, t)}
               </Stack>
             );
           },

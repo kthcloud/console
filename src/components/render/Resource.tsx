@@ -279,3 +279,33 @@ export const renderShared = (
     </Label>
   );
 };
+
+function isOlderThanThreeMonths(accessedAt: string | undefined) {
+  if (!accessedAt) return false;
+
+  const accessedDate = new Date(accessedAt);
+  const threeMonthsAgo = new Date();
+  threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+
+  return accessedDate < threeMonthsAgo;
+}
+
+export const renderStale = (
+  row: Resource,
+  t: TFunction<"translation", undefined>
+) => {
+  const stale = isOlderThanThreeMonths(row?.accessedAt);
+  if (!stale) return <></>;
+
+  return (
+    <Label
+      variant="ghost"
+      color="warning"
+      startIcon={<Iconify icon="mdi:hourglass-full" sx={{ opacity: 0.65 }} />}
+    >
+      <Tooltip title={t("stale-description")}>
+        <span>{t("stale")}</span>
+      </Tooltip>
+    </Label>
+  );
+};

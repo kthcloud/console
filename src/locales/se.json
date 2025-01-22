@@ -537,6 +537,8 @@
         "admin-visibility-auth": "Privat (auth proxy)",
         "visibility-public-tooltip": "Din deployment är publikt åtkomlig på internet.",
         "visibility-private-tooltip": "Din deployment är privat och inte åtkomlig på internet. Enbart intern trafik mellan appar är tillåten.",
-        "visibility-auth-tooltip": "Din deployment är privat och åtkomlig på internet via en autentiserings-proxy, detta begränsar tillåten trafik."
+        "visibility-auth-tooltip": "Din deployment är privat och åtkomlig på internet via en autentiserings-proxy, detta begränsar tillåten trafik.",
+        "stale": "Föråldrad",
+        "stale-description": "Denna resurs har inte åtkommits av dess ägare under mer än eller lika med 3 månader."
     }
 }
