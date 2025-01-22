@@ -13,17 +13,16 @@ import {
   Box,
   Button,
   TablePagination,
-  InputAdornment,
   SxProps,
   Theme,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import ConfirmButton from "../ConfirmButton";
-import { SearchStyle } from "./SearchStyle";
-import Iconify from "../Iconify";
+import SearchBar from "./SearchBar";
+import { Category, QueryModifier } from "./searchTypes";
 
 interface ResourceTabProps<T> {
-  resourceName: string;
+  resourceName: String;
   data: T[] | undefined;
   filteredData: T[] | undefined;
   filter: string | undefined;
@@ -40,6 +39,10 @@ interface ResourceTabProps<T> {
     withConfirm?: boolean;
   }[];
   OnClickModal?: React.ComponentType<{ data: T }>;
+  category?: Category;
+  setCategory?: Dispatch<SetStateAction<Category | undefined>>;
+  queryModifier?: QueryModifier[Category];
+  setQueryModifier?: Dispatch<SetStateAction<QueryModifier[Category]>>;
 }
 
 const ResourceTab = <T extends { id: string | number }>({
@@ -51,6 +54,10 @@ const ResourceTab = <T extends { id: string | number }>({
   columns,
   actions,
   OnClickModal,
+  category,
+  setCategory,
+  queryModifier,
+  setQueryModifier,
 }: ResourceTabProps<T>) => {
   const { t } = useTranslation();
   const loading = !data;
@@ -95,7 +102,8 @@ const ResourceTab = <T extends { id: string | number }>({
     page * rowsPerPage + rowsPerPage
   );
 
-  const modalBoxStyles: SxProps<Theme> = {
+  // annoying TS compile issue for some reason
+  const modalBoxStyles: any = {
     position: "absolute" as const,
     top: "50%" as const,
     left: "50%" as const,
@@ -114,18 +122,15 @@ const ResourceTab = <T extends { id: string | number }>({
       <Typography variant="h6" gutterBottom>
         {resourceName}
       </Typography>
-      <SearchStyle
-        value={filter || ""}
-        onChange={(e) => setFilter(e.target.value)}
-        placeholder={t("deploy-search")}
-        startAdornment={
-          <InputAdornment position="start">
-            <Iconify
-              icon="eva:search-fill"
-              sx={{ color: "text.disabled", width: 20, height: 20 }}
-            />
-          </InputAdornment>
-        }
+      <SearchBar
+        searchText={"Search " + resourceName}
+        searchQuery={filter || ""}
+        setSearchQuery={setFilter}
+        onSearch={() => {}}
+        category={category}
+        setCategory={setCategory}
+        queryModifier={queryModifier}
+        setQueryModifier={setQueryModifier}
       />
 
       {loading ? (

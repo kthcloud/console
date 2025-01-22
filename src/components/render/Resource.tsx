@@ -280,7 +280,7 @@ export const renderShared = (
   );
 };
 
-function isOlderThanThreeMonths(accessedAt: string | undefined) {
+export function isOlderThanThreeMonths(accessedAt: string | undefined) {
   if (!accessedAt) return false;
 
   const accessedDate = new Date(accessedAt);

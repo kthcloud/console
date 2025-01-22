@@ -48,6 +48,8 @@ import { AlertList } from "../../components/AlertList";
 import { Specs } from "./Specs";
 import { ReplicaStatus } from "./deployments/ReplicaStatus";
 import ProxyManager from "./vms/ProxyManager";
+import { isOlderThanThreeMonths } from "../../components/render/Resource";
+import Label from "../../components/Label";
 
 export function Edit() {
   const { t } = useTranslation();
@@ -192,6 +194,44 @@ export function Edit() {
       />
     );
   };
+  const renderStaleResourceHeaderFullWidth = (resource: Resource) => {
+    const stale = isOlderThanThreeMonths(resource?.accessedAt);
+    if (!stale) return <></>;
+
+    return (
+      <Label
+        variant="ghost"
+        color="warning"
+        sx={{
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "flex-start",
+          padding: "0.5em",
+        }}
+      >
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+          <Iconify icon="mdi:hourglass-full" sx={{ opacity: 0.65 }} />
+          <Typography variant="h6">{t("stale")}</Typography>
+        </Box>
+        <Typography
+          variant="body2"
+          ml={"1.5em"}
+          sx={{
+            wordWrap: "break-word",
+            overflowWrap: "break-word",
+            whiteSpace: "normal",
+          }}
+        >
+          {t("stale-description") +
+            (resource.status === "resourceDisabled"
+              ? " " + t("stale-and-disabled-description")
+              : " " + t("stale-and-not-disabled"))}
+        </Typography>
+      </Label>
+    );
+  };
 
   return (
     <>
@@ -330,6 +370,7 @@ export function Edit() {
               </Stack>
 
               <AlertList />
+              {renderStaleResourceHeaderFullWidth(resource)}
               <JobList />
 
               {resource.type === "vm" && <SSHString vm={resource as Vm} />}

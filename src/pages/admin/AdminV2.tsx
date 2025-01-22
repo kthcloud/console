@@ -39,6 +39,8 @@ import {
   renderStatusCode,
 } from "../../components/render/Resource";
 import { Resource, Uuid } from "../../types";
+import TimeAgo from "../../components/admin/TimeAgo";
+import { Category, QueryModifier } from "../../components/admin/searchTypes";
 
 export default function AdminV2() {
   const { t } = useTranslation();
@@ -84,6 +86,11 @@ export default function AdminV2() {
   const navigate = useNavigate();
 
   const [activeTab, setActiveTab] = useState<number>(0);
+  const [categoryTemp, setCategoryTemp] = useState<Category | undefined>(
+    "Matches"
+  );
+  const [queryModifierTemp, setQueryModifierTemp] =
+    useState<QueryModifier[Category]>("");
 
   const handleChangeTab = (_: any, newTab: number) => {
     setActiveTab(newTab);
@@ -333,6 +340,31 @@ export default function AdminV2() {
     },
     {
       label: "Jobs",
+      columns: [
+        { id: "id", label: "ID" },
+        {
+          id: "userId",
+          label: "User",
+          renderFunc: (userId: string) => {
+            return users?.find((user) => user.id === userId)?.username;
+          },
+        },
+        {
+          id: "type",
+          label: "Type",
+        },
+        {
+          id: "status",
+          label: "Status",
+        },
+        {
+          id: "createdAt",
+          label: "Created",
+          renderFunc: (createdAt: string | undefined) =>
+            TimeAgo({ createdAt: createdAt }),
+        },
+        { id: "runAfter", label: "Run After" },
+      ],
     },
   ];
 
@@ -412,6 +444,10 @@ export default function AdminV2() {
       setFilter={resourceLookup[index].setFilter}
       columns={config.columns}
       actions={config.actions}
+      category={categoryTemp}
+      setCategory={setCategoryTemp}
+      queryModifier={queryModifierTemp}
+      setQueryModifier={setQueryModifierTemp}
     />
   ));
 
