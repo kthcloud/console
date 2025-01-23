@@ -169,6 +169,7 @@ export default function CreateVm({
       diskSize: diskSize,
       ram: ram,
       ports: [],
+      neverStale: false,
     };
     // zone: selectedZone,
 

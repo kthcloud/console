@@ -538,6 +538,17 @@
         "admin-visibility-auth": "Private (auth proxy)",
         "visibility-public-tooltip": "Your deployment is publicly accessible on the internet.",
         "visibility-private-tooltip": "Your deployment is private and not reachable on the internet. Only internal traffic is allowed in (traffic between deployments).",
-        "visibility-auth-tooltip": "Your deployment is private and reachable on the internet through an authentication proxy, this limits the allowed traffic."
+        "visibility-auth-tooltip": "Your deployment is private and reachable on the internet through an authentication proxy, this limits the allowed traffic.",
+        "stale": "Stale",
+        "stale-description": "This resource hasn't been accessed by its owner for more than or equal to 3 months.",
+        "stale-and-disabled-description": "This resource has been disabled due to inactivity. Please contact the resource owner to log in and restore access.",
+        "stale-and-not-disabled-description": "Due to prolonged inactivity, this resource will be disabled soon.",
+        "stale-soon": "Stale soon",
+        "stale-soon-description": "This resource will become stale soon due to inactivity from the owner",
+        "stale-in": "Stale in",
+        "days-left": "days left",
+        "never-stale-option-header": "Always Active Option",
+        "never-stale-option-header-subheader": "Control whether this resource should remain active despite inactivity.",
+        "never-stale": "Always Active"
     }
 }

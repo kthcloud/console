@@ -537,6 +537,17 @@
         "admin-visibility-auth": "Privat (auth proxy)",
         "visibility-public-tooltip": "Din deployment är publikt åtkomlig på internet.",
         "visibility-private-tooltip": "Din deployment är privat och inte åtkomlig på internet. Enbart intern trafik mellan appar är tillåten.",
-        "visibility-auth-tooltip": "Din deployment är privat och åtkomlig på internet via en autentiserings-proxy, detta begränsar tillåten trafik."
+        "visibility-auth-tooltip": "Din deployment är privat och åtkomlig på internet via en autentiserings-proxy, detta begränsar tillåten trafik.",
+        "stale": "Inaktiv",
+        "stale-description": "Denna resurs har inte åtkommits av dess ägare under mer än eller lika med 3 månader.",
+        "stale-and-disabled-description": "Denna resurs har inaktiverats på grund av inaktivitet. Kontakta resursägaren för att logga in och återställa åtkomsten.",
+        "stale-and-not-disabled-description": "På grund av långvarig inaktivitet kommer denna resurs att inaktiveras inom en snar framtid.",
+        "stale-soon": "Snart inaktiv",
+        "stale-soon-description": "Denna resurs kommer snart att bli avaktiverad på grund av ägarens inaktivitet",
+        "stale-in": "Inaktiv om",
+        "days-left": "dagar kvar",
+        "never-stale-option-header": "Aldrig inaktiv-alternativ",
+        "never-stale-option-header-subheader": "Styr om denna resurs ska förbli aktiv trots inaktivitet.",
+        "never-stale": "Alltid aktiv"
     }
 }
