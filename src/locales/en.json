@@ -546,6 +546,9 @@
         "stale-soon": "Stale soon",
         "stale-soon-description": "This resource will become stale soon due to inactivity from the owner",
         "stale-in": "Stale in",
-        "days-left": "days left"
+        "days-left": "days left",
+        "never-stale-option-header": "Always Active Option",
+        "never-stale-option-header-subheader": "Control whether this resource should remain active despite inactivity.",
+        "never-stale": "Always Active"
     }
 }
