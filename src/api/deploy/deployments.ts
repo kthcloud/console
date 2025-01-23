@@ -9,7 +9,11 @@ export const getDeployment = async (token: string, id: string) => {
     },
   });
   const response = [await res.json()];
-  const result = response.map((obj) => ({ ...obj, type: "deployment" }));
+  const result = response.map((obj) => ({
+    ...obj,
+    deploymentType: obj.type,
+    type: "deployment",
+  }));
   if (Array.isArray(result)) return result;
   else throw new Error("Error getting deployments, response was not an array");
 };
