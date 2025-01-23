@@ -303,9 +303,10 @@ export const renderStale = (
       : isOlderThanThreeMonths(row?.accessedAt);
 
   if (
-    !stale &&
-    (daysLeftUntilStale === false ||
-      (daysLeftUntilStale as number) > warningDaysBeforeStale)
+    row.neverStale ||
+    (!stale &&
+      (daysLeftUntilStale === false ||
+        (daysLeftUntilStale as number) > warningDaysBeforeStale))
   )
     return <></>;
 

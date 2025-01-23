@@ -51,6 +51,7 @@ import ProxyManager from "./vms/ProxyManager";
 import { isOlderThanThreeMonths } from "../../components/render/Resource";
 import Label from "../../components/Label";
 import { getDaysLeftUntilStale } from "../../utils/staleDates";
+import NeverStaleMode from "./NeverStaleMode";
 
 export function Edit() {
   const { t } = useTranslation();
@@ -204,9 +205,10 @@ export function Edit() {
         : isOlderThanThreeMonths(resource?.accessedAt);
 
     if (
-      !stale &&
-      (daysLeftUntilStale === false ||
-        (daysLeftUntilStale as number) > warningDaysBeforeStale)
+      resource.neverStale ||
+      (!stale &&
+        (daysLeftUntilStale === false ||
+          (daysLeftUntilStale as number) > warningDaysBeforeStale))
     )
       return <></>;
 
@@ -448,6 +450,8 @@ export function Edit() {
               {resource.type === "deployment" && (
                 <HealthCheckRoute deployment={resource as Deployment} />
               )}
+
+              {user?.admin && <NeverStaleMode resource={resource} />}
 
               <DangerZone resource={resource} />
             </Stack>

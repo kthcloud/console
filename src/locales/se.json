@@ -545,6 +545,9 @@
         "stale-soon": "Snart inaktiv",
         "stale-soon-description": "Denna resurs kommer snart att bli avaktiverad på grund av ägarens inaktivitet",
         "stale-in": "Inaktiv om",
-        "days-left": "dagar kvar"
+        "days-left": "dagar kvar",
+        "never-stale-option-header": "Aldrig inaktiv-alternativ",
+        "never-stale-option-header-subheader": "Styr om denna resurs ska förbli aktiv trots inaktivitet.",
+        "never-stale": "Alltid aktiv"
     }
 }
