@@ -21,6 +21,7 @@ export default function HostMachine({
 
   return (
     <Box
+      // @ts-ignore weird ts issue
       sx={{
         display: "flex",
         flexDirection: "column",
@@ -28,7 +29,7 @@ export default function HostMachine({
         borderRadius: 2,
         boxShadow: 3,
         backgroundColor: theme.palette.grey[200],
-        position: "relative", // Allow absolute positioning inside
+        position: "relative",
       }}
     >
       <Typography variant="h6">{host.displayName}</Typography>
