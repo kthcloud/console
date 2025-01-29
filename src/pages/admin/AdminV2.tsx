@@ -12,7 +12,7 @@ import {
 
 import { useTranslation } from "react-i18next";
 import useResource from "../../hooks/useResource";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { enqueueSnackbar } from "notistack";
 import useAdmin from "../../hooks/useAdmin";
@@ -40,6 +40,7 @@ import AdminToolbar from "../../components/admin/AdminToolbar";
 import HostsTab from "../../components/admin/HostsTab";
 
 export default function AdminV2() {
+  const { tab: initialTab } = useParams();
   const { t } = useTranslation();
   const { user, setImpersonatingDeployment, setImpersonatingVm } =
     useResource();
@@ -402,6 +403,24 @@ export default function AdminV2() {
     },
   ];
 
+  const tabLookup = resourceConfig.reduce<Record<string, number>>(
+    (acc, obj, index) => {
+      acc[obj.label.toLowerCase()] = index;
+      return acc;
+    },
+    {}
+  );
+  tabLookup["hosts"] = resourceConfig.length;
+  useEffect(() => {
+    if (
+      initialTab &&
+      tabLookup[initialTab.toLowerCase()] &&
+      tabLookup[initialTab.toLowerCase()] !== activeTab
+    ) {
+      setActiveTab(tabLookup[initialTab.toLowerCase()]);
+    }
+  }, []);
+
   const resourceLookup = [
     {
       data: deployments,
@@ -519,6 +538,14 @@ export default function AdminV2() {
     )),
     <HostsTab />,
   ];
+
+  useEffect(() => {
+    const path = `/admin/${activeTab < resourceConfig.length ? resourceConfig[activeTab].label.toLowerCase() : "hosts"}`;
+
+    if (window.location.pathname !== path) {
+      navigate(path);
+    }
+  }, [activeTab]);
 
   return (
     <>

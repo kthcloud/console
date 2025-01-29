@@ -83,10 +83,10 @@ const ResourceTab = <T extends { id: string | number }>({
   const resolvedActions =
     columns && columns.length > 0
       ? [
-          {
+          /*{
             label: t("details"),
             onClick: (value: T) => setSelectedItem(value),
-          },
+          },*/
           ...(actions || []),
         ]
       : actions;
@@ -149,8 +149,10 @@ const ResourceTab = <T extends { id: string | number }>({
           <Table>
             <TableHead>
               <TableRow>
-                {resolvedColumns.map((col) => (
-                  <TableCell key={col.id as string}>{col.label}</TableCell>
+                {resolvedColumns.map((col, index) => (
+                  <TableCell key={(col.id as string) + index}>
+                    {col.label}
+                  </TableCell>
                 ))}
                 {resolvedActions && (
                   <TableCell key={"admin-actions"}>
@@ -161,9 +163,9 @@ const ResourceTab = <T extends { id: string | number }>({
             </TableHead>
             <TableBody>
               {paginatedData?.map((row, index) => (
-                <TableRow key={row.id || index}>
-                  {resolvedColumns.map((col) => (
-                    <TableCell key={col.id as string}>
+                <TableRow key={String(row.id) + index}>
+                  {resolvedColumns.map((col, j) => (
+                    <TableCell key={(col.id as string) + j}>
                       {(() => {
                         if (col.renderFunc) {
                           if (col.id === "*") {
@@ -189,10 +191,11 @@ const ResourceTab = <T extends { id: string | number }>({
                     </TableCell>
                   ))}
                   {resolvedActions && (
-                    <TableCell key={"admin-actions"}>
-                      {resolvedActions.map((action) =>
+                    <TableCell key={"admin-actions" + index}>
+                      {resolvedActions.map((action, j) =>
                         action.withConfirm ? (
                           <ConfirmButton
+                            key={"action-button" + j}
                             action={action.label}
                             actionText={action.label}
                             callback={() => {
@@ -204,6 +207,7 @@ const ResourceTab = <T extends { id: string | number }>({
                           />
                         ) : (
                           <Button
+                            key={"action-button" + j}
                             size="small"
                             onClick={() => action.onClick(row)}
                           >
