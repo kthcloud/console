@@ -19,6 +19,11 @@ export default function HostMachine({
   const { t } = useTranslation();
   const theme = useTheme();
 
+  const currentlyDeactivated =
+    host.deactivatedUntil &&
+    new Date(host.deactivatedUntil).getTime() - new Date().getTime() > 0;
+
+  const hasIssue = !host.schedulable || currentlyDeactivated;
   return (
     <Box
       // @ts-ignore weird ts issue
@@ -32,20 +37,30 @@ export default function HostMachine({
         position: "relative",
       }}
     >
-      <Typography variant="h6">{host.displayName}</Typography>
+      <Typography
+        variant="h6"
+        sx={{
+          fontWeight: 600,
+          background: hasIssue
+            ? "linear-gradient(to right,rgb(182, 111, 4), #feb47b)"
+            : "linear-gradient(to right,rgb(69, 182, 4), #feb47b)",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+        }}
+      >
+        {host.displayName}
+      </Typography>
       <Box sx={{ display: "flex", alignItems: "center", mt: 1 }}>
         <BlinkingLED status={host.enabled && host.schedulable} />
         <Typography sx={{ ml: 1 }}>
           {host.schedulable ? t("schedulable") : t("unschedulable")}
         </Typography>
       </Box>
-      {host.deactivatedUntil &&
-        new Date(host.deactivatedUntil).getTime() - new Date().getTime() >
-          0 && (
-          <Typography variant="body2" color="error" sx={{ mt: 1 }}>
-            <TimeLeft targetDate={host.deactivatedUntil} />
-          </Typography>
-        )}
+      {currentlyDeactivated && (
+        <Typography variant="body2" color="error" sx={{ mt: 1 }}>
+          <TimeLeft targetDate={host.deactivatedUntil} />
+        </Typography>
+      )}
 
       {specs && (
         <Box
