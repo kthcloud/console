@@ -534,7 +534,11 @@ export default function AdminV2() {
                 {t("menu-admin-panel")}
               </Typography>
               <Card sx={{ boxShadow: 20 }}>
-                <Tabs value={activeTab} onChange={handleChangeTab}>
+                <Tabs
+                  value={activeTab}
+                  onChange={handleChangeTab}
+                  variant="scrollable"
+                >
                   {resourceConfig.map((resource, index) => (
                     <Tab key={index} label={resource.label} />
                   ))}
