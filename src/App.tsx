@@ -14,35 +14,38 @@ import { IconButton } from "@mui/material";
 import Iconify from "./components/Iconify";
 import { ThemeModeContextProvider } from "./contexts/ThemeModeContext";
 import { AlertContextProvider } from "./contexts/AlertContext";
+import { AdminResourceContextProvider } from "./contexts/AdminResourceContext";
 
 export default function App() {
   return (
     <AuthContextWrapperProvider authClient={keycloak}>
       <AlertContextProvider>
         <ResourceContextProvider>
-          <ThemeModeContextProvider>
-            <SnackbarProvider
-              maxSnack={5}
-              anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-              autoHideDuration={3000}
-              action={(snack) => (
-                <IconButton
-                  onClick={() => closeSnackbar(snack)}
-                  color="inherit"
-                >
-                  <Iconify icon="material-symbols:close" />
-                </IconButton>
-              )}
-              dense
-              preventDuplicate
-            >
-              <ThemeProvider>
-                <ScrollToTop />
-                <BaseOptionChartStyle />
-                <Router />
-              </ThemeProvider>
-            </SnackbarProvider>
-          </ThemeModeContextProvider>
+          <AdminResourceContextProvider>
+            <ThemeModeContextProvider>
+              <SnackbarProvider
+                maxSnack={5}
+                anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+                autoHideDuration={3000}
+                action={(snack) => (
+                  <IconButton
+                    onClick={() => closeSnackbar(snack)}
+                    color="inherit"
+                  >
+                    <Iconify icon="material-symbols:close" />
+                  </IconButton>
+                )}
+                dense
+                preventDuplicate
+              >
+                <ThemeProvider>
+                  <ScrollToTop />
+                  <BaseOptionChartStyle />
+                  <Router />
+                </ThemeProvider>
+              </SnackbarProvider>
+            </ThemeModeContextProvider>
+          </AdminResourceContextProvider>
         </ResourceContextProvider>
       </AlertContextProvider>
     </AuthContextWrapperProvider>

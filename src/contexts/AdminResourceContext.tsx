@@ -3,6 +3,7 @@ import {
   Dispatch,
   SetStateAction,
   useEffect,
+  useMemo,
   useState,
 } from "react";
 import useInterval from "../hooks/useInterval";
@@ -15,9 +16,11 @@ import {
   UserRead,
   VmRead,
 } from "@kthcloud/go-deploy-types/types/v2/body";
-import useFilterableResourceState from "../hooks/useFilterableResourceState";
+import useFilterableResourceState, {
+  DEFAULT_PAGESIZE,
+} from "../hooks/useFilterableResourceState";
 import { useKeycloak } from "@react-keycloak/web";
-import { getAllUsers } from "../api/deploy/users";
+import { getUsers } from "../api/deploy/users";
 import { errorHandler } from "../utils/errorHandler";
 import { enqueueSnackbar } from "notistack";
 import { useTranslation } from "react-i18next";
@@ -35,37 +38,77 @@ type AdminResourceContextType = {
   setEnableFetching: Dispatch<SetStateAction<boolean>>;
   lastRefresh: number;
   lastRefreshRtt: number;
-  timeDiffSinceLastRefresh: string;
   loading: boolean;
   refetch: () => void;
+  // Users
   users: UserRead[] | undefined;
   usersFilter: string | undefined;
   setUsersFilter: Dispatch<SetStateAction<string | undefined>>;
   filteredUsers: UserRead[] | undefined;
+  usersPage: number;
+  setUsersPage: Dispatch<SetStateAction<number>>;
+  usersPageSize: number;
+  setUsersPageSize: Dispatch<SetStateAction<number>>;
+
+  // Teams
   teams: TeamRead[] | undefined;
   teamsFilter: string | undefined;
   setTeamsFilter: Dispatch<SetStateAction<string | undefined>>;
   filteredTeams: TeamRead[] | undefined;
+  teamsPage: number;
+  setTeamsPage: Dispatch<SetStateAction<number>>;
+  teamsPageSize: number;
+  setTeamsPageSize: Dispatch<SetStateAction<number>>;
+
+  // Deployments
   deployments: DeploymentRead[] | undefined;
   deploymentsFilter: string | undefined;
   setDeploymentsFilter: Dispatch<SetStateAction<string | undefined>>;
   filteredDeployments: DeploymentRead[] | undefined;
+  deploymentsPage: number;
+  setDeploymentsPage: Dispatch<SetStateAction<number>>;
+  deploymentsPageSize: number;
+  setDeploymentsPageSize: Dispatch<SetStateAction<number>>;
+
+  // Vms
   vms: VmRead[] | undefined;
   vmsFilter: string | undefined;
   setVmsFilter: Dispatch<SetStateAction<string | undefined>>;
   filteredVms: VmRead[] | undefined;
+  vmsPage: number;
+  setVmsPage: Dispatch<SetStateAction<number>>;
+  vmsPageSize: number;
+  setVmsPageSize: Dispatch<SetStateAction<number>>;
+
+  // GpuLeases
   gpuLeases: GpuLeaseRead[] | undefined;
   gpuLeasesFilter: string | undefined;
   setGpuLeasesFilter: Dispatch<SetStateAction<string | undefined>>;
   filteredGpuLeases: GpuLeaseRead[] | undefined;
+  gpuLeasesPage: number;
+  setGpuLeasesPage: Dispatch<SetStateAction<number>>;
+  gpuLeasesPageSize: number;
+  setGpuLeasesPageSize: Dispatch<SetStateAction<number>>;
+
+  // GpuGroups
   gpuGroups: GpuGroupRead[] | undefined;
   gpuGroupsFilter: string | undefined;
   setGpuGroupsFilter: Dispatch<SetStateAction<string | undefined>>;
   filteredGpuGroups: GpuGroupRead[] | undefined;
+  gpuGroupsPage: number;
+  setGpuGroupsPage: Dispatch<SetStateAction<number>>;
+  gpuGroupsPageSize: number;
+  setGpuGroupsPageSize: Dispatch<SetStateAction<number>>;
+
+  // Jobs
   jobs: JobRead[] | undefined;
   jobsFilter: string | undefined;
   setJobsFilter: Dispatch<SetStateAction<string | undefined>>;
   filteredJobs: JobRead[] | undefined;
+  jobsPage: number;
+  setJobsPage: Dispatch<SetStateAction<number>>;
+  jobsPageSize: number;
+  setJobsPageSize: Dispatch<SetStateAction<number>>;
 };
 
 const initialState: AdminResourceContextType = {
@@ -73,37 +116,77 @@ const initialState: AdminResourceContextType = {
   setEnableFetching: () => {},
   lastRefresh: 0,
   lastRefreshRtt: 0,
-  timeDiffSinceLastRefresh: "",
   loading: false,
   refetch: () => {},
+  // Users
   users: undefined,
   usersFilter: undefined,
   setUsersFilter: () => {},
   filteredUsers: undefined,
+  usersPage: 0,
+  setUsersPage: () => {},
+  usersPageSize: DEFAULT_PAGESIZE,
+  setUsersPageSize: () => {},
+
+  // Teams
   teams: undefined,
   teamsFilter: undefined,
   setTeamsFilter: () => {},
   filteredTeams: undefined,
+  teamsPage: 0,
+  setTeamsPage: () => {},
+  teamsPageSize: DEFAULT_PAGESIZE,
+  setTeamsPageSize: () => {},
+
+  // Deployments
   deployments: undefined,
   deploymentsFilter: undefined,
   setDeploymentsFilter: () => {},
   filteredDeployments: undefined,
+  deploymentsPage: 0,
+  setDeploymentsPage: () => {},
+  deploymentsPageSize: DEFAULT_PAGESIZE,
+  setDeploymentsPageSize: () => {},
+
+  // Vms
   vms: undefined,
   vmsFilter: undefined,
   setVmsFilter: () => {},
   filteredVms: undefined,
+  vmsPage: 0,
+  setVmsPage: () => {},
+  vmsPageSize: DEFAULT_PAGESIZE,
+  setVmsPageSize: () => {},
+
+  // GpuLeases
   gpuLeases: undefined,
   gpuLeasesFilter: undefined,
   setGpuLeasesFilter: () => {},
   filteredGpuLeases: undefined,
+  gpuLeasesPage: 0,
+  setGpuLeasesPage: () => {},
+  gpuLeasesPageSize: DEFAULT_PAGESIZE,
+  setGpuLeasesPageSize: () => {},
+
+  // GpuGroups
   gpuGroups: undefined,
   gpuGroupsFilter: undefined,
   setGpuGroupsFilter: () => {},
   filteredGpuGroups: undefined,
+  gpuGroupsPage: 0,
+  setGpuGroupsPage: () => {},
+  gpuGroupsPageSize: DEFAULT_PAGESIZE,
+  setGpuGroupsPageSize: () => {},
+
+  // Jobs
   jobs: undefined,
   jobsFilter: undefined,
   setJobsFilter: () => {},
   filteredJobs: undefined,
+  jobsPage: 0,
+  setJobsPage: () => {},
+  jobsPageSize: DEFAULT_PAGESIZE,
+  setJobsPageSize: () => {},
 };
 
 export const AdminResourceContext = createContext(initialState);
@@ -119,6 +202,10 @@ export const AdminResourceContextProvider = ({
     filter: usersFilter,
     setFilter: setUsersFilter,
     filteredItems: filteredUsers,
+    page: usersPage,
+    setPage: setUsersPage,
+    pageSize: usersPageSize,
+    setPageSize: setUsersPageSize,
   } = useFilterableResourceState<UserRead>(undefined);
   const {
     items: teams,
@@ -126,6 +213,10 @@ export const AdminResourceContextProvider = ({
     filter: teamsFilter,
     setFilter: setTeamsFilter,
     filteredItems: filteredTeams,
+    page: teamsPage,
+    setPage: setTeamsPage,
+    pageSize: teamsPageSize,
+    setPageSize: setTeamsPageSize,
   } = useFilterableResourceState<TeamRead>(undefined);
   const {
     items: deployments,
@@ -133,6 +224,10 @@ export const AdminResourceContextProvider = ({
     filter: deploymentsFilter,
     setFilter: setDeploymentsFilter,
     filteredItems: filteredDeployments,
+    page: deploymentsPage,
+    setPage: setDeploymentsPage,
+    pageSize: deploymentsPageSize,
+    setPageSize: setDeploymentsPageSize,
   } = useFilterableResourceState<DeploymentRead>(undefined);
   const {
     items: vms,
@@ -140,6 +235,10 @@ export const AdminResourceContextProvider = ({
     filter: vmsFilter,
     setFilter: setVmsFilter,
     filteredItems: filteredVms,
+    page: vmsPage,
+    setPage: setVmsPage,
+    pageSize: vmsPageSize,
+    setPageSize: setVmsPageSize,
   } = useFilterableResourceState<VmRead>(undefined);
   const {
     items: gpuLeases,
@@ -147,6 +246,10 @@ export const AdminResourceContextProvider = ({
     filter: gpuLeasesFilter,
     setFilter: setGpuLeasesFilter,
     filteredItems: filteredGpuLeases,
+    page: gpuLeasesPage,
+    setPage: setGpuLeasesPage,
+    pageSize: gpuLeasesPageSize,
+    setPageSize: setGpuLeasesPageSize,
   } = useFilterableResourceState<GpuLeaseRead>(undefined);
   const {
     items: gpuGroups,
@@ -154,6 +257,10 @@ export const AdminResourceContextProvider = ({
     filter: gpuGroupsFilter,
     setFilter: setGpuGroupsFilter,
     filteredItems: filteredGpuGroups,
+    page: gpuGroupsPage,
+    setPage: setGpuGroupsPage,
+    pageSize: gpuGroupsPageSize,
+    setPageSize: setGpuGroupsPageSize,
   } = useFilterableResourceState<GpuGroupRead>(undefined);
   const {
     items: jobs,
@@ -161,11 +268,14 @@ export const AdminResourceContextProvider = ({
     filter: jobsFilter,
     setFilter: setJobsFilter,
     filteredItems: filteredJobs,
+    page: jobsPage,
+    setPage: setJobsPage,
+    pageSize: jobsPageSize,
+    setPageSize: setJobsPageSize,
   } = useFilterableResourceState<JobRead>(undefined);
 
   const [lastRefreshRtt, setLastRefreshRtt] = useState(0);
   const [lastRefresh, setLastRefresh] = useState(0);
-  const [timeDiffSinceLastRefresh, setTimeDiffSinceLastRefresh] = useState("");
   const [loading, setLoading] = useState(false);
 
   const { t } = useTranslation();
@@ -183,40 +293,30 @@ export const AdminResourceContextProvider = ({
         t,
         setLastRefresh,
         setLastRefreshRtt,
+        usersPage,
+        usersPageSize,
         setUsers,
+        teamsPage,
+        teamsPageSize,
         setTeams,
+        deploymentsPage,
+        deploymentsPageSize,
         setDeployments,
+        vmsPage,
+        vmsPageSize,
         setVms,
+        gpuLeasesPage,
+        gpuLeasesPageSize,
         setGpuLeases,
+        gpuGroupsPage,
+        gpuGroupsPageSize,
         setGpuGroups,
+        jobsPage,
+        jobsPageSize,
         setJobs
       ).finally(() => setLoading(false));
     }
   };
-
-  useInterval(() => {
-    const now = new Date().getTime();
-    const diff = now - lastRefresh;
-    const seconds = Math.floor(diff / 1000);
-    const minutes = Math.floor(seconds / 60);
-    const hours = Math.floor(minutes / 60);
-
-    if (hours > 0) {
-      setTimeDiffSinceLastRefresh(hours + " " + t("time-hours-ago"));
-      return;
-    }
-    if (minutes > 0) {
-      setTimeDiffSinceLastRefresh(minutes + " " + t("time-minutes-ago"));
-      return;
-    }
-
-    if (seconds > 0) {
-      setTimeDiffSinceLastRefresh(seconds + " " + t("time-seconds-ago"));
-      return;
-    }
-
-    setTimeDiffSinceLastRefresh("0 " + t("time-seconds-ago"));
-  }, 1000);
 
   useEffect(() => {
     if (
@@ -250,7 +350,6 @@ export const AdminResourceContextProvider = ({
         setEnableFetching,
         lastRefresh,
         lastRefreshRtt,
-        timeDiffSinceLastRefresh,
         loading,
         refetch: () => {
           if (initialized && keycloak.authenticated && user && user.admin) {
@@ -260,34 +359,76 @@ export const AdminResourceContextProvider = ({
             }
           }
         },
+
+        // Users
         users,
         usersFilter,
         setUsersFilter,
         filteredUsers,
+        usersPage,
+        setUsersPage,
+        usersPageSize,
+        setUsersPageSize,
+
+        // Teams
         teams,
         teamsFilter,
         setTeamsFilter,
         filteredTeams,
+        teamsPage,
+        setTeamsPage,
+        teamsPageSize,
+        setTeamsPageSize,
+
+        // Deployments
         deployments,
         deploymentsFilter,
         setDeploymentsFilter,
         filteredDeployments,
+        deploymentsPage,
+        setDeploymentsPage,
+        deploymentsPageSize,
+        setDeploymentsPageSize,
+
+        // Vms
         vms,
         vmsFilter,
         setVmsFilter,
         filteredVms,
+        vmsPage,
+        setVmsPage,
+        vmsPageSize,
+        setVmsPageSize,
+
+        // GpuLeases
         gpuLeases,
         gpuLeasesFilter,
         setGpuLeasesFilter,
         filteredGpuLeases,
+        gpuLeasesPage,
+        setGpuLeasesPage,
+        gpuLeasesPageSize,
+        setGpuLeasesPageSize,
+
+        // GpuGroups
         gpuGroups,
         gpuGroupsFilter,
         setGpuGroupsFilter,
         filteredGpuGroups,
+        gpuGroupsPage,
+        setGpuGroupsPage,
+        gpuGroupsPageSize,
+        setGpuGroupsPageSize,
+
+        // Jobs
         jobs,
         jobsFilter,
         setJobsFilter,
         filteredJobs,
+        jobsPage,
+        setJobsPage,
+        jobsPageSize,
+        setJobsPageSize,
       }}
     >
       {children}
@@ -301,21 +442,51 @@ async function fetchResources(
   t: TFunction<"translation", undefined>,
   setLastRefresh: Dispatch<SetStateAction<number>>,
   setLastRefreshRtt: Dispatch<SetStateAction<number>>,
+
+  // Users
+  __usersPage: number,
+  __usersPageSize: number,
   setUsers: Dispatch<SetStateAction<UserRead[] | undefined>>,
+
+  // Teams
+  __teamsPage: number,
+  __teamsPageSize: number,
   setTeams: Dispatch<SetStateAction<TeamRead[] | undefined>>,
+
+  // Deployments
+  __deploymentsPage: number,
+  __deploymentsPageSize: number,
   setDeployments: Dispatch<SetStateAction<DeploymentRead[] | undefined>>,
+
+  // Vms
+  __vmsPage: number,
+  __vmsPageSize: number,
   setVms: Dispatch<SetStateAction<VmRead[] | undefined>>,
+
+  // GpuLeases
+  __gpuLeases: number,
+  __gpuLeasesPage: number,
   setGpuLeases: Dispatch<SetStateAction<GpuLeaseRead[] | undefined>>,
+
+  // GpuGroups
+  __gpuGroups: number,
+  __gpuGroupsPageSize: number,
   setGpuGroups: Dispatch<SetStateAction<GpuGroupRead[] | undefined>>,
+
+  // Jobs
+  __jobsPage: number,
+  __jobsPageSize: number,
   setJobs: Dispatch<SetStateAction<JobRead[] | undefined>>
 ) {
   if (!(initialized && keycloak.authenticated && keycloak.token)) return;
 
-  const startTimer = Date.now();
+  const startTimer = performance.now();
   const promises = [
     async () => {
       try {
-        const response = await getAllUsers(keycloak.token!);
+        const response = await getUsers(keycloak.token!, {
+          all: true,
+        });
         setUsers(response);
       } catch (error: any) {
         errorHandler(error).forEach((e) =>
@@ -410,5 +581,5 @@ async function fetchResources(
 
   // end timer and set last refresh, show in ms
   setLastRefresh(new Date().getTime());
-  setLastRefreshRtt(Date.now() - startTimer);
+  setLastRefreshRtt(performance.now() - startTimer);
 }

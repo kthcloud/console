@@ -18,7 +18,7 @@ import {
 import { useTranslation } from "react-i18next";
 import useResource from "../../hooks/useResource";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { enqueueSnackbar } from "notistack";
 import useAdmin from "../../hooks/useAdmin";
 import LoadingPage from "../../components/LoadingPage";
@@ -41,47 +41,85 @@ import {
 import { Resource, Uuid } from "../../types";
 import TimeAgo from "../../components/admin/TimeAgo";
 import { Category, QueryModifier } from "../../components/admin/searchTypes";
+import AdminToolbar from "../../components/admin/AdminToolbar";
 
 export default function AdminV2() {
   const { t } = useTranslation();
-  const theme = useTheme();
   const { user, setImpersonatingDeployment, setImpersonatingVm } =
     useResource();
   const {
     fetchingEnabled,
     setEnableFetching,
-    lastRefreshRtt,
-    timeDiffSinceLastRefresh,
-    loading,
-    refetch,
+
+    // Users
     users,
     usersFilter,
     setUsersFilter,
     filteredUsers,
+    usersPage,
+    setUsersPage,
+    usersPageSize,
+    setUsersPageSize,
+
+    // Teams
     teams,
     teamsFilter,
     setTeamsFilter,
     filteredTeams,
+    teamsPage,
+    setTeamsPage,
+    teamsPageSize,
+    setTeamsPageSize,
+
+    // Deployments
     deployments,
     deploymentsFilter,
     setDeploymentsFilter,
     filteredDeployments,
+    deploymentsPage,
+    setDeploymentsPage,
+    deploymentsPageSize,
+    setDeploymentsPageSize,
+
+    // Vms
     vms,
     vmsFilter,
     setVmsFilter,
     filteredVms,
+    vmsPage,
+    setVmsPage,
+    vmsPageSize,
+    setVmsPageSize,
+
+    // GpuLeases
     gpuLeases,
     gpuLeasesFilter,
     setGpuLeasesFilter,
     filteredGpuLeases,
+    gpuLeasesPage,
+    setGpuLeasesPage,
+    gpuLeasesPageSize,
+    setGpuLeasesPageSize,
+
+    // GpuGroups
     gpuGroups,
     gpuGroupsFilter,
     setGpuGroupsFilter,
     filteredGpuGroups,
+    gpuGroupsPage,
+    setGpuGroupsPage,
+    gpuGroupsPageSize,
+    setGpuGroupsPageSize,
+
+    // Jobs
     jobs,
     jobsFilter,
     setJobsFilter,
     filteredJobs,
+    jobsPage,
+    setJobsPage,
+    jobsPageSize,
+    setJobsPageSize,
   } = useAdmin();
   const navigate = useNavigate();
 
@@ -374,42 +412,70 @@ export default function AdminV2() {
       filter: deploymentsFilter,
       setFilter: setDeploymentsFilter,
       filteredData: filteredDeployments,
+      page: deploymentsPage,
+      setPage: setDeploymentsPage,
+      pageSize: deploymentsPageSize,
+      setPageSize: setDeploymentsPageSize,
     },
     {
       data: vms,
       filter: vmsFilter,
       setFilter: setVmsFilter,
       filteredData: filteredVms,
+      page: vmsPage,
+      setPage: setVmsPage,
+      pageSize: vmsPageSize,
+      setPageSize: setVmsPageSize,
     },
     {
       data: gpuLeases,
       filter: gpuLeasesFilter,
       setFilter: setGpuLeasesFilter,
       filteredData: filteredGpuLeases,
+      page: gpuLeasesPage,
+      setPage: setGpuLeasesPage,
+      pageSize: gpuLeasesPageSize,
+      setPageSize: setGpuLeasesPageSize,
     },
     {
       data: gpuGroups,
       filter: gpuGroupsFilter,
       setFilter: setGpuGroupsFilter,
       filteredData: filteredGpuGroups,
+      page: gpuGroupsPage,
+      setPage: setGpuGroupsPage,
+      pageSize: gpuGroupsPageSize,
+      setPageSize: setGpuGroupsPageSize,
     },
     {
       data: users,
       filter: usersFilter,
       setFilter: setUsersFilter,
       filteredData: filteredUsers,
+      page: usersPage,
+      setPage: setUsersPage,
+      pageSize: usersPageSize,
+      setPageSize: setUsersPageSize,
     },
     {
       data: teams,
       filter: teamsFilter,
       setFilter: setTeamsFilter,
       filteredData: filteredTeams,
+      page: teamsPage,
+      setPage: setTeamsPage,
+      pageSize: teamsPageSize,
+      setPageSize: setTeamsPageSize,
     },
     {
       data: jobs,
       filter: jobsFilter,
       setFilter: setJobsFilter,
       filteredData: filteredJobs,
+      page: jobsPage,
+      setPage: setJobsPage,
+      pageSize: jobsPageSize,
+      setPageSize: setJobsPageSize,
     },
   ];
 
@@ -435,7 +501,7 @@ export default function AdminV2() {
   }, []);
 
   const tabs = resourceConfig.map((config, index) => (
-    <ResourceTab<any> // Todo
+    <ResourceTab<any>
       key={index}
       resourceName={config.label}
       data={resourceLookup[index].data}
@@ -448,6 +514,10 @@ export default function AdminV2() {
       setCategory={setCategoryTemp}
       queryModifier={queryModifierTemp}
       setQueryModifier={setQueryModifierTemp}
+      page={resourceLookup[index].page}
+      setPage={resourceLookup[index].setPage}
+      pageSize={resourceLookup[index].pageSize}
+      setPageSize={resourceLookup[index].setPageSize}
     />
   ));
 
@@ -457,42 +527,7 @@ export default function AdminV2() {
         <LoadingPage />
       ) : (
         <Page title={t("admin-title")}>
-          <AppBar
-            position="fixed"
-            color="inherit"
-            sx={{
-              top: "auto",
-              bottom: 0,
-              borderTop: 1,
-              borderColor: theme.palette.grey[300],
-            }}
-          >
-            <Toolbar>
-              <Typography variant="h4">{t("admin-title")}</Typography>
-              <Box component="div" sx={{ flexGrow: 1 }} />
-              <Stack direction="row" alignItems={"center"} spacing={3}>
-                <Button variant="contained" onClick={refetch}>
-                  {t("admin-refresh-resources")}
-                </Button>
-                <Typography variant="body1">
-                  {loading ? (
-                    t("loading")
-                  ) : (
-                    <span>
-                      RTT:
-                      <span style={{ fontFamily: "monospace" }}>
-                        {" " + lastRefreshRtt + " ms "}
-                      </span>
-                      {t("admin-last-load")}:
-                      <span style={{ fontFamily: "monospace" }}>
-                        {" " + timeDiffSinceLastRefresh}
-                      </span>
-                    </span>
-                  )}
-                </Typography>
-              </Stack>
-            </Toolbar>
-          </AppBar>
+          <AdminToolbar />
 
           <Container maxWidth="xl">
             <Stack spacing={3}>
