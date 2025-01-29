@@ -67,7 +67,7 @@ export default function AdminToolbar() {
               <span>
                 RTT:
                 <span style={{ fontFamily: "monospace" }}>
-                  {" " + lastRefreshRtt + " ms "}
+                  {" " + lastRefreshRtt.toFixed(1) + " ms "}
                 </span>
                 {t("admin-last-load")}:
                 <span style={{ fontFamily: "monospace" }}>

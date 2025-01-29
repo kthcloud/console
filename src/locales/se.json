@@ -548,6 +548,8 @@
         "days-left": "dagar kvar",
         "never-stale-option-header": "Aldrig inaktiv-alternativ",
         "never-stale-option-header-subheader": "Styr om denna resurs ska förbli aktiv trots inaktivitet.",
-        "never-stale": "Alltid aktiv"
+        "never-stale": "Alltid aktiv",
+        "error-could-not-fetch-hosts": "Kunde inte hämta värdmaskiner",
+        "error-could-not-fetch-system-capacities": "Kunde inte hämta kapaciteten hos systemet"
     }
 }

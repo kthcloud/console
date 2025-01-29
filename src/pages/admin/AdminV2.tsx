@@ -37,6 +37,7 @@ import { Resource, Uuid } from "../../types";
 import TimeAgo from "../../components/admin/TimeAgo";
 import { Category, QueryModifier } from "../../components/admin/searchTypes";
 import AdminToolbar from "../../components/admin/AdminToolbar";
+import HostsTab from "../../components/admin/HostsTab";
 
 export default function AdminV2() {
   const { t } = useTranslation();
@@ -495,26 +496,29 @@ export default function AdminV2() {
     };
   }, []);
 
-  const tabs = resourceConfig.map((config, index) => (
-    <ResourceTab<any>
-      key={index}
-      resourceName={config.label}
-      data={resourceLookup[index].data}
-      filteredData={resourceLookup[index].filteredData}
-      filter={resourceLookup[index].filter}
-      setFilter={resourceLookup[index].setFilter}
-      columns={config.columns}
-      actions={config.actions}
-      category={categoryTemp}
-      setCategory={setCategoryTemp}
-      queryModifier={queryModifierTemp}
-      setQueryModifier={setQueryModifierTemp}
-      page={resourceLookup[index].page}
-      setPage={resourceLookup[index].setPage}
-      pageSize={resourceLookup[index].pageSize}
-      setPageSize={resourceLookup[index].setPageSize}
-    />
-  ));
+  const tabs = [
+    ...resourceConfig.map((config, index) => (
+      <ResourceTab<any>
+        key={index}
+        resourceName={config.label}
+        data={resourceLookup[index].data}
+        filteredData={resourceLookup[index].filteredData}
+        filter={resourceLookup[index].filter}
+        setFilter={resourceLookup[index].setFilter}
+        columns={config.columns}
+        actions={config.actions}
+        category={categoryTemp}
+        setCategory={setCategoryTemp}
+        queryModifier={queryModifierTemp}
+        setQueryModifier={setQueryModifierTemp}
+        page={resourceLookup[index].page}
+        setPage={resourceLookup[index].setPage}
+        pageSize={resourceLookup[index].pageSize}
+        setPageSize={resourceLookup[index].setPageSize}
+      />
+    )),
+    <HostsTab />,
+  ];
 
   return (
     <>
@@ -534,6 +538,7 @@ export default function AdminV2() {
                   {resourceConfig.map((resource, index) => (
                     <Tab key={index} label={resource.label} />
                   ))}
+                  <Tab key={resourceConfig.length} label={t("hosts")} />
                 </Tabs>
                 {tabs[activeTab]}
               </Card>

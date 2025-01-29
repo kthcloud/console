@@ -10,7 +10,9 @@ import {
   DeploymentRead,
   GpuGroupRead,
   GpuLeaseRead,
+  HostVerboseRead,
   JobRead,
+  SystemCapacities,
   TeamRead,
   UserRead,
   VmRead,
@@ -31,6 +33,8 @@ import { getTeams } from "../api/deploy/teams";
 import { getJobs } from "../api/deploy/jobs";
 import useResource from "../hooks/useResource";
 import { TFunction } from "i18next";
+import { getHostsVerbose } from "../api/deploy/hosts";
+import { getSystemCapacities } from "../api/deploy/systemCapacities";
 
 type AdminResourceContextType = {
   fetchingEnabled: boolean;
@@ -108,6 +112,12 @@ type AdminResourceContextType = {
   setJobsPage: Dispatch<SetStateAction<number>>;
   jobsPageSize: number;
   setJobsPageSize: Dispatch<SetStateAction<number>>;
+
+  // Hosts
+  hosts: HostVerboseRead[] | undefined;
+
+  // SystemCapacities
+  systemCapacities: SystemCapacities | undefined;
 };
 
 const initialState: AdminResourceContextType = {
@@ -186,6 +196,12 @@ const initialState: AdminResourceContextType = {
   setJobsPage: () => {},
   jobsPageSize: DEFAULT_PAGESIZE,
   setJobsPageSize: () => {},
+
+  // Hosts
+  hosts: undefined,
+
+  // SystemCapacities
+  systemCapacities: undefined,
 };
 
 export const AdminResourceContext = createContext(initialState);
@@ -273,6 +289,12 @@ export const AdminResourceContextProvider = ({
     setPageSize: setJobsPageSize,
   } = useFilterableResourceState<JobRead>(undefined);
 
+  const [hosts, setHosts] = useState<HostVerboseRead[] | undefined>(undefined);
+
+  const [systemCapacities, setSystemCapacities] = useState<
+    SystemCapacities | undefined
+  >(undefined);
+
   const [lastRefreshRtt, setLastRefreshRtt] = useState(0);
   const [lastRefresh, setLastRefresh] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -312,7 +334,9 @@ export const AdminResourceContextProvider = ({
         setGpuGroups,
         jobsPage,
         jobsPageSize,
-        setJobs
+        setJobs,
+        setHosts,
+        setSystemCapacities
       ).finally(() => setLoading(false));
     }
   };
@@ -428,6 +452,12 @@ export const AdminResourceContextProvider = ({
         setJobsPage,
         jobsPageSize,
         setJobsPageSize,
+
+        // Hosts
+        hosts,
+
+        // SystemCapacities
+        systemCapacities,
       }}
     >
       {children}
@@ -475,7 +505,13 @@ async function fetchResources(
   // Jobs
   __jobsPage: number,
   __jobsPageSize: number,
-  setJobs: Dispatch<SetStateAction<JobRead[] | undefined>>
+  setJobs: Dispatch<SetStateAction<JobRead[] | undefined>>,
+
+  // Hosts
+  setHosts: Dispatch<SetStateAction<HostVerboseRead[] | undefined>>,
+
+  // SystemCapacities
+  setSystemCapacities: Dispatch<SetStateAction<SystemCapacities | undefined>>
 ) {
   if (!(initialized && keycloak.authenticated && keycloak.token)) return;
 
@@ -571,6 +607,35 @@ async function fetchResources(
           enqueueSnackbar(t("error-could-not-fetch-jobs") + ": " + e, {
             variant: "error",
           })
+        );
+      }
+    },
+
+    async () => {
+      try {
+        const response = await getHostsVerbose(keycloak.token!);
+        setHosts(response);
+      } catch (error: any) {
+        errorHandler(error).forEach((e) =>
+          enqueueSnackbar(t("error-could-not-fetch-hosts") + ": " + e, {
+            variant: "error",
+          })
+        );
+      }
+    },
+
+    async () => {
+      try {
+        const response = await getSystemCapacities(keycloak.token!);
+        if (response) setSystemCapacities(response);
+      } catch (error: any) {
+        errorHandler(error).forEach((e) =>
+          enqueueSnackbar(
+            t("error-could-not-fetch-system-capacities") + ": " + e,
+            {
+              variant: "error",
+            }
+          )
         );
       }
     },
