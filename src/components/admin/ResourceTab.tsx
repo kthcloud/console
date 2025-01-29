@@ -228,7 +228,7 @@ const ResourceTab = <T extends { id: string | number }>({
         onRowsPerPageChange={handleChangeRowsPerPage}
         showFirstButton={true}
         showLastButton={true}
-        rowsPerPageOptions={[10, 25, 50, 100, "all"]}
+        rowsPerPageOptions={[10, 25, 50, 100, { value: -1, label: "all" }]}
       />
       {selectedItem && OnClickModal ? (
         <Modal

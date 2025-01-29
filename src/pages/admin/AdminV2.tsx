@@ -1,7 +1,4 @@
 import {
-  AppBar,
-  Box,
-  Button,
   Card,
   Container,
   LinearProgress,
@@ -9,16 +6,14 @@ import {
   Stack,
   Tab,
   Tabs,
-  Toolbar,
   Tooltip,
   Typography,
-  useTheme,
 } from "@mui/material";
 
 import { useTranslation } from "react-i18next";
 import useResource from "../../hooks/useResource";
 import { useNavigate } from "react-router-dom";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { enqueueSnackbar } from "notistack";
 import useAdmin from "../../hooks/useAdmin";
 import LoadingPage from "../../components/LoadingPage";

@@ -3,7 +3,6 @@ import {
   Dispatch,
   SetStateAction,
   useEffect,
-  useMemo,
   useState,
 } from "react";
 import useInterval from "../hooks/useInterval";
