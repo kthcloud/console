@@ -553,6 +553,8 @@
         "error-could-not-fetch-hosts": "Could not fetch hosts",
         "error-could-not-fetch-system-capacities": "Could not fetch system capacities",
         "unschedulable": "Unschedulable",
-        "schedulable": "Schedulable"
+        "schedulable": "Schedulable",
+        "schedulable-description": "The last time this node reported its status, it was schedulable in the Kubernetes cluster",
+        "unschedulable-description": "The last time this node reported its status, it was unschedulable in the Kubernetes cluster"
     }
 }

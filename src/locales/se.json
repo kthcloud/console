@@ -551,7 +551,9 @@
         "never-stale": "Alltid aktiv",
         "error-could-not-fetch-hosts": "Kunde inte hämta värdmaskiner",
         "error-could-not-fetch-system-capacities": "Kunde inte hämta kapaciteten hos systemet",
-        "unschedulable": "O-Schemaläggningsbar",
-        "schedulable": "Schemaläggningsbar"
+        "unschedulable": "Oschemaläggningsbar",
+        "schedulable": "Schemaläggningsbar",
+        "schedulable-description": "Senast denna nod rapporterade sin status var den schemaläggningsbar i Kubernetes-klustret",
+        "unschedulable-description": "Senast denna nod rapporterade sin status var den oschemaläggningsbar i Kubernetes-klustret"
     }
 }

@@ -2,7 +2,7 @@ import {
   HostCapacities,
   HostVerboseRead,
 } from "@kthcloud/go-deploy-types/types/v2/body";
-import { Box, Chip, Typography, useTheme } from "@mui/material";
+import { Box, Chip, Tooltip, Typography, useTheme } from "@mui/material";
 import BlinkingLED from "./BlinkingLED";
 import TimeLeft from "./TimeLeft";
 import TimeAgo from "./TimeAgo";
@@ -52,9 +52,17 @@ export default function HostMachine({
       </Typography>
       <Box sx={{ display: "flex", alignItems: "center", mt: 1 }}>
         <BlinkingLED status={host.enabled && host.schedulable} />
-        <Typography sx={{ ml: 1 }}>
-          {host.schedulable ? t("schedulable") : t("unschedulable")}
-        </Typography>
+        <Tooltip
+          title={
+            host.schedulable
+              ? t("schedulable-description")
+              : t("unschedulable-description")
+          }
+        >
+          <Typography sx={{ ml: 1 }}>
+            {host.schedulable ? t("schedulable") : t("unschedulable")}
+          </Typography>
+        </Tooltip>
       </Box>
       {currentlyDeactivated && (
         <Typography variant="body2" color="error" sx={{ mt: 1 }}>
@@ -152,29 +160,9 @@ export default function HostMachine({
             overflow: "hidden",
           }}
         >
-          <Typography
-            variant="body2"
-            sx={{
-              fontSize: "0.6rem",
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-            }}
-          >
-            {t("last-seen")}:
-          </Typography>
-          <Box
-            variant="body2"
-            sx={{
-              fontSize: "0.6rem",
-              "& *": { fontSize: "inherit" },
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-            }}
-          >
-            <TimeAgo createdAt={new Date(host.lastSeenAt).toLocaleString()} />
-          </Box>
+          <Typography variant={"body2"}>{t("last-seen")}:</Typography>
+
+          <TimeAgo createdAt={new Date(host.lastSeenAt).toLocaleString()} />
         </Box>
         <Box
           sx={{
@@ -184,29 +172,9 @@ export default function HostMachine({
             overflow: "hidden",
           }}
         >
-          <Typography
-            variant="body2"
-            sx={{
-              fontSize: "0.6rem",
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-            }}
-          >
-            {t("registered-at")}:
-          </Typography>
-          <Box
-            variant="body2"
-            sx={{
-              fontSize: "0.6rem",
-              "& *": { fontSize: "inherit" },
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-            }}
-          >
-            <TimeAgo createdAt={new Date(host.registeredAt).toLocaleString()} />
-          </Box>
+          <Typography variant="body2">{t("registered-at")}:</Typography>
+
+          <TimeAgo createdAt={new Date(host.registeredAt).toLocaleString()} />
         </Box>
       </Box>
     </Box>
