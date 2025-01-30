@@ -65,9 +65,44 @@ export default function HostMachine({
         </Tooltip>
       </Box>
       {currentlyDeactivated && (
-        <Typography variant="body2" color="error" sx={{ mt: 1 }}>
-          <TimeLeft targetDate={host.deactivatedUntil} />
-        </Typography>
+        <Box
+          sx={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0, 0, 0, 0.4)",
+            display: "flex",
+            alignItems: "flex-end",
+            justifyContent: "flex-end",
+            borderRadius: "inherit",
+            gap: 1,
+          }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "flex-end",
+              justifyContent: "flex-end",
+              borderRadius: "inherit",
+              gap: 1,
+              position: "absolute",
+              bottom: 0,
+              right: 0,
+              padding: "1em",
+            }}
+          >
+            <Typography
+              variant="body2"
+              color="error"
+              sx={{ fontWeight: "bold" }}
+            >
+              Deactivated
+            </Typography>
+            <TimeLeft targetDate={host.deactivatedUntil} />
+          </Box>
+        </Box>
       )}
 
       {specs && (
