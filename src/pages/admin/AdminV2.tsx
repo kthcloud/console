@@ -35,13 +35,18 @@ import {
 } from "../../components/render/Resource";
 import { Resource, Uuid } from "../../types";
 import TimeAgo from "../../components/admin/TimeAgo";
-import { Category, QueryModifier } from "../../components/admin/searchTypes";
 import AdminToolbar from "../../components/admin/AdminToolbar";
 import HostsTab from "../../components/admin/HostsTab";
+import { deleteDeployment } from "../../api/deploy/deployments";
+import { useKeycloak } from "@react-keycloak/web";
+import { deleteVM } from "../../api/deploy/vms";
+import { deleteGpuLease } from "../../api/deploy/gpuLeases";
+import { deleteTeam } from "../../api/deploy/teams";
 
 export default function AdminV2() {
   const { tab: initialTab } = useParams();
   const { t } = useTranslation();
+  const { keycloak } = useKeycloak();
   const { user, setImpersonatingDeployment, setImpersonatingVm } =
     useResource();
   const {
@@ -121,11 +126,6 @@ export default function AdminV2() {
   const navigate = useNavigate();
 
   const [activeTab, setActiveTab] = useState<number>(0);
-  const [categoryTemp, setCategoryTemp] = useState<Category | undefined>(
-    "Matches"
-  );
-  const [queryModifierTemp, setQueryModifierTemp] =
-    useState<QueryModifier[Category]>("");
 
   const handleChangeTab = (_: any, newTab: number) => {
     setActiveTab(newTab);
@@ -193,7 +193,9 @@ export default function AdminV2() {
         },
         {
           label: t("button-delete"),
-          onClick: (_: DeploymentRead) => {},
+          onClick: (deployment: DeploymentRead) => {
+            if (keycloak.token) deleteDeployment(deployment.id, keycloak.token);
+          },
           withConfirm: true,
         },
       ],
@@ -241,7 +243,9 @@ export default function AdminV2() {
         },
         {
           label: t("button-delete"),
-          onClick: (_: VmRead) => {},
+          onClick: (vm: VmRead) => {
+            if (keycloak.token) deleteVM(keycloak.token, vm.id);
+          },
           withConfirm: true,
         },
       ],
@@ -272,7 +276,9 @@ export default function AdminV2() {
       actions: [
         {
           label: t("button-delete"),
-          onClick: (_: GpuLeaseRead) => {},
+          onClick: (gpuLease: GpuLeaseRead) => {
+            if (keycloak.token) deleteGpuLease(keycloak.token, gpuLease.id);
+          },
           withConfirm: true,
         },
       ],
@@ -336,7 +342,37 @@ export default function AdminV2() {
           },
         },
       ],
-      actions: [{ label: "test", onClick: (_: UserRead) => {} }],
+      actions: [
+        {
+          label: "Deployments",
+          onClick: (user: UserRead) => {
+            setDeploymentsFilter(user.id);
+            setActiveTab(0);
+          },
+        },
+        {
+          label: "VMs",
+          onClick: (user: UserRead) => {
+            setVmsFilter(user.id);
+            setActiveTab(1);
+          },
+        },
+        {
+          label: "Teams",
+          onClick: (user: UserRead) => {
+            setTeamsFilter(user.id);
+            setActiveTab(5);
+          },
+        },
+        {
+          label: "Open Keycloak",
+          onClick: (user: UserRead) => {
+            const keycloakUrl = import.meta.env.VITE_KEYCLOAK_URL;
+            const userUrl = `${keycloakUrl}/admin/master/console/#/realms/cloud/users/${user.id}`;
+            window.open(userUrl, "_blank");
+          },
+        },
+      ],
     },
     {
       label: "Teams",
@@ -365,10 +401,11 @@ export default function AdminV2() {
         },
       ],
       actions: [
-        { label: t("button-edit"), onClick: (_: TeamRead) => {} },
         {
           label: t("button-delete"),
-          onClick: (_: TeamRead) => {},
+          onClick: (team: TeamRead) => {
+            if (keycloak.token) deleteTeam(keycloak.token!, team.id);
+          },
           withConfirm: true,
         },
       ],
@@ -526,10 +563,6 @@ export default function AdminV2() {
         setFilter={resourceLookup[index].setFilter}
         columns={config.columns}
         actions={config.actions}
-        category={categoryTemp}
-        setCategory={setCategoryTemp}
-        queryModifier={queryModifierTemp}
-        setQueryModifier={setQueryModifierTemp}
         page={resourceLookup[index].page}
         setPage={resourceLookup[index].setPage}
         pageSize={resourceLookup[index].pageSize}
