@@ -551,6 +551,8 @@
         "never-stale-option-header-subheader": "Control whether this resource should remain active despite inactivity.",
         "never-stale": "Always Active",
         "error-could-not-fetch-hosts": "Could not fetch hosts",
-        "error-could-not-fetch-system-capacities": "Could not fetch system capacities"
+        "error-could-not-fetch-system-capacities": "Could not fetch system capacities",
+        "unschedulable": "Unschedulable",
+        "schedulable": "Schedulable"
     }
 }

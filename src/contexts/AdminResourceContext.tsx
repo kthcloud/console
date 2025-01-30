@@ -514,14 +514,15 @@ async function fetchResources(
   setSystemCapacities: Dispatch<SetStateAction<SystemCapacities | undefined>>
 ) {
   if (!(initialized && keycloak.authenticated && keycloak.token)) return;
-
-  const startTimer = performance.now();
+  const rtts: Record<number, { start: number; end: number }> = {};
   const promises = [
     async () => {
       try {
+        const start = performance.now();
         const response = await getUsers(keycloak.token!, {
           all: true,
         });
+        rtts[0] = { start, end: performance.now() };
         setUsers(response);
       } catch (error: any) {
         errorHandler(error).forEach((e) =>
@@ -534,7 +535,9 @@ async function fetchResources(
 
     async () => {
       try {
+        const start = performance.now();
         const response = await listVMs(keycloak.token!, true);
+        rtts[1] = { start, end: performance.now() };
         setVms(response);
       } catch (error: any) {
         errorHandler(error).forEach((e) =>
@@ -546,7 +549,9 @@ async function fetchResources(
     },
     async () => {
       try {
+        const start = performance.now();
         const response = await getDeployments(keycloak.token!, true);
+        rtts[2] = { start, end: performance.now() };
         setDeployments(response);
       } catch (error: any) {
         errorHandler(error).forEach((e) =>
@@ -558,7 +563,9 @@ async function fetchResources(
     },
     async () => {
       try {
+        const start = performance.now();
         const response = await listGpuLeases(keycloak.token!, undefined, true);
+        rtts[3] = { start, end: performance.now() };
         setGpuLeases(response);
       } catch (error: any) {
         errorHandler(error).forEach((e) =>
@@ -570,7 +577,9 @@ async function fetchResources(
     },
     async () => {
       try {
+        const start = performance.now();
         const response = await listGpuGroups(keycloak.token!, undefined);
+        rtts[4] = { start, end: performance.now() };
         setGpuGroups(response);
       } catch (error: any) {
         errorHandler(error).forEach((e) =>
@@ -582,7 +591,9 @@ async function fetchResources(
     },
     async () => {
       try {
+        const start = performance.now();
         const response = await getTeams(keycloak.token!, true);
+        rtts[5] = { start, end: performance.now() };
         setTeams(response);
       } catch (error: any) {
         errorHandler(error).forEach((e) =>
@@ -595,12 +606,14 @@ async function fetchResources(
 
     async () => {
       try {
+        const start = performance.now();
         const response = await getJobs(
           keycloak.token!,
           undefined,
           undefined,
           true
         );
+        rtts[6] = { start, end: performance.now() };
         setJobs(response);
       } catch (error: any) {
         errorHandler(error).forEach((e) =>
@@ -613,7 +626,9 @@ async function fetchResources(
 
     async () => {
       try {
+        const start = performance.now();
         const response = await getHostsVerbose(keycloak.token!);
+        rtts[7] = { start, end: performance.now() };
         setHosts(response);
       } catch (error: any) {
         errorHandler(error).forEach((e) =>
@@ -626,7 +641,9 @@ async function fetchResources(
 
     async () => {
       try {
+        const start = performance.now();
         const response = await getSystemCapacities(keycloak.token!);
+        rtts[8] = { start, end: performance.now() };
         if (response) setSystemCapacities(response);
       } catch (error: any) {
         errorHandler(error).forEach((e) =>
@@ -643,7 +660,13 @@ async function fetchResources(
 
   await Promise.all(promises.map((p) => p()));
 
+  const rttValues = Object.values(rtts).map(({ start, end }) => end - start);
+  const averageRtt =
+    rttValues.length > 0
+      ? rttValues.reduce((sum, rtt) => sum + rtt, 0) / rttValues.length
+      : 0;
+
   // end timer and set last refresh, show in ms
   setLastRefresh(new Date().getTime());
-  setLastRefreshRtt(performance.now() - startTimer);
+  setLastRefreshRtt(averageRtt);
 }

@@ -163,7 +163,7 @@ export default function HostMachine({
           >
             {t("last-seen")}:
           </Typography>
-          <Typography
+          <Box
             variant="body2"
             sx={{
               fontSize: "0.6rem",
@@ -174,7 +174,7 @@ export default function HostMachine({
             }}
           >
             <TimeAgo createdAt={new Date(host.lastSeenAt).toLocaleString()} />
-          </Typography>
+          </Box>
         </Box>
         <Box
           sx={{
@@ -195,7 +195,7 @@ export default function HostMachine({
           >
             {t("registered-at")}:
           </Typography>
-          <Typography
+          <Box
             variant="body2"
             sx={{
               fontSize: "0.6rem",
@@ -206,7 +206,7 @@ export default function HostMachine({
             }}
           >
             <TimeAgo createdAt={new Date(host.registeredAt).toLocaleString()} />
-          </Typography>
+          </Box>
         </Box>
       </Box>
     </Box>
