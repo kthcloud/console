@@ -21,6 +21,7 @@ import Page from "../../components/Page";
 import ResourceTab from "../../components/admin/ResourceTab";
 import {
   DeploymentRead,
+  GpuGroupRead,
   GpuLeaseRead,
   TeamRead,
   UserRead,
@@ -34,7 +35,6 @@ import {
   renderStatusCode,
 } from "../../components/render/Resource";
 import { Resource, Uuid } from "../../types";
-import TimeAgo from "../../components/admin/TimeAgo";
 import AdminToolbar from "../../components/admin/AdminToolbar";
 import HostsTab from "../../components/admin/HostsTab";
 import { deleteDeployment } from "../../api/deploy/deployments";
@@ -42,6 +42,7 @@ import { useKeycloak } from "@react-keycloak/web";
 import { deleteVM } from "../../api/deploy/vms";
 import { deleteGpuLease } from "../../api/deploy/gpuLeases";
 import { deleteTeam } from "../../api/deploy/teams";
+import TimeLeft from "../../components/admin/TimeLeft";
 
 export default function AdminV2() {
   const { tab: initialTab } = useParams();
@@ -112,16 +113,6 @@ export default function AdminV2() {
     setGpuGroupsPage,
     gpuGroupsPageSize,
     setGpuGroupsPageSize,
-
-    // Jobs
-    jobs,
-    jobsFilter,
-    setJobsFilter,
-    filteredJobs,
-    jobsPage,
-    setJobsPage,
-    jobsPageSize,
-    setJobsPageSize,
   } = useAdmin();
   const navigate = useNavigate();
 
@@ -272,6 +263,13 @@ export default function AdminV2() {
         { id: "active", label: "Active" },
         { id: "vmId", label: "VmId", or: "N/A" },
         { id: "leaseDuration", label: "Duration" },
+        {
+          id: "expiresAt",
+          label: "Expiry",
+          renderFunc: (expiresAt: string) => (
+            <TimeLeft targetDate={expiresAt} />
+          ),
+        },
       ],
       actions: [
         {
@@ -284,7 +282,29 @@ export default function AdminV2() {
       ],
     },
     {
-      label: "Gpu Groups",
+      label: "GPU Groups",
+      columns: [
+        { id: "id", label: "ID" },
+        { id: "name", label: "Name" },
+        { id: "displayName", label: "Display Name" },
+        { id: "zone", label: "Zone" },
+        { id: "vendor", label: "Vendor" },
+        {
+          id: "*",
+          label: "Available",
+          renderFunc: (gpuGroup: GpuGroupRead) =>
+            `${gpuGroup.available} / ${gpuGroup.total}`,
+        },
+      ],
+      actions: [
+        {
+          label: "Leases",
+          onClick: (gpuGroup: GpuGroupRead) => {
+            setGpuLeasesFilter(gpuGroup.id);
+            setActiveTab(2);
+          },
+        },
+      ],
     },
     {
       label: "Users",
@@ -410,34 +430,6 @@ export default function AdminV2() {
         },
       ],
     },
-    {
-      label: "Jobs",
-      columns: [
-        { id: "id", label: "ID" },
-        {
-          id: "userId",
-          label: "User",
-          renderFunc: (userId: string) => {
-            return users?.find((user) => user.id === userId)?.username;
-          },
-        },
-        {
-          id: "type",
-          label: "Type",
-        },
-        {
-          id: "status",
-          label: "Status",
-        },
-        {
-          id: "createdAt",
-          label: "Created",
-          renderFunc: (createdAt: string | undefined) =>
-            TimeAgo({ createdAt: createdAt }),
-        },
-        { id: "runAfter", label: "Run After" },
-      ],
-    },
   ];
 
   const tabLookup = resourceConfig.reduce<Record<string, number>>(
@@ -518,16 +510,6 @@ export default function AdminV2() {
       setPage: setTeamsPage,
       pageSize: teamsPageSize,
       setPageSize: setTeamsPageSize,
-    },
-    {
-      data: jobs,
-      filter: jobsFilter,
-      setFilter: setJobsFilter,
-      filteredData: filteredJobs,
-      page: jobsPage,
-      setPage: setJobsPage,
-      pageSize: jobsPageSize,
-      setPageSize: setJobsPageSize,
     },
   ];
 
