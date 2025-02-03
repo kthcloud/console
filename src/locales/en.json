@@ -549,6 +549,12 @@
         "days-left": "days left",
         "never-stale-option-header": "Always Active Option",
         "never-stale-option-header-subheader": "Control whether this resource should remain active despite inactivity.",
-        "never-stale": "Always Active"
+        "never-stale": "Always Active",
+        "error-could-not-fetch-hosts": "Could not fetch hosts",
+        "error-could-not-fetch-system-capacities": "Could not fetch system capacities",
+        "unschedulable": "Unschedulable",
+        "schedulable": "Schedulable",
+        "schedulable-description": "The last time this node reported its status, it was schedulable in the Kubernetes cluster",
+        "unschedulable-description": "The last time this node reported its status, it was unschedulable in the Kubernetes cluster"
     }
 }

@@ -1,4 +1,6 @@
-import { useState, useMemo, Dispatch, SetStateAction } from "react";
+import { useState, useMemo, Dispatch, SetStateAction, useEffect } from "react";
+
+export const DEFAULT_PAGESIZE = 10;
 
 export default function useFilterableResourceState<T>(
   defaultState: T[] | undefined
@@ -8,9 +10,15 @@ export default function useFilterableResourceState<T>(
   filter: string | undefined;
   setFilter: Dispatch<SetStateAction<string | undefined>>;
   filteredItems: T[] | undefined;
+  page: number;
+  setPage: Dispatch<SetStateAction<number>>;
+  pageSize: number;
+  setPageSize: Dispatch<SetStateAction<number>>;
 } {
   const [items, setItems] = useState<T[] | undefined>(defaultState);
   const [filter, setFilter] = useState<string | undefined>(undefined);
+  const [page, setPage] = useState<number>(0);
+  const [pageSize, setPageSize] = useState<number>(DEFAULT_PAGESIZE);
 
   const filteredItems = useMemo(() => {
     if (filter === undefined) return undefined;
@@ -19,11 +27,21 @@ export default function useFilterableResourceState<T>(
     );
   }, [items, filter]);
 
+  useEffect(() => {
+    if (page !== 0) {
+      setPage(0);
+    }
+  }, [filter]);
+
   return {
     items,
     setItems,
     filter,
     setFilter,
     filteredItems,
+    page,
+    setPage,
+    pageSize,
+    setPageSize,
   };
 }

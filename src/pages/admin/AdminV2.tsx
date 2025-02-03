@@ -1,7 +1,4 @@
 import {
-  AppBar,
-  Box,
-  Button,
   Card,
   Container,
   LinearProgress,
@@ -9,15 +6,13 @@ import {
   Stack,
   Tab,
   Tabs,
-  Toolbar,
   Tooltip,
   Typography,
-  useTheme,
 } from "@mui/material";
 
 import { useTranslation } from "react-i18next";
 import useResource from "../../hooks/useResource";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { enqueueSnackbar } from "notistack";
 import useAdmin from "../../hooks/useAdmin";
@@ -40,57 +35,97 @@ import {
 } from "../../components/render/Resource";
 import { Resource, Uuid } from "../../types";
 import TimeAgo from "../../components/admin/TimeAgo";
-import { Category, QueryModifier } from "../../components/admin/searchTypes";
+import AdminToolbar from "../../components/admin/AdminToolbar";
+import HostsTab from "../../components/admin/HostsTab";
+import { deleteDeployment } from "../../api/deploy/deployments";
+import { useKeycloak } from "@react-keycloak/web";
+import { deleteVM } from "../../api/deploy/vms";
+import { deleteGpuLease } from "../../api/deploy/gpuLeases";
+import { deleteTeam } from "../../api/deploy/teams";
 
 export default function AdminV2() {
+  const { tab: initialTab } = useParams();
   const { t } = useTranslation();
-  const theme = useTheme();
+  const { keycloak } = useKeycloak();
   const { user, setImpersonatingDeployment, setImpersonatingVm } =
     useResource();
   const {
     fetchingEnabled,
     setEnableFetching,
-    lastRefreshRtt,
-    timeDiffSinceLastRefresh,
-    loading,
-    refetch,
+
+    // Users
     users,
     usersFilter,
     setUsersFilter,
     filteredUsers,
+    usersPage,
+    setUsersPage,
+    usersPageSize,
+    setUsersPageSize,
+
+    // Teams
     teams,
     teamsFilter,
     setTeamsFilter,
     filteredTeams,
+    teamsPage,
+    setTeamsPage,
+    teamsPageSize,
+    setTeamsPageSize,
+
+    // Deployments
     deployments,
     deploymentsFilter,
     setDeploymentsFilter,
     filteredDeployments,
+    deploymentsPage,
+    setDeploymentsPage,
+    deploymentsPageSize,
+    setDeploymentsPageSize,
+
+    // Vms
     vms,
     vmsFilter,
     setVmsFilter,
     filteredVms,
+    vmsPage,
+    setVmsPage,
+    vmsPageSize,
+    setVmsPageSize,
+
+    // GpuLeases
     gpuLeases,
     gpuLeasesFilter,
     setGpuLeasesFilter,
     filteredGpuLeases,
+    gpuLeasesPage,
+    setGpuLeasesPage,
+    gpuLeasesPageSize,
+    setGpuLeasesPageSize,
+
+    // GpuGroups
     gpuGroups,
     gpuGroupsFilter,
     setGpuGroupsFilter,
     filteredGpuGroups,
+    gpuGroupsPage,
+    setGpuGroupsPage,
+    gpuGroupsPageSize,
+    setGpuGroupsPageSize,
+
+    // Jobs
     jobs,
     jobsFilter,
     setJobsFilter,
     filteredJobs,
+    jobsPage,
+    setJobsPage,
+    jobsPageSize,
+    setJobsPageSize,
   } = useAdmin();
   const navigate = useNavigate();
 
   const [activeTab, setActiveTab] = useState<number>(0);
-  const [categoryTemp, setCategoryTemp] = useState<Category | undefined>(
-    "Matches"
-  );
-  const [queryModifierTemp, setQueryModifierTemp] =
-    useState<QueryModifier[Category]>("");
 
   const handleChangeTab = (_: any, newTab: number) => {
     setActiveTab(newTab);
@@ -158,7 +193,9 @@ export default function AdminV2() {
         },
         {
           label: t("button-delete"),
-          onClick: (_: DeploymentRead) => {},
+          onClick: (deployment: DeploymentRead) => {
+            if (keycloak.token) deleteDeployment(deployment.id, keycloak.token);
+          },
           withConfirm: true,
         },
       ],
@@ -206,7 +243,9 @@ export default function AdminV2() {
         },
         {
           label: t("button-delete"),
-          onClick: (_: VmRead) => {},
+          onClick: (vm: VmRead) => {
+            if (keycloak.token) deleteVM(keycloak.token, vm.id);
+          },
           withConfirm: true,
         },
       ],
@@ -237,7 +276,9 @@ export default function AdminV2() {
       actions: [
         {
           label: t("button-delete"),
-          onClick: (_: GpuLeaseRead) => {},
+          onClick: (gpuLease: GpuLeaseRead) => {
+            if (keycloak.token) deleteGpuLease(keycloak.token, gpuLease.id);
+          },
           withConfirm: true,
         },
       ],
@@ -301,7 +342,37 @@ export default function AdminV2() {
           },
         },
       ],
-      actions: [{ label: "test", onClick: (_: UserRead) => {} }],
+      actions: [
+        {
+          label: "Deployments",
+          onClick: (user: UserRead) => {
+            setDeploymentsFilter(user.id);
+            setActiveTab(0);
+          },
+        },
+        {
+          label: "VMs",
+          onClick: (user: UserRead) => {
+            setVmsFilter(user.id);
+            setActiveTab(1);
+          },
+        },
+        {
+          label: "Teams",
+          onClick: (user: UserRead) => {
+            setTeamsFilter(user.id);
+            setActiveTab(5);
+          },
+        },
+        {
+          label: "Open Keycloak",
+          onClick: (user: UserRead) => {
+            const keycloakUrl = import.meta.env.VITE_KEYCLOAK_URL;
+            const userUrl = `${keycloakUrl}/admin/master/console/#/master/users/${user.id}/settings`;
+            window.open(userUrl, "_blank");
+          },
+        },
+      ],
     },
     {
       label: "Teams",
@@ -330,10 +401,11 @@ export default function AdminV2() {
         },
       ],
       actions: [
-        { label: t("button-edit"), onClick: (_: TeamRead) => {} },
         {
           label: t("button-delete"),
-          onClick: (_: TeamRead) => {},
+          onClick: (team: TeamRead) => {
+            if (keycloak.token) deleteTeam(keycloak.token!, team.id);
+          },
           withConfirm: true,
         },
       ],
@@ -368,48 +440,94 @@ export default function AdminV2() {
     },
   ];
 
+  const tabLookup = resourceConfig.reduce<Record<string, number>>(
+    (acc, obj, index) => {
+      acc[obj.label.toLowerCase()] = index;
+      return acc;
+    },
+    {}
+  );
+  tabLookup["hosts"] = resourceConfig.length;
+  useEffect(() => {
+    if (
+      initialTab &&
+      tabLookup[initialTab.toLowerCase()] &&
+      tabLookup[initialTab.toLowerCase()] !== activeTab
+    ) {
+      setActiveTab(tabLookup[initialTab.toLowerCase()]);
+    }
+  }, []);
+
   const resourceLookup = [
     {
       data: deployments,
       filter: deploymentsFilter,
       setFilter: setDeploymentsFilter,
       filteredData: filteredDeployments,
+      page: deploymentsPage,
+      setPage: setDeploymentsPage,
+      pageSize: deploymentsPageSize,
+      setPageSize: setDeploymentsPageSize,
     },
     {
       data: vms,
       filter: vmsFilter,
       setFilter: setVmsFilter,
       filteredData: filteredVms,
+      page: vmsPage,
+      setPage: setVmsPage,
+      pageSize: vmsPageSize,
+      setPageSize: setVmsPageSize,
     },
     {
       data: gpuLeases,
       filter: gpuLeasesFilter,
       setFilter: setGpuLeasesFilter,
       filteredData: filteredGpuLeases,
+      page: gpuLeasesPage,
+      setPage: setGpuLeasesPage,
+      pageSize: gpuLeasesPageSize,
+      setPageSize: setGpuLeasesPageSize,
     },
     {
       data: gpuGroups,
       filter: gpuGroupsFilter,
       setFilter: setGpuGroupsFilter,
       filteredData: filteredGpuGroups,
+      page: gpuGroupsPage,
+      setPage: setGpuGroupsPage,
+      pageSize: gpuGroupsPageSize,
+      setPageSize: setGpuGroupsPageSize,
     },
     {
       data: users,
       filter: usersFilter,
       setFilter: setUsersFilter,
       filteredData: filteredUsers,
+      page: usersPage,
+      setPage: setUsersPage,
+      pageSize: usersPageSize,
+      setPageSize: setUsersPageSize,
     },
     {
       data: teams,
       filter: teamsFilter,
       setFilter: setTeamsFilter,
       filteredData: filteredTeams,
+      page: teamsPage,
+      setPage: setTeamsPage,
+      pageSize: teamsPageSize,
+      setPageSize: setTeamsPageSize,
     },
     {
       data: jobs,
       filter: jobsFilter,
       setFilter: setJobsFilter,
       filteredData: filteredJobs,
+      page: jobsPage,
+      setPage: setJobsPage,
+      pageSize: jobsPageSize,
+      setPageSize: setJobsPageSize,
     },
   ];
 
@@ -434,22 +552,33 @@ export default function AdminV2() {
     };
   }, []);
 
-  const tabs = resourceConfig.map((config, index) => (
-    <ResourceTab<any> // Todo
-      key={index}
-      resourceName={config.label}
-      data={resourceLookup[index].data}
-      filteredData={resourceLookup[index].filteredData}
-      filter={resourceLookup[index].filter}
-      setFilter={resourceLookup[index].setFilter}
-      columns={config.columns}
-      actions={config.actions}
-      category={categoryTemp}
-      setCategory={setCategoryTemp}
-      queryModifier={queryModifierTemp}
-      setQueryModifier={setQueryModifierTemp}
-    />
-  ));
+  const tabs = [
+    ...resourceConfig.map((config, index) => (
+      <ResourceTab<any>
+        key={index}
+        resourceName={config.label}
+        data={resourceLookup[index].data}
+        filteredData={resourceLookup[index].filteredData}
+        filter={resourceLookup[index].filter}
+        setFilter={resourceLookup[index].setFilter}
+        columns={config.columns}
+        actions={config.actions}
+        page={resourceLookup[index].page}
+        setPage={resourceLookup[index].setPage}
+        pageSize={resourceLookup[index].pageSize}
+        setPageSize={resourceLookup[index].setPageSize}
+      />
+    )),
+    <HostsTab />,
+  ];
+
+  useEffect(() => {
+    const path = `/admin/${activeTab < resourceConfig.length ? resourceConfig[activeTab].label.toLowerCase() : "hosts"}`;
+
+    if (window.location.pathname !== path) {
+      navigate(path);
+    }
+  }, [activeTab]);
 
   return (
     <>
@@ -457,42 +586,7 @@ export default function AdminV2() {
         <LoadingPage />
       ) : (
         <Page title={t("admin-title")}>
-          <AppBar
-            position="fixed"
-            color="inherit"
-            sx={{
-              top: "auto",
-              bottom: 0,
-              borderTop: 1,
-              borderColor: theme.palette.grey[300],
-            }}
-          >
-            <Toolbar>
-              <Typography variant="h4">{t("admin-title")}</Typography>
-              <Box component="div" sx={{ flexGrow: 1 }} />
-              <Stack direction="row" alignItems={"center"} spacing={3}>
-                <Button variant="contained" onClick={refetch}>
-                  {t("admin-refresh-resources")}
-                </Button>
-                <Typography variant="body1">
-                  {loading ? (
-                    t("loading")
-                  ) : (
-                    <span>
-                      RTT:
-                      <span style={{ fontFamily: "monospace" }}>
-                        {" " + lastRefreshRtt + " ms "}
-                      </span>
-                      {t("admin-last-load")}:
-                      <span style={{ fontFamily: "monospace" }}>
-                        {" " + timeDiffSinceLastRefresh}
-                      </span>
-                    </span>
-                  )}
-                </Typography>
-              </Stack>
-            </Toolbar>
-          </AppBar>
+          <AdminToolbar />
 
           <Container maxWidth="xl">
             <Stack spacing={3}>
@@ -500,10 +594,15 @@ export default function AdminV2() {
                 {t("menu-admin-panel")}
               </Typography>
               <Card sx={{ boxShadow: 20 }}>
-                <Tabs value={activeTab} onChange={handleChangeTab}>
+                <Tabs
+                  value={activeTab}
+                  onChange={handleChangeTab}
+                  variant="scrollable"
+                >
                   {resourceConfig.map((resource, index) => (
                     <Tab key={index} label={resource.label} />
                   ))}
+                  <Tab key={resourceConfig.length} label={t("hosts")} />
                 </Tabs>
                 {tabs[activeTab]}
               </Card>

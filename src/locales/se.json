@@ -548,6 +548,12 @@
         "days-left": "dagar kvar",
         "never-stale-option-header": "Aldrig inaktiv-alternativ",
         "never-stale-option-header-subheader": "Styr om denna resurs ska förbli aktiv trots inaktivitet.",
-        "never-stale": "Alltid aktiv"
+        "never-stale": "Alltid aktiv",
+        "error-could-not-fetch-hosts": "Kunde inte hämta värdmaskiner",
+        "error-could-not-fetch-system-capacities": "Kunde inte hämta kapaciteten hos systemet",
+        "unschedulable": "Oschemaläggningsbar",
+        "schedulable": "Schemaläggningsbar",
+        "schedulable-description": "Senast denna nod rapporterade sin status var den schemaläggningsbar i Kubernetes-klustret",
+        "unschedulable-description": "Senast denna nod rapporterade sin status var den oschemaläggningsbar i Kubernetes-klustret"
     }
 }

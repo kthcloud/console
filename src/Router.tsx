@@ -93,7 +93,7 @@ export default function Router() {
           ),
         },
         {
-          path: "admin",
+          path: "admin/:tab?",
           element: (
             <ProtectedRoute>
               <Admin />

@@ -42,6 +42,10 @@ interface ResourceTabProps<T> {
   setCategory?: Dispatch<SetStateAction<Category | undefined>>;
   queryModifier?: QueryModifier[Category];
   setQueryModifier?: Dispatch<SetStateAction<QueryModifier[Category]>>;
+  page: number;
+  setPage: Dispatch<SetStateAction<number>>;
+  pageSize: number;
+  setPageSize: Dispatch<SetStateAction<number>>;
 }
 
 const ResourceTab = <T extends { id: string | number }>({
@@ -57,6 +61,10 @@ const ResourceTab = <T extends { id: string | number }>({
   setCategory,
   queryModifier,
   setQueryModifier,
+  page,
+  setPage,
+  pageSize,
+  setPageSize,
 }: ResourceTabProps<T>) => {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -75,31 +83,32 @@ const ResourceTab = <T extends { id: string | number }>({
   const resolvedActions =
     columns && columns.length > 0
       ? [
-          {
+          /*{
             label: t("details"),
             onClick: (value: T) => setSelectedItem(value),
-          },
+          },*/
           ...(actions || []),
         ]
       : actions;
   const [selectedItem, setSelectedItem] = useState<T | undefined>(undefined);
 
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-
   const handleChangePage = (_: any, newPage: number) => {
-    setPage(newPage);
+    if (page !== newPage) setPage(newPage);
   };
 
   const handleChangeRowsPerPage = (event: any) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
+    if (event.target.value === "all") {
+      setPageSize(-1);
+    } else {
+      setPageSize(parseInt(event.target.value, 10));
+    }
     setPage(0);
   };
 
   const currentData = filter ? filteredData : data;
   const paginatedData = currentData?.slice(
-    page * rowsPerPage,
-    page * rowsPerPage + rowsPerPage
+    page * pageSize,
+    page * pageSize + pageSize
   );
 
   // annoying TS compile issue for some reason
@@ -140,8 +149,10 @@ const ResourceTab = <T extends { id: string | number }>({
           <Table>
             <TableHead>
               <TableRow>
-                {resolvedColumns.map((col) => (
-                  <TableCell key={col.id as string}>{col.label}</TableCell>
+                {resolvedColumns.map((col, index) => (
+                  <TableCell key={(col.id as string) + index}>
+                    {col.label}
+                  </TableCell>
                 ))}
                 {resolvedActions && (
                   <TableCell key={"admin-actions"}>
@@ -152,9 +163,9 @@ const ResourceTab = <T extends { id: string | number }>({
             </TableHead>
             <TableBody>
               {paginatedData?.map((row, index) => (
-                <TableRow key={row.id || index}>
-                  {resolvedColumns.map((col) => (
-                    <TableCell key={col.id as string}>
+                <TableRow key={String(row.id) + index}>
+                  {resolvedColumns.map((col, j) => (
+                    <TableCell key={(col.id as string) + j}>
                       {(() => {
                         if (col.renderFunc) {
                           if (col.id === "*") {
@@ -180,10 +191,11 @@ const ResourceTab = <T extends { id: string | number }>({
                     </TableCell>
                   ))}
                   {resolvedActions && (
-                    <TableCell key={"admin-actions"}>
-                      {resolvedActions.map((action) =>
+                    <TableCell key={"admin-actions" + index}>
+                      {resolvedActions.map((action, j) =>
                         action.withConfirm ? (
                           <ConfirmButton
+                            key={"action-button" + j}
                             action={action.label}
                             actionText={action.label}
                             callback={() => {
@@ -195,6 +207,7 @@ const ResourceTab = <T extends { id: string | number }>({
                           />
                         ) : (
                           <Button
+                            key={"action-button" + j}
                             size="small"
                             onClick={() => action.onClick(row)}
                           >
@@ -213,13 +226,13 @@ const ResourceTab = <T extends { id: string | number }>({
       <TablePagination
         component="div"
         count={currentData?.length || 0}
-        rowsPerPage={rowsPerPage}
+        rowsPerPage={pageSize}
         page={page}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
         showFirstButton={true}
         showLastButton={true}
-        rowsPerPageOptions={[10, 25, 50, 100, -1]}
+        rowsPerPageOptions={[10, 25, 50, 100, { value: -1, label: "all" }]}
       />
       {selectedItem && OnClickModal ? (
         <Modal
@@ -283,11 +296,11 @@ const SkeletonTable = ({ columns }: { columns: number }) => (
         </TableRow>
       </TableHead>
       <TableBody>
-        {[...Array(5)].map((_, rowIndex) => (
+        {[...Array(10)].map((_, rowIndex) => (
           <TableRow key={rowIndex}>
             {[...Array(columns)].map((_, colIndex) => (
               <TableCell key={colIndex}>
-                <Skeleton variant="text" />
+                <Skeleton variant="text" height="3" />
               </TableCell>
             ))}
           </TableRow>
