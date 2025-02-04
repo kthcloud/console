@@ -47,6 +47,8 @@ ENV KEYCLOAK_CLIENT_ID="landing"
 ENV RANCHER_URL="https://mgmt.cloud.cbh.kth.se"
 ENV DNS_URL="https://dns.cloud.cbh.kth.se"
 ENV MAIA_URL="https://maia.app.cloud.cbh.kth.se/maia"
+# can be comma separated to add more
+ENV SERVER_PLATFORM="linux/amd64"
 
 EXPOSE 3000
 ENTRYPOINT ["/entrypoint.sh"]
