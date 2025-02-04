@@ -353,7 +353,7 @@ export default function AdminV2() {
 
                 <Typography variant="body2">Disk</Typography>
                 <Tooltip
-                  title={`${user.usage.cpuCores} of ${user.quota.cpuCores} GB (${disk}%)`}
+                  title={`${user.usage.diskSize} of ${user.quota.diskSize} GB (${disk}%)`}
                 >
                   <LinearProgress variant="determinate" value={Number(disk)} />
                 </Tooltip>
