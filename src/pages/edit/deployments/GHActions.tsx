@@ -74,8 +74,7 @@ const GHActions = ({ resource }: { resource: Deployment }) => {
 
       const commands = [
         `docker login ${registry} -u ${username} -p ${password}`,
-        `docker build -t ${tag} .`,
-        `docker push ${tag}`,
+        `docker buildx build --platform="${import.meta.env.VITE_SERVER_PLATFORM || "linux/amd64"}" -t ${tag} --push .`,
       ];
 
       // escape $ for bash
