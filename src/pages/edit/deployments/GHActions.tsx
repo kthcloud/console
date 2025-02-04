@@ -13,11 +13,13 @@ import {
   Link,
   Paper,
   Stack,
+  Tab,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
+  Tabs,
   TextareaAutosize,
   Typography,
   useTheme,
@@ -34,16 +36,28 @@ type Secret = {
   value: string;
 };
 
+const MACOS_LINUX_INDEX: number = 0;
+const WINDOWS_INDEX: number = 1;
+
 const GHActions = ({ resource }: { resource: Deployment }) => {
   const { t } = useTranslation();
   const { keycloak, initialized } = useKeycloak();
   const [actionsFile, setActionsFile] = useState<string>("");
   const [cliCommands, setCliCommands] = useState<string>("");
+  const [cliCommandsPS, setCliCommandsPS] = useState<string>("");
   const [redacted, setRedacted] = useState<string>("");
+  const [redactedPS, setRedactedPS] = useState<string>("");
   const [secrets, setSecrets] = useState<Secret[]>([]);
   const [showSecrets, setShowSecrets] = useState(false);
   const [showCliSecrets, setShowCliSecrets] = useState(false);
   const theme: CustomTheme = useTheme();
+
+  const [tabIndex, setTabIndex] = useState(0);
+
+  useEffect(() => {
+    const isWindows = navigator.platform.toLowerCase().includes("win");
+    setTabIndex(isWindows ? WINDOWS_INDEX : MACOS_LINUX_INDEX);
+  }, []);
 
   const loadYaml = async () => {
     if (!(initialized && keycloak.token)) return;
@@ -66,9 +80,19 @@ const GHActions = ({ resource }: { resource: Deployment }) => {
 
       // escape $ for bash
       const commandString = commands.join("\n").replace(/\$/g, "\\$");
+      // on windows use ` to escape it in powershell
+      const commandStringPS = commands.join("\n").replace(/\$/g, "`$");
       setCliCommands(commandString);
+      setCliCommandsPS(commandStringPS);
       setRedacted(
         commandString
+          .replace(password, "********")
+          .replace(username, "********")
+          .replace(registry, "********")
+          .replace(tag, "********")
+      );
+      setRedactedPS(
+        commandStringPS
           .replace(password, "********")
           .replace(username, "********")
           .replace(registry, "********")
@@ -119,17 +143,29 @@ const GHActions = ({ resource }: { resource: Deployment }) => {
   return (
     <>
       <Card sx={{ boxShadow: 20 }}>
+        <Tabs
+          value={tabIndex}
+          onChange={(_: any, newIndex: number) => setTabIndex(newIndex)}
+        >
+          <Tab label="MacOS/Linux" value={MACOS_LINUX_INDEX} />
+          <Tab label="Windows" value={WINDOWS_INDEX} />
+        </Tabs>
         <CardHeader
           title={t("deploy-with-docker-cli")}
           subheader={t("deploy-with-docker-cli-subheader")}
         />
+
         <CardContent>
           <TextareaAutosize
             value={
-              cliCommands
+              (tabIndex === WINDOWS_INDEX ? cliCommandsPS : cliCommands)
                 ? showCliSecrets
-                  ? cliCommands
-                  : redacted
+                  ? tabIndex === WINDOWS_INDEX
+                    ? cliCommandsPS
+                    : cliCommands
+                  : tabIndex === WINDOWS_INDEX
+                    ? redactedPS
+                    : redacted
                 : t("loading")
             }
             style={{
@@ -140,8 +176,11 @@ const GHActions = ({ resource }: { resource: Deployment }) => {
             }}
           />
         </CardContent>
+
         <CardActions>
-          <CopyButton content={cliCommands} />
+          <CopyButton
+            content={tabIndex === WINDOWS_INDEX ? cliCommandsPS : cliCommands}
+          />
 
           <Button
             onClick={() => setShowCliSecrets(!showCliSecrets)}
