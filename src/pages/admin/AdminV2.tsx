@@ -391,7 +391,7 @@ export default function AdminV2() {
         {
           label: "Open Keycloak",
           onClick: (user: UserRead) => {
-            const userUrl = `${import.meta.env.VITE_KEYCLOAK_URL}/admin/${import.meta.env.VITE_KEYCLOAK_REALM}/console/#/${import.meta.env.VITE_KEYCLOAK_REALM}/users/${user.id}/settings`;
+            const userUrl = `${import.meta.env.VITE_KEYCLOAK_URL}/admin/master/console/#/${import.meta.env.VITE_KEYCLOAK_REALM}/users/${user.id}/settings`;
             window.open(userUrl, "_blank");
           },
         },
