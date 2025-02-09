@@ -230,7 +230,11 @@ export default function Menu() {
             </Box>
 
             <Stack sx={{ p: 1 }}>
-              <MenuItem href={"/admin"} component={Link} onClick={handleClose}>
+              <MenuItem
+                to={"/admin"}
+                component={RouterLink}
+                onClick={handleClose}
+              >
                 {t("menu-admin-panel")}
               </MenuItem>
               <MenuItem
