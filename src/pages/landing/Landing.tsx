@@ -40,8 +40,8 @@ export function Landing() {
         </Container>
 
         <Hero />
-        <Maia />
         <Intro />
+        <Maia />
         <Funding />
       </Page>
     );

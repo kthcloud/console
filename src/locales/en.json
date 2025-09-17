@@ -468,9 +468,6 @@
         "joinedAt": "Joined at",
         "addedAt": "Added at",
         "jobRestarted": "Job restarted",
-        "maia-intro-body": "Are you interested in developing your Medical AI application in a collaborative environment with access to state-of-the-art applications and resources? MAIA is a then the right platform for you that provides researchers and students with the tools and infrastructure needed to develop, test, and deploy AI applications in the medical field. Designed to be supported with direct connection to clinical workflows and hospital infrastructures, MAIA offers a unique solution to test your ideas and see them deployed in a real-world clinical setting.",
-        "maia-intro-footer": "Request your MAIA account today and register a project to start working on your Medical AI solution.",
-        "maia-intro-header": "Discover ",
         "funding-provided-by": "kthcloud is proudly supported by a diverse group of partners. Financial backing is provided by ",
         "the": " the ",
         "program-and-the": "program and the ",
@@ -558,6 +555,10 @@
         "unschedulable": "Unschedulable",
         "schedulable": "Schedulable",
         "schedulable-description": "The last time this node reported its status, it was schedulable in the Kubernetes cluster",
-        "unschedulable-description": "The last time this node reported its status, it was unschedulable in the Kubernetes cluster"
+        "unschedulable-description": "The last time this node reported its status, it was unschedulable in the Kubernetes cluster",
+        "maia-intro-body": "Are you a researcher or student in biomedical engineering at KTH who needs state-of-the-art deep learning resources and compute? MAIA is the platform for developing, testing, and deploying medical AI, from early prototypes to real clinical workflows. You get straightforward access to compute via JupyterHub, SSH, or a virtual desktop. Our infrastructure, provided jointly with KTH Cloud, scales to different computational needs. Designed for collaboration and integration with hospital systems, MAIA lets you validate ideas and pilot your solutions in real-world clinical settings.",
+        "maia-intro-footer": "Request a MAIA account today and register a project to start building your medical AI solution.",
+        "maia-intro-header": "Discover ",
+        "button-get-started-maia": "Get started with MAIA"
     }
 }

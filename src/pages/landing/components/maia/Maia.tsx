@@ -16,7 +16,7 @@ const Maia = () => {
   const { t } = useTranslation();
 
   return (
-<Box component="div" sx={{ overflow: "hidden", marginBottom: 5 }}>
+<Box component="div" sx={{ overflow: "hidden", marginTop: 5 }}>
   <Container maxWidth="lg">
     <Card sx={{ boxShadow: 20, background: "#242424ff", color: "#ffffff" }}>
       <Grid
@@ -33,7 +33,7 @@ const Maia = () => {
         }}
       >
         {/* Text block - comes first on all screen sizes */}
-        <Grid item xs={12} md={5} order={{ xs: 1, md: 1 }}>
+        <Grid item sx={{zIndex: 6}} xs={12} md={5} order={{ xs: 1, md: 1 }}>
           <Typography
             variant="h2"
             sx={{
@@ -55,11 +55,11 @@ const Maia = () => {
 
             <Button
               variant="contained"
-              sx={{ whiteSpace: "nowrap", px: 4 }}
+              sx={{ whiteSpace: "nowrap", px: 8 }}
               component={Link}
-              to="https://maia.app.cloud.cbh.kth.se/maia/register"
+              to="https://maia.app.cloud.cbh.kth.se"
             >
-              {t("button-get-started")}
+              {t("button-get-started-maia")}
             </Button>
           </Stack>
         </Grid>
@@ -72,6 +72,7 @@ const Maia = () => {
             sx={{
               display: { xs: "none", sm: "none", md: "block" },
               textAlign: "right",
+              zIndex: 1
             }}
           >
             <Brain position={[3, 0, 0]} mobile={false} />

@@ -42,7 +42,7 @@ export function BrainMesh({ mobile, position, props }) {
       let y = 1 - mouseCoordinates.y / window.innerHeight;
       const vector = new Vector3(x, y, 0);
       vector.unproject(camera);
-      meshRef.current.rotation.set(1 - vector.y - 0.8, vector.x, 0);
+      meshRef.current.rotation.set(1 - vector.y*20, vector.x*10, 0);
     }
   });
 
