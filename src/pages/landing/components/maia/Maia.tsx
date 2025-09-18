@@ -63,7 +63,7 @@ const Maia = () => {
                   variant="contained"
                   sx={{ whiteSpace: "nowrap", px: 8 }}
                   component={Link}
-                  to="https://maia.app.cloud.cbh.kth.se"
+                  to={import.meta.env.VITE_MAIA_URL}
                 >
                   {t("button-get-started-maia")}
                 </Button>
