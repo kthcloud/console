@@ -4,15 +4,15 @@ Welcome to the kthcloud/console repository! This project is the web console for 
 
 ## Table of Contents
 
-- [☁️ kthcloud/console](#️-kthcloudconsole)
-    - [Table of Contents](#table-of-contents)
-    - [External dependencies](#external-dependencies)
-    - [Setup](#setup)
-    - [Contributing](#contributing)
-    - [Locales and translations](#locales-and-translations)
-        - [Other languages](#other-languages)
-    - [Formatting](#formatting)
-    - [License](#license)
+-   [☁️ kthcloud/console](#️-kthcloudconsole)
+    -   [Table of Contents](#table-of-contents)
+    -   [External dependencies](#external-dependencies)
+    -   [Setup](#setup)
+    -   [Contributing](#contributing)
+    -   [Locales and translations](#locales-and-translations)
+        -   [Other languages](#other-languages)
+    -   [Formatting](#formatting)
+    -   [License](#license)
 
 ## External dependencies
 
@@ -20,14 +20,14 @@ console uses these services for its functionality.
 
 kthcloud maintained:
 
-- [go-deploy](https://github.com/kthcloud/go-deploy): Backend for creation, and management of resources
-- [alert](https://alert.app.cloud.cbh.kth.se/): Provides alerts
-- [kthcloud iam](https://iam.cloud.cbh.kth.se): Provides user auth
+-   [go-deploy](https://github.com/kthcloud/go-deploy): Backend for creation, and management of resources
+-   [alert](https://alert.app.cloud.cbh.kth.se/): Provides alerts
+-   [kthcloud iam](https://iam.cloud.cbh.kth.se): Provides user auth
 
 External:
 
-- [Gravatar](https://gravatar.com): Provides user avatars
-- [Google Fonts](https://fonts.google.com): Provides fonts
+-   [Gravatar](https://gravatar.com): Provides user avatars
+-   [Google Fonts](https://fonts.google.com): Provides fonts
 
 ## Setup
 

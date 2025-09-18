@@ -25,5 +25,5 @@ export const getSystemCapacities = async (
     throw res;
   }
   const cap = await res.json();
-  return cap.length > 0 ? (cap[0]?.capacities ?? undefined) : undefined;
+  return cap.length > 0 ? cap[0]?.capacities ?? undefined : undefined;
 };
