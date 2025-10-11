@@ -538,6 +538,27 @@
         "admin-visibility-auth": "Private (auth proxy)",
         "visibility-public-tooltip": "Your deployment is publicly accessible on the internet.",
         "visibility-private-tooltip": "Your deployment is private and not reachable on the internet. Only internal traffic is allowed in (traffic between deployments).",
-        "visibility-auth-tooltip": "Your deployment is private and reachable on the internet through an authentication proxy, this limits the allowed traffic."
+        "visibility-auth-tooltip": "Your deployment is private and reachable on the internet through an authentication proxy, this limits the allowed traffic.",
+        "stale": "Stale",
+        "stale-description": "This resource hasn't been accessed by its owner for more than or equal to 3 months.",
+        "stale-and-disabled-description": "This resource has been disabled due to inactivity. Please contact the resource owner to log in and restore access.",
+        "stale-and-not-disabled-description": "Due to prolonged inactivity, this resource will be disabled soon.",
+        "stale-soon": "Stale soon",
+        "stale-soon-description": "This resource will become stale soon due to inactivity from the owner",
+        "stale-in": "Stale in",
+        "days-left": "days left",
+        "never-stale-option-header": "Always Active Option",
+        "never-stale-option-header-subheader": "Control whether this resource should remain active despite inactivity.",
+        "never-stale": "Always Active",
+        "error-could-not-fetch-hosts": "Could not fetch hosts",
+        "error-could-not-fetch-system-capacities": "Could not fetch system capacities",
+        "unschedulable": "Unschedulable",
+        "schedulable": "Schedulable",
+        "schedulable-description": "The last time this node reported its status, it was schedulable in the Kubernetes cluster",
+        "unschedulable-description": "The last time this node reported its status, it was unschedulable in the Kubernetes cluster",
+        "maia-intro-body": "Are you a researcher or student in biomedical engineering at KTH who needs state-of-the-art deep learning resources and compute? MAIA is the platform for developing, testing, and deploying medical AI, from early prototypes to real clinical workflows. You get straightforward access to compute via JupyterHub, SSH, or a virtual desktop. Our infrastructure, provided jointly with KTH Cloud, scales to different computational needs. Designed for collaboration and integration with hospital systems, MAIA lets you validate ideas and pilot your solutions in real-world clinical settings.",
+        "maia-intro-footer": "Request a MAIA account today and register a project to start building your medical AI solution.",
+        "maia-intro-header": "Discover ",
+        "button-get-started-maia": "Get started with MAIA"
     }
 }

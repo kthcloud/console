@@ -853,7 +853,7 @@ export const Admin = () => {
                     <Typography variant="body2">
                       {t("admin-edit-permissions-in") + " "}
                       <Link
-                        href="https://iam.cloud.cbh.kth.se"
+                        href={import.meta.env.VITE_KEYCLOAK_URL}
                         target="_blank"
                         rel="noopener noreferrer"
                       >

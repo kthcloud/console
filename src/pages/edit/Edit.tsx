@@ -48,6 +48,10 @@ import { AlertList } from "../../components/AlertList";
 import { Specs } from "./Specs";
 import { ReplicaStatus } from "./deployments/ReplicaStatus";
 import ProxyManager from "./vms/ProxyManager";
+import { isOlderThanThreeMonths } from "../../components/render/Resource";
+import Label from "../../components/Label";
+import { getDaysLeftUntilStale } from "../../utils/staleDates";
+import NeverStaleMode from "./NeverStaleMode";
 
 export function Edit() {
   const { t } = useTranslation();
@@ -192,6 +196,72 @@ export function Edit() {
       />
     );
   };
+  const renderStaleResourceHeaderFullWidth = (resource: Resource) => {
+    const warningDaysBeforeStale = 30;
+    const daysLeftUntilStale = getDaysLeftUntilStale(resource?.accessedAt);
+    const stale =
+      typeof daysLeftUntilStale === "number"
+        ? daysLeftUntilStale <= 0
+        : isOlderThanThreeMonths(resource?.accessedAt);
+
+    if (
+      resource.neverStale ||
+      (!stale &&
+        (daysLeftUntilStale === false ||
+          (daysLeftUntilStale as number) > warningDaysBeforeStale))
+    )
+      return <></>;
+
+    // Styles for the icon and header
+    const boxStyles: React.CSSProperties = {
+      display: "flex",
+      alignItems: "center",
+      gap: "8px",
+    };
+
+    return (
+      <Label
+        variant="ghost"
+        color={!stale ? "info" : "warning"}
+        sx={{
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "flex-start",
+          padding: "0.5em",
+        }}
+      >
+        <div style={boxStyles}>
+          <Iconify
+            icon={!stale ? "mdi:hourglass" : "mdi:hourglass-full"}
+            sx={{ opacity: 0.65 }}
+          />
+          <Typography variant="h6">
+            {!stale ? t("stale-soon") : t("stale")}
+          </Typography>
+        </div>
+        <Typography
+          variant="body2"
+          ml={"1.5em"}
+          sx={{
+            wordWrap: "break-word",
+            overflowWrap: "break-word",
+            whiteSpace: "normal",
+          }}
+        >
+          {stale
+            ? t("stale-description") +
+              (resource.status === "resourceDisabled" ||
+              resource.status === "resourceStopped"
+                ? " " + t("stale-and-disabled-description")
+                : " " + t("stale-and-not-disabled-description"))
+            : t("stale-soon-description") +
+              ` (${daysLeftUntilStale} ${t("days-left")})`}
+        </Typography>
+      </Label>
+    );
+  };
 
   return (
     <>
@@ -330,6 +400,7 @@ export function Edit() {
               </Stack>
 
               <AlertList />
+              {renderStaleResourceHeaderFullWidth(resource)}
               <JobList />
 
               {resource.type === "vm" && <SSHString vm={resource as Vm} />}
@@ -379,6 +450,8 @@ export function Edit() {
               {resource.type === "deployment" && (
                 <HealthCheckRoute deployment={resource as Deployment} />
               )}
+
+              {user?.admin && <NeverStaleMode resource={resource} />}
 
               <DangerZone resource={resource} />
             </Stack>

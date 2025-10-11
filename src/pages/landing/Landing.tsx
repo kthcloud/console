@@ -5,6 +5,7 @@ import { Box, Container } from "@mui/material";
 import { useKeycloak } from "@react-keycloak/web";
 import LoadingPage from "../../components/LoadingPage";
 import Funding from "./components/funding/Funding";
+import Maia from "./components/maia/Maia";
 import { AlertList } from "../../components/AlertList";
 import { useContext, useEffect } from "react";
 import { AuthContextWrapper } from "../../contexts/AuthContextWrapper";
@@ -40,6 +41,7 @@ export function Landing() {
 
         <Hero />
         <Intro />
+        <Maia />
         <Funding />
       </Page>
     );

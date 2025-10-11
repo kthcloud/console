@@ -43,3 +43,29 @@ export type DeployApiError = {
   validationErrors?: ValidationError;
   errors?: ErrorElement[];
 };
+
+export type PaginationOpts = {
+  query?: string;
+  page?: number;
+  pageSize?: number;
+};
+
+export type BaseQueryParams = PaginationOpts & {
+  all?: boolean;
+};
+
+export type UserQueryParams = BaseQueryParams & {
+  userId?: string;
+};
+
+export type DeploymentQueryParams = UserQueryParams & {
+  shared?: boolean;
+};
+
+export type VmQueryParams = UserQueryParams & {
+  shared?: boolean;
+};
+
+export type GpuLeaseQueryParams = BaseQueryParams & {
+  vmId?: string;
+};

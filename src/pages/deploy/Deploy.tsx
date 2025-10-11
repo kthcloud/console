@@ -46,6 +46,7 @@ import { ThemeColor } from "../../theme/types";
 import { deleteVM } from "../../api/deploy/vms";
 import { AlertList } from "../../components/AlertList";
 import { NoWrapTable as Table } from "../../components/NoWrapTable";
+import { renderStale } from "../../components/render/Resource";
 
 const descendingComparator = (
   a: Record<string, any>,
@@ -542,6 +543,7 @@ export function Deploy() {
                                 {renderResourceStatus(row)}
                                 {renderStatusCode(row)}
                                 {renderShared(row)}
+                                {renderStale(row, t)}
                               </Stack>
                             </TableCell>
                             <TableCell align="left">

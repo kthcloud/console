@@ -4,7 +4,8 @@ import {
   UserReadDiscovery,
   UserUpdate,
 } from "@kthcloud/go-deploy-types/types/v2/body";
-import { Jwt, Uuid } from "../../types";
+import { Jwt, UserQueryParams, Uuid } from "../../types";
+import { createQueryParams } from "../../utils/paguinationOpts";
 
 export const getUser = async (
   userId: string,
@@ -136,6 +137,32 @@ export const discoverUserById = async (
 ): Promise<UserReadDiscovery> => {
   const res = await fetch(
     import.meta.env.VITE_DEPLOY_API_URL + "/users/" + userId + "?discover=true",
+    {
+      method: "GET",
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    }
+  );
+
+  if (!res.ok) {
+    const body = await res.json();
+    if (body) {
+      throw body;
+    }
+    throw res;
+  }
+  return await res.json();
+};
+
+export const getUsers = async (
+  token: Uuid,
+  queryParams: UserQueryParams = { all: true, page: 1, pageSize: 10 }
+): Promise<UserRead[]> => {
+  const res = await fetch(
+    import.meta.env.VITE_DEPLOY_API_URL +
+      "/users" +
+      createQueryParams(queryParams),
     {
       method: "GET",
       headers: {

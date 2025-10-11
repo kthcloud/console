@@ -153,7 +153,7 @@ export default function Menu() {
             {t("menu-status")}
           </MenuItem>
           <MenuItem
-            href={"https://maia.app.cloud.cbh.kth.se/maia"}
+            href={import.meta.env.VITE_MAIA_URL}
             component={Link}
             onClick={handleClose}
             target="_blank"
@@ -230,32 +230,29 @@ export default function Menu() {
             </Box>
 
             <Stack sx={{ p: 1 }}>
-              <MenuItem href={"/admin"} component={Link} onClick={handleClose}>
+              <MenuItem
+                to={"/admin"}
+                component={RouterLink}
+                onClick={handleClose}
+              >
                 {t("menu-admin-panel")}
               </MenuItem>
               <MenuItem
-                href={"https://dashboard.cloud.cbh.kth.se"}
-                component={Link}
-                onClick={handleClose}
-              >
-                {t("menu-cloudstack")}
-              </MenuItem>
-              <MenuItem
-                href={"https://rancher.mgmt.cloud.cbh.kth.se/"}
+                href={import.meta.env.VITE_RANCHER_URL}
                 component={Link}
                 onClick={handleClose}
               >
                 {t("menu-rancher")}
               </MenuItem>
               <MenuItem
-                href={"https://iam.cloud.cbh.kth.se"}
+                href={import.meta.env.VITE_KEYCLOAK_URL}
                 component={Link}
                 onClick={handleClose}
               >
                 {t("menu-keycloak")}
               </MenuItem>
               <MenuItem
-                href={"https://dns.cloud.cbh.kth.se"}
+                href={import.meta.env.VITE_DNS_URL}
                 component={Link}
                 onClick={handleClose}
               >
