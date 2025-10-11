@@ -32,8 +32,18 @@ RUN bun run build
 
 # Serve with NGINX
 FROM nginx:latest
+
+# control if the old js bundle from the cached index.html should be symlinked to the newest
+# this is a workaround to prevent white page after bad caching rule on nginx
+ARG USE_OLD_CACHED_HTML_WORKAROND_FIX=true
+ARG OLD_JS_BUNDLE_HASH=jmByhSew
+
 COPY --from=build /app/dist /usr/share/nginx/html
-RUN rm /etc/nginx/conf.d/default.conf
+RUN rm /etc/nginx/conf.d/default.conf && \
+    if [ "$USE_OLD_CACHED_HTML_WORKAROND_FIX" = "true" ]; then \
+    ln -sf /usr/share/nginx/html/assets/index-*.js /usr/share/nginx/html/assets/index-${OLD_JS_BUNDLE_HASH}.js; \
+    fi
+
 COPY nginx/nginx.conf /etc/nginx/conf.d
 
 COPY --from=build --chmod=777 --link /app/entrypoint.sh .
