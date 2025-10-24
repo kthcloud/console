@@ -337,23 +337,56 @@ export const Specs = ({ resource }: { resource: Resource }) => {
               }
             />
             {resource.type === "deployment" && (
-              <Chip
-                sx={{ p: 1 }}
-                icon={<Iconify icon="mage:stack" width={24} height={24} />}
-                label={
-                  <span style={{ marginLeft: ".5rem" }}>
-                    {t("replicas")}
-                    <b
-                      style={{
-                        fontFamily: "monospace",
-                        marginLeft: "1rem",
-                      }}
-                    >
-                      {replicas}
-                    </b>
-                  </span>
-                }
-              />
+              <>
+                <Chip
+                  sx={{ p: 1 }}
+                  icon={<Iconify icon="mage:stack" width={24} height={24} />}
+                  label={
+                    <span style={{ marginLeft: ".5rem" }}>
+                      {t("replicas")}
+                      <b
+                        style={{
+                          fontFamily: "monospace",
+                          marginLeft: "1rem",
+                        }}
+                      >
+                        {replicas}
+                      </b>
+                    </span>
+                  }
+                />
+                {/* @ts-ignore 'gpus' not yet defined in resource.specs type */}
+                {Array.isArray(resource.specs?.gpus) &&
+                  (resource.specs as any).gpus!.map(
+                    (gpu: any, index: number) => (
+                      <Chip
+                        key={gpu.name || index}
+                        icon={<Iconify icon="mdi:gpu" width={20} height={20} />}
+                        label={
+                          <span
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: ".4rem",
+                              marginLeft: ".25rem",
+                            }}
+                          >
+                            <span style={{ opacity: 0.8 }}>GPU:</span>
+                            <b>{gpu.name}</b>
+                            {gpu.claimName ||
+                              (gpu.templateName && (
+                                <span
+                                  style={{ opacity: 0.6, fontSize: "0.8rem" }}
+                                >
+                                  ({gpu.claimName || gpu.templateName})
+                                </span>
+                              ))}
+                          </span>
+                        }
+                      />
+                    )
+                  )}
+              </>
             )}
             {resource.type === "vm" &&
               resource.specs &&
