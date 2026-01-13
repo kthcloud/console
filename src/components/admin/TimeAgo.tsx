@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Typography } from "@mui/material";
 
-const TimeAgo: React.FC<{ createdAt: string | undefined }> = ({
-  createdAt,
-}) => {
+const TimeAgo: React.FC<{
+  createdAt: string | undefined;
+  variant?: string | undefined;
+}> = ({ createdAt, variant }) => {
   const [timeAgo, setTimeAgo] = useState<string>("");
+  variant = variant != undefined ? variant : "body2";
 
   const calculateTimeAgo = (createdAt: string) => {
     const now = new Date().getTime();
@@ -44,7 +46,7 @@ const TimeAgo: React.FC<{ createdAt: string | undefined }> = ({
     }
   }, [createdAt]);
 
-  return <Typography variant="body2">{timeAgo}</Typography>;
+  return <Typography variant={variant}>{timeAgo}</Typography>;
 };
 
 export default TimeAgo;
