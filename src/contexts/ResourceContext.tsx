@@ -28,6 +28,8 @@ import {
 import { listGpuGroups } from "../api/deploy/gpuGroups";
 import { listGpuLeases } from "../api/deploy/gpuLeases";
 import { listMigrations } from "../api/deploy/resourceMigrations";
+import { GpuClaimRead } from "../temporaryTypesRemoveMe";
+import { listGpuClaims } from "../api/deploy/gpuClaims";
 
 type ResourceContextType = {
   rows: Resource[];
@@ -52,6 +54,7 @@ type ResourceContextType = {
   setGpuGroups: (gpuGroups: GpuGroupRead[]) => void;
   gpuLeases: GpuLeaseRead[];
   setGpuLeases: (gpuLeases: GpuLeaseRead[]) => void;
+  gpuClaims: GpuClaimRead[] | undefined;
   resourceMigrations: ResourceMigrationRead[];
   setResourceMigrations: (resourceMigrations: ResourceMigrationRead[]) => void;
   queueJob: (job: Job) => void;
@@ -87,6 +90,7 @@ const initialState: ResourceContextType = {
   setGpuGroups: () => {},
   gpuLeases: new Array<GpuLeaseRead>(),
   setGpuLeases: () => {},
+  gpuClaims: new Array<GpuClaimRead>(),
   resourceMigrations: new Array<ResourceMigrationRead>(),
   setResourceMigrations: () => {},
   queueJob: () => {},
@@ -124,6 +128,7 @@ export const ResourceContextProvider = ({
   const [zones, setZones] = useState<Zone[]>([]);
   const [gpuGroups, setGpuGroups] = useState<GpuGroupRead[]>([]);
   const [gpuLeases, setGpuLeases] = useState<GpuLeaseRead[]>([]);
+  const [gpuClaims, setGpuClaims] = useState<GpuClaimRead[]>([]);
   const [resourceMigrations, setResourceMigrations] = useState<
     ResourceMigrationRead[]
   >([]);
@@ -247,6 +252,20 @@ export const ResourceContextProvider = ({
     } catch (error: any) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar("Error fetching GPU leases: " + e, {
+          variant: "error",
+        })
+      );
+    }
+  };
+
+  const loadGpuClaims = async () => {
+    if (!(initialized && keycloak.authenticated && keycloak.token)) return;
+    try {
+      const gpuClaims = await listGpuClaims(keycloak.token);
+      setGpuLeases(gpuClaims);
+    } catch (error: any) {
+      errorHandler(error).forEach((e) =>
+        enqueueSnackbar("Error fetching GPU claims: " + e, {
           variant: "error",
         })
       );
@@ -391,6 +410,7 @@ export const ResourceContextProvider = ({
     loadZones();
     loadGpuGroups();
     loadGpuLeases();
+    loadGpuClaims();
     loadResourceMigrations();
 
     // eslint-disable-next-line
@@ -440,6 +460,7 @@ export const ResourceContextProvider = ({
         setGpuGroups,
         gpuLeases,
         setGpuLeases,
+        gpuClaims,
         resourceMigrations,
         setResourceMigrations,
         queueJob,

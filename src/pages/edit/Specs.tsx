@@ -1,4 +1,5 @@
 import {
+  Autocomplete,
   Button,
   Card,
   CardActions,
@@ -33,7 +34,7 @@ export const Specs = ({ resource }: { resource: Resource }) => {
   const theme: CustomTheme = useTheme();
   const { initialized, keycloak } = useKeycloak();
 
-  const { user, queueJob } = useResource();
+  const { user, queueJob, zones, gpuClaims } = useResource();
 
   const STEP_DEPLOYMENT = 0.2;
   const MIN_CPU_DEPLOYMENT = 0.2;
@@ -67,8 +68,19 @@ export const Specs = ({ resource }: { resource: Resource }) => {
     return resource.specs.ram || 0;
   };
 
+  const gpuEnabledZone =
+    resource.type === "deployment" &&
+    resource.zone &&
+    zones
+      .find(
+        (zone) =>
+          zone.name === resource.zone &&
+          zone.capabilities.includes(resource.type)
+      )
+      ?.capabilities.includes("dra");
+
   const getInitialGPUs = () =>
-    resource.type === "deployment" ? resource.specs.gpus : undefined;
+    gpuEnabledZone ? resource.specs.gpus : undefined;
 
   const [cpu, setCpu] = useState<number>(getInitialCpu());
   const [ram, setRam] = useState<number>(getInitialRam());
@@ -114,11 +126,7 @@ export const Specs = ({ resource }: { resource: Resource }) => {
   };
 
   const validateGPU = (gpu: DeploymentGPU): boolean =>
-    !!gpu.name &&
-    Boolean(
-      (gpu.templateName && !gpu.claimName) ||
-        (!gpu.templateName && gpu.claimName)
-    );
+    !!gpu.name && Boolean(gpu.claimName);
 
   useEffect(() => {
     if (user) {
@@ -395,14 +403,7 @@ export const Specs = ({ resource }: { resource: Resource }) => {
                         >
                           <span style={{ opacity: 0.8 }}>GPU:</span>
                           <b>{gpu.name}</b>
-                          {gpu.claimName ||
-                            (gpu.templateName && (
-                              <span
-                                style={{ opacity: 0.6, fontSize: "0.8rem" }}
-                              >
-                                ({gpu.claimName || gpu.templateName})
-                              </span>
-                            ))}
+                          {gpu.claimName}
                         </span>
                       }
                     />
@@ -627,7 +628,7 @@ export const Specs = ({ resource }: { resource: Resource }) => {
             )}
 
             {/* GPUs */}
-            {resource.type === "deployment" && (
+            {gpuEnabledZone && (
               <>
                 <Grid
                   container
@@ -685,10 +686,13 @@ export const Specs = ({ resource }: { resource: Resource }) => {
                           startIcon={<AddCircleOutline />}
                           variant="outlined"
                           size="small"
+                          disabled={
+                            gpuClaims == undefined || gpuClaims.length < 1
+                          }
                           onClick={() =>
                             setGpus((prev) => [
                               ...(prev || []),
-                              { name: "", templateName: "", claimName: "" },
+                              { name: "", claimName: "" },
                             ])
                           }
                         >
@@ -751,7 +755,7 @@ export const Specs = ({ resource }: { resource: Resource }) => {
                               p: 2,
                             }}
                           >
-                            <TextField
+                            {/*<TextField
                               label={t("deployment-gpu-name")}
                               value={gpu.name}
                               onChange={(e) =>
@@ -760,30 +764,31 @@ export const Specs = ({ resource }: { resource: Resource }) => {
                               required
                               size="small"
                               sx={{ flex: 1 }}
-                            />
-                            <TextField
-                              label={t(
-                                "deployment-gpu-resourceclaimtemplate-name"
-                              )}
-                              value={gpu.templateName ?? ""}
-                              onChange={(e) =>
+                            />*/}
+                            <Autocomplete
+                              fullWidth
+                              value={gpu.claimName || ""}
+                              onChange={(_, newValue) => {
                                 handleChange(
                                   index,
-                                  "templateName",
-                                  e.target.value
-                                )
+                                  "claimName",
+                                  newValue ? newValue : ""
+                                );
+                              }}
+                              options={gpuClaims?.map((c) => c.name) || []}
+                              getOptionLabel={(option) => option}
+                              renderInput={(params) => (
+                                <TextField
+                                  {...params}
+                                  label={t("deployment-gpu-resourceclaim-name")}
+                                  size="small"
+                                  sx={{ flex: 1 }}
+                                />
+                              )}
+                              isOptionEqualToValue={(option, value) =>
+                                option === value
                               }
-                              size="small"
-                              sx={{ flex: 1 }}
-                            />
-                            <TextField
-                              label={t("deployment-gpu-resourceclaim-name")}
-                              value={gpu.claimName ?? ""}
-                              onChange={(e) =>
-                                handleChange(index, "claimName", e.target.value)
-                              }
-                              size="small"
-                              sx={{ flex: 1 }}
+                              disableClearable
                             />
                             <Tooltip title={t("deployment-gpu-remove")}>
                               <IconButton

@@ -20,7 +20,6 @@ export interface Vm extends V2VmRead {
 
 export interface DeploymentGPU {
   name: string;
-  templateName?: string;
   claimName?: string;
 }
 
