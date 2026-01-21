@@ -20,7 +20,7 @@ export interface Vm extends V2VmRead {
 
 export interface DeploymentGPU {
   name: string;
-  claimName?: string;
+  claimName: string;
 }
 
 export interface DeploymentSpecsGPU extends DeploymentSpecs {

@@ -126,7 +126,7 @@ export const Specs = ({ resource }: { resource: Resource }) => {
   };
 
   const validateGPU = (gpu: DeploymentGPU): boolean =>
-    !!gpu.name && Boolean(gpu.claimName);
+    gpu.name != "" && gpu.claimName != "";
 
   useEffect(() => {
     if (user) {
@@ -755,16 +755,37 @@ export const Specs = ({ resource }: { resource: Resource }) => {
                               p: 2,
                             }}
                           >
-                            {/*<TextField
-                              label={t("deployment-gpu-name")}
-                              value={gpu.name}
-                              onChange={(e) =>
-                                handleChange(index, "name", e.target.value)
-                              }
-                              required
-                              size="small"
-                              sx={{ flex: 1 }}
-                            />*/}
+                            {gpu.claimName != "" && (
+                              <Autocomplete
+                                fullWidth
+                                value={gpu.name || ""}
+                                onChange={(_, newValue) => {
+                                  handleChange(
+                                    index,
+                                    "name",
+                                    newValue ? newValue : ""
+                                  );
+                                }}
+                                options={Object.keys(
+                                  gpuClaims?.find(
+                                    (g) => g.name === gpu.claimName
+                                  )?.requested ?? {}
+                                )}
+                                getOptionLabel={(option) => option}
+                                renderInput={(params) => (
+                                  <TextField
+                                    {...params}
+                                    label={t("deployment-gpu-request-name")}
+                                    size="small"
+                                    sx={{ flex: 1 }}
+                                  />
+                                )}
+                                isOptionEqualToValue={(option, value) =>
+                                  option === value
+                                }
+                                disableClearable
+                              />
+                            )}
                             <Autocomplete
                               fullWidth
                               value={gpu.claimName || ""}
@@ -775,7 +796,11 @@ export const Specs = ({ resource }: { resource: Resource }) => {
                                   newValue ? newValue : ""
                                 );
                               }}
-                              options={gpuClaims?.map((c) => c.name) || []}
+                              options={
+                                gpuClaims
+                                  ?.filter((c) => c.zone == resource.zone)
+                                  .map((c) => c.name) || []
+                              }
                               getOptionLabel={(option) => option}
                               renderInput={(params) => (
                                 <TextField

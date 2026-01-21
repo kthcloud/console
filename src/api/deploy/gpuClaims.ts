@@ -57,7 +57,7 @@ export const deleteGpuClaim = async (token: Jwt, gpuClaimId: string) => {
 };
 
 export const createGpuClaim = async (token: Jwt, gpuClaim: GpuClaimCreate) => {
-  const url = `${import.meta.env.VITE_DEPLOY_API_URL}/gpuClaims/`;
+  const url = `${import.meta.env.VITE_DEPLOY_API_URL}/gpuClaims`;
   const response = await fetch(url, {
     method: "POST",
     headers: {
@@ -67,7 +67,7 @@ export const createGpuClaim = async (token: Jwt, gpuClaim: GpuClaimCreate) => {
   });
   const result = await response.json();
   if (typeof result !== "object") {
-    throw new Error("Error deleting GPU claim, response was not an object");
+    throw new Error("Error creating GPU claim, response was not an object");
   }
   return result;
 };

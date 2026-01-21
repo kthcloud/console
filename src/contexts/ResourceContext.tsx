@@ -262,7 +262,7 @@ export const ResourceContextProvider = ({
     if (!(initialized && keycloak.authenticated && keycloak.token)) return;
     try {
       const gpuClaims = await listGpuClaims(keycloak.token);
-      setGpuLeases(gpuClaims);
+      setGpuClaims(gpuClaims);
     } catch (error: any) {
       errorHandler(error).forEach((e) =>
         enqueueSnackbar("Error fetching GPU claims: " + e, {

@@ -1,7 +1,11 @@
 import { useState } from "react";
 import { Stack, Typography, Button, Alert, Box } from "@mui/material";
 import GpuClaimModal from "./GPUClaimModal";
-import { GpuClaimCreate } from "../../temporaryTypesRemoveMe";
+import { GpuClaimCreate, GpuClaimRead } from "../../temporaryTypesRemoveMe";
+import { createGpuClaim } from "../../api/deploy/gpuClaims";
+import { useKeycloak } from "@react-keycloak/web";
+import { enqueueSnackbar } from "notistack";
+import useAdmin from "../../hooks/useAdmin";
 
 interface DRAConfigPanelProps {
   zone: {
@@ -13,12 +17,19 @@ interface DRAConfigPanelProps {
 
 export default function DRAConfigPanel({ zone, roles }: DRAConfigPanelProps) {
   const [gpuModalOpen, setGpuModalOpen] = useState(false);
-  const [gpuClaims, setGpuClaims] = useState<GpuClaimCreate[]>([]);
+  const { gpuClaims } = useAdmin();
+  const { keycloak } = useKeycloak();
 
-  const handleAddGpuClaim = (claim: GpuClaimCreate) => {
-    // TODO: actual post later
-    setGpuClaims((prev) => [...prev, claim]);
-    setGpuModalOpen(false);
+  const handleAddGpuClaim = async (claim: GpuClaimCreate) => {
+    try {
+      const response = await createGpuClaim(keycloak.token!, claim);
+      if (response["validationErrors"] != undefined) {
+        throw response["validationErrors"];
+      }
+      setGpuModalOpen(false);
+    } catch (ex) {
+      enqueueSnackbar<"error">({ message: "Failed to create gpu claim" + ex });
+    }
   };
 
   return (
@@ -41,13 +52,13 @@ export default function DRAConfigPanel({ zone, roles }: DRAConfigPanelProps) {
         }}
       >
         <Stack spacing={1}>
-          {gpuClaims.length === 0 ? (
+          {gpuClaims?.length === 0 ? (
             <Typography variant="body2" color="text.secondary">
               No DRA resources configured yet.
             </Typography>
           ) : (
             <Stack spacing={1}>
-              {gpuClaims.map((claim) => (
+              {gpuClaims?.map((claim) => (
                 <Box
                   key={claim.name}
                   sx={{
@@ -66,7 +77,7 @@ export default function DRAConfigPanel({ zone, roles }: DRAConfigPanelProps) {
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
                     Requested GPUs:{" "}
-                    {claim.requested?.map((r) => r.name).join(", ")}
+                    {Object.keys(claim.requested || {}).join(", ")}
                   </Typography>
                 </Box>
               ))}
@@ -80,9 +91,6 @@ export default function DRAConfigPanel({ zone, roles }: DRAConfigPanelProps) {
               onClick={() => setGpuModalOpen(true)}
             >
               Add DRA Resource
-            </Button>
-            <Button size="small" variant="outlined">
-              Manage Policies
             </Button>
           </Stack>
         </Stack>

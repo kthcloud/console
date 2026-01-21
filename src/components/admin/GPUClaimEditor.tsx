@@ -27,17 +27,11 @@ export default function GpuClaimEditor({ value, onChange }: Props) {
     onChange(next);
   };
 
-  const updateRequested = (
-    idx: number,
-    patch: Partial<RequestedGpuCreate["RequestedGpu"]>
-  ) => {
+  const updateRequested = (idx: number, patch: Partial<RequestedGpuCreate>) => {
     const next = [...value];
     next[idx] = {
       ...next[idx],
-      RequestedGpu: {
-        ...next[idx].RequestedGpu,
-        ...patch,
-      },
+      ...patch,
     };
     onChange(next);
   };
@@ -45,7 +39,7 @@ export default function GpuClaimEditor({ value, onChange }: Props) {
   return (
     <Stack spacing={2}>
       {value.map((req, idx) => {
-        const gpu = req.RequestedGpu;
+        const gpu = req;
 
         return (
           <Paper key={idx} variant="outlined" sx={{ p: 2 }}>
@@ -262,10 +256,8 @@ export default function GpuClaimEditor({ value, onChange }: Props) {
             ...value,
             {
               name: "",
-              RequestedGpu: {
-                allocationMode: "All",
-                deviceClassName: "",
-              },
+              allocationMode: "All",
+              deviceClassName: "nvidia.com/gpu",
             },
           ])
         }

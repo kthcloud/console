@@ -1,3 +1,6 @@
+//////////
+// source: gpu_claim.go
+
 /**
  * GpuClaimRead is a detailed DTO for administrators
  * providing full visibility into requested, allocated,
@@ -7,15 +10,18 @@ export interface GpuClaimRead {
   id: string;
   name: string;
   zone: string;
+  /**
+   * Roles allowed to use this GpuClaim, empty means all
+   */
   allowedRoles?: string[];
   /**
    * Requested contains all requested GPU configurations by key (request.Name).
    */
-  requested?: { [key: string]: RequestedGpu };
+  requested?: Record<string, RequestedGpu>;
   /**
    * Allocated contains the GPUs that have been successfully bound/allocated.
    */
-  allocated?: { [key: string]: AllocatedGpu[] };
+  allocated?: Record<string, AllocatedGpu>;
   /**
    * Consumers are the workloads currently using this claim.
    */
@@ -44,8 +50,7 @@ export interface GpuClaimCreated {
   id: string;
   jobId: string;
 }
-export interface RequestedGpuCreate {
-  RequestedGpu: RequestedGpu;
+export interface RequestedGpuCreate extends RequestedGpu {
   name: string;
 }
 /**
@@ -75,7 +80,7 @@ export interface GenericDeviceConfiguration {
  */
 export interface NvidiaDeviceConfiguration {
   driver: string;
-  sharing?: any /* nvidia.GpuSharing */;
+  parameters?: any /* nvidia.GpuConfig */;
 }
 /**
  * AllocatedGpu represents a concrete allocated GPU or GPU share.
