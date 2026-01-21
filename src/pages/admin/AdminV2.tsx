@@ -53,6 +53,7 @@ import {
 import Iconify from "../../components/Iconify";
 import Label from "../../components/Label";
 import TimeAgo from "../../components/admin/TimeAgo";
+import CluseterOverviewTab from "../../components/admin/ClusterOverviewTab";
 
 export default function AdminV2() {
   const { tab: initialTab } = useParams();
@@ -617,6 +618,7 @@ export default function AdminV2() {
     {}
   );
   tabLookup["hosts"] = resourceConfig.length;
+  tabLookup["overview"] = resourceConfig.length + 1;
   useEffect(() => {
     if (
       initialTab &&
@@ -737,6 +739,7 @@ export default function AdminV2() {
       />
     )),
     <HostsTab />,
+    <CluseterOverviewTab />,
   ];
 
   useEffect(() => {
@@ -770,6 +773,7 @@ export default function AdminV2() {
                     <Tab key={index} label={resource.label} />
                   ))}
                   <Tab key={resourceConfig.length} label={t("hosts")} />
+                  <Tab key={resourceConfig.length + 1} label={t("overview")} />
                 </Tabs>
                 {tabs[activeTab]}
               </Card>

@@ -7,6 +7,7 @@ export interface GpuClaimRead {
   id: string;
   name: string;
   zone: string;
+  allowedRoles?: string[];
   /**
    * Requested contains all requested GPU configurations by key (request.Name).
    */
@@ -33,6 +34,7 @@ export interface GpuClaimRead {
 export interface GpuClaimCreate {
   name: string;
   zone?: string;
+  allowedRoles?: string[];
   /**
    * Requested contains all requested GPU configurations by key (request.Name).
    */
