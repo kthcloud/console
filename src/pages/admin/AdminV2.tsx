@@ -54,6 +54,7 @@ import Iconify from "../../components/Iconify";
 import Label from "../../components/Label";
 import TimeAgo from "../../components/admin/TimeAgo";
 import CluseterOverviewTab from "../../components/admin/ClusterOverviewTab";
+import { deleteGpuClaim } from "../../api/deploy/gpuClaims";
 
 export default function AdminV2() {
   const { tab: initialTab } = useParams();
@@ -482,6 +483,15 @@ export default function AdminV2() {
               </Stack>
             );
           },
+        },
+      ],
+      actions: [
+        {
+          label: t("button-delete"),
+          onClick: (claim: GpuClaimRead) => {
+            if (keycloak.token) deleteGpuClaim(keycloak.token, claim.id);
+          },
+          withConfirm: true,
         },
       ],
     },

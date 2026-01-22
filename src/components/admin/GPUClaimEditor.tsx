@@ -257,7 +257,10 @@ export default function GpuClaimEditor({ value, onChange }: Props) {
             {
               name: "",
               allocationMode: "All",
-              deviceClassName: "nvidia.com/gpu",
+              deviceClassName: "gpu.nvidia.com",
+              config: {
+                driver: "gpu.nvidia.com",
+              },
             },
           ])
         }
