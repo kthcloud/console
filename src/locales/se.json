@@ -560,6 +560,7 @@
         "maia-intro-body": "Är du forskare eller student inom medicinsk teknik på KTH och behöver tillgång till datorresurser för deep learning och simuleringar? MAIA är en plattform för att utveckla, testa och implementera medicinsk AI, från tidiga prototyper till kliniska arbetsflöden. Du får åtkomst till beräkningsresurser via JupyterHub, SSH eller en virtual desktop. Vår infrastruktur, som tillhandahålls tillsammans med KTH Cloud, kan möta olika typer av behov för beräkningsresurser. MAIA är utformad för samarbete och integration med sjukhussystem och gör det möjligt för dig att validera idéer och testa dina lösningar även i kliniska miljöer.",
         "maia-intro-footer": "Skapa ett MAIA-konto redan idag och registrera ett projekt",
         "maia-intro-header": "Testa ",
-        "button-get-started-maia": "Kom igång med MAIA"
+        "button-get-started-maia": "Kom igång med MAIA",
+        "use-vms": "Använda VMar"
     }
 }

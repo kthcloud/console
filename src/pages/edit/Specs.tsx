@@ -672,7 +672,9 @@ export const Specs = ({ resource }: { resource: Resource }) => {
                     </Stack>
                   </Grid>
                   <Grid container spacing={2} sx={{ width: "100%" }}>
+                    {/*@ts-ignore legacy api */}
                     <Grid item xs={12} fullWidth>
+                      {/*@ts-ignore legacy api */}
                       <Stack
                         direction="row"
                         alignItems="center"
@@ -702,24 +704,28 @@ export const Specs = ({ resource }: { resource: Resource }) => {
                     </Grid>
 
                     {(!gpus || gpus.length === 0) && (
-                      <Grid item xs={12}>
-                        <Stack
-                          sx={{
-                            borderRadius: 2,
-                            p: 2,
-                            bgcolor: (theme: any) => theme.palette.action.hover,
-                            textAlign: "center",
-                          }}
-                        >
-                          <Typography
-                            variant="body2"
-                            color="text.secondary"
-                            sx={{ p: "8.5px" }}
+                      <>
+                        {/*@ts-ignore legacy api */}
+                        <Grid item xs={12}>
+                          <Stack
+                            sx={{
+                              borderRadius: 2,
+                              p: 2,
+                              bgcolor: (theme: any) =>
+                                theme.palette.action.hover,
+                              textAlign: "center",
+                            }}
                           >
-                            {t("deployment-gpu-none")}
-                          </Typography>
-                        </Stack>
-                      </Grid>
+                            <Typography
+                              variant="body2"
+                              color="text.secondary"
+                              sx={{ p: "8.5px" }}
+                            >
+                              {t("deployment-gpu-none")}
+                            </Typography>
+                          </Stack>
+                        </Grid>
+                      </>
                     )}
 
                     {gpus?.map((gpu, index) => {
@@ -743,39 +749,73 @@ export const Specs = ({ resource }: { resource: Resource }) => {
                       };
 
                       return (
-                        <Grid item xs={12} key={index}>
-                          <Stack
-                            direction={{ xs: "column", sm: "row" }}
-                            spacing={2}
-                            alignItems="center"
-                            sx={{
-                              border: "1px solid",
-                              borderColor: isValid ? "divider" : "error.main",
-                              borderRadius: 2,
-                              p: 2,
-                            }}
-                          >
-                            {gpu.claimName != "" && (
+                        <>
+                          {/*@ts-ignore legacy api */}
+                          <Grid item xs={12} key={index}>
+                            <Stack
+                              direction={{ xs: "column", sm: "row" }}
+                              spacing={2}
+                              alignItems="center"
+                              sx={{
+                                border: "1px solid",
+                                borderColor: isValid ? "divider" : "error.main",
+                                borderRadius: 2,
+                                p: 2,
+                              }}
+                            >
+                              {gpu.claimName != "" && (
+                                <Autocomplete
+                                  fullWidth
+                                  value={gpu.name || ""}
+                                  onChange={(_, newValue) => {
+                                    handleChange(
+                                      index,
+                                      "name",
+                                      newValue ? newValue : ""
+                                    );
+                                  }}
+                                  options={Object.keys(
+                                    gpuClaims?.find(
+                                      (g) => g.name === gpu.claimName
+                                    )?.requested ?? {}
+                                  )}
+                                  getOptionLabel={(option) => option}
+                                  renderInput={(params) => (
+                                    <TextField
+                                      {...params}
+                                      label={t("deployment-gpu-request-name")}
+                                      size="small"
+                                      sx={{ flex: 1 }}
+                                    />
+                                  )}
+                                  isOptionEqualToValue={(option, value) =>
+                                    option === value
+                                  }
+                                  disableClearable
+                                />
+                              )}
                               <Autocomplete
                                 fullWidth
-                                value={gpu.name || ""}
+                                value={gpu.claimName || ""}
                                 onChange={(_, newValue) => {
                                   handleChange(
                                     index,
-                                    "name",
+                                    "claimName",
                                     newValue ? newValue : ""
                                   );
                                 }}
-                                options={Object.keys(
-                                  gpuClaims?.find(
-                                    (g) => g.name === gpu.claimName
-                                  )?.requested ?? {}
-                                )}
+                                options={
+                                  gpuClaims
+                                    ?.filter((c) => c.zone == resource.zone)
+                                    .map((c) => c.name) || []
+                                }
                                 getOptionLabel={(option) => option}
                                 renderInput={(params) => (
                                   <TextField
                                     {...params}
-                                    label={t("deployment-gpu-request-name")}
+                                    label={t(
+                                      "deployment-gpu-resourceclaim-name"
+                                    )}
                                     size="small"
                                     sx={{ flex: 1 }}
                                   />
@@ -785,54 +825,26 @@ export const Specs = ({ resource }: { resource: Resource }) => {
                                 }
                                 disableClearable
                               />
-                            )}
-                            <Autocomplete
-                              fullWidth
-                              value={gpu.claimName || ""}
-                              onChange={(_, newValue) => {
-                                handleChange(
-                                  index,
-                                  "claimName",
-                                  newValue ? newValue : ""
-                                );
-                              }}
-                              options={
-                                gpuClaims
-                                  ?.filter((c) => c.zone == resource.zone)
-                                  .map((c) => c.name) || []
-                              }
-                              getOptionLabel={(option) => option}
-                              renderInput={(params) => (
-                                <TextField
-                                  {...params}
-                                  label={t("deployment-gpu-resourceclaim-name")}
-                                  size="small"
-                                  sx={{ flex: 1 }}
-                                />
-                              )}
-                              isOptionEqualToValue={(option, value) =>
-                                option === value
-                              }
-                              disableClearable
-                            />
-                            <Tooltip title={t("deployment-gpu-remove")}>
-                              <IconButton
-                                color="error"
-                                onClick={() =>
-                                  setGpus((prev) =>
-                                    prev?.filter((_, i) => i !== index)
-                                  )
-                                }
-                              >
-                                <Delete />
-                              </IconButton>
-                            </Tooltip>
-                          </Stack>
-                        </Grid>
+                              <Tooltip title={t("deployment-gpu-remove")}>
+                                <IconButton
+                                  color="error"
+                                  onClick={() =>
+                                    setGpus((prev) =>
+                                      prev?.filter((_, i) => i !== index)
+                                    )
+                                  }
+                                >
+                                  <Delete />
+                                </IconButton>
+                              </Tooltip>
+                            </Stack>
+                          </Grid>
+                        </>
                       );
                     })}
                   </Grid>
                 </Grid>
+                {/*@ts-ignore legacy api */}
                 <Grid
                   item
                   sm={4}
@@ -842,6 +854,7 @@ export const Specs = ({ resource }: { resource: Resource }) => {
                     borderRadius: "1rem",
                   }}
                 >
+                  {/*@ts-ignore legacy api */}
                   <Stack fullWidth>
                     {gpus?.some((g) => !validateGPU(g)) && (
                       <Typography

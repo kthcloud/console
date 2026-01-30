@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Typography } from "@mui/material";
+import { Variant } from "@mui/material/styles/createTypography";
 
 const TimeAgo: React.FC<{
   createdAt: string | undefined;
-  variant?: string | undefined;
+  variant?: Variant | undefined;
 }> = ({ createdAt, variant }) => {
   const [timeAgo, setTimeAgo] = useState<string>("");
   variant = variant != undefined ? variant : "body2";

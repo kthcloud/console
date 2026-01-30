@@ -66,6 +66,14 @@ const TierCard = ({ tier }: { tier: Role }) => {
             gutterBottom
             sx={{ whiteSpace: "nowrap" }}
           >
+            {(tier.permissions.includes("useVms") ? "✅ " : "❌ ") +
+              t("use-vms")}
+          </Typography>
+          <Typography
+            variant="subtitle2"
+            gutterBottom
+            sx={{ whiteSpace: "nowrap" }}
+          >
             {(tier.permissions.includes("useGpus") ? "✅ " : "❌ ") +
               t("landing-hero-gpu")}
           </Typography>

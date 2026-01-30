@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Stack, Typography, Button, Alert, Box } from "@mui/material";
 import GpuClaimModal from "./GPUClaimModal";
-import { GpuClaimCreate, GpuClaimRead } from "../../temporaryTypesRemoveMe";
+import { GpuClaimCreate } from "../../temporaryTypesRemoveMe";
 import { createGpuClaim } from "../../api/deploy/gpuClaims";
 import { useKeycloak } from "@react-keycloak/web";
 import { enqueueSnackbar } from "notistack";
@@ -44,6 +44,7 @@ export default function DRAConfigPanel({ zone, roles }: DRAConfigPanelProps) {
       </Alert>
 
       <Box
+        //@ts-ignore this is too complex somehow?
         sx={{
           border: "1px dashed",
           borderColor: "divider",

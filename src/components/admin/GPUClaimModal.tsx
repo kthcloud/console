@@ -113,7 +113,7 @@ export default function GpuClaimModal({
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
       <DialogTitle>
-        {initialValue ? "Edit GPU Claim" : "Create GPU Claim"}
+        {initialValue ? t("edit-gpu-claim") : t("create-gpu-claim")}
       </DialogTitle>
 
       <DialogContent>

@@ -37,7 +37,7 @@ export const Create = () => {
   const { initialized } = useKeycloak();
   const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
-  const { queueJob } = useResource();
+  const { queueJob, user } = useResource();
   const [alignment, _setAlignment] = useState("");
   const setAlignment = (newAlignment: string) => {
     _setAlignment(newAlignment);
@@ -118,7 +118,10 @@ export const Create = () => {
                       </Button>
                       <Button
                         variant={alignment === "vm" ? "contained" : "text"}
-                        disabled={alignment === "vm"}
+                        disabled={
+                          alignment === "vm" ||
+                          !user?.role.permissions.includes("useVms")
+                        }
                         size="large"
                         onClick={() => {
                           setAlignment("vm");

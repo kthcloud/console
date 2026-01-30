@@ -363,7 +363,7 @@ export default function AdminV2() {
                     : undefined;
                   const allocatedChip = allocs ? (
                     <Stack>
-                      {allocs.map((alloc) => (
+                      {(allocs as Array<any>).map((alloc) => (
                         <Chip
                           variant="outlined"
                           label={`Allocated (${alloc.pool}/${alloc.device})`}
@@ -385,6 +385,7 @@ export default function AdminV2() {
 
                   return (
                     <Box
+                      //@ts-ignore Too complex somehow?
                       key={name}
                       sx={{
                         border: "1px solid",
@@ -473,6 +474,7 @@ export default function AdminV2() {
               <Stack direction="column" alignItems={"center"}>
                 <Chip
                   label={phase || "unknown"}
+                  //@ts-ignore annoying color type.
                   color={color}
                   variant="outlined"
                   size="small"

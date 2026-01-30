@@ -7,7 +7,6 @@ import {
   Chip,
   Divider,
 } from "@mui/material";
-import useAdmin from "../../hooks/useAdmin";
 import useResource from "../../hooks/useResource";
 import { useTranslation } from "react-i18next";
 import DRAConfigPanel from "./DRAConfigPanel";
@@ -16,7 +15,6 @@ import { discover } from "../../api/deploy/discover";
 
 export default function ClusterOverviewTab() {
   const { t } = useTranslation();
-  const { systemCapacities } = useAdmin();
   const { zones } = useResource();
   const [roles, setRoles] = useState<string[]>([]);
 
