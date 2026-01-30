@@ -9,7 +9,8 @@
     "dev": "vite --port 3000",
     "build": "vite build",
     "format": "prettier --write .",
-    "format-check": "prettier --check ."
+    "format-check": "prettier --check .",
+    "check": "prettier --check . && tsc --noEmit"
   },
   "dependencies": {
     "@emotion/react": "^11.11.4",
