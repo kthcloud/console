@@ -514,7 +514,7 @@ export default function AdminV2() {
             const calculatePercentage = (used: number, total: number) =>
               total ? ((used / total) * 100).toFixed(1) : "0.0";
 
-            const { cpu, ram, disk } = {
+            const { cpu, ram, disk, gpu } = {
               cpu: calculatePercentage(
                 user.usage.cpuCores,
                 user.quota.cpuCores
@@ -524,6 +524,14 @@ export default function AdminV2() {
                 user.usage.diskSize,
                 user.quota.diskSize
               ),
+              gpu:
+                (user.usage as any).gpus != undefined &&
+                (user.quota as any).gpus != undefined
+                  ? calculatePercentage(
+                      (user.usage as any).gpus,
+                      (user.quota as any).gpus
+                    )
+                  : undefined,
             };
 
             return (
@@ -548,6 +556,20 @@ export default function AdminV2() {
                 >
                   <LinearProgress variant="determinate" value={Number(disk)} />
                 </Tooltip>
+
+                {gpu && (
+                  <>
+                    <Typography variant="body2">GPUs</Typography>
+                    <Tooltip
+                      title={`${(user.usage as any).gpus} of ${(user.quota as any).gpus} (${gpu}%)`}
+                    >
+                      <LinearProgress
+                        variant="determinate"
+                        value={Number(gpu)}
+                      />
+                    </Tooltip>
+                  </>
+                )}
               </div>
             );
           },

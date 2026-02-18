@@ -561,6 +561,15 @@
         "maia-intro-footer": "Skapa ett MAIA-konto redan idag och registrera ett projekt",
         "maia-intro-header": "Testa ",
         "button-get-started-maia": "Kom igång med MAIA",
-        "use-vms": "Använda VMar"
+        "use-vms": "Använda VMar",
+        "landing-hero-gpus": "GPUs (deployment)",
+        "deployment-gpu": "GPU",
+        "deployment-gpu-configuration": "Konfigurera GPUer för deployment",
+        "deployment-gpu-none": "Inga GPUer",
+        "deployment-gpu-add": "Lägg till GPUer",
+        "deployment-gpu-subheader": "GPUs på deployments använder en ny k8s funktion som heter DRA kombinerat med drivrutin funktioner för att dela ett grafikkort mellan flera containrar.",
+        "deployment-gpu-quota": "GPU användnings kvoten är användarglobal, om din kvot tillåter flera GPUer kan du dela upp dom som du vill. Dvs antingen ett grafikkort per deployment, eller flera GPUer på en deployment.",
+        "deployment-gpu-unstable": "Denna funktion bygger på funktioner från NVIDIA som är i BETA, fel kan uppstå. Kontakta oss på discord om du har några frågor.",
+        "clusters-overview": "Kluster"
     }
 }

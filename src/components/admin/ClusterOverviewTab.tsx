@@ -27,10 +27,10 @@ export default function ClusterOverviewTab() {
   return (
     <Paper sx={{ p: 3 }}>
       <Stack spacing={3}>
-        <Typography variant="h6">{t("cluster.overview")}</Typography>
+        <Typography variant="h6">{t("clusters-overview")}</Typography>
 
         {zones?.map((zone) => {
-          const hasDRA = zone.capabilities?.includes("dra") || true;
+          const hasDRA = zone.capabilities?.includes("dra");
 
           return (
             <Card key={zone.name} variant="outlined">

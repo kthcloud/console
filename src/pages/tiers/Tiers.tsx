@@ -99,6 +99,15 @@ const TierCard = ({ tier }: { tier: Role }) => {
           >
             {`🧠 ${t("memory")}: ${tier.quota.ram} GB`}
           </Typography>
+          {(tier.quota as any).gpus != undefined && (
+            <Typography
+              variant="subtitle2"
+              gutterBottom
+              sx={{ whiteSpace: "nowrap" }}
+            >
+              {`🤖 ${t("landing-hero-gpus")}: ${(tier.quota as any).gpus}`}
+            </Typography>
+          )}
           <Typography
             variant="subtitle2"
             gutterBottom
