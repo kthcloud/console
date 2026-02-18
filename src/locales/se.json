@@ -560,6 +560,16 @@
         "maia-intro-body": "Är du forskare eller student inom medicinsk teknik på KTH och behöver tillgång till datorresurser för deep learning och simuleringar? MAIA är en plattform för att utveckla, testa och implementera medicinsk AI, från tidiga prototyper till kliniska arbetsflöden. Du får åtkomst till beräkningsresurser via JupyterHub, SSH eller en virtual desktop. Vår infrastruktur, som tillhandahålls tillsammans med KTH Cloud, kan möta olika typer av behov för beräkningsresurser. MAIA är utformad för samarbete och integration med sjukhussystem och gör det möjligt för dig att validera idéer och testa dina lösningar även i kliniska miljöer.",
         "maia-intro-footer": "Skapa ett MAIA-konto redan idag och registrera ett projekt",
         "maia-intro-header": "Testa ",
-        "button-get-started-maia": "Kom igång med MAIA"
+        "button-get-started-maia": "Kom igång med MAIA",
+        "use-vms": "Använda VMar",
+        "landing-hero-gpus": "GPUs (deployment)",
+        "deployment-gpu": "GPU",
+        "deployment-gpu-configuration": "Konfigurera GPUer för deployment",
+        "deployment-gpu-none": "Inga GPUer",
+        "deployment-gpu-add": "Lägg till GPUer",
+        "deployment-gpu-subheader": "GPUs på deployments använder en ny k8s funktion som heter DRA kombinerat med drivrutin funktioner för att dela ett grafikkort mellan flera containrar.",
+        "deployment-gpu-quota": "GPU användnings kvoten är användarglobal, om din kvot tillåter flera GPUer kan du dela upp dom som du vill. Dvs antingen ett grafikkort per deployment, eller flera GPUer på en deployment.",
+        "deployment-gpu-unstable": "Denna funktion bygger på funktioner från NVIDIA som är i BETA, fel kan uppstå. Kontakta oss på discord om du har några frågor.",
+        "clusters-overview": "Kluster"
     }
 }

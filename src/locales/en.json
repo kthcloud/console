@@ -559,6 +559,16 @@
         "maia-intro-body": "Are you a researcher or student in biomedical engineering at KTH who needs state-of-the-art deep learning resources and compute? MAIA is the platform for developing, testing, and deploying medical AI, from early prototypes to real clinical workflows. You get straightforward access to compute via JupyterHub, SSH, or a virtual desktop. Our infrastructure, provided jointly with KTH Cloud, scales to different computational needs. Designed for collaboration and integration with hospital systems, MAIA lets you validate ideas and pilot your solutions in real-world clinical settings.",
         "maia-intro-footer": "Request a MAIA account today and register a project to start building your medical AI solution.",
         "maia-intro-header": "Discover ",
-        "button-get-started-maia": "Get started with MAIA"
+        "button-get-started-maia": "Get started with MAIA",
+        "use-vms": "Use VMs",
+        "landing-hero-gpus": "GPUs (deployment)",
+        "deployment-gpu": "GPU",
+        "deployment-gpu-configuration": "Configure GPUs for deployment",
+        "deployment-gpu-none": "No GPUs",
+        "deployment-gpu-add": "Add GPUs",
+        "deployment-gpu-subheader": "GPUs on deployments utilizes a new k8s feature called DRA combined with driver specific features to share GPUs between multiple containers.",
+        "deployment-gpu-quota": "GPU quota is user global, if your quota allows multiple GPUs you can allocate them how you like, multiple on a single deployment or single allocation for different deployments.",
+        "deployment-gpu-unstable": "This feature relies on BETA features from NVIDIA, and issues might occur. Feel free to reach out on discord if you have any questions.",
+        "clusters-overview": "Clusters"
     }
 }

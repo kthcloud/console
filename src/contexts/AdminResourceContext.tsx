@@ -35,6 +35,8 @@ import useResource from "../hooks/useResource";
 import { TFunction } from "i18next";
 import { getHostsVerbose } from "../api/deploy/hosts";
 import { getSystemCapacities } from "../api/deploy/systemCapacities";
+import { GpuClaimRead } from "../temporaryTypesRemoveMe";
+import { listGpuClaims } from "../api/deploy/gpuClaims";
 
 type AdminResourceContextType = {
   fetchingEnabled: boolean;
@@ -118,6 +120,9 @@ type AdminResourceContextType = {
 
   // SystemCapacities
   systemCapacities: SystemCapacities | undefined;
+
+  // GpuClaims
+  gpuClaims: GpuClaimRead[] | undefined;
 };
 
 const initialState: AdminResourceContextType = {
@@ -202,6 +207,9 @@ const initialState: AdminResourceContextType = {
 
   // SystemCapacities
   systemCapacities: undefined,
+
+  // GpuClaims
+  gpuClaims: undefined,
 };
 
 export const AdminResourceContext = createContext(initialState);
@@ -295,6 +303,10 @@ export const AdminResourceContextProvider = ({
     SystemCapacities | undefined
   >(undefined);
 
+  const [gpuClaims, setGpuClaims] = useState<GpuClaimRead[] | undefined>(
+    undefined
+  );
+
   const [lastRefreshRtt, setLastRefreshRtt] = useState(0);
   const [lastRefresh, setLastRefresh] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -336,7 +348,8 @@ export const AdminResourceContextProvider = ({
         jobsPageSize,
         setJobs,
         setHosts,
-        setSystemCapacities
+        setSystemCapacities,
+        setGpuClaims
       ).finally(() => setLoading(false));
     }
   };
@@ -458,6 +471,9 @@ export const AdminResourceContextProvider = ({
 
         // SystemCapacities
         systemCapacities,
+
+        // GpuClaims
+        gpuClaims,
       }}
     >
       {children}
@@ -511,7 +527,10 @@ async function fetchResources(
   setHosts: Dispatch<SetStateAction<HostVerboseRead[] | undefined>>,
 
   // SystemCapacities
-  setSystemCapacities: Dispatch<SetStateAction<SystemCapacities | undefined>>
+  setSystemCapacities: Dispatch<SetStateAction<SystemCapacities | undefined>>,
+
+  // GpuClaims
+  setGpuClaims: Dispatch<SetStateAction<GpuClaimRead[] | undefined>>
 ) {
   if (!(initialized && keycloak.authenticated && keycloak.token)) return;
   const rtts: Record<number, { start: number; end: number }> = {};
@@ -653,6 +672,21 @@ async function fetchResources(
               variant: "error",
             }
           )
+        );
+      }
+    },
+
+    async () => {
+      try {
+        const start = performance.now();
+        const response = await listGpuClaims(keycloak.token!, true);
+        rtts[9] = { start, end: performance.now() };
+        if (response) setGpuClaims(response);
+      } catch (error: any) {
+        errorHandler(error).forEach((e) =>
+          enqueueSnackbar(t("error-could-not-fetch-gpu-claims") + ": " + e, {
+            variant: "error",
+          })
         );
       }
     },

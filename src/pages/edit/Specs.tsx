@@ -1,10 +1,12 @@
 import {
+  Autocomplete,
   Button,
   Card,
   CardActions,
   CardContent,
   CardHeader,
   Chip,
+  IconButton,
   Slider,
   Stack,
   TextField,
@@ -14,7 +16,7 @@ import {
 } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 import { useTranslation } from "react-i18next";
-import { Deployment, Resource, Vm } from "../../types";
+import { Deployment, DeploymentGPU, Resource, Vm } from "../../types";
 import { CustomTheme } from "../../theme/types";
 import useResource from "../../hooks/useResource";
 import { useEffect, useState } from "react";
@@ -25,13 +27,14 @@ import { enqueueSnackbar } from "notistack";
 import { errorHandler } from "../../utils/errorHandler";
 import { updateVM } from "../../api/deploy/vms";
 import { LoadingButton } from "@mui/lab";
+import { AddCircleOutline, Delete } from "@mui/icons-material";
 
 export const Specs = ({ resource }: { resource: Resource }) => {
   const { t } = useTranslation();
   const theme: CustomTheme = useTheme();
   const { initialized, keycloak } = useKeycloak();
 
-  const { user, queueJob } = useResource();
+  const { user, queueJob, zones, gpuClaims } = useResource();
 
   const STEP_DEPLOYMENT = 0.2;
   const MIN_CPU_DEPLOYMENT = 0.2;
@@ -65,9 +68,26 @@ export const Specs = ({ resource }: { resource: Resource }) => {
     return resource.specs.ram || 0;
   };
 
+  const gpuEnabledZone =
+    resource.type === "deployment" &&
+    resource.zone &&
+    zones
+      .find(
+        (zone) =>
+          zone.name === resource.zone &&
+          zone.capabilities.includes(resource.type)
+      )
+      ?.capabilities.includes("dra");
+
+  const getInitialGPUs = () =>
+    gpuEnabledZone ? resource.specs.gpus : undefined;
+
   const [cpu, setCpu] = useState<number>(getInitialCpu());
   const [ram, setRam] = useState<number>(getInitialRam());
   const [replicas, setReplicas] = useState<number>(0);
+  const [gpus, setGpus] = useState<DeploymentGPU[] | undefined>(
+    getInitialGPUs()
+  );
 
   const [loading, setLoading] = useState<boolean>(false);
   const [editing, setEditing] = useState<boolean>(false);
@@ -104,6 +124,9 @@ export const Specs = ({ resource }: { resource: Resource }) => {
 
     return { totalCoresLeft, totalRamLeft };
   };
+
+  const validateGPU = (gpu: DeploymentGPU): boolean =>
+    gpu.name != "" && gpu.claimName != "";
 
   useEffect(() => {
     if (user) {
@@ -161,6 +184,7 @@ export const Specs = ({ resource }: { resource: Resource }) => {
       setCpu(d.specs.cpuCores);
       setRam(d.specs.ram);
       setReplicas(d.specs.replicas);
+      setGpus(d.specs.gpus);
       return;
     }
     if (resource.type === "vm" && resource.specs) {
@@ -212,7 +236,8 @@ export const Specs = ({ resource }: { resource: Resource }) => {
       return (
         d.specs.cpuCores === cpu &&
         d.specs.ram === ram &&
-        d.specs.replicas === replicas
+        d.specs.replicas === replicas &&
+        gpusEqual(d.specs.gpus, gpus)
       );
     }
     if (resource.type === "vm" && resource.specs) {
@@ -230,6 +255,7 @@ export const Specs = ({ resource }: { resource: Resource }) => {
       setCpu(d.specs.cpuCores);
       setRam(d.specs.ram);
       setReplicas(d.specs.replicas);
+      setGpus(d.specs.gpus);
       setLoading(false);
       return;
     }
@@ -248,9 +274,15 @@ export const Specs = ({ resource }: { resource: Resource }) => {
     if (resource.type === "deployment") {
       const d = resource as Deployment;
       try {
+        const sanitizedGpus = gpus?.map((gpu) => {
+          return Object.fromEntries(
+            Object.entries(gpu).filter(([_, v]) => v !== undefined && v !== "")
+          );
+        });
+
         const res = await updateDeployment(
           d.id,
-          { replicas: replicas, cpuCores: cpu, ram: ram },
+          { replicas: replicas, cpuCores: cpu, ram: ram, gpus: sanitizedGpus },
           keycloak.token
         );
 
@@ -337,23 +369,46 @@ export const Specs = ({ resource }: { resource: Resource }) => {
               }
             />
             {resource.type === "deployment" && (
-              <Chip
-                sx={{ p: 1 }}
-                icon={<Iconify icon="mage:stack" width={24} height={24} />}
-                label={
-                  <span style={{ marginLeft: ".5rem" }}>
-                    {t("replicas")}
-                    <b
-                      style={{
-                        fontFamily: "monospace",
-                        marginLeft: "1rem",
-                      }}
-                    >
-                      {replicas}
-                    </b>
-                  </span>
-                }
-              />
+              <>
+                <Chip
+                  sx={{ p: 1 }}
+                  icon={<Iconify icon="mage:stack" width={24} height={24} />}
+                  label={
+                    <span style={{ marginLeft: ".5rem" }}>
+                      {t("replicas")}
+                      <b
+                        style={{
+                          fontFamily: "monospace",
+                          marginLeft: "1rem",
+                        }}
+                      >
+                        {replicas}
+                      </b>
+                    </span>
+                  }
+                />
+                {Array.isArray(gpus) &&
+                  gpus!.map((gpu: DeploymentGPU, index: number) => (
+                    <Chip
+                      key={gpu.name || index}
+                      icon={<Iconify icon="mdi:gpu" width={20} height={20} />}
+                      label={
+                        <span
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: ".4rem",
+                            marginLeft: ".25rem",
+                          }}
+                        >
+                          <span style={{ opacity: 0.8 }}>GPU:</span>
+                          <b>{gpu.name}</b>
+                          {gpu.claimName}
+                        </span>
+                      }
+                    />
+                  ))}
+              </>
             )}
             {resource.type === "vm" &&
               resource.specs &&
@@ -571,6 +626,249 @@ export const Specs = ({ resource }: { resource: Resource }) => {
                 </Grid>
               </Grid>
             )}
+
+            {/* GPUs */}
+            {gpuEnabledZone && (
+              <>
+                <Grid
+                  container
+                  xs={12}
+                  sm={8}
+                  sx={{ px: 3, py: 1 }}
+                  spacing={1}
+                >
+                  <Grid xs={12}>
+                    <Stack direction="row" justifyContent="space-between">
+                      <Typography variant="body1" sx={{ whiteSpace: "nowrap" }}>
+                        {t("deployment-gpu")}
+                      </Typography>
+                      <Tooltip
+                        enterTouchDelay={10}
+                        title={
+                          <>
+                            <Typography variant="caption">
+                              {t("deployment-gpu-subheader")}
+                            </Typography>
+                            <br />
+                            <br />
+                            <Typography variant="caption">
+                              {t("deployment-gpu-quota")}
+                            </Typography>
+                            <br />
+                            <br />
+                            <Typography variant="caption">
+                              {t("deployment-gpu-unstable")}
+                            </Typography>
+                          </>
+                        }
+                      >
+                        <span>
+                          <Iconify
+                            icon="mdi:help-circle-outline"
+                            color={theme.palette.text.secondary}
+                          />
+                        </span>
+                      </Tooltip>
+                    </Stack>
+                  </Grid>
+                  <Grid container spacing={2} sx={{ width: "100%" }}>
+                    {/*@ts-ignore legacy api */}
+                    <Grid item xs={12} fullWidth>
+                      {/*@ts-ignore legacy api */}
+                      <Stack
+                        direction="row"
+                        alignItems="center"
+                        justifyContent="space-between"
+                        fullWidth
+                      >
+                        <Typography variant="subtitle1" fontWeight={600}>
+                          {t("deployment-gpu-configuration")}
+                        </Typography>
+                        <Button
+                          startIcon={<AddCircleOutline />}
+                          variant="outlined"
+                          size="small"
+                          disabled={
+                            gpuClaims == undefined || gpuClaims.length < 1
+                          }
+                          onClick={() =>
+                            setGpus((prev) => [
+                              ...(prev || []),
+                              { name: "", claimName: "" },
+                            ])
+                          }
+                        >
+                          {t("deployment-gpu-add")}
+                        </Button>
+                      </Stack>
+                    </Grid>
+
+                    {(!gpus || gpus.length === 0) && (
+                      <>
+                        {/*@ts-ignore legacy api */}
+                        <Grid item xs={12}>
+                          <Stack
+                            sx={{
+                              borderRadius: 2,
+                              p: 2,
+                              bgcolor: (theme: any) =>
+                                theme.palette.action.hover,
+                              textAlign: "center",
+                            }}
+                          >
+                            <Typography
+                              variant="body2"
+                              color="text.secondary"
+                              sx={{ p: "8.5px" }}
+                            >
+                              {t("deployment-gpu-none")}
+                            </Typography>
+                          </Stack>
+                        </Grid>
+                      </>
+                    )}
+
+                    {gpus?.map((gpu, index) => {
+                      const isValid = validateGPU(gpu);
+
+                      const handleChange = (
+                        index: number,
+                        field: keyof DeploymentGPU,
+                        value: string
+                      ) => {
+                        const unset = field === "name" ? "" : undefined;
+                        const trimmed = value.trim();
+                        setGpus((prev) => {
+                          const updated = [...(prev || [])];
+                          updated[index] = {
+                            ...updated[index],
+                            [field]: trimmed === "" ? unset : trimmed,
+                          };
+                          return updated;
+                        });
+                      };
+
+                      return (
+                        <>
+                          {/*@ts-ignore legacy api */}
+                          <Grid item xs={12} key={index}>
+                            <Stack
+                              direction={{ xs: "column", sm: "row" }}
+                              spacing={2}
+                              alignItems="center"
+                              sx={{
+                                border: "1px solid",
+                                borderColor: isValid ? "divider" : "error.main",
+                                borderRadius: 2,
+                                p: 2,
+                              }}
+                            >
+                              {gpu.claimName != "" && (
+                                <Autocomplete
+                                  fullWidth
+                                  value={gpu.name || ""}
+                                  onChange={(_, newValue) => {
+                                    handleChange(
+                                      index,
+                                      "name",
+                                      newValue ? newValue : ""
+                                    );
+                                  }}
+                                  options={Object.keys(
+                                    gpuClaims?.find(
+                                      (g) => g.name === gpu.claimName
+                                    )?.requested ?? {}
+                                  )}
+                                  getOptionLabel={(option) => option}
+                                  renderInput={(params) => (
+                                    <TextField
+                                      {...params}
+                                      label={t("deployment-gpu-request-name")}
+                                      size="small"
+                                      sx={{ flex: 1 }}
+                                    />
+                                  )}
+                                  isOptionEqualToValue={(option, value) =>
+                                    option === value
+                                  }
+                                  disableClearable
+                                />
+                              )}
+                              <Autocomplete
+                                fullWidth
+                                value={gpu.claimName || ""}
+                                onChange={(_, newValue) => {
+                                  handleChange(
+                                    index,
+                                    "claimName",
+                                    newValue ? newValue : ""
+                                  );
+                                }}
+                                options={
+                                  gpuClaims
+                                    ?.filter((c) => c.zone == resource.zone)
+                                    .map((c) => c.name) || []
+                                }
+                                getOptionLabel={(option) => option}
+                                renderInput={(params) => (
+                                  <TextField
+                                    {...params}
+                                    label={t(
+                                      "deployment-gpu-resourceclaim-name"
+                                    )}
+                                    size="small"
+                                    sx={{ flex: 1 }}
+                                  />
+                                )}
+                                isOptionEqualToValue={(option, value) =>
+                                  option === value
+                                }
+                                disableClearable
+                              />
+                              <Tooltip title={t("deployment-gpu-remove")}>
+                                <IconButton
+                                  color="error"
+                                  onClick={() =>
+                                    setGpus((prev) =>
+                                      prev?.filter((_, i) => i !== index)
+                                    )
+                                  }
+                                >
+                                  <Delete />
+                                </IconButton>
+                              </Tooltip>
+                            </Stack>
+                          </Grid>
+                        </>
+                      );
+                    })}
+                  </Grid>
+                </Grid>
+                {/*@ts-ignore legacy api */}
+                <Grid
+                  item
+                  sm={4}
+                  sx={{
+                    display: { xs: "none", sm: "block" },
+                    backgroundColor: (theme: any) => theme.palette.action.hover,
+                    borderRadius: "1rem",
+                  }}
+                >
+                  {/*@ts-ignore legacy api */}
+                  <Stack fullWidth>
+                    {gpus?.some((g) => !validateGPU(g)) && (
+                      <Typography
+                        variant="caption"
+                        color="error"
+                        sx={{ ml: 1.5, mt: 0.5, display: "block" }}
+                      >
+                        {t("deployment-gpu-invalid-config-warning")}
+                      </Typography>
+                    )}
+                  </Stack>
+                </Grid>
+              </>
+            )}
           </Grid>
         )}
       </CardContent>
@@ -601,4 +899,21 @@ export const Specs = ({ resource }: { resource: Resource }) => {
       </CardActions>
     </Card>
   );
+};
+
+const gpusEqual = (a?: DeploymentGPU[], b?: DeploymentGPU[]): boolean => {
+  if (!a && !b) return true;
+  if (!a || !b) return false;
+  if (a.length !== b.length) return false;
+
+  return a.every((gpuA, index) => {
+    const gpuB = b[index];
+    if (!gpuB) return false;
+
+    const keys = new Set([...Object.keys(gpuA), ...Object.keys(gpuB)]);
+    for (const key of keys) {
+      if ((gpuA as any)[key] !== (gpuB as any)[key]) return false;
+    }
+    return true;
+  });
 };

@@ -7,17 +7,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Setup Bun
-      uses: oven-sh/setup-bun@v1
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
 
-    - name: Install Prettier
-      run: bun install
+      - name: Install Prettier
+        run: bun install
 
-    - name: Check for formatting errors
-      run: bun run format-check
-    
-    - name: Check for TS errors
-      run: bun run tsc
+      - name: Check for formatting errors
+        run: bun run format-check
+
+      - name: Check for TS errors
+        run: bun run tsc --noEmit

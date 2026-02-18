@@ -66,6 +66,14 @@ const TierCard = ({ tier }: { tier: Role }) => {
             gutterBottom
             sx={{ whiteSpace: "nowrap" }}
           >
+            {(tier.permissions.includes("useVms") ? "✅ " : "❌ ") +
+              t("use-vms")}
+          </Typography>
+          <Typography
+            variant="subtitle2"
+            gutterBottom
+            sx={{ whiteSpace: "nowrap" }}
+          >
             {(tier.permissions.includes("useGpus") ? "✅ " : "❌ ") +
               t("landing-hero-gpu")}
           </Typography>
@@ -91,6 +99,15 @@ const TierCard = ({ tier }: { tier: Role }) => {
           >
             {`🧠 ${t("memory")}: ${tier.quota.ram} GB`}
           </Typography>
+          {(tier.quota as any).gpus != undefined && (
+            <Typography
+              variant="subtitle2"
+              gutterBottom
+              sx={{ whiteSpace: "nowrap" }}
+            >
+              {`🤖 ${t("landing-hero-gpus")}: ${(tier.quota as any).gpus}`}
+            </Typography>
+          )}
           <Typography
             variant="subtitle2"
             gutterBottom

@@ -1,5 +1,7 @@
 import {
+  Box,
   Card,
+  Chip,
   Container,
   LinearProgress,
   Link,
@@ -43,6 +45,16 @@ import { deleteVM } from "../../api/deploy/vms";
 import { deleteGpuLease } from "../../api/deploy/gpuLeases";
 import { deleteTeam } from "../../api/deploy/teams";
 import TimeLeft from "../../components/admin/TimeLeft";
+import {
+  GpuClaimConsumer,
+  GpuClaimRead,
+  GpuClaimStatus,
+} from "../../temporaryTypesRemoveMe";
+import Iconify from "../../components/Iconify";
+import Label from "../../components/Label";
+import TimeAgo from "../../components/admin/TimeAgo";
+import CluseterOverviewTab from "../../components/admin/ClusterOverviewTab";
+import { deleteGpuClaim } from "../../api/deploy/gpuClaims";
 
 export default function AdminV2() {
   const { tab: initialTab } = useParams();
@@ -113,6 +125,9 @@ export default function AdminV2() {
     setGpuGroupsPage,
     gpuGroupsPageSize,
     setGpuGroupsPageSize,
+
+    // GpuClaims
+    gpuClaims,
   } = useAdmin();
   const navigate = useNavigate();
 
@@ -311,6 +326,178 @@ export default function AdminV2() {
       ],
     },
     {
+      label: "GPU Claims",
+      columns: [
+        { id: "id", label: "ID" },
+        { id: "name", label: "Name" },
+        { id: "zone", label: "Zone" },
+        {
+          id: "*",
+          label: "Requested",
+          renderFunc: (claim: GpuClaimRead | undefined) => {
+            const requested = claim?.requested;
+            const allocated = claim?.allocated;
+
+            if (!requested || Object.keys(requested).length === 0) {
+              return (
+                <Typography variant="body2" color="text.secondary">
+                  {t("gpuclaim-no-gpu-requested")}
+                </Typography>
+              );
+            }
+
+            return (
+              <Stack direction="column" spacing={0.5}>
+                {Object.entries(requested).map(([name, req]) => {
+                  const allocs = allocated?.[name];
+                  const vendor =
+                    (req.config as any)?.type ||
+                    (req.config as any)?.driver ||
+                    "unknown";
+                  const sharing = (req.config as any)?.parameters?.sharing
+                    ?.strategy;
+                  const sharingConfig = vendor?.toLowerCase().includes("nvidia")
+                    ? sharing?.includes("MPS")
+                      ? (req.config as any)?.parameters?.mpsConfig
+                      : (req.config as any)?.parameters?.timeslicingConfig
+                    : undefined;
+                  const allocatedChip = allocs ? (
+                    <Stack>
+                      {(allocs as Array<any>).map((alloc) => (
+                        <Chip
+                          variant="outlined"
+                          label={`Allocated (${alloc.pool}/${alloc.device})`}
+                          color="success"
+                          size="small"
+                          sx={{ fontSize: "0.7rem" }}
+                        />
+                      ))}
+                    </Stack>
+                  ) : (
+                    <Chip
+                      variant="outlined"
+                      label="Not allocated"
+                      color="default"
+                      size="small"
+                      sx={{ fontSize: "0.7rem" }}
+                    />
+                  );
+
+                  return (
+                    <Box
+                      //@ts-ignore Too complex somehow?
+                      key={name}
+                      sx={{
+                        border: "1px solid",
+                        borderColor: "divider",
+                        borderRadius: 1,
+                        p: 0.8,
+                        backgroundColor: "background.paper",
+                      }}
+                    >
+                      <Stack
+                        direction="row"
+                        alignItems="center"
+                        justifyContent="space-between"
+                        spacing={1}
+                      >
+                        <Label
+                          variant="ghost"
+                          //fontWeight={600}
+                          startIcon={
+                            <Iconify
+                              icon="mdi:gpu"
+                              width={20}
+                              height={20}
+                              sx={{ opacity: 0.65 }}
+                            />
+                          }
+                        >
+                          {name}
+                        </Label>
+                        {allocatedChip}
+                      </Stack>
+
+                      <Typography
+                        variant="caption"
+                        color="text.secondary"
+                        sx={{ display: "block", mt: 0.3 }}
+                      >
+                        {req.count} {vendor} {sharing && `• ${sharing}`}{" "}
+                        {sharingConfig && `• ${sharingConfig}`}
+                      </Typography>
+                    </Box>
+                  );
+                })}
+              </Stack>
+            );
+          },
+        },
+        {
+          id: "consumers",
+          label: "Consumers",
+          renderFunc: (consumers: GpuClaimConsumer[] | undefined) => {
+            if (consumers == undefined) return <></>;
+            return (
+              <Stack
+                direction="row"
+                spacing={0.5}
+                flexWrap="wrap"
+                useFlexGap
+                sx={{ maxWidth: 220 }}
+              >
+                {consumers.map((c) => (
+                  <Chip
+                    key={c.name}
+                    label={c.name}
+                    size="small"
+                    variant="outlined"
+                    sx={{ fontSize: "0.75rem" }}
+                  />
+                ))}
+              </Stack>
+            );
+          },
+        },
+        {
+          id: "status",
+          label: "Status",
+          renderFunc: (status: GpuClaimStatus) => {
+            const phase = status?.phase?.toLowerCase();
+
+            let color = "default";
+            if (phase === "bound") color = "success";
+            else if (phase === "pending") color = "info";
+            else if (phase === "failed") color = "error";
+
+            return (
+              <Stack direction="column" alignItems={"center"}>
+                <Chip
+                  label={phase || "unknown"}
+                  //@ts-ignore annoying color type.
+                  color={color}
+                  variant="outlined"
+                  size="small"
+                />
+                {status?.lastSynced != undefined && (
+                  <TimeAgo variant={"caption"} createdAt={status.lastSynced} />
+                )}
+              </Stack>
+            );
+          },
+        },
+      ],
+      actions: [
+        {
+          label: t("button-delete"),
+          onClick: (claim: GpuClaimRead) => {
+            if (keycloak.token) deleteGpuClaim(keycloak.token, claim.id);
+          },
+          withConfirm: true,
+        },
+      ],
+    },
+    {
       label: "Users",
       columns: [
         { id: "id", label: "ID" },
@@ -327,7 +514,7 @@ export default function AdminV2() {
             const calculatePercentage = (used: number, total: number) =>
               total ? ((used / total) * 100).toFixed(1) : "0.0";
 
-            const { cpu, ram, disk } = {
+            const { cpu, ram, disk, gpu } = {
               cpu: calculatePercentage(
                 user.usage.cpuCores,
                 user.quota.cpuCores
@@ -337,6 +524,14 @@ export default function AdminV2() {
                 user.usage.diskSize,
                 user.quota.diskSize
               ),
+              gpu:
+                (user.usage as any).gpus != undefined &&
+                (user.quota as any).gpus != undefined
+                  ? calculatePercentage(
+                      (user.usage as any).gpus,
+                      (user.quota as any).gpus
+                    )
+                  : undefined,
             };
 
             return (
@@ -361,6 +556,20 @@ export default function AdminV2() {
                 >
                   <LinearProgress variant="determinate" value={Number(disk)} />
                 </Tooltip>
+
+                {gpu && (
+                  <>
+                    <Typography variant="body2">GPUs</Typography>
+                    <Tooltip
+                      title={`${(user.usage as any).gpus} of ${(user.quota as any).gpus} (${gpu}%)`}
+                    >
+                      <LinearProgress
+                        variant="determinate"
+                        value={Number(gpu)}
+                      />
+                    </Tooltip>
+                  </>
+                )}
               </div>
             );
           },
@@ -443,6 +652,7 @@ export default function AdminV2() {
     {}
   );
   tabLookup["hosts"] = resourceConfig.length;
+  tabLookup["overview"] = resourceConfig.length + 1;
   useEffect(() => {
     if (
       initialTab &&
@@ -493,6 +703,14 @@ export default function AdminV2() {
       setPage: setGpuGroupsPage,
       pageSize: gpuGroupsPageSize,
       setPageSize: setGpuGroupsPageSize,
+    },
+    {
+      data: gpuClaims,
+      setFilter: () => {},
+      page: 0,
+      setPage: () => {},
+      pageSize: gpuClaims?.length || 0,
+      setPageSize: () => {},
     },
     {
       data: users,
@@ -555,6 +773,7 @@ export default function AdminV2() {
       />
     )),
     <HostsTab />,
+    <CluseterOverviewTab />,
   ];
 
   useEffect(() => {
@@ -588,6 +807,7 @@ export default function AdminV2() {
                     <Tab key={index} label={resource.label} />
                   ))}
                   <Tab key={resourceConfig.length} label={t("hosts")} />
+                  <Tab key={resourceConfig.length + 1} label={t("overview")} />
                 </Tabs>
                 {tabs[activeTab]}
               </Card>
