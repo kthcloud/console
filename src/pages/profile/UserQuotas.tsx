@@ -52,6 +52,29 @@ export const UserQuotas = ({ user }: { user: User }) => {
               </span>
             }
           />
+          {(user.usage as any).gpus != undefined &&
+            (user.quota as any).gpus != undefined && (
+              <Chip
+                sx={{ p: 1 }}
+                icon={<Iconify icon="mdi:gpu" width={24} height={24} />}
+                label={
+                  <span style={{ marginLeft: ".5rem" }}>
+                    {t("landing-hero-gpus")}
+                    <b
+                      style={{
+                        fontFamily: "monospace",
+                        marginLeft: "1rem",
+                        marginRight: ".75em",
+                      }}
+                    >
+                      {(user.usage as any).gpus +
+                        "/" +
+                        (user.quota as any).gpus}
+                    </b>
+                  </span>
+                }
+              />
+            )}
           <Chip
             sx={{ p: 1 }}
             icon={<Iconify icon="mdi:harddisk" width={24} height={24} />}
