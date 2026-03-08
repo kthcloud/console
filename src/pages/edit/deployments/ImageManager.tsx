@@ -1,6 +1,6 @@
 import { LoadingButton } from "@mui/lab";
 import { Card, CardContent, CardHeader, Stack, TextField } from "@mui/material";
-import { useKeycloak } from "@react-keycloak/web";
+import { useKeycloak } from "../../../hooks/useKeycloak";
 import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";

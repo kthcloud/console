@@ -16,7 +16,7 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 
-import { useKeycloak } from "@react-keycloak/web";
+import { useKeycloak } from "../../hooks/useKeycloak";
 import { useSnackbar } from "notistack";
 import { createVM } from "../../api/deploy/vms";
 import { Link } from "react-router-dom";

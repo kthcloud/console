@@ -53,7 +53,7 @@ export default function HostsTab() {
       {hosts === undefined ? (
         <Grid container spacing={2}>
           {Array.from({ length: 9 }).map((_, index) => (
-            <Grid item xs={12} sm={6} md={4} key={index}>
+            <Grid size={{ xs: 12, sm: 6, md: 4 }} key={index}>
               <Box sx={{ p: 2, borderRadius: 2 }}>
                 <Skeleton variant="rectangular" height={140} />
               </Box>
@@ -73,7 +73,7 @@ export default function HostsTab() {
                 </Typography>
                 <Grid container spacing={2}>
                   {enabled.map((host) => (
-                    <Grid item xs={12} sm={6} md={4} key={host.name}>
+                    <Grid size={{ xs: 12, sm: 6, md: 4 }} key={host.name}>
                       <HostMachine
                         host={host}
                         specs={hostsMap[`${host.name}_${host.zone}`]}
@@ -90,7 +90,7 @@ export default function HostsTab() {
                 </Typography>
                 <Grid container spacing={2}>
                   {disabled.map((host) => (
-                    <Grid item xs={12} sm={6} md={4} key={host.name}>
+                    <Grid size={{ xs: 12, sm: 6, md: 4 }} key={host.name}>
                       <HostMachine host={host} />
                     </Grid>
                   ))}

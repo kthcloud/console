@@ -3,7 +3,7 @@ import { Stack, Typography, Button, Alert, Box } from "@mui/material";
 import GpuClaimModal from "./GPUClaimModal";
 import { GpuClaimCreate } from "../../temporaryTypesRemoveMe";
 import { createGpuClaim } from "../../api/deploy/gpuClaims";
-import { useKeycloak } from "@react-keycloak/web";
+import { useKeycloak } from "../../hooks/useKeycloak";
 import { enqueueSnackbar } from "notistack";
 import useAdmin from "../../hooks/useAdmin";
 

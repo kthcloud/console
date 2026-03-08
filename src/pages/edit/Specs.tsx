@@ -13,15 +13,15 @@ import {
   Tooltip,
   Typography,
   useTheme,
+  Grid,
 } from "@mui/material";
-import Grid from "@mui/material/Unstable_Grid2";
 import { useTranslation } from "react-i18next";
 import { Deployment, DeploymentGPU, Resource, Vm } from "../../types";
 import { CustomTheme } from "../../theme/types";
 import useResource from "../../hooks/useResource";
 import { useEffect, useState } from "react";
 import Iconify from "../../components/Iconify";
-import { useKeycloak } from "@react-keycloak/web";
+import { useKeycloak } from "../../hooks/useKeycloak";
 import { updateDeployment } from "../../api/deploy/deployments";
 import { enqueueSnackbar } from "notistack";
 import { errorHandler } from "../../utils/errorHandler";
@@ -459,8 +459,13 @@ export const Specs = ({ resource }: { resource: Resource }) => {
         ) : (
           <Grid container>
             {/* CPU */}
-            <Grid container xs={12} sm={4} sx={{ px: 3, py: 1 }} spacing={1}>
-              <Grid xs={12}>
+            <Grid
+              container
+              size={{ xs: 12, sm: 4 }}
+              sx={{ px: 3, py: 1 }}
+              spacing={1}
+            >
+              <Grid size={{ xs: 12 }}>
                 <Typography variant="body1" sx={{ whiteSpace: "nowrap" }}>
                   {t("landing-hero-cpu") +
                     (resource.type === "deployment"
@@ -468,7 +473,7 @@ export const Specs = ({ resource }: { resource: Resource }) => {
                       : "")}
                 </Typography>
               </Grid>
-              <Grid xs={12}>
+              <Grid size={{ xs: 12 }}>
                 <Slider
                   value={cpu}
                   onChange={(_: any, v: any) => setCpu(v as number)}
@@ -477,7 +482,7 @@ export const Specs = ({ resource }: { resource: Resource }) => {
                   step={resource.type === "vm" ? STEP_VM : STEP_DEPLOYMENT}
                 />
               </Grid>
-              <Grid xs={12}>
+              <Grid size={{ xs: 12 }}>
                 <Stack
                   direction="row"
                   alignItems="center"
@@ -505,8 +510,13 @@ export const Specs = ({ resource }: { resource: Resource }) => {
             </Grid>
 
             {/* RAM */}
-            <Grid container xs={12} sm={4} sx={{ px: 3, py: 1 }} spacing={1}>
-              <Grid xs={12}>
+            <Grid
+              container
+              size={{ xs: 12, sm: 4 }}
+              sx={{ px: 3, py: 1 }}
+              spacing={1}
+            >
+              <Grid size={{ xs: 12 }}>
                 <Typography variant="body1" sx={{ whiteSpace: "nowrap" }}>
                   {t("memory") +
                     ", GB" +
@@ -515,7 +525,7 @@ export const Specs = ({ resource }: { resource: Resource }) => {
                       : "")}
                 </Typography>
               </Grid>
-              <Grid xs={12}>
+              <Grid size={{ xs: 12 }}>
                 <Slider
                   value={ram}
                   onChange={(_: any, v: any) => setRam(v as number)}
@@ -524,7 +534,7 @@ export const Specs = ({ resource }: { resource: Resource }) => {
                   step={resource.type === "vm" ? STEP_VM : STEP_DEPLOYMENT}
                 />
               </Grid>
-              <Grid xs={12}>
+              <Grid size={{ xs: 12 }}>
                 <Stack
                   direction="row"
                   alignItems="center"
@@ -555,8 +565,13 @@ export const Specs = ({ resource }: { resource: Resource }) => {
 
             {/* Replicas */}
             {resource.type === "deployment" && (
-              <Grid container xs={12} sm={4} sx={{ px: 3, py: 1 }} spacing={1}>
-                <Grid xs={12}>
+              <Grid
+                container
+                size={{ xs: 12, sm: 4 }}
+                sx={{ px: 3, py: 1 }}
+                spacing={1}
+              >
+                <Grid size={{ xs: 12 }}>
                   <Stack direction="row" justifyContent="space-between">
                     <Typography variant="body1" sx={{ whiteSpace: "nowrap" }}>
                       {t("replicas")}
@@ -590,7 +605,7 @@ export const Specs = ({ resource }: { resource: Resource }) => {
                     </Tooltip>
                   </Stack>
                 </Grid>
-                <Grid xs={12}>
+                <Grid size={{ xs: 12 }}>
                   <Slider
                     value={replicas}
                     onChange={(_: any, v: any) => setReplicas(v as number)}
@@ -599,7 +614,7 @@ export const Specs = ({ resource }: { resource: Resource }) => {
                     step={1}
                   />
                 </Grid>
-                <Grid xs={12}>
+                <Grid size={{ xs: 12 }}>
                   <Stack
                     direction="row"
                     alignItems="center"
@@ -632,12 +647,11 @@ export const Specs = ({ resource }: { resource: Resource }) => {
               <>
                 <Grid
                   container
-                  xs={12}
-                  sm={8}
+                  size={{ xs: 12, sm: 8 }}
                   sx={{ px: 3, py: 1 }}
                   spacing={1}
                 >
-                  <Grid xs={12}>
+                  <Grid size={{ xs: 12 }}>
                     <Stack direction="row" justifyContent="space-between">
                       <Typography variant="body1" sx={{ whiteSpace: "nowrap" }}>
                         {t("deployment-gpu")}
@@ -672,14 +686,12 @@ export const Specs = ({ resource }: { resource: Resource }) => {
                     </Stack>
                   </Grid>
                   <Grid container spacing={2} sx={{ width: "100%" }}>
-                    {/*@ts-ignore legacy api */}
-                    <Grid item xs={12} fullWidth>
-                      {/*@ts-ignore legacy api */}
+                    <Grid size={{ xs: 12 }} sx={{ width: "100%" }}>
                       <Stack
                         direction="row"
                         alignItems="center"
                         justifyContent="space-between"
-                        fullWidth
+                        sx={{ width: "100%" }}
                       >
                         <Typography variant="subtitle1" fontWeight={600}>
                           {t("deployment-gpu-configuration")}
@@ -705,8 +717,7 @@ export const Specs = ({ resource }: { resource: Resource }) => {
 
                     {(!gpus || gpus.length === 0) && (
                       <>
-                        {/*@ts-ignore legacy api */}
-                        <Grid item xs={12}>
+                        <Grid size={{ xs: 12 }}>
                           <Stack
                             sx={{
                               borderRadius: 2,
@@ -750,8 +761,7 @@ export const Specs = ({ resource }: { resource: Resource }) => {
 
                       return (
                         <>
-                          {/*@ts-ignore legacy api */}
-                          <Grid item xs={12} key={index}>
+                          <Grid size={{ xs: 12 }} key={index}>
                             <Stack
                               direction={{ xs: "column", sm: "row" }}
                               spacing={2}
@@ -844,18 +854,15 @@ export const Specs = ({ resource }: { resource: Resource }) => {
                     })}
                   </Grid>
                 </Grid>
-                {/*@ts-ignore legacy api */}
                 <Grid
-                  item
-                  sm={4}
+                  size={{ sm: 4 }}
                   sx={{
                     display: { xs: "none", sm: "block" },
                     backgroundColor: (theme: any) => theme.palette.action.hover,
                     borderRadius: "1rem",
                   }}
                 >
-                  {/*@ts-ignore legacy api */}
-                  <Stack fullWidth>
+                  <Stack sx={{ width: "100%" }}>
                     {gpus?.some((g) => !validateGPU(g)) && (
                       <Typography
                         variant="caption"

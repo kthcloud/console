@@ -1,6 +1,6 @@
 import { IconButton, Tooltip } from "@mui/material";
 import Iconify from "../../components/Iconify";
-import { useKeycloak } from "@react-keycloak/web";
+import { useKeycloak } from "../../hooks/useKeycloak";
 import { useTranslation } from "react-i18next";
 
 export default function LoginButton() {
@@ -23,11 +23,7 @@ export default function LoginButton() {
           ) : (
             <Tooltip enterTouchDelay={10} title={t("button-login")}>
               <IconButton
-                onClick={() =>
-                  keycloak.login({
-                    redirectUri: window.location.origin + "/deploy",
-                  })
-                }
+                onClick={() => keycloak.login()}
                 sx={{ width: 40, height: 40 }}
               >
                 <Iconify icon="eva:log-in-outline" width={20} height={20} />

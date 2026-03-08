@@ -14,7 +14,7 @@ import {
   Tooltip,
 } from "@mui/material";
 import { useState, useEffect, ReactNode } from "react";
-import { useKeycloak } from "@react-keycloak/web";
+import { useKeycloak } from "../../hooks/useKeycloak";
 import useResource from "../../hooks/useResource";
 import { useParams, useNavigate } from "react-router-dom";
 import { sentenceCase } from "change-case";
@@ -25,6 +25,7 @@ import JobList from "../../components/JobList";
 import EnvManager from "./deployments/EnvManager";
 import GHActions from "./deployments/GHActions";
 import SSHString from "./vms/SSHString";
+import DeploymentSSHString from "./deployments/SSHString";
 import { GPUManager } from "./vms/GPUManager";
 import { PrivateMode } from "./deployments/PrivateMode";
 import { DeploymentCommands } from "./deployments/DeploymentCommands";
@@ -403,7 +404,11 @@ export function Edit() {
               {renderStaleResourceHeaderFullWidth(resource)}
               <JobList />
 
-              {resource.type === "vm" && <SSHString vm={resource as Vm} />}
+              {resource.type === "vm" ? (
+                <SSHString vm={resource as Vm} />
+              ) : (
+                <DeploymentSSHString deployment={resource as Deployment} />
+              )}
 
               {resource.type === "vm" && <GPUManager vm={resource as Vm} />}
 

@@ -13,7 +13,7 @@ const Funding = () => {
   return (
     <Container maxWidth="lg" sx={{ marginTop: 5 }}>
       <Grid container justifyContent={"space-between"} spacing={5}>
-        <Grid item xs={12} md={6}>
+        <Grid size={{ xs: 12, md: 6 }}>
           <Card>
             <CardHeader title={t("funding")} />
             <CardContent>

@@ -1,5 +1,5 @@
 import { Button, Stack, Link } from "@mui/material";
-import { useKeycloak } from "@react-keycloak/web";
+import { useKeycloak } from "../../../hooks/useKeycloak";
 import { enqueueSnackbar } from "notistack";
 import { useNavigate } from "react-router-dom";
 import {

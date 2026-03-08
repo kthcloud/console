@@ -1,5 +1,5 @@
 import { getDeploymentYaml } from "../../../api/deploy/deployments";
-import { useKeycloak } from "@react-keycloak/web";
+import { useKeycloak } from "../../../hooks/useKeycloak";
 import { useEffect, useState } from "react";
 import { parse } from "yaml";
 

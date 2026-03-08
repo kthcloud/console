@@ -7,7 +7,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import LoadingPage from "../../components/LoadingPage";
-import { useKeycloak } from "@react-keycloak/web";
+import { useKeycloak } from "../../hooks/useKeycloak";
 import { useSnackbar } from "notistack";
 import { sentenceCase } from "change-case";
 import CopyButton from "../../components/CopyButton";

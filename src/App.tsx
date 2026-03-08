@@ -1,6 +1,7 @@
 // keycloak
-import { AuthContextWrapperProvider } from "./contexts/AuthContextWrapper";
-import { keycloak } from "./keycloak";
+import { oidcConfig } from "./keycloak";
+import { AuthProvider } from "react-oidc-context";
+
 // routes
 import Router from "./Router";
 // theme
@@ -18,7 +19,7 @@ import { AdminResourceContextProvider } from "./contexts/AdminResourceContext";
 
 export default function App() {
   return (
-    <AuthContextWrapperProvider authClient={keycloak}>
+    <AuthProvider {...oidcConfig}>
       <AlertContextProvider>
         <ResourceContextProvider>
           <AdminResourceContextProvider>
@@ -48,6 +49,6 @@ export default function App() {
           </AdminResourceContextProvider>
         </ResourceContextProvider>
       </AlertContextProvider>
-    </AuthContextWrapperProvider>
+    </AuthProvider>
   );
 }

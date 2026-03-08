@@ -2,24 +2,27 @@ import Hero from "./components/hero/Hero";
 import Intro from "./components/intro/Intro";
 import Page from "../../components/Page";
 import { Box, Container } from "@mui/material";
-import { useKeycloak } from "@react-keycloak/web";
+import { useKeycloak } from "../../hooks/useKeycloak";
 import LoadingPage from "../../components/LoadingPage";
 import Funding from "./components/funding/Funding";
 import Maia from "./components/maia/Maia";
 import { AlertList } from "../../components/AlertList";
-import { useContext, useEffect } from "react";
-import { AuthContextWrapper } from "../../contexts/AuthContextWrapper";
+import { useEffect } from "react";
+
 import { enqueueSnackbar } from "notistack";
 import { useTranslation } from "react-i18next";
+import { useAuth } from "react-oidc-context";
 
 export function Landing() {
   const { keycloak, initialized } = useKeycloak();
-  const { error } = useContext(AuthContextWrapper);
+  const { error } = useAuth();
   const { t } = useTranslation();
 
   useEffect(() => {
     if (error) {
-      enqueueSnackbar(t("error-connecting-to-iam"), { variant: "error" });
+      enqueueSnackbar(t("error-connecting-to-iam") + ": " + error.message, {
+        variant: "error",
+      });
     }
   }, [error, enqueueSnackbar]);
 

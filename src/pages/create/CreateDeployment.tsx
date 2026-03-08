@@ -20,7 +20,7 @@ import { useState } from "react";
 import Iconify from "../../components/Iconify";
 import { createDeployment } from "../../api/deploy/deployments";
 import { useSnackbar } from "notistack";
-import { useKeycloak } from "@react-keycloak/web";
+import { useKeycloak } from "../../hooks/useKeycloak";
 import RFC1035Input from "../../components/RFC1035Input";
 import { faker } from "@faker-js/faker";
 import { errorHandler } from "../../utils/errorHandler";
@@ -29,6 +29,7 @@ import ZoneSelector from "./ZoneSelector";
 import { useTranslation } from "react-i18next";
 import { Volume } from "@kthcloud/go-deploy-types/types/v2/body";
 import { NoWrapTable as Table } from "../../components/NoWrapTable";
+import DeploymentTypeCard from "./DeploymentTypeCard";
 
 export default function CreateDeployment({
   finished,
@@ -174,42 +175,12 @@ export default function CreateDeployment({
         setSelectedZone={setSelectedZone}
       />
 
-      <Card sx={{ boxShadow: 20 }}>
-        <CardHeader
-          title={t("create-deployment-image")}
-          subheader={t("create-deployment-image-subheader")}
-        />
-        <CardContent>
-          <Stack
-            direction="row"
-            spacing={3}
-            alignItems={"center"}
-            flexWrap={"wrap"}
-            useFlexGap
-          >
-            <TextField
-              label={t("create-deployment-image")}
-              variant="outlined"
-              placeholder="mongo:latest"
-              value={image}
-              onChange={(e) => {
-                setImage(e.target.value.trim());
-              }}
-              fullWidth
-            />
-            <TextField
-              label={t("run-args")}
-              variant="outlined"
-              placeholder="--setParameter httpVerboseLogging=true"
-              value={imageArgs}
-              onChange={(e) => {
-                setImageArgs(e.target.value);
-              }}
-              fullWidth
-            />
-          </Stack>
-        </CardContent>
-      </Card>
+      <DeploymentTypeCard
+        image={image}
+        setImage={setImage}
+        imageArgs={imageArgs}
+        setImageArgs={setImageArgs}
+      />
 
       <Card sx={{ boxShadow: 20 }}>
         <CardHeader

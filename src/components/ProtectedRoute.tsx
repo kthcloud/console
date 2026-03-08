@@ -1,11 +1,11 @@
 import { Navigate } from "react-router-dom";
-import { useKeycloak } from "@react-keycloak/web";
+import { useKeycloak } from "../hooks/useKeycloak";
 import LoadingPage from "./LoadingPage";
-import { useContext } from "react";
-import { AuthContextWrapper } from "../contexts/AuthContextWrapper";
+import { useAuth } from "react-oidc-context";
+//import { AuthContextWrapper } from "../contexts/AuthContextWrapper";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const { error } = useContext(AuthContextWrapper);
+  const { error } = useAuth();
   const { keycloak, initialized } = useKeycloak();
 
   const renderPage = (children: React.ReactNode) => {
