@@ -266,7 +266,7 @@ const DangerZone = ({ resource }: { resource: Resource }) => {
                   return (
                     <li {...props} key={option.id}>
                       <Grid container alignItems="center">
-                        <Grid item sx={{ display: "flex", width: 44 }}>
+                        <Grid sx={{ display: "flex", width: 44 }}>
                           {option.gravatarUrl ? (
                             <Avatar
                               src={option.gravatarUrl + "?s=32"}
@@ -282,7 +282,6 @@ const DangerZone = ({ resource }: { resource: Resource }) => {
                             </Avatar>
                           )}
                           <Grid
-                            item
                             sx={{
                               width: "calc(100% - 44px)",
                               wordWrap: "break-word",

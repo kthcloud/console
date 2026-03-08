@@ -31,8 +31,8 @@ const ZoneSelector = ({
   useEffect(
     () => {
       if (!(zones && alignment)) return;
-      const filtered = zones.filter((zone) =>
-        zone.capabilities.includes(alignment)
+      const filtered = zones.filter(
+        (zone) => zone.enabled && zone.capabilities.includes(alignment)
       );
       setFilteredZones(filtered);
 
@@ -48,6 +48,8 @@ const ZoneSelector = ({
   if (alignment === "vm") return null;
 
   if (!filteredZones) return <CircularProgress />;
+
+  if (filteredZones.length < 2) return <></>;
 
   if (user?.role?.permissions?.includes("chooseZone")) {
     return (

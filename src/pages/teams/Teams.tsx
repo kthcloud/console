@@ -278,6 +278,7 @@ const Teams = () => {
                                     alignItems={"center"}
                                     useFlexGap
                                   >
+                                    {/* @ts-ignore idk why ts cant handle it */}
                                     <AvatarGroup max={4}>
                                       {team.members.map((member) =>
                                         member.gravatarUrl ? (
@@ -490,7 +491,6 @@ const Teams = () => {
                                                             alignItems="center"
                                                           >
                                                             <Grid
-                                                              item
                                                               sx={{
                                                                 display: "flex",
                                                                 width: 44,
@@ -525,7 +525,6 @@ const Teams = () => {
                                                                 </Avatar>
                                                               )}
                                                               <Grid
-                                                                item
                                                                 sx={{
                                                                   width:
                                                                     "calc(100% - 44px)",

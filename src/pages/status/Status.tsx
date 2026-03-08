@@ -265,7 +265,7 @@ export function Status() {
         <Typography variant="h4">{t("menu-status")}</Typography>
         <AlertList />
         <Grid container spacing={3}>
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
             <WidgetSummary
               title={t("running-containers")}
               total={podCount}
@@ -273,7 +273,7 @@ export function Status() {
             />
           </Grid>
 
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
             <WidgetSummary
               title={t("resource-gpus")}
               total={gpus}
@@ -282,7 +282,7 @@ export function Status() {
             />
           </Grid>
 
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
             <WidgetSummary
               title={t("landing-hero-cpu")}
               total={cpuCores}
@@ -291,7 +291,7 @@ export function Status() {
             />
           </Grid>
 
-          <Grid item xs={12} sm={6} md={3}>
+          <Grid size={{ xs: 12, sm: 6, md: 3 }}>
             <WidgetSummary
               title={t("landing-hero-ram")}
               total={Math.round(ram / 1000)}
@@ -300,7 +300,7 @@ export function Status() {
             />
           </Grid>
 
-          <Grid item xs={12} md={6} lg={4}>
+          <Grid size={{ xs: 12, md: 6, lg: 4 }}>
             <ServerStats
               title={t("server-statistics")}
               chartLabels={["CPU °C", "CPU %", "Memory %", "GPU °C"]}
@@ -311,7 +311,7 @@ export function Status() {
             />
           </Grid>
 
-          <Grid item xs={12} md={6} lg={8}>
+          <Grid size={{ xs: 12, md: 6, lg: 8 }}>
             <LineChart
               title={t("overview")}
               chartData={overviewData}
@@ -321,7 +321,7 @@ export function Status() {
             />
           </Grid>
 
-          <Grid item xs={12} md={6} lg={4}>
+          <Grid size={{ xs: 12, md: 6, lg: 4 }}>
             <TreeMap
               title={t("cpu-capacity")}
               chartData={cpuCapacities}
@@ -331,7 +331,7 @@ export function Status() {
             />
           </Grid>
 
-          <Grid item xs={12} md={6} lg={4}>
+          <Grid size={{ xs: 12, md: 6, lg: 4 }}>
             <TreeMap
               title={t("ram-capacity")}
               chartData={ramCapacities}
@@ -341,7 +341,7 @@ export function Status() {
             />
           </Grid>
 
-          <Grid item xs={12} md={6} lg={4}>
+          <Grid size={{ xs: 12, md: 6, lg: 4 }}>
             <TreeMap
               title={t("gpu-capacity")}
               chartData={gpuCapacities}
@@ -352,7 +352,7 @@ export function Status() {
           </Grid>
 
           {posts.length > 0 && (
-            <Grid item xs={12} md={12} lg={12}>
+            <Grid size={{ xs: 12, md: 12, lg: 12 }}>
               <Card sx={{ boxShadow: 20 }}>
                 <CardHeader title={t("latest-posts-on-mastodon")} />
                 <CardContent>

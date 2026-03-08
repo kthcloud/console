@@ -44,7 +44,10 @@ const Intro = () => {
               },
             }}
           >
-            <Grid item xs={12} md={7}>
+            <Grid
+              //item
+              size={{ xs: 12, md: 7 }}
+            >
               <Box
                 component="div"
                 sx={{
@@ -59,7 +62,10 @@ const Intro = () => {
                 <Cloud mobile position={[0, 0, 0]} />
               </Box>
             </Grid>
-            <Grid item xs={12} md={5}>
+            <Grid
+              //item
+              size={{ xs: 12, md: 5 }}
+            >
               <Typography
                 variant="h2"
                 sx={{

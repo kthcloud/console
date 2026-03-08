@@ -34,10 +34,9 @@ const Maia = () => {
           >
             {/* Text block - comes first on all screen sizes */}
             <Grid
-              item
+              //item
+              size={{ xs: 12, md: 5 }}
               sx={{ zIndex: 6 }}
-              xs={12}
-              md={5}
               order={{ xs: 1, md: 1 }}
             >
               <Typography
@@ -71,7 +70,11 @@ const Maia = () => {
             </Grid>
 
             {/* Brain block - comes second on desktop, second (below) on mobile */}
-            <Grid item xs={12} md={7} order={{ xs: 2, md: 2 }}>
+            <Grid
+              //item
+              size={{ xs: 12, md: 7 }}
+              order={{ xs: 2, md: 2 }}
+            >
               {/* Desktop brain */}
               <Box
                 component="div"

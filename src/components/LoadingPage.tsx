@@ -58,16 +58,16 @@ const LoadingPage = () => {
           direction="column"
           alignItems="center"
           justifyContent="center"
-          style={{ minHeight: "100vh" }}
+          sx={{ minHeight: "100vh", textAlign: "center" }}
         >
-          <Grid item xs={3} m={1}>
+          <Grid size={{ xs: 3 }} m={1}>
             <CircularProgress />
           </Grid>
-          <Grid item xs={3} m={1}>
+          <Grid size={{ xs: 3 }} m={1}>
             <div>{getLoadingMessage()}</div>
           </Grid>
           {connectionError && retryIn > 0 && (
-            <Grid item xs={3} m={1}>
+            <Grid size={{ xs: 3 }} m={1}>
               <div>{`${t("retrying-in")} ${retryIn} ${t("seconds")}`}</div>
             </Grid>
           )}

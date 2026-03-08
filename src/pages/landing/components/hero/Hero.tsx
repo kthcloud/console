@@ -49,10 +49,12 @@ const Hero = () => {
     <Container maxWidth="lg" sx={{ marginBottom: { xs: "100px" } }}>
       <Grid container>
         <Grid
-          item
-          md={10}
-          sm={12}
-          xs={12}
+          //item
+          size={{
+            md: 10,
+            sm: 12,
+            xs: 12,
+          }}
           sx={{
             marginBottom: { xs: "50px", sm: "100px", md: "50px" },
             padding: { md: "80px 0", sm: "20px 0" },
@@ -113,9 +115,8 @@ const Hero = () => {
         </Grid>
 
         <Grid
-          item
-          xs={12}
-          md={2}
+          //item
+          size={{ xs: 12, md: 2 }}
           sx={{ display: { sm: "none" }, marginBottom: "56px" }}
         >
           <CardMedia
@@ -127,10 +128,9 @@ const Hero = () => {
 
         <Grid
           rowSpacing={4}
-          item
+          //item
           container
-          md={1.5}
-          xs={12}
+          size={{ xs: 12, md: 1.5 }}
           justifyContent="center"
           alignItems="center"
           sx={{
@@ -138,7 +138,10 @@ const Hero = () => {
             opacity: capacitiesLoading ? 0 : 1,
           }}
         >
-          <Grid item xs={12} sm={4} md={12}>
+          <Grid
+            //item
+            size={{ xs: 12, sm: 4, md: 12 }}
+          >
             <Typography
               variant="h2"
               sx={{ textAlign: { md: "left", xs: "center" } }}
@@ -152,7 +155,10 @@ const Hero = () => {
               {t("landing-hero-gpu")}
             </Typography>
           </Grid>
-          <Grid item xs={12} sm={4} md={12}>
+          <Grid
+            //item
+            size={{ xs: 12, sm: 4, md: 12 }}
+          >
             <Typography
               variant="h2"
               sx={{ textAlign: { md: "left", xs: "center" } }}
@@ -166,7 +172,10 @@ const Hero = () => {
               {t("landing-hero-cpu")}
             </Typography>
           </Grid>
-          <Grid item xs={12} sm={4} md={12}>
+          <Grid
+            //item
+            size={{ xs: 12, sm: 4, md: 12 }}
+          >
             <Typography
               variant="h2"
               sx={{ textAlign: { md: "left", xs: "center" } }}

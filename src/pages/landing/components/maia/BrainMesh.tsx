@@ -4,16 +4,17 @@ import { useRef, useEffect, useState } from "react";
 import { useFrame, useLoader } from "@react-three/fiber";
 import { GLTFLoader } from "three-stdlib";
 import { Vector3 } from "three";
+import { useGLTF } from "@react-three/drei";
 
-const url = "/static/models/Brain.glb";
+const url = "/static/models/brain.glb";
 
 function BrainModel() {
-  const gltf = useLoader(GLTFLoader, url);
-  gltf.scene.traverse((child) => {
-    if (child.material) child.material.metalness = 0;
+  const { scene } = useGLTF(url);
+  scene.traverse((obj) => {
+    if (obj.material) obj.material.metalness = 0;
   });
 
-  return <primitive object={gltf.scene}></primitive>;
+  return <primitive object={scene}></primitive>;
 }
 
 export function BrainMesh({ mobile, position, props }) {
@@ -42,7 +43,8 @@ export function BrainMesh({ mobile, position, props }) {
       let y = 1 - mouseCoordinates.y / window.innerHeight;
       const vector = new Vector3(x, y, 0);
       vector.unproject(camera);
-      meshRef.current.rotation.set(1 - vector.y * 20, vector.x * 10, 0);
+      //meshRef.current.rotation.set(1 - vector.y * 20, vector.x * 10, 0);
+      meshRef.current.rotation.set(1 - vector.y - 0.8, vector.x, 0);
     }
   });
 
