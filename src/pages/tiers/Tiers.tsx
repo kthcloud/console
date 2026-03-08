@@ -13,7 +13,7 @@ import Page from "../../components/Page";
 import useResource from "../../hooks/useResource";
 import { Coin } from "./Coin";
 import { useEffect, useState } from "react";
-import { useKeycloak } from "@react-keycloak/web";
+import { useKeycloak } from "../../hooks/useKeycloak";
 import { discover } from "../../api/deploy/discover";
 import Scrollbar from "../../components/Scrollbar";
 import { AlertList } from "../../components/AlertList";
@@ -129,11 +129,7 @@ const TierCard = ({ tier }: { tier: Role }) => {
                 variant="outlined"
                 color="primary"
                 fullWidth
-                onClick={() =>
-                  keycloak.login({
-                    redirectUri: window.location.origin + "/deploy",
-                  })
-                }
+                onClick={() => keycloak.login()}
                 sx={{ m: 1 }}
               >
                 {t("button-login")}

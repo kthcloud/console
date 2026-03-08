@@ -1,5 +1,5 @@
 import { Button, Stack } from "@mui/material";
-import { useKeycloak } from "@react-keycloak/web";
+import { useKeycloak } from "../../../hooks/useKeycloak";
 import { sentenceCase } from "change-case";
 import { enqueueSnackbar } from "notistack";
 import { useTranslation } from "react-i18next";

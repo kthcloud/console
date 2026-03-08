@@ -15,7 +15,7 @@ import {
   Stepper,
   Typography,
 } from "@mui/material";
-import { useKeycloak } from "@react-keycloak/web";
+import { useKeycloak } from "../../hooks/useKeycloak";
 import { enqueueSnackbar } from "notistack";
 import { useState } from "react";
 import LoadingPage from "../../components/LoadingPage";

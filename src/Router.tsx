@@ -18,6 +18,7 @@ import Onboarding from "./pages/onboarding";
 import Inbox from "./pages/inbox/Inbox";
 import Teams from "./pages/teams/Teams";
 import { GPU } from "./pages/gpu/GPU";
+import Callback from "./components/Callback";
 
 export default function Router() {
   return useRoutes([
@@ -28,6 +29,7 @@ export default function Router() {
         { path: "/", element: <Landing /> },
         { path: "/status", element: <Status /> },
         { path: "tiers", element: <Tiers /> },
+        { path: "oauth2/callback", element: <Callback /> },
         {
           path: "deploy",
           element: (

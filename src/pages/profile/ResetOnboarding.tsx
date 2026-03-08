@@ -1,6 +1,6 @@
 import { LoadingButton } from "@mui/lab";
 import { Card, CardActions, CardHeader, CircularProgress } from "@mui/material";
-import { useKeycloak } from "@react-keycloak/web";
+import { useKeycloak } from "../../hooks/useKeycloak";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";

@@ -24,7 +24,7 @@ import {
   Typography,
 } from "@mui/material";
 import Iconify from "../../components/Iconify";
-import { useKeycloak } from "@react-keycloak/web";
+import { useKeycloak } from "../../hooks/useKeycloak";
 import { Uuid } from "../../types";
 import { errorHandler } from "../../utils/errorHandler";
 import { enqueueSnackbar } from "notistack";

@@ -19,7 +19,7 @@ import {
 import { useSnackbar } from "notistack";
 import useResource from "../../hooks/useResource";
 import { ChangeEvent, useEffect, useState } from "react";
-import { useKeycloak } from "@react-keycloak/web";
+import { useKeycloak } from "../../hooks/useKeycloak";
 import { useNavigate } from "react-router-dom";
 
 // utils

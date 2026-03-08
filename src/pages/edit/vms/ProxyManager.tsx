@@ -29,7 +29,7 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import { useKeycloak } from "@react-keycloak/web";
+import { useKeycloak } from "../../../hooks/useKeycloak";
 import { enqueueSnackbar } from "notistack";
 import { useEffect, useState } from "react";
 import { updateVM } from "../../../api/deploy/vms";

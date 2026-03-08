@@ -1,11 +1,12 @@
-import Keycloak from "keycloak-js";
-
-const config = {
-  url: import.meta.env.VITE_KEYCLOAK_URL,
-  realm: import.meta.env.VITE_KEYCLOAK_REALM,
-  clientId: import.meta.env.VITE_KEYCLOAK_CLIENT_ID,
+const oidcConfig = {
+  authority:
+    import.meta.env.VITE_KEYCLOAK_URL +
+    "/realms/" +
+    import.meta.env.VITE_KEYCLOAK_REALM,
+  client_id: import.meta.env.VITE_KEYCLOAK_CLIENT_ID,
+  redirect_uri: window.location.origin + "/oauth2/callback",
+  response_type: "code",
+  scope: "openid profile email",
 };
 
-const keycloak = new Keycloak(config);
-
-export { keycloak };
+export { oidcConfig };

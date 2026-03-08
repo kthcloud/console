@@ -22,7 +22,6 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import { useKeycloak } from "@react-keycloak/web";
 import { sentenceCase } from "change-case";
 import { enqueueSnackbar } from "notistack";
 import { Fragment, useEffect, useState } from "react";
@@ -52,6 +51,7 @@ import {
 } from "@kthcloud/go-deploy-types/types/v2/body";
 import { AlertList } from "../../components/AlertList";
 import { NoWrapTable as Table } from "../../components/NoWrapTable";
+import { useKeycloak } from "../../hooks/useKeycloak";
 
 const Teams = () => {
   const { user, teams, beginFastLoad } = useResource();

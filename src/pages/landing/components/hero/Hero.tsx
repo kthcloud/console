@@ -9,7 +9,7 @@ import {
 import "./hero.css";
 import { useEffect, useState } from "react";
 import { fShortenNumber } from "../../../../utils/formatNumber";
-import { useKeycloak } from "@react-keycloak/web";
+import { useKeycloak } from "../../../../hooks/useKeycloak";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { TimestampedSystemCapacities } from "@kthcloud/go-deploy-types/types/v2/body";
@@ -104,9 +104,7 @@ const Hero = () => {
               size={"large"}
               onClick={() => {
                 if (!initialized) return;
-                keycloak.login({
-                  redirectUri: window.location.origin + "/deploy",
-                });
+                keycloak.login();
               }}
             >
               {t("button-login")}

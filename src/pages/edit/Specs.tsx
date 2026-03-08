@@ -21,7 +21,7 @@ import { CustomTheme } from "../../theme/types";
 import useResource from "../../hooks/useResource";
 import { useEffect, useState } from "react";
 import Iconify from "../../components/Iconify";
-import { useKeycloak } from "@react-keycloak/web";
+import { useKeycloak } from "../../hooks/useKeycloak";
 import { updateDeployment } from "../../api/deploy/deployments";
 import { enqueueSnackbar } from "notistack";
 import { errorHandler } from "../../utils/errorHandler";

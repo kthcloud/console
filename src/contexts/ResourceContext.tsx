@@ -2,7 +2,7 @@
 import React, { useState, createContext, useEffect } from "react";
 import useInterval from "../hooks/useInterval";
 import { useSnackbar } from "notistack";
-import { useKeycloak } from "@react-keycloak/web";
+import { useKeycloak } from "../hooks/useKeycloak";
 
 // api
 import { getJob } from "../api/deploy/jobs";

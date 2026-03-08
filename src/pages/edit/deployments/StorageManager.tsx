@@ -20,7 +20,7 @@ import { enqueueSnackbar } from "notistack";
 import { useState } from "react";
 import { updateDeployment } from "../../../api/deploy/deployments";
 import Iconify from "../../../components/Iconify";
-import { useKeycloak } from "@react-keycloak/web";
+import { useKeycloak } from "../../../hooks/useKeycloak";
 import useResource from "../../../hooks/useResource";
 import { errorHandler } from "../../../utils/errorHandler";
 import { useTranslation } from "react-i18next";

@@ -20,7 +20,7 @@ import { useState } from "react";
 import Iconify from "../../components/Iconify";
 import { createDeployment } from "../../api/deploy/deployments";
 import { useSnackbar } from "notistack";
-import { useKeycloak } from "@react-keycloak/web";
+import { useKeycloak } from "../../hooks/useKeycloak";
 import RFC1035Input from "../../components/RFC1035Input";
 import { faker } from "@faker-js/faker";
 import { errorHandler } from "../../utils/errorHandler";

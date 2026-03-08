@@ -33,7 +33,7 @@ import { CustomTheme } from "../../theme/types";
 import { createApiKey, updateUser } from "../../api/deploy/users";
 import { errorHandler } from "../../utils/errorHandler";
 import { enqueueSnackbar } from "notistack";
-import { useKeycloak } from "@react-keycloak/web";
+import { useKeycloak } from "../../hooks/useKeycloak";
 import { ApiKeyCreated } from "@kthcloud/go-deploy-types/types/v2/body";
 import CopyButton from "../../components/CopyButton";
 import { NoWrapTable as Table } from "../../components/NoWrapTable";

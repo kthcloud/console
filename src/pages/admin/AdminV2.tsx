@@ -40,7 +40,7 @@ import { Resource, Uuid } from "../../types";
 import AdminToolbar from "../../components/admin/AdminToolbar";
 import HostsTab from "../../components/admin/HostsTab";
 import { deleteDeployment } from "../../api/deploy/deployments";
-import { useKeycloak } from "@react-keycloak/web";
+import { useKeycloak } from "../../hooks/useKeycloak";
 import { deleteVM } from "../../api/deploy/vms";
 import { deleteGpuLease } from "../../api/deploy/gpuLeases";
 import { deleteTeam } from "../../api/deploy/teams";

@@ -20,7 +20,7 @@ import {
 import useFilterableResourceState, {
   DEFAULT_PAGESIZE,
 } from "../hooks/useFilterableResourceState";
-import { useKeycloak } from "@react-keycloak/web";
+import { useKeycloak } from "../hooks/useKeycloak";
 import { getUsers } from "../api/deploy/users";
 import { errorHandler } from "../utils/errorHandler";
 import { enqueueSnackbar } from "notistack";

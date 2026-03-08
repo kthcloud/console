@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { searchUsers } from "../../api/deploy/users";
 import { errorHandler } from "../../utils/errorHandler";
-import { useKeycloak } from "@react-keycloak/web";
+import { useKeycloak } from "../../hooks/useKeycloak";
 import ConfirmButton from "../../components/ConfirmButton";
 import { Link } from "react-router-dom";
 import useResource from "../../hooks/useResource";
