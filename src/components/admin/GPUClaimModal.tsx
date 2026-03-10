@@ -36,7 +36,7 @@ type Role =
   | "admin"
   | string;
 
-function getChipColor(role: Role) {
+export function getChipColor(role: Role) {
   const metalStyles: Record<string, any> = {
     bronze: {
       background:

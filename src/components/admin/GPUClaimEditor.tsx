@@ -14,6 +14,7 @@ import {
   GenericDeviceConfiguration,
   RequestedGpuCreate,
 } from "../../temporaryTypesRemoveMe";
+import CelExprBuilder from "./CELExprBuilder";
 
 interface Props {
   value: RequestedGpuCreate[];
@@ -103,24 +104,16 @@ export default function GpuClaimEditor({ value, onChange }: Props) {
                 required
               />
 
-              {/*gpu.selectors?.find(((s as any)) => "cel" in s) && (
-                <CelExprBuilder
-                  value={[
-                    (gpu.selectors!.find(((s as any)) => "cel" in s) as any).cel
-                      .expression,
-                  ]} // wrap as array
-                  onChange={(newExpressions) => {
-                    const newSelectors = gpu.selectors!.map((s) =>
-                      "cel" in s
-                        ? { cel: { expression: newExpressions[0] } } // update CEL
-                        : s
-                    );
-                    updateRequested(idx, { selectors: newSelectors });
-                  }}
-                  label="Selectors (CEL expression)"
-                  placeholder="gpu.memory > 4 && gpu.computeCapability >= 7.0"
-                />
-              )*/}
+              <CelExprBuilder
+                value={gpu.selectors || []}
+                onChange={(newExpressions) => {
+                  updateRequested(idx, {
+                    selectors: [...(gpu.selectors || []), ...newExpressions],
+                  });
+                }}
+                label="Selectors (CEL expression)"
+                placeholder="memory <= 16 && cudaComputeCapability >= 7.0"
+              />
 
               <Stack spacing={2}>
                 <Typography>{"Driver configuration"}</Typography>
