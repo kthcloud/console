@@ -49,18 +49,17 @@ export default function DeploymentTypeCard({
   };
 
   return (
-    <Card sx={{ boxShadow: 20 }}>
-      <CardHeader
-        title={t("create-deployment-image")}
-        subheader={t("create-deployment-image-subheader")}
-      />
-      <CardContent>
-        <Tabs value={tabIndex} onChange={handleTabChange}>
-          <Tab label={t("image")} />
-          <Tab label={t("custom-deployment")} />
-        </Tabs>
+    <Card sx={{ boxShadow: 20, padding: "0.5rem 1rem 1rem 1rem" }}>
+      <Tabs value={tabIndex} onChange={handleTabChange}>
+        <Tab label={t("image")} />
+        <Tab label={t("custom-deployment")} />
+      </Tabs>
 
-        <TabPanel value={tabIndex} index={0}>
+      <TabPanel value={tabIndex} index={0}>
+        <CardContent sx={{ padding: "0 0.5rem 0.5rem 0.5rem" }}>
+          <Typography mb="1rem">
+            {t("create-deployment-image-subheader")}
+          </Typography>
           <Stack
             direction="row"
             spacing={3}
@@ -85,14 +84,16 @@ export default function DeploymentTypeCard({
               fullWidth
             />
           </Stack>
-        </TabPanel>
+        </CardContent>
+      </TabPanel>
 
-        <TabPanel value={tabIndex} index={1}>
+      <TabPanel value={tabIndex} index={1}>
+        <CardContent sx={{ padding: "0 0.5rem 0.5rem 0.5rem" }}>
           <Typography variant="body1" gutterBottom>
             {t("custom-deployment-description")}
           </Typography>
-        </TabPanel>
-      </CardContent>
+        </CardContent>
+      </TabPanel>
     </Card>
   );
 }

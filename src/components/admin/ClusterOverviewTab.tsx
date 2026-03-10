@@ -33,7 +33,14 @@ export default function ClusterOverviewTab() {
           const hasDRA = zone.capabilities?.includes("dra");
 
           return (
-            <Card key={zone.name} variant="outlined">
+            <Card
+              key={zone.name}
+              variant="outlined"
+              sx={{
+                opacity: zone.enabled === false ? 0.5 : 1, // gray out if disabled
+                pointerEvents: zone.enabled === false ? "none" : "auto", // disable interactions
+              }}
+            >
               <CardContent>
                 <Stack spacing={2}>
                   {/* Header */}
@@ -42,10 +49,26 @@ export default function ClusterOverviewTab() {
                     justifyContent="space-between"
                     alignItems="center"
                   >
-                    <Typography variant="subtitle1" fontWeight={600}>
+                    <Typography
+                      variant="subtitle1"
+                      fontWeight={600}
+                      color={
+                        zone.enabled === false
+                          ? "text.disabled"
+                          : "text.primary"
+                      }
+                    >
                       {zone.name}
                     </Typography>
-                    <Typography variant="subtitle1" fontWeight={600}>
+                    <Typography
+                      variant="subtitle1"
+                      fontWeight={600}
+                      color={
+                        zone.enabled === false
+                          ? "text.disabled"
+                          : "text.primary"
+                      }
+                    >
                       {zone.description}
                     </Typography>
                   </Stack>
@@ -58,12 +81,14 @@ export default function ClusterOverviewTab() {
                         label={cap.toUpperCase()}
                         size="small"
                         color={cap === "dra" ? "primary" : "default"}
+                        sx={{
+                          opacity: zone.enabled === false ? 0.5 : 1,
+                        }}
                       />
                     ))}
                   </Stack>
 
-                  {/* Optional DRA section */}
-                  {hasDRA && (
+                  {hasDRA && zone.enabled !== false && (
                     <>
                       <Divider />
                       <DRAConfigPanel zone={zone} roles={roles} />

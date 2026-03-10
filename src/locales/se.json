@@ -44,6 +44,7 @@
         "button-get-started": "Kom igång",
         "gpu-lease-subheader": "Genom att låna ett grafikkort får du använda det under en begränsad tidsperiod.",
         "resouce-comparison-serverless-computing-services": "Serverlösa tjänster: t.ex. Cloudflare-workers",
+        "resouce-comparison-llm": "Köra LLMs: t.ex. Ollama, llama.cpp",
         "reset-onboarding": "Visa genomgång",
         "button-delete": "Radera",
         "gpu-capacity": "GPU-kapacitet",
@@ -571,6 +572,11 @@
         "deployment-gpu-subheader": "GPUs på deployments använder en ny k8s funktion som heter DRA kombinerat med drivrutin funktioner för att dela ett grafikkort mellan flera containrar.",
         "deployment-gpu-quota": "GPU användnings kvoten är användarglobal, om din kvot tillåter flera GPUer kan du dela upp dom som du vill. Dvs antingen ett grafikkort per deployment, eller flera GPUer på en deployment.",
         "deployment-gpu-unstable": "Denna funktion bygger på funktioner från NVIDIA som är i BETA, fel kan uppstå. Kontakta oss på discord om du har några frågor.",
-        "clusters-overview": "Kluster"
+        "clusters-overview": "Kluster",
+        "active-keys": "Aktiva nycklar",
+        "expired-keys": "Utgångna nycklar",
+        "delete-all-expired": "Ta bort alla utgågna",
+        "custom-deployment": "Egen",
+        "custom-deployment-description": "Bygg och använd din egna image, använd CI/CD via Github actions / Gitlab workflows eller bygg och pusha din egna image. Nycklar går att se när din deployment är skapad"
     }
 }

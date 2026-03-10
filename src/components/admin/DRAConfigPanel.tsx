@@ -10,7 +10,6 @@ import useAdmin from "../../hooks/useAdmin";
 interface DRAConfigPanelProps {
   zone: {
     name: string;
-    // extend later with draResources, policies, etc
   };
   roles: string[];
 }

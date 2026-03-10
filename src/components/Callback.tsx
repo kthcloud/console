@@ -10,6 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import Page from "./Page";
+import LoadingPage from "./LoadingPage";
 
 export default function Callback() {
   const navigate = useNavigate();
@@ -31,16 +32,7 @@ export default function Callback() {
   }, [auth.isLoading, auth.isAuthenticated, navigate]);
 
   if (auth.isLoading) {
-    return (
-      <Page>
-        <Box component="div" sx={{ minHeight: "100vh" }}>
-          <CircularProgress />
-          <Typography mt={2} variant="h6">
-            Authenticating...
-          </Typography>
-        </Box>
-      </Page>
-    );
+    return <LoadingPage />;
   }
 
   if (auth.error) {
