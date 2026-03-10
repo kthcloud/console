@@ -56,6 +56,7 @@ import Label from "../../components/Label";
 import TimeAgo from "../../components/admin/TimeAgo";
 import CluseterOverviewTab from "../../components/admin/ClusterOverviewTab";
 import { deleteGpuClaim } from "../../api/deploy/gpuClaims";
+import { getChipColor } from "../../components/admin/GPUClaimModal";
 
 export default function AdminV2() {
   const { tab: initialTab } = useParams();
@@ -333,6 +334,23 @@ export default function AdminV2() {
         { id: "id", label: "ID" },
         { id: "name", label: "Name" },
         { id: "zone", label: "Zone" },
+        {
+          id: "allowedRoles",
+          label: "Allowed Roles",
+          renderFunc: (allowedRoles: string[] | undefined) => {
+            return (
+              <Stack gap={0.5}>
+                {allowedRoles ? (
+                  allowedRoles.map((role) => (
+                    <Chip label={role} size="small" {...getChipColor(role)} />
+                  ))
+                ) : (
+                  <Chip label={"all"} size="small" />
+                )}
+              </Stack>
+            );
+          },
+        },
         {
           id: "*",
           label: "Requested",

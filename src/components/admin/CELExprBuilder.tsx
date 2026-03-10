@@ -2,7 +2,7 @@ import { Stack, TextField, IconButton, Chip, Typography } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { useState } from "react";
 
-// Simple CEL validation function (stub, replace with real parser)
+// Simple CEL validation function (stub, TODO: replace with real parser)
 const validateCel = (expr: string): boolean => {
   try {
     if (!expr) return true; // empty allowed
@@ -52,7 +52,6 @@ export default function CelExprBuilder({
     <Stack spacing={1}>
       <Typography variant="subtitle2">{label}</Typography>
 
-      {/* Existing expressions as Chips */}
       <Stack direction="row" spacing={1} flexWrap="wrap">
         {value.map((expr, idx) => {
           const valid = validateCel(expr);
@@ -67,7 +66,6 @@ export default function CelExprBuilder({
         })}
       </Stack>
 
-      {/* Input field for new expression */}
       <Stack direction="row" spacing={1}>
         <TextField
           fullWidth

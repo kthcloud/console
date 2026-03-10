@@ -105,7 +105,11 @@ export default function GPUSelector({ gpus, setGpus, zone }: GPUSelectorProps) {
             }
           >
             <span>
-              <Iconify icon="mdi:help-circle-outline" color="primary.main" />
+              <Iconify
+                icon="mdi:help-circle-outline"
+                color="primary.main"
+                sx={{ fontSize: 20 }}
+              />
             </span>
           </Tooltip>
         }

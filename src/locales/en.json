@@ -298,6 +298,7 @@
         "onboarding-resources-3": "If you need more resources, please contact us on Discord!",
         "onboarding-deployments-1": "Deployments are the most common resource type on kthcloud. They are perfect for running experiments, or hosting websites.",
         "onboarding-deployments-2": "All you need is a Docker image or a repo with a Dockerfile, and a little bit of configuration. kthcloud will take care of the rest.",
+        "onboarding-deployments-3": "You can add GPU compute to your deployment to use for machine learning.",
         "onboarding-vms-1": "Virtual machines are the most flexible resource type on kthcloud. You can install any programs you want and have full control over the machine.",
         "onboarding-vms-2": "Virtual machines are perfect for running machine learning models, databases and other more complex applications.",
         "onboarding-vms-3": "You can also request a GPU for your virtual machine. Please note that GPU resources are limited, for extended use you may want to provide your own GPU.",
@@ -582,6 +583,8 @@
         "delete-all-expired": "Delete all expired",
         "custom-deployment": "Custom",
         "custom-deployment-description": "Build and use your own image, use CI/CD through Github actions / Gitlab workflows or build and push your own image. Secrets will be provided after the deployment is created",
-        "deployment-spec-selector": "Select specs"
+        "deployment-spec-selector": "Select specs",
+        "deployment-ssh-info": "SSH into your deployments using a private key linked to a public key in your profile",
+        "deployment-ssh-view-keys": "View your ssh keys in your profile"
     }
 }

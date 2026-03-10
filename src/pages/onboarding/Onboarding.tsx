@@ -369,6 +369,10 @@ export const Onboarding = () => {
                             <Typography variant="body1" gutterBottom mb={3}>
                               {t("onboarding-deployments-2")}
                             </Typography>
+
+                            <Typography variant="body1" gutterBottom mb={3}>
+                              {t("onboarding-deployments-3")}
+                            </Typography>
                           </OnboardingCard>
                         </div>
                       </Fade>

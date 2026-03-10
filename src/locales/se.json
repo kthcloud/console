@@ -583,6 +583,8 @@
         "delete-all-expired": "Ta bort alla utgågna",
         "custom-deployment": "Egen",
         "custom-deployment-description": "Bygg och använd din egna image, använd CI/CD via Github actions / Gitlab workflows eller bygg och pusha din egna image. Nycklar går att se när din deployment är skapad",
-        "deployment-spec-selector": "Välj specifikationer"
+        "deployment-spec-selector": "Välj specifikationer",
+        "deployment-ssh-info": "SSH:a till dina deployments med en privat nyckel kopplad till en offentlig nyckel i din profil",
+        "deployment-ssh-view-keys": "Se dina SSH nycklar i din profil"
     }
 }
