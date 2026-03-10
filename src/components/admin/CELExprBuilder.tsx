@@ -1,7 +1,6 @@
 import { Stack, TextField, IconButton, Chip, Typography } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import DeleteIcon from "@mui/icons-material/Delete";
-import React, { useState } from "react";
+import { useState } from "react";
 
 // Simple CEL validation function (stub, replace with real parser)
 const validateCel = (expr: string): boolean => {

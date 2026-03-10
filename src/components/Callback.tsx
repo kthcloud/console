@@ -2,13 +2,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "react-oidc-context";
 
-import {
-  Box,
-  Button,
-  CircularProgress,
-  Paper,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Paper, Typography } from "@mui/material";
 import Page from "./Page";
 import LoadingPage from "./LoadingPage";
 
