@@ -37,10 +37,9 @@ import { useKeycloak } from "../../hooks/useKeycloak";
 import { ApiKeyCreated } from "@kthcloud/go-deploy-types/types/v2/body";
 import CopyButton from "../../components/CopyButton";
 import { NoWrapTable as Table } from "../../components/NoWrapTable";
-
 export const ApiKeys = () => {
   const { t } = useTranslation();
-  const { user } = useResource();
+  const { user, setUser } = useResource();
   const theme: CustomTheme = useTheme();
   const { keycloak, initialized } = useKeycloak();
 
@@ -51,17 +50,26 @@ export const ApiKeys = () => {
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const [newKey, setNewKey] = useState<string>("");
   const [loading, setLoading] = useState<string[]>([]);
+  const [bulkLoading, setBulkLoading] = useState(false);
+
+  const now = new Date();
+
+  if (!user) return null;
+
+  const activeKeys = user.apiKeys.filter(
+    (key) => key.expiresAt && new Date(key.expiresAt) > now
+  );
+  const expiredKeys = user.apiKeys.filter(
+    (key) => key.expiresAt && new Date(key.expiresAt) <= now
+  );
 
   const createKey = async () => {
-    if (!(user && initialized && keycloak.token)) {
-      return;
-    }
+    if (!(user && initialized && keycloak.token)) return;
 
-    // Calculate ISO date from selected option
     const newKeyExpiresDate = new Date();
-    const option = newKeyExpires.split(" ");
-    const amount = parseInt(option[0]);
-    const unit = option[1];
+    const [amountStr, unit] = newKeyExpires.split(" ");
+    const amount = parseInt(amountStr);
+
     switch (unit) {
       case "days":
         newKeyExpiresDate.setDate(newKeyExpiresDate.getDate() + amount);
@@ -69,21 +77,17 @@ export const ApiKeys = () => {
       case "year":
         newKeyExpiresDate.setFullYear(newKeyExpiresDate.getFullYear() + amount);
         break;
-      default:
-        break;
     }
 
     const isoDate = newKeyExpiresDate.toISOString();
 
     try {
-      // Create the key
       const response: ApiKeyCreated = await createApiKey(
         keycloak.token,
         user.id,
         newKeyName,
         isoDate
       );
-
       if (response) {
         setNewKey(response.key);
         setNewKeyName("");
@@ -92,35 +96,52 @@ export const ApiKeys = () => {
       }
     } catch (error: any) {
       errorHandler(error).forEach((e) =>
-        enqueueSnackbar(t("could-not-fetch-profile") + e, {
-          variant: "error",
-        })
+        enqueueSnackbar(t("could-not-fetch-profile") + e, { variant: "error" })
       );
     }
   };
 
   const deleteKey = async (keyName: string) => {
-    if (!(user && initialized && keycloak.token)) {
-      return;
-    }
-    setLoading([...loading, keyName]);
+    if (!(user && initialized && keycloak.token)) return;
 
+    setLoading([...loading, keyName]);
     try {
-      const response = await updateUser(user.id, keycloak.token, {
+      await updateUser(user.id, keycloak.token, {
         apiKeys: user.apiKeys.filter((k) => k.name !== keyName),
       });
-      if (response) {
-        enqueueSnackbar(t("successfully-updated"), {
-          variant: "success",
-        });
-      }
+      enqueueSnackbar(t("successfully-updated"), { variant: "success" });
+      setUser({
+        ...user,
+        apiKeys: user.apiKeys.filter((k) => k.name !== keyName),
+      });
     } catch (error: any) {
       errorHandler(error).forEach((e) =>
-        enqueueSnackbar(t("could-not-fetch-profile") + e, {
-          variant: "error",
-        })
+        enqueueSnackbar(t("could-not-fetch-profile") + e, { variant: "error" })
       );
+    } finally {
       setLoading(loading.filter((k) => k !== keyName));
+    }
+  };
+
+  const deleteExpired = async () => {
+    if (!(user && initialized && keycloak.token)) return;
+    setBulkLoading(true);
+    const expiredNames = expiredKeys.map((k) => k.name);
+    try {
+      await updateUser(user.id, keycloak.token, {
+        apiKeys: user.apiKeys.filter((k) => !expiredNames.includes(k.name)),
+      });
+      enqueueSnackbar(t("successfully-updated"), { variant: "success" });
+      setUser({
+        ...user,
+        apiKeys: user.apiKeys.filter((k) => !expiredNames.includes(k.name)),
+      });
+    } catch (error: any) {
+      errorHandler(error).forEach((e) =>
+        enqueueSnackbar(t("could-not-fetch-profile") + e, { variant: "error" })
+      );
+    } finally {
+      setBulkLoading(false);
     }
   };
 
@@ -129,9 +150,32 @@ export const ApiKeys = () => {
     return chunks[0] + " " + t(chunks[1]);
   };
 
-  if (!user) {
-    return null;
-  }
+  const renderKeyRow = (key: (typeof user.apiKeys)[0]) => (
+    <TableRow
+      key={key.name}
+      sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+    >
+      {!loading.includes(key.name) ? (
+        <>
+          <TableCell component="th" scope="row">
+            {key.name}
+          </TableCell>
+          <TableCell>
+            {key.expiresAt?.replace("T", " ").replace("Z", "").split(".")[0]}
+          </TableCell>
+          <TableCell align="right">
+            <IconButton color="error" onClick={() => deleteKey(key.name)}>
+              <Iconify icon="mdi:delete" />
+            </IconButton>
+          </TableCell>
+        </>
+      ) : (
+        <TableCell colSpan={3}>
+          <Skeleton />
+        </TableCell>
+      )}
+    </TableRow>
+  );
 
   return (
     <>
@@ -141,10 +185,7 @@ export const ApiKeys = () => {
         slots={{ backdrop: Backdrop }}
         slotProps={{
           backdrop: {
-            sx: {
-              background: "rgba(0, 0, 0, 0.4)",
-              backdropFilter: "blur(3px)",
-            },
+            sx: { background: "rgba(0,0,0,0.4)", backdropFilter: "blur(3px)" },
           },
         }}
       >
@@ -189,101 +230,111 @@ export const ApiKeys = () => {
           }
         />
         <CardContent>
-          <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
-              <TableHead>
-                <TableRow>
-                  <TableCell>{t("admin-name")}</TableCell>
-                  <TableCell>{t("expires")}</TableCell>
-                  <TableCell align="right">{t("admin-actions")}</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {user.apiKeys
-                  .filter((key) => key.name)
-                  .map((key, index) => (
-                    <TableRow
-                      key={"key_" + key.name + "_" + index}
-                      sx={{
-                        "&:last-child td, &:last-child th": { border: 0 },
-                      }}
-                    >
-                      {!loading.includes(key.name) ? (
-                        <>
-                          <TableCell component="th" scope="row">
-                            {key.name}
-                          </TableCell>
-                          <TableCell>
-                            {
-                              key.expiresAt
-                                .replace("T", " ")
-                                .replace("Z", "")
-                                .split(".")[0]
-                            }
-                          </TableCell>
-                          <TableCell align="right">
-                            <IconButton
-                              color="error"
-                              onClick={() => deleteKey(key.name)}
-                            >
-                              <Iconify icon="mdi:delete" />
-                            </IconButton>
-                          </TableCell>
-                        </>
-                      ) : (
-                        <TableCell colSpan={3}>
-                          <Skeleton />
-                        </TableCell>
-                      )}
+          <Stack spacing={4}>
+            <Typography variant="h6">{t("active-keys")}</Typography>
+            <TableContainer component={Paper}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>{t("admin-name")}</TableCell>
+                    <TableCell>{t("expires")}</TableCell>
+                    <TableCell align="right">{t("admin-actions")}</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {activeKeys.length > 0 ? (
+                    activeKeys.map(renderKeyRow)
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={3} align="center">
+                        {t("nothing-to-see-here")}
+                      </TableCell>
                     </TableRow>
-                  ))}
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
 
-                <TableRow
-                  sx={{
-                    "&:last-child td, &:last-child th": { border: 0 },
-                  }}
+            {expiredKeys.length > 0 && (
+              <>
+                <Stack
+                  direction="row"
+                  alignItems="center"
+                  justifyContent="space-between"
+                  mb={1}
                 >
-                  <TableCell component="th" scope="row">
-                    <TextField
-                      label={t("admin-name")}
+                  <Typography variant="h6">{t("expired-keys")}</Typography>
+                  {expiredKeys.length > 0 && (
+                    <Button
+                      color="error"
                       variant="outlined"
-                      value={newKeyName}
-                      onChange={(e) => {
-                        setNewKeyName(e.target.value);
-                      }}
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <Select
-                      value={newKeyExpires}
-                      onChange={(e) => {
-                        setNewKeyExpires(e.target.value);
-                      }}
-                      variant="outlined"
-                      sx={{ minWidth: 130 }}
+                      onClick={deleteExpired}
+                      disabled={bulkLoading}
                     >
-                      {dateOptions.map((option) => (
-                        <MenuItem key={option} value={option}>
-                          {renderExpireSpan(option)}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </TableCell>
-                  <TableCell align="right">
-                    <IconButton
-                      color="primary"
-                      aria-label="upload key"
-                      component="label"
-                      disabled={!(newKeyName && newKeyExpires)}
-                      onClick={createKey}
-                    >
-                      <Iconify icon="mdi:content-save" />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </TableContainer>
+                      {t("delete-all-expired")}
+                    </Button>
+                  )}
+                </Stack>
+                <TableContainer component={Paper}>
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>{t("admin-name")}</TableCell>
+                        <TableCell>{t("expires")}</TableCell>
+                        <TableCell align="right">
+                          {t("admin-actions")}
+                        </TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>{expiredKeys.map(renderKeyRow)}</TableBody>
+                  </Table>
+                </TableContainer>
+              </>
+            )}
+
+            <TableContainer component={Paper} sx={{ mt: 2 }}>
+              <Table>
+                <TableBody>
+                  <TableRow
+                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                  >
+                    <TableCell component="th" scope="row">
+                      <TextField
+                        label={t("admin-name")}
+                        variant="outlined"
+                        value={newKeyName}
+                        onChange={(e) => setNewKeyName(e.target.value)}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <Select
+                        value={newKeyExpires}
+                        onChange={(e) => setNewKeyExpires(e.target.value)}
+                        variant="outlined"
+                        sx={{ minWidth: 130 }}
+                      >
+                        {dateOptions.map((option) => (
+                          <MenuItem key={option} value={option}>
+                            {renderExpireSpan(option)}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </TableCell>
+                    <TableCell align="right">
+                      <IconButton
+                        color="primary"
+                        component="label"
+                        disabled={!(newKeyName && newKeyExpires)}
+                        onClick={createKey}
+                      >
+                        <Iconify icon="mdi:content-save" />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Stack>
         </CardContent>
       </Card>
     </>

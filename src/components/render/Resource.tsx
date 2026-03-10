@@ -244,6 +244,18 @@ export const renderStatusCode = (row: Resource) => {
   );
 };
 
+export const renderDeploymentGPU = (gpus: Deployment["specs"]["gpus"]) => {
+  if (!gpus || gpus.length <= 0) return null;
+  return (
+    <Label
+      variant="ghost"
+      startIcon={<Iconify icon="mdi:gpu" sx={{ opacity: 0.65 }} />}
+    >
+      {gpus.length > 1 ? gpus.length : gpus[0].claimName + "/" + gpus[0].name}
+    </Label>
+  );
+};
+
 export const renderZone = (row: Resource, zones: ZoneRead[]) => {
   if (!row.zone || !zones) {
     return <></>;

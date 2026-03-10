@@ -103,19 +103,24 @@ export default function GpuClaimEditor({ value, onChange }: Props) {
                 required
               />
 
-              {/* TODO: CEL expr for selectors*/}
-              {/* <Autocomplete
-                multiple
-                freeSolo
-                options={["e"]}
-                label="Selectors"
-                value={gpu.selectors}
-                onChange={(_, sel) => {
-                  updateRequested(idx, {
-                    selectors: sel,
-                  });
-                }}
-              /> */}
+              {/*gpu.selectors?.find(((s as any)) => "cel" in s) && (
+                <CelExprBuilder
+                  value={[
+                    (gpu.selectors!.find(((s as any)) => "cel" in s) as any).cel
+                      .expression,
+                  ]} // wrap as array
+                  onChange={(newExpressions) => {
+                    const newSelectors = gpu.selectors!.map((s) =>
+                      "cel" in s
+                        ? { cel: { expression: newExpressions[0] } } // update CEL
+                        : s
+                    );
+                    updateRequested(idx, { selectors: newSelectors });
+                  }}
+                  label="Selectors (CEL expression)"
+                  placeholder="gpu.memory > 4 && gpu.computeCapability >= 7.0"
+                />
+              )*/}
 
               <Stack spacing={2}>
                 <Typography>{"Driver configuration"}</Typography>

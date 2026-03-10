@@ -30,6 +30,7 @@ import {
   VmRead,
 } from "@kthcloud/go-deploy-types/types/v2/body";
 import {
+  renderDeploymentGPU,
   renderResourceStatus,
   renderResourceWithGPU,
   renderShared,
@@ -162,6 +163,7 @@ export default function AdminV2() {
         },
         { id: "zone", label: "Zone" },
         { id: "image", label: "Image", or: "Custom deployment" },
+        { id: "specs.gpus", label: "GPUs", renderFunc: renderDeploymentGPU },
         {
           id: "*",
           label: "Status",
