@@ -679,7 +679,8 @@ export const Specs = ({ resource }: { resource: Resource }) => {
                         <span>
                           <Iconify
                             icon="mdi:help-circle-outline"
-                            color={theme.palette.text.secondary}
+                            color="primary.main"
+                            sx={{ fontSize: 20 }}
                           />
                         </span>
                       </Tooltip>
