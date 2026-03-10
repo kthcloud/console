@@ -106,9 +106,9 @@ export default function GpuClaimEditor({ value, onChange }: Props) {
 
               <CelExprBuilder
                 value={gpu.selectors || []}
-                onChange={(newExpressions) => {
+                onChange={(exprs) => {
                   updateRequested(idx, {
-                    selectors: [...(gpu.selectors || []), ...newExpressions],
+                    selectors: exprs,
                   });
                 }}
                 label="Selectors (CEL expression)"
