@@ -1,23 +1,6 @@
 // @mui
-import {
-  Button,
-  TextField,
-  Card,
-  CardContent,
-  CardHeader,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  TableBody,
-  IconButton,
-  Paper,
-  Stack,
-  Switch,
-  FormControlLabel,
-} from "@mui/material";
+import { Button, Card, CardContent, CardHeader, Stack } from "@mui/material";
 import { useState } from "react";
-import Iconify from "../../components/Iconify";
 import { createDeployment } from "../../api/deploy/deployments";
 import { useSnackbar } from "notistack";
 import { useKeycloak } from "../../hooks/useKeycloak";
@@ -28,8 +11,13 @@ import useResource from "../../hooks/useResource";
 import ZoneSelector from "./ZoneSelector";
 import { useTranslation } from "react-i18next";
 import { Volume } from "@kthcloud/go-deploy-types/types/v2/body";
-import { NoWrapTable as Table } from "../../components/NoWrapTable";
 import DeploymentTypeCard from "./DeploymentTypeCard";
+import { DeploymentGPU, EnvVar, Visibility } from "../../types";
+import EnvironmentVariableSelector from "../../components/create/EnvironmentVariableSelector";
+import PersistentVolumeSelector from "../../components/create/PersistentVolumeSelector";
+import GPUSelector from "../../components/create/GpuSelector";
+import SpecSelector from "../../components/create/SpecSelector";
+import VisibilitySelector from "../../components/create/VisibilitySelector";
 
 export default function CreateDeployment({
   finished,
@@ -61,15 +49,23 @@ export default function CreateDeployment({
   const [image, setImage] = useState("");
   const [imageArgs, setImageArgs] = useState("");
 
-  const [envs, setEnvs] = useState([{ name: "PORT", value: "8080" }]);
-  const [newEnvName, setNewEnvName] = useState("");
-  const [newEnvValue, setNewEnvValue] = useState("");
+  const [visibility, setVisibility] = useState<Visibility>("public");
+
+  const [envs, setEnvs] = useState<EnvVar[]>([{ name: "PORT", value: "8080" }]);
+  const [currentEnv, setCurrentEnv] = useState<EnvVar>({ name: "", value: "" });
 
   const [usePersistent, setUsePersistent] = useState(false);
   const [persistent, setPersistent] = useState<Volume[]>([]);
-  const [newPersistentName, setNewPersistentName] = useState("");
-  const [newPersistentAppPath, setNewPersistentAppPath] = useState("");
-  const [newPersistentServerPath, setNewPersistentServerPath] = useState("");
+  const [currentVolume, setCurrentVolume] = useState<Volume>({
+    name: "",
+    appPath: "",
+    serverPath: "",
+  });
+
+  const [cpuCores, setCpuCores] = useState<number>(0.2);
+  const [ram, setRam] = useState<number>(0.5);
+  const [replicas, setReplicas] = useState<number>(1);
+  const [gpus, setGpus] = useState<DeploymentGPU[]>([]);
 
   const [initialName, setInitialName] = useState(
     import.meta.env.VITE_RELEASE_BRANCH
@@ -83,34 +79,21 @@ export default function CreateDeployment({
 
     let newEnvs = envs;
     // Apply unsaved ENVS
-    if (newEnvName && newEnvValue) {
-      newEnvs = [
-        ...envs,
-        {
-          name: newEnvName,
-          value: newEnvValue,
-        },
-      ];
-
-      setNewEnvName("");
-      setNewEnvValue("");
+    if (currentEnv.name != "" && currentEnv.value != "") {
+      newEnvs = [...envs, currentEnv];
+      setCurrentEnv({ name: "", value: "" });
     }
 
     let newPersistent = persistent;
     // Apply unsaved persitent
-    if (newPersistentName && newPersistentAppPath && newPersistentServerPath) {
-      newPersistent = [
-        ...persistent,
-        {
-          name: newPersistentName,
-          appPath: newPersistentAppPath,
-          serverPath: newPersistentServerPath,
-        },
-      ];
+    if (
+      currentVolume.name &&
+      currentVolume.appPath &&
+      currentVolume.serverPath
+    ) {
+      newPersistent = [...persistent, currentVolume];
 
-      setNewPersistentName("");
-      setNewPersistentAppPath("");
-      setNewPersistentServerPath("");
+      setCurrentVolume({ name: "", appPath: "", serverPath: "" });
     }
 
     // If args are "", it should be an empty array
@@ -125,7 +108,14 @@ export default function CreateDeployment({
         newImageArgs,
         newEnvs,
         newPersistent,
-        keycloak.token
+        keycloak.token,
+        visibility,
+        {
+          cpuCores,
+          ram,
+          replicas,
+          gpus,
+        }
       );
       finished(job, stay);
       if (stay) {
@@ -135,8 +125,17 @@ export default function CreateDeployment({
           );
         setCleaned("");
         setEnvs([]);
-        setNewEnvName("");
-        setNewEnvValue("");
+
+        setCurrentEnv({ name: "", value: "" });
+
+        setUsePersistent(false);
+        setPersistent([]);
+        setCurrentVolume({ name: "", appPath: "", serverPath: "" });
+
+        setGpus([]);
+        setCpuCores(0.2);
+        setRam(0.5);
+        setReplicas(1);
       }
     } catch (error: any) {
       errorHandler(error).forEach((e) =>
@@ -182,310 +181,37 @@ export default function CreateDeployment({
         setImageArgs={setImageArgs}
       />
 
-      <Card sx={{ boxShadow: 20 }}>
-        <CardHeader
-          title={t("create-deployment-env")}
-          subheader={t("create-deployment-env-subheader")}
-        />
-        <CardContent>
-          <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
-              <TableHead>
-                <TableRow>
-                  <TableCell>{t("create-deployment-env-key")}</TableCell>
-                  <TableCell>{t("create-deployment-env-value")}</TableCell>
-                  <TableCell align="right">{t("admin-actions")}</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {envs.map((env) => (
-                  <TableRow
-                    key={"env_row_" + env.name}
-                    sx={{
-                      "&:last-child td, &:last-child th": { border: 0 },
-                    }}
-                  >
-                    <TableCell component="th" scope="row">
-                      <b style={{ fontFamily: "monospace" }}>{env.name}</b>
-                    </TableCell>
-                    <TableCell>
-                      <b style={{ fontFamily: "monospace" }}>{env.value}</b>
-                    </TableCell>
-                    <TableCell align="right">
-                      <Stack
-                        direction="row"
-                        spacing={1}
-                        useFlexGap
-                        alignItems={"center"}
-                        justifyContent={"flex-end"}
-                      >
-                        <IconButton
-                          color="primary"
-                          aria-label="edit env"
-                          component="label"
-                          onClick={() => {
-                            setNewEnvName(env.name);
-                            setNewEnvValue(env.value);
-                            setEnvs(
-                              envs.filter((item) => item.name !== env.name)
-                            );
-                          }}
-                        >
-                          <Iconify icon="mdi:pencil" />
-                        </IconButton>
+      <VisibilitySelector
+        visibility={visibility}
+        setVisibility={setVisibility}
+      />
 
-                        <IconButton
-                          color="error"
-                          aria-label="delete env"
-                          component="label"
-                          onClick={() =>
-                            setEnvs(
-                              envs.filter((item) => item.name !== env.name)
-                            )
-                          }
-                        >
-                          <Iconify icon="mdi:delete" />
-                        </IconButton>
-                      </Stack>
-                    </TableCell>
-                  </TableRow>
-                ))}
+      <EnvironmentVariableSelector
+        envs={envs}
+        setEnvs={setEnvs}
+        currentEnv={currentEnv}
+        setCurrentEnv={setCurrentEnv}
+      />
 
-                <TableRow
-                  sx={{
-                    "&:last-child td, &:last-child th": { border: 0 },
-                  }}
-                >
-                  <TableCell component="th" scope="row">
-                    <TextField
-                      label={t("admin-name")}
-                      variant="outlined"
-                      value={newEnvName}
-                      onChange={(e) => {
-                        setNewEnvName(e.target.value);
-                      }}
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <TextField
-                      label={t("create-deployment-env-value")}
-                      variant="outlined"
-                      value={newEnvValue}
-                      onChange={(e) => {
-                        setNewEnvValue(e.target.value);
-                      }}
-                      fullWidth
-                    />
-                  </TableCell>
-                  <TableCell align="right">
-                    <IconButton
-                      color="primary"
-                      component="label"
-                      disabled={!(newEnvName && newEnvValue)}
-                      onClick={() => {
-                        if (!(newEnvName && newEnvName)) return;
+      <SpecSelector
+        cpuCores={cpuCores}
+        setCpuCores={setCpuCores}
+        ram={ram}
+        setRam={setRam}
+        replicas={replicas}
+        setReplicas={setReplicas}
+      />
 
-                        setEnvs([
-                          ...envs,
-                          {
-                            name: newEnvName,
-                            value: newEnvValue,
-                          },
-                        ]);
+      <GPUSelector gpus={gpus} setGpus={setGpus} zone={selectedZone} />
 
-                        setNewEnvName("");
-                        setNewEnvValue("");
-                      }}
-                    >
-                      <Iconify icon="mdi:content-save" />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </CardContent>
-      </Card>
-
-      <Card sx={{ boxShadow: 20 }}>
-        <CardHeader
-          title={t("create-deployment-persistent")}
-          subheader={t("create-deployment-persistent-subheader")}
-        />
-        <CardContent>
-          <FormControlLabel
-            control={
-              <Switch
-                checked={usePersistent}
-                onChange={(e) => setUsePersistent(e.target.checked)}
-                inputProps={{ "aria-label": "controlled" }}
-              />
-            }
-            label={t("create-deployment-persistent")}
-          />
-          {usePersistent && (
-            <TableContainer component={Paper}>
-              <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>{t("admin-name")}</TableCell>
-                    <TableCell>{t("create-deployment-app-path")}</TableCell>
-                    <TableCell>{t("create-deployment-storage-path")}</TableCell>
-                    <TableCell align="right">{t("admin-actions")}</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {persistent.map((persistentRecord) => (
-                    <TableRow
-                      key={"persistent_row_" + persistentRecord.name}
-                      sx={{
-                        "&:last-child td, &:last-child th": { border: 0 },
-                      }}
-                    >
-                      <TableCell component="th" scope="row">
-                        <b style={{ fontFamily: "monospace" }}>
-                          {persistentRecord.name}
-                        </b>
-                      </TableCell>
-                      <TableCell>
-                        <b style={{ fontFamily: "monospace" }}>
-                          {persistentRecord.appPath}
-                        </b>
-                      </TableCell>
-                      <TableCell>
-                        <b style={{ fontFamily: "monospace" }}>
-                          {persistentRecord.serverPath}
-                        </b>
-                      </TableCell>
-                      <TableCell align="right">
-                        <Stack
-                          direction="row"
-                          spacing={1}
-                          useFlexGap
-                          alignItems={"center"}
-                          justifyContent={"flex-end"}
-                        >
-                          <IconButton
-                            color="primary"
-                            aria-label="edit persistent record"
-                            component="label"
-                            onClick={() => {
-                              setNewPersistentName(persistentRecord.name);
-                              setNewPersistentAppPath(persistentRecord.appPath);
-                              setNewPersistentServerPath(
-                                persistentRecord.serverPath
-                              );
-
-                              setPersistent(
-                                persistent.filter(
-                                  (item) => item.name !== persistentRecord.name
-                                )
-                              );
-                            }}
-                          >
-                            <Iconify icon="mdi:pencil" />
-                          </IconButton>
-                          <IconButton
-                            color="error"
-                            aria-label="delete env"
-                            component="label"
-                            onClick={() =>
-                              setPersistent(
-                                persistent.filter(
-                                  (item) => item.name !== persistentRecord.name
-                                )
-                              )
-                            }
-                          >
-                            <Iconify icon="mdi:delete" />
-                          </IconButton>
-                        </Stack>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-
-                  <TableRow
-                    sx={{
-                      "&:last-child td, &:last-child th": { border: 0 },
-                    }}
-                  >
-                    <TableCell component="th" scope="row">
-                      <TextField
-                        label={t("admin-name")}
-                        variant="outlined"
-                        value={newPersistentName}
-                        onChange={(e) => {
-                          setNewPersistentName(e.target.value);
-                        }}
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <TextField
-                        label={t("create-deployment-app-path-label")}
-                        variant="outlined"
-                        value={newPersistentAppPath}
-                        onChange={(e) => {
-                          setNewPersistentAppPath(e.target.value);
-                        }}
-                        fullWidth
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <TextField
-                        label={t("create-deployment-storage-path-label")}
-                        variant="outlined"
-                        value={newPersistentServerPath}
-                        onChange={(e) => {
-                          setNewPersistentServerPath(e.target.value);
-                        }}
-                        fullWidth
-                      />
-                    </TableCell>
-                    <TableCell align="right">
-                      <IconButton
-                        color="primary"
-                        component="label"
-                        disabled={
-                          !(
-                            newPersistentAppPath &&
-                            newPersistentServerPath &&
-                            newPersistentName
-                          )
-                        }
-                        onClick={() => {
-                          if (
-                            !(
-                              newPersistentAppPath &&
-                              newPersistentServerPath &&
-                              newPersistentName
-                            )
-                          )
-                            return;
-
-                          setPersistent([
-                            ...persistent,
-                            {
-                              name: newPersistentName,
-                              appPath: newPersistentAppPath,
-                              serverPath: newPersistentServerPath,
-                            },
-                          ]);
-
-                          setNewPersistentName("");
-                          setNewPersistentAppPath("");
-                          setNewPersistentServerPath("");
-                        }}
-                      >
-                        <Iconify icon="mdi:content-save" />
-                      </IconButton>
-                    </TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </TableContainer>
-          )}
-        </CardContent>
-      </Card>
+      <PersistentVolumeSelector
+        usePersistent={usePersistent}
+        setUsePersistent={setUsePersistent}
+        volumes={persistent}
+        setVolumes={setPersistent}
+        currentVolume={currentVolume}
+        setCurrentVolume={setCurrentVolume}
+      />
 
       <Stack justifyContent="flex-end" direction="row" spacing={3}>
         <Button onClick={() => handleCreate(true)} variant="outlined">

@@ -1,4 +1,4 @@
-import { Job } from "../../types";
+import { DeploymentSpecsGPU, Job, Visibility } from "../../types";
 
 export const getDeployment = async (token: string, id: string) => {
   const url = `${import.meta.env.VITE_DEPLOY_API_URL}/deployments/${id}`;
@@ -90,7 +90,9 @@ export const createDeployment = async (
   imageArgs: any,
   envs: any,
   volumes: any,
-  token: string
+  token: string,
+  visibility: Visibility,
+  specs?: DeploymentSpecsGPU
 ) => {
   let body: any = {
     name,
@@ -99,8 +101,14 @@ export const createDeployment = async (
   if (zone) body = { ...body, zone };
   if (image) body = { ...body, image };
   if (imageArgs) body = { ...body, args: imageArgs };
+  if (visibility) body = { ...body, visibility };
   if (envs) body = { ...body, envs };
   if (volumes) body = { ...body, volumes };
+  if (specs?.cpuCores) body = { ...body, cpuCores: specs.cpuCores };
+  if (specs?.ram) body = { ...body, ram: specs.ram };
+  if (specs?.replicas != undefined)
+    body = { ...body, replicas: specs.replicas };
+  if (specs?.gpus) body = { ...body, gpus: specs.gpus };
 
   const res = await fetch(
     import.meta.env.VITE_DEPLOY_API_URL + "/deployments",

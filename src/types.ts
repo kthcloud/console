@@ -3,6 +3,7 @@ import {
   DeploymentRead,
   JobRead,
   DeploymentSpecs,
+  Env,
 } from "@kthcloud/go-deploy-types/types/v2/body/index";
 import {
   VmRead as V2VmRead,
@@ -80,3 +81,7 @@ export type VmQueryParams = UserQueryParams & {
 export type GpuLeaseQueryParams = BaseQueryParams & {
   vmId?: string;
 };
+
+export type EnvVar = Env;
+
+export type Visibility = "public" | "private" | "auth";
