@@ -112,7 +112,7 @@ export default function GpuClaimEditor({ value, onChange }: Props) {
                   });
                 }}
                 label="Selectors (CEL expression)"
-                placeholder="memory <= 16 && cudaComputeCapability >= 7.0"
+                placeholder='device.attributes["gpu.nvidia.com"].productName == "NVIDIA RTX A5000" && device.attributes["gpu.nvidia.com"].cudaDriverVersion == "13.1.0"'
               />
 
               <Stack spacing={2}>
