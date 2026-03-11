@@ -20,7 +20,7 @@ import Iconify from "../../../components/Iconify";
 import { updateDeployment } from "../../../api/deploy/deployments";
 import { enqueueSnackbar } from "notistack";
 import useResource from "../../../hooks/useResource";
-import { useKeycloak } from "@react-keycloak/web";
+import { useKeycloak } from "../../../hooks/useKeycloak";
 import { errorHandler } from "../../../utils/errorHandler";
 import { useTranslation } from "react-i18next";
 import { Deployment } from "../../../types";

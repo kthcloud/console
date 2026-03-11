@@ -13,7 +13,7 @@ import Page from "../../components/Page";
 import useResource from "../../hooks/useResource";
 import { Coin } from "./Coin";
 import { useEffect, useState } from "react";
-import { useKeycloak } from "@react-keycloak/web";
+import { useKeycloak } from "../../hooks/useKeycloak";
 import { discover } from "../../api/deploy/discover";
 import Scrollbar from "../../components/Scrollbar";
 import { AlertList } from "../../components/AlertList";
@@ -66,6 +66,14 @@ const TierCard = ({ tier }: { tier: Role }) => {
             gutterBottom
             sx={{ whiteSpace: "nowrap" }}
           >
+            {(tier.permissions.includes("useVms") ? "✅ " : "❌ ") +
+              t("use-vms")}
+          </Typography>
+          <Typography
+            variant="subtitle2"
+            gutterBottom
+            sx={{ whiteSpace: "nowrap" }}
+          >
             {(tier.permissions.includes("useGpus") ? "✅ " : "❌ ") +
               t("landing-hero-gpu")}
           </Typography>
@@ -91,6 +99,15 @@ const TierCard = ({ tier }: { tier: Role }) => {
           >
             {`🧠 ${t("memory")}: ${tier.quota.ram} GB`}
           </Typography>
+          {(tier.quota as any).gpus != undefined && (
+            <Typography
+              variant="subtitle2"
+              gutterBottom
+              sx={{ whiteSpace: "nowrap" }}
+            >
+              {`🤖 ${t("landing-hero-gpus")}: ${(tier.quota as any).gpus}`}
+            </Typography>
+          )}
           <Typography
             variant="subtitle2"
             gutterBottom
@@ -112,11 +129,7 @@ const TierCard = ({ tier }: { tier: Role }) => {
                 variant="outlined"
                 color="primary"
                 fullWidth
-                onClick={() =>
-                  keycloak.login({
-                    redirectUri: window.location.origin + "/deploy",
-                  })
-                }
+                onClick={() => keycloak.login()}
                 sx={{ m: 1 }}
               >
                 {t("button-login")}

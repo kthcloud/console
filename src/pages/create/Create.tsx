@@ -11,7 +11,7 @@ import {
 
 //hooks
 import { useEffect, useState } from "react";
-import { useKeycloak } from "@react-keycloak/web";
+import { useKeycloak } from "../../hooks/useKeycloak";
 import { useSnackbar } from "notistack";
 import useResource from "../../hooks/useResource";
 
@@ -37,7 +37,7 @@ export const Create = () => {
   const { initialized } = useKeycloak();
   const { t } = useTranslation();
   const { enqueueSnackbar } = useSnackbar();
-  const { queueJob } = useResource();
+  const { queueJob, user } = useResource();
   const [alignment, _setAlignment] = useState("");
   const setAlignment = (newAlignment: string) => {
     _setAlignment(newAlignment);
@@ -118,7 +118,10 @@ export const Create = () => {
                       </Button>
                       <Button
                         variant={alignment === "vm" ? "contained" : "text"}
-                        disabled={alignment === "vm"}
+                        disabled={
+                          alignment === "vm" ||
+                          !user?.role.permissions.includes("useVms")
+                        }
                         size="large"
                         onClick={() => {
                           setAlignment("vm");

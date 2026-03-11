@@ -15,7 +15,7 @@ import {
   Stepper,
   Typography,
 } from "@mui/material";
-import { useKeycloak } from "@react-keycloak/web";
+import { useKeycloak } from "../../hooks/useKeycloak";
 import { enqueueSnackbar } from "notistack";
 import { useState } from "react";
 import LoadingPage from "../../components/LoadingPage";
@@ -368,6 +368,10 @@ export const Onboarding = () => {
 
                             <Typography variant="body1" gutterBottom mb={3}>
                               {t("onboarding-deployments-2")}
+                            </Typography>
+
+                            <Typography variant="body1" gutterBottom mb={3}>
+                              {t("onboarding-deployments-3")}
                             </Typography>
                           </OnboardingCard>
                         </div>

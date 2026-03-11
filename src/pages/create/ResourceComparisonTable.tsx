@@ -37,7 +37,11 @@ const ResourceComparisonTable = () => {
     },
     {
       type: t("resouce-comparison-machine-learning-gpu"),
-      use: ["vm"],
+      use: ["vm", "deployment"],
+    },
+    {
+      type: t("resouce-comparison-llm"),
+      use: ["vm", "deployment"],
     },
     {
       type: t("resouce-comparison-game-streaming-server"),
@@ -45,11 +49,11 @@ const ResourceComparisonTable = () => {
     },
     {
       type: t("resouce-comparison-databases"),
-      use: ["vm"],
+      use: ["vm", "deployment"],
     },
     {
       type: t("resouce-comparison-real-time-analytics"),
-      use: ["vm"],
+      use: ["deployment"],
     },
     {
       type: t("resouce-comparison-cache-services"),
@@ -57,7 +61,7 @@ const ResourceComparisonTable = () => {
     },
     {
       type: t("resouce-comparison-data-processing-pipelines"),
-      use: ["vm"],
+      use: ["deployment"],
     },
     {
       type: t("resouce-comparison-image-processing-services"),
@@ -89,7 +93,7 @@ const ResourceComparisonTable = () => {
     },
     {
       type: t("resouce-comparison-web-scraping-services"),
-      use: ["vm"],
+      use: ["vm", "deployment"],
     },
     {
       type: t("resouce-comparison-logging-services"),

@@ -19,7 +19,7 @@ import {
 import { useSnackbar } from "notistack";
 import useResource from "../../hooks/useResource";
 import { ChangeEvent, useEffect, useState } from "react";
-import { useKeycloak } from "@react-keycloak/web";
+import { useKeycloak } from "../../hooks/useKeycloak";
 import { useNavigate } from "react-router-dom";
 
 // utils
@@ -278,24 +278,76 @@ export function Deploy() {
 
     if (resource.type === "deployment") {
       return (
-        <Stack direction="row" alignItems="center" spacing={1}>
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="start"
+          spacing={1}
+          gap={1}
+          flexWrap="wrap"
+        >
           <Label
             variant="ghost"
             color="info"
             startIcon={
               <Iconify icon="lucide:container" sx={{ opacity: 0.65 }} />
             }
+            sx={{
+              "& .MuiLabel-label": {
+                // Hide text on small widths
+                display: { xs: "none", sm: "inline" },
+              },
+            }}
           >
             Deployment
           </Label>
-          {(resource as Deployment).private === true && (
+
+          {(resource as Deployment).private === true ||
+            ((resource as Deployment).visibility === "private" && (
+              <Label
+                variant="ghost"
+                startIcon={
+                  <Iconify icon="mdi:eye-off" sx={{ opacity: 0.65 }} />
+                }
+                sx={{
+                  "& .MuiLabel-label": {
+                    display: { xs: "none", sm: "inline" },
+                  },
+                }}
+              >
+                {t("admin-visibility-private")}
+              </Label>
+            ))}
+
+          {(resource as Deployment).visibility === "auth" && (
             <Label
               variant="ghost"
-              startIcon={<Iconify icon="mdi:eye-off" sx={{ opacity: 0.65 }} />}
+              startIcon={<Iconify icon="mdi:security" sx={{ opacity: 0.65 }} />}
+              sx={{
+                "& .MuiLabel-label": {
+                  display: { xs: "none", sm: "inline" },
+                },
+              }}
             >
-              {t("admin-visibility-private")}
+              {t("admin-visibility-auth")}
             </Label>
           )}
+
+          {(resource as Deployment).specs.gpus &&
+            (resource as Deployment).specs.gpus?.map((gpu, idx) => (
+              <Label
+                key={idx}
+                variant="ghost"
+                startIcon={<Iconify icon="mdi:gpu" sx={{ opacity: 0.65 }} />}
+                sx={{
+                  "& .MuiLabel-label": {
+                    display: { xs: "none", sm: "inline" },
+                  },
+                }}
+              >
+                {gpu.name}
+              </Label>
+            ))}
         </Stack>
       );
     }

@@ -9,6 +9,7 @@ export default function Backdrop(theme: CustomTheme) {
     MuiBackdrop: {
       styleOverrides: {
         root: {
+          backgroundColor: "rgb(22,28,36",
           background: [
             `rgb(22,28,36)`,
             `-moz-linear-gradient(75deg, ${varLow} 0%, ${varHigh} 100%)`,

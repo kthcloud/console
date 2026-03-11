@@ -2,6 +2,8 @@ import {
   UserRead,
   DeploymentRead,
   JobRead,
+  DeploymentSpecs,
+  Env,
 } from "@kthcloud/go-deploy-types/types/v2/body/index";
 import {
   VmRead as V2VmRead,
@@ -17,9 +19,19 @@ export interface Vm extends V2VmRead {
   type: "vm";
 }
 
+export interface DeploymentGPU {
+  name: string;
+  claimName: string;
+}
+
+export interface DeploymentSpecsGPU extends DeploymentSpecs {
+  gpus?: DeploymentGPU[];
+}
+
 export interface Deployment extends DeploymentRead {
   type: "deployment";
   deploymentType?: string;
+  specs: DeploymentSpecsGPU;
 }
 
 export type Resource = Vm | Deployment;
@@ -69,3 +81,7 @@ export type VmQueryParams = UserQueryParams & {
 export type GpuLeaseQueryParams = BaseQueryParams & {
   vmId?: string;
 };
+
+export type EnvVar = Env;
+
+export type Visibility = "public" | "private" | "auth";

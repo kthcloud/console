@@ -1,6 +1,6 @@
 import { IconButton, Tooltip } from "@mui/material";
 import Iconify from "../../components/Iconify";
-import { useKeycloak } from "@react-keycloak/web";
+import { useKeycloak } from "../../hooks/useKeycloak";
 import { Link } from "react-router-dom";
 import HelpButton from "./HelpButton";
 import LocaleSwitcher from "./LocaleSwitcher";

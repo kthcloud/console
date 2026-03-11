@@ -172,6 +172,7 @@ export default function BaseOptionChart(): ApexOptions {
       position: "top",
       horizontalAlign: "right",
       markers: {
+        //@ts-ignore idk if this exists or not.
         radius: 12,
       },
       fontWeight: 500,

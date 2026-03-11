@@ -49,6 +49,7 @@ ENV DNS_URL="https://dns.cloud.cbh.kth.se"
 ENV MAIA_URL="https://maia.app.cloud.cbh.kth.se/maia"
 # can be comma separated to add more
 ENV SERVER_PLATFORM="linux/amd64"
+ENV DEPLOYMENT_SSH_BASE="deploy.cloud.cbh.kth.se"
 
 EXPOSE 3000
 ENTRYPOINT ["/entrypoint.sh"]

@@ -20,7 +20,7 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import { useKeycloak } from "@react-keycloak/web";
+import { useKeycloak } from "../../hooks/useKeycloak";
 import { decode } from "js-base64";
 import { enqueueSnackbar } from "notistack";
 import { Fragment, useEffect, useState } from "react";

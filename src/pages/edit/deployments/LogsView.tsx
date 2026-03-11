@@ -8,7 +8,7 @@ import {
   Switch,
   Typography,
 } from "@mui/material";
-import { useKeycloak } from "@react-keycloak/web";
+import { useKeycloak } from "../../../hooks/useKeycloak";
 import { useEffect, useRef, useState } from "react";
 import Iconify from "../../../components/Iconify";
 import polyfilledEventSource from "@sanity/eventsource";

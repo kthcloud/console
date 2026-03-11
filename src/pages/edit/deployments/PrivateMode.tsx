@@ -10,7 +10,7 @@ import {
 
 import { enqueueSnackbar } from "notistack";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { useKeycloak } from "@react-keycloak/web";
+import { useKeycloak } from "../../../hooks/useKeycloak";
 import useResource from "../../../hooks/useResource";
 import { updateDeployment } from "../../../api/deploy/deployments";
 import { errorHandler } from "../../../utils/errorHandler";

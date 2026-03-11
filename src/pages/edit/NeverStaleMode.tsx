@@ -5,7 +5,7 @@ import {
   FormControlLabel,
   Switch,
 } from "@mui/material";
-import { useKeycloak } from "@react-keycloak/web";
+import { useKeycloak } from "../../hooks/useKeycloak";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Job, Resource } from "../../types";

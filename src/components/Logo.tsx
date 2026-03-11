@@ -1,6 +1,6 @@
 import { Link as RouterLink } from "react-router-dom";
 import { Box } from "@mui/material";
-import { useKeycloak } from "@react-keycloak/web";
+import { useKeycloak } from "../hooks/useKeycloak";
 import { useContext } from "react";
 import { ThemeModeContext } from "../contexts/ThemeModeContext";
 
